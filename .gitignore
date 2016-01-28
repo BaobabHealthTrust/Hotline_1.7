@@ -17,6 +17,7 @@
 
 #ignore every yml file
 *.yml
+*.swp
 
 #ignore database.yml file
 /config/database.yml
