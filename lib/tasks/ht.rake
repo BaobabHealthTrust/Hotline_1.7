@@ -2,14 +2,17 @@ namespace :ht do
   desc "ht create"
 
   task create: :environment do
-  	system "mysql --user --password"
+  	db_user = YAML::load_file('config/database.yml')[Rails.env]['username']
+  	db_password = YAML::load_file('config/database.yml')[Rails.env]['password']
+  	db_database = YAML::load_file('config/database.yml')[Rails.env]['database']
+
+  	system "mysqladmin create #{db_database} -u #{db_user} -p#{db_password} -v"
   end
 
   desc "ht migrate"
   
   task migrate: :environment do
 	ActiveRecord::Schema.define(version: 0) do
-
 	  create_table "active_list", primary_key: "active_list_id", force: true do |t|
 	    t.integer  "active_list_type_id",                        null: false
 	    t.integer  "person_id",                                  null: false
@@ -2006,7 +2009,11 @@ namespace :ht do
   desc "ht seed"
   
   task seed: :environment do
-  	puts 'initialising data'
+  	db_user = YAML::load_file('config/database.yml')[Rails.env]['username']
+  	db_password = YAML::load_file('config/database.yml')[Rails.env]['password']
+  	db_database = YAML::load_file('config/database.yml')[Rails.env]['database']
+
+  	system "mysql -u #{db_user} -p#{db_password} #{db_database} < db/openmrs_metadata_1_7.sql"
   end
 
 end
