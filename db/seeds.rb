@@ -50,4 +50,44 @@ puts "Creating user roles ...."
   UserRole.create(:user_id => user.id, :role => role)
 end
 
+
+
+###################################### Creating locations ################################################################
+districts = {}
+
+CSV.foreach("#{Rails.root}/app/assets/data/health_facilities.csv", :headers => true) do |row|
+  district_name = row[3] ; facility_name = row[1]
+  facility_code = row[0] ; facility_short_name = row[2]
+  districts[district_name] = [] if districts[district_name].blank?
+  districts[district_name] << [facility_code, facility_short_name,facility_name] 
+end
+
+puts "Creating districts, facilities and location_tag_map ...."
+["Health center","District"].each do |location|
+  description = 'Malawian health center/Hospital' 
+  description = 'Malawian district' if location == 'District'
+  LocationTag.create(:name => location, :description => description)
+end
+
+location_tag_district = LocationTag.find_by_name('District')
+location_tag_facility = LocationTag.find_by_name('Health center')
+(districts || {}).each do |district, facilities|
+  location = Location.create(:name => district, :description => location_tag_district.description)
+  LocationTagMap.create(location_id: location.id, location_tag_id: location_tag_district.id)
+  (facilities || []).each do |facility_code, facility_short_name,facility_name| 
+    facility = Location.create(:name => facility_name,postal_code: facility_code, 
+      :description => facility_short_name,parent_location: location.id)
+    LocationTagMap.create(location_id: facility.id, location_tag_id: location_tag_facility.id)
+  end
+end
+
+###################################### Creating locations ends ################################################################
+
+
+
+
+
+
+
+
 puts "Your new user is: admin, password: Admin123"

@@ -6,3 +6,4 @@ Rails.application.initialize!
 
 require "bantu_soundex"
 require "bean"
+require "csv"

@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
 
   before_create :encrypt_before_create
 
-  def self.authenticate(username, password, patient_or_doctor)
+  def self.authenticate(username, password)
 		user = User.where(:username => username).first
 		if !user.blank?
 			return user.valid_password?(password) ? user : nil
