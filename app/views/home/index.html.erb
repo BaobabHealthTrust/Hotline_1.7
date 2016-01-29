@@ -1,2 +1,199 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<style>
+
+.main-page-container  {
+  display: table;
+  width: 100%;
+}
+
+.main-page-container-rows  {
+  display: table-row;
+}
+
+.cells {
+  display: table-cell;
+}
+
+
+/* ...................................... */
+.divbtn {
+  height: 265px;
+  display: table;
+  margin-top: 10px;
+  cursor:pointer;
+}
+
+.icons {
+  width: 160px;
+  height: 160px;
+  margin-top: 10%;
+  text-align: middle;
+}
+
+.divbtn p {
+  font-weight: bold;
+}
+
+.btncells {
+  width: 25%;
+  text-align: center;
+}
+
+.small-icons {
+  width: 100px;
+  height: 100px;
+}
+
+.header .cells {
+  vertical-align: bottom; 
+  padding-right: 5px;
+}
+
+#scan {
+  background-color: lightgrey;
+  border-style: solid;
+  border-width: 1px;
+  font-size: 80px;
+  margin-bottom: 6px;
+  width: 44%;
+}
+
+.header .icons {
+  width: 100px;
+  height: 100px;
+}
+
+/* ...................................... */
+</style>
+
+<div class="main-page-container">
+
+
+<div class="main-page-container-rows header">
+  <div class="cells" style="width:5.5%;">
+    <span class="icons small-icons">
+      <%=image_tag("icons/barcode.png", class: 'icons')%>
+    </span>
+  </div>
+  <div class="cells" style="width:79.5%; border-style: solid; border-width: 0px;">
+    <input type="text" name="barcode" id="scan" />
+  </div>
+  <div class="cells" style="border-style: solid; text-align: center; border-width: 1px; width: 25%;">
+    <span class="icons small-icons">
+      <%=image_tag("icons/index.jpeg", class: 'icons')%>
+    </span>
+  </div>
+</div>
+
+</div>
+
+
+<div class="main-page-container">
+
+<div class="main-page-container-rows">
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #708090;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/Dial.png", class: 'icons')%>
+          <p style="color: black;">Start call</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #ffff1a;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/clear.png", class: 'icons')%>
+          <p>House Keeping</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color:#4d8eff ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/stats.png", class: 'icons')%>
+          <p style="color: white;">Current patient statistics</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #d2ff4d;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/red_phone.png", class: 'icons')%>
+          <p>Incomplete calls</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  
+</div>
+
+
+<div class="main-page-container-rows">
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #c51bff;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/reports.png", class: 'icons')%>
+          <p>Reports</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #008080;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/config.png", class: 'icons')%>
+          <p style="color: white;">Configurations</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #95c900;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/Admin.png", class: 'icons')%>
+          <p>Admin</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color:red;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/Logout.png", class: 'icons')%>
+          <p>Logout</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+</div>
+
