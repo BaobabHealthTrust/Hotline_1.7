@@ -1,5 +1,22 @@
 <style>
 
+body {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */ 
+}
+
+img {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
 .main-page-container  {
   display: table;
   width: 100%;
@@ -94,8 +111,8 @@
   <div class="cells btncells">
     <div class="divbtn" style="background-color: #708090;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/start_call'" >
         <span class="icons">
-          <%=image_tag("icons/Dial.png", class: 'icons')%>
-          <p style="color: black;">Start call</p>
+          <%=image_tag("icons/Directory.png", class: 'icons')%>
+          <p style="color: black;">Find by phone</p>
         </span>
     </div>
   </div>
@@ -103,10 +120,10 @@
   
   <!-- loop -->
   <div class="cells btncells">
-    <div class="divbtn" style="background-color: #ffff1a;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+    <div class="divbtn" style="background-color: #ff8509;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
         <span class="icons">
-          <%=image_tag("icons/clear.png", class: 'icons')%>
-          <p>House Keeping</p>
+          <%=image_tag("icons/user-id.png", class: 'icons')%>
+          <p>Find by ID</p>
         </span>
     </div>
   </div>
@@ -116,8 +133,8 @@
   <div class="cells btncells">
     <div class="divbtn" style="background-color:#4d8eff ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
         <span class="icons">
-          <%=image_tag("icons/stats.png", class: 'icons')%>
-          <p style="color: white;">Current patient statistics</p>
+          <%=image_tag("icons/kuser.png", class: 'icons')%>
+          <p style="color: white;">Find by name</p>
         </span>
     </div>
   </div>
@@ -125,66 +142,18 @@
   
   <!-- loop -->
   <div class="cells btncells">
-    <div class="divbtn" style="background-color: #d2ff4d;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+    <div class="divbtn" style="background-color: tomato;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
         <span class="icons">
-          <%=image_tag("icons/red_phone.png", class: 'icons')%>
-          <p>Incomplete calls</p>
+          <%=image_tag("icons/cancel-phone.png", class: 'icons')%>
+          <p>Cancel call</p>
         </span>
     </div>
   </div>
   <!-- endloop -->
-  
+
   
 </div>
 
-
-<div class="main-page-container-rows">
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: #c51bff;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/reports.png", class: 'icons')%>
-          <p>Reports</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-  
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: #008080;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/config.png", class: 'icons')%>
-          <p style="color: white;">Configurations</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-  
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: #95c900;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/Admin.png", class: 'icons')%>
-          <p>Admin</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-  
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color:red;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/Logout.png", class: 'icons')%>
-          <p>Logout</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-
-
-</div>
 
 
 

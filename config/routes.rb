@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  
+
   ######################### home start ############################################
   get 'home/index'
   get 'start_call' => 'home#start_call'
+  get 'house_keeping' => 'home#house_cleaning'
   ######################### home end ############################################
   
   ######################### user start ############################################

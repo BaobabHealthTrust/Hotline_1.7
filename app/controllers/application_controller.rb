@@ -14,8 +14,8 @@ class ApplicationController < ActionController::Base
         format.html { redirect_to '/login' }
       end
     elsif not session[:user_id].blank?
-      User.current = User.where(:user_id => session[:user_id]).first
-      #Location.current = Location.where(:name => session[:location]).first
+      User.current = User.find(session[:user_id])
+      Location.current = Location.find(session[:location_id])
     end
   end
 
