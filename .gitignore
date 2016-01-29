@@ -24,3 +24,23 @@
 
 #ignore Gemfile lock
 /Gemfile.lock
+
+.DS_Store
+*.swp
+*.swo
+config/database.yml
+config/email.yml
+config/application.yml
+config/settings.yml
+notes
+development.sql
+development_structure.sql
+schema.rb
+*~
+mockups
+rerun.txt
+nbproject
+log/*
+.idea/*
+.ruby-version
+public/touchscreentoolkit/*

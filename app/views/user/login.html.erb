@@ -1,0 +1,63 @@
+  <%= stylesheet_link_tag "user_login" %>
+
+  <script language="javascript">
+    doListSuggestions = false; //speeds up keyboard response
+
+    var setFocusTimeout = 1000;
+    var checkForBarcodeTimeout = 1500;
+   
+    function loadBarcodePage() {
+       focusForBarcodeInput();
+       moveNext();
+    }
+
+    function focusForBarcodeInput(){
+      var barcode = document.getElementById("touchscreenInput0");
+      if (barcode) {
+         barcode.focus();
+         window.setTimeout("focusForBarcodeInput()", setFocusTimeout);
+      }
+    }
+    
+   
+    function moveNext(){
+      usertext=document.getElementById("touchscreenInput0");
+      if (usertext.value.match(/.+\$$/i) != null){
+        usertext.value=usertext.value.substring(0,usertext.value.length -1);
+        gotoNextPage();
+      }
+       window.setTimeout("moveNext()", checkForBarcodeTimeout);
+    }    
+    window.addEventListener("load", loadBarcodePage, false);
+  </script>
+      <%= form_tag("/login", id: "login-form", method: 'post', enctype: 'multipart/form-data') do %>
+        <% flash.each do |key, value| %>
+          <div class="alert alert-<%= key %>"><%= value %></div>
+        <% end %>
+        <table class="tform">
+          <tr>
+            <td>
+              <table style="width: 100%;">
+                <tr>
+                  <td><label for="user_email">Email</label></td>
+                </tr>
+                <tr>
+                  <td><input id="username" type="text" class="inputs" name="username" placeholder="Enter your username" 
+                    helpText="Enter your username" textCase="lower" /></td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <table style="width: 100%;">
+                <tr>
+                  <td><label for="user_password">Password</label></td>
+                </tr>
+                <tr>
+                  <td><input id="password" type="password" class="inputs" name="password" placeholder="Enter your password"
+                   helpText="Enter your password" textCase="lower" /></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          </table>
+        <% end %>

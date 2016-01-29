@@ -26,7 +26,6 @@ unless Rails.env.production?
     end
   end
 end
-=end
 
 # Seeding metadata_1_7 into Application Database
 ActiveRecord::Schema.define(version: 0) do
@@ -37,3 +36,18 @@ ActiveRecord::Schema.define(version: 0) do
 	system "mysql -u #{db_user} -p#{db_password} #{db_database} < db/openmrs_metadata_1_7.sql -v"
 end
 #end
+=end
+person = Person.create(:birthdate => Date.today, :birthdate_estimated => 1, :creator => 1)
+person_name = PersonName.create(:given_name => "System", :family_name => "Admininistrator",:person_id => person.id)
+PersonNameCode.create(:given_name_code => "System".soundex, :family_name_code => "Admininistrator".soundex,:person_name_id => person_name.id)
+
+user = User.create(:username => 'admin',:password => "adminhotline", :creator => 1, :person_id => person.id,:system_id => "admin")
+
+User.current = user
+
+puts "Creating user roles ...."
+["System Developer","Provider"].each do |role|
+  UserRole.create(:user_id => user.id, :role => role)
+end
+
+puts "Your new user is: admin, password: Admin123"
