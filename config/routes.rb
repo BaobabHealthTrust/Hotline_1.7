@@ -1,10 +1,14 @@
 Rails.application.routes.draw do
+  
+  ######################### home start ############################################
   get 'home/index'
+  get 'start_call' => 'home#start_call'
+  ######################### home end ############################################
   
   ######################### user start ############################################
   get '/login' => 'user#login'
   post '/login' => 'user#login'
-  ######################### user start ############################################
+  ######################### user end ############################################
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
