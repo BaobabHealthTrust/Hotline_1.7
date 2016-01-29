@@ -27,3 +27,13 @@ unless Rails.env.production?
   end
 end
 =end
+
+# Seeding metadata_1_7 into Application Database
+ActiveRecord::Schema.define(version: 0) do
+	db_user = YAML::load_file('config/database.yml')[Rails.env]['username']
+	db_password = YAML::load_file('config/database.yml')[Rails.env]['password']
+	db_database = YAML::load_file('config/database.yml')[Rails.env]['database']
+
+	system "mysql -u #{db_user} -p#{db_password} #{db_database} < db/openmrs_metadata_1_7.sql -v"
+end
+#end

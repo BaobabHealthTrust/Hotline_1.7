@@ -2013,7 +2013,7 @@ namespace :ht do
   	db_password = YAML::load_file('config/database.yml')[Rails.env]['password']
   	db_database = YAML::load_file('config/database.yml')[Rails.env]['database']
 
-  	system "mysql -u #{db_user} -p#{db_password} #{db_database} < db/openmrs_metadata_1_7.sql"
+  	system "mysql -u #{db_user} -p#{db_password} #{db_database} < db/openmrs_metadata_1_7.sql -v"
   end
 
 end
