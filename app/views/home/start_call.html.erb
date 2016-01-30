@@ -19,7 +19,14 @@ img {
 
 .main-page-container  {
   display: table;
+  width: 99.7%;
+  padding: 5px 1px 0px 1px;
+}
+
+.main-page-container  {
+  display: table;
   width: 100%;
+  padding: 0px 1px 0px 1px;
 }
 
 .main-page-container-rows  {
@@ -66,7 +73,7 @@ img {
 }
 
 #scan {
-  background-color: lightgrey;
+  background-color: white;
   border-style: solid;
   border-width: 1px;
   font-size: 80px;
@@ -94,7 +101,7 @@ img {
   <div class="cells" style="width:79.5%; border-style: solid; border-width: 0px;">
     <input type="text" name="barcode" id="scan" />
   </div>
-  <div class="cells" style="border-style: solid; text-align: center; border-width: 1px; width: 25%;">
+  <div class="cells" style="border-style: solid; text-align: center; border-width: 1px; width: 10%;">
     <span class="icons small-icons">
       <%=image_tag("icons/index.jpeg", class: 'icons')%>
     </span>
