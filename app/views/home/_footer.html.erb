@@ -14,14 +14,36 @@
   border-style: solid;
   border-width: 1px 0px 0px 0px;
   border-color: #708090;
+  height: 40px;
 }
 
+.x-small-icons {
+  width: 35px;
+  height: 35px;
+}
+
+.x-icons {
+  width: 80px;
+  height: 40px;
+  text-align: middle;
+  padding-right: 5px;
+}
+
+.footer img {
+  bottom: 0px;
+  position: absolute;
+}
 </style>
 
 
 <div class="footer">
-  Hotline&nbsp;version:&nbsp;<%= APP_VERSION %>
-  <div id="txt" style="float: right;"></div>
+  <span class="x-icons x-small-icons">
+    <%=image_tag("b40b4b-2.png", class: 'x-icons')%>
+  </span>
+  <span style="padding-left: 85px; position: absolute; bottom: 0px;">
+    Hotline&nbsp;version:&nbsp;<%= APP_VERSION %>
+  </span>
+  <div id="txt" style="float: right; right: 0px; position: absolute; bottom: 0px;"></div>
 </div>
 
 
