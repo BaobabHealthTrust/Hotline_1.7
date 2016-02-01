@@ -179,4 +179,4 @@ end
 
 
 
-puts "Your new user is: admin, password: Admin123"
+puts "Your new user is: admin, password: adminhotline"
