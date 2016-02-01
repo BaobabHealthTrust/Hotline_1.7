@@ -3,8 +3,12 @@ class UserController < ApplicationController
     if request.post?
       user = User.authenticate(params[:username],params[:password])
       if user
-        location = Location.find(params[:location]) rescue nil     
-        location = Location.find_by_name(params[:location]) if location.blank? 
+        location_tag_id = LocationTag.find_by_name('Facility location').id
+        
+        location = Location.where("location.location_id = ? OR location.name = ?", 
+          params[:location],params[:location]).joins("location_tag_map m ON m.location_id = location.location_id AND
+          location_tag_id = #{location_tag_id}").first rescue nil     
+
         if location.blank?
           redirect_to '/login' and return
         end

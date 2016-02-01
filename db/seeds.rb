@@ -113,7 +113,7 @@ end
 
 
 districts_with_ta_and_villages = {}
-CSV.foreach("#{Rails.root}/app/assets/data/districts_with_ta_and_villages.csv", :headers => true) do |row|
+CSV.foreach("#{Rails.root}/app/assets/data/districts_with_ta_and_villages.csv", :headers => true).each_with_index do |row, i|
   district_name = row[0].gsub('-',' ').strip ; ta_name = row[1] ; village_name = row[2]
   district = Location.where("t.name = 'District' AND location.name = ?",
              district_name).joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id
@@ -138,17 +138,18 @@ end
 
 ta_location_tag = LocationTag.find_by_name('Traditional Authority')
 village_location_tag = LocationTag.find_by_name('Village')
-(districts_with_ta_and_villages || {}).each do |district_name, ta_and_villages|
+(districts_with_ta_and_villages || {}).each_with_index do |(district_name, ta_and_villages), i|
   district = Location.find_by_name(district_name)
   (ta_and_villages || {}).each do |ta, villages|
     traditional_authority = Location.create(name: ta, description: 'Traditional Authority')
     LocationTagMap.create(location_id: traditional_authority.id, location_tag_id: ta_location_tag.id)
     traditional_authority.update_attributes(parent_location: district.id)
 
-    (villages || []).each do |village_name|
+    (villages || []).each_with_index do |village_name, i|
       village = Location.create(name: village_name, description: 'A village under a TA')
       LocationTagMap.create(location_id: village.id, location_tag_id: village_location_tag.id)
       village.update_attributes(parent_location: traditional_authority.id)
+      puts "#{village_name} #####{villages.length - i} to go for district: #{district_name}"
     end
   end
 end
