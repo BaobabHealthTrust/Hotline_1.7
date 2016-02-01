@@ -3,7 +3,7 @@ class GlobalProperty < ActiveRecord::Base
   include Openmrs
 
   def self.current_health_center
-    Location.find(self.find_by_description('Current.health.center').property_value)
+    Location.find(self.find_by_description('current.health.center').property_value)
   end
 
 end
