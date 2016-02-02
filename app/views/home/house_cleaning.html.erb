@@ -84,28 +84,7 @@ img {
 /* ...................................... */
 </style>
 
-<div class="main-page-container">
-
-<div class="main-page-container-rows header">
-  <div class="cells" style="width:45%;">
-    <span class="icons small-icons" style=" border-right: 0px solid #ccc; color: #999;font-size: 1.5em; font-style: italic;">
-      <b>Facility Name:</b>&nbsp;<%=GlobalProperty.current_health_center.description%>
-    </span>
-  </div>
-  <div class="cells" style="width:45%">
-    <span class="icons small-icons" style=" border-right: 0px solid #ccc; color: #999;font-size: 1.5em; font-style: italic;">
-      <b>Location:</b>&nbsp;<%=Location.current.name%>
-    </span>
-  </div>
-  <div class="cells" style="border-style: solid; text-align: center; border-width: 1px; width: 10%;">
-    <span class="icons small-icons">
-      <%=image_tag("index.jpeg", class: 'icons')%>
-    </span>
-  </div>
-</div>
-
-</div>
-
+<%= render :partial => 'header' %>
 
 <div class="main-page-container">
 
