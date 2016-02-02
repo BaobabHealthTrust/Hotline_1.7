@@ -7,4 +7,8 @@ class HomeController < ApplicationController
     render :layout => false
   end
 
+  def house_cleaning
+    render :layout => false
+  end
+
 end
