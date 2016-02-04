@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+
   ######################### home start ############################################
   get 'home/index'
   get 'start_call' => 'home#start_call'
@@ -12,6 +13,10 @@ Rails.application.routes.draw do
   get '/logout' => 'user#login'
   ######################### user end ############################################
 
+  ######################### patient start ############################################
+  get 'patient/dashboard'
+  ######################### patient end ############################################
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
