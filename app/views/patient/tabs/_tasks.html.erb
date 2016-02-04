@@ -1,0 +1,129 @@
+<style>
+
+.table-div  {
+  display: table;
+  width: 100%;
+  padding: 0px 1px 0px 1px;
+}
+
+.row  {
+  display: table-row;
+}
+
+.cell {
+  display: table-cell;
+  width: 25%;
+}
+
+.btn {
+ padding-bottom: 5px; 
+ text-align: center;
+ margin: 5px;
+}
+
+.btn p {
+  font-weight: bold;
+}
+
+.task-icons {
+  height: 90px;
+  width: 90px;
+  margin-top: 10%;
+}
+</style>
+
+
+
+<div class="table-div">
+
+  <div class="row">
+    <!-- loop -->
+    <%if params[:gender]%> 
+      <div class="cell">
+        <div class="btn" style="background-color: #f5deb3;border: 1px solid #2e6da4; width: 99%;">
+          <%=image_tag("icons/pregnacy.png", class: 'task-icons')%>
+            <p style="color: black;">Pregnancy status</p>
+          </span>
+        </div>
+      </div>
+    <%else%>
+      <div class="cell">
+        <div class="btn" style="background-color: snow;border: 0px solid #2e6da4; width: 99%;">
+            <p style="color: black;">&nbsp;</p>
+        </div>
+      </div>
+    <%end%>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: #666600 ;border: 1px solid #2e6da4; width: 99%;">
+        <%=image_tag("icons/symptoms.png", class: 'task-icons')%>
+          <p style="color: white;">Symptoms</p>
+        </span>
+      </div>
+    </div>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: #ff7575;border: 1px solid #2e6da4; width: 99%;">
+        <%=image_tag("icons/outcome.png", class: 'task-icons')%>
+          <p style="color: black;">Outcomes</p>
+        </span>
+      </div>
+    </div>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: #dcdcdc;border: 1px solid #2e6da4; width: 99%;">
+        <%=image_tag("icons/calendar-and-tasks.png", class: 'task-icons')%>
+          <p style="color: black;">Clinic schedule</p>
+        </span>
+      </div>
+    </div>
+    <!-- endloop -->
+  </div>
+
+
+  <div class="row">
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: coral;border: 1px solid #2e6da4; width: 99%;">
+        <%=image_tag("icons/notification.png", class: 'task-icons')%>
+          <p style="color: black;">Edit reminders</p>
+        </span>
+      </div>
+    </div>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: pink;border: 1px solid #2e6da4; width: 99%;">
+        <%=image_tag("icons/demographic.png", class: 'task-icons')%>
+          <p style="color: black;">Edit demographics</p>
+        </span>
+      </div>
+    </div>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: lime;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/start_call'">
+        <%=image_tag("icons/next.png", class: 'task-icons')%>
+          <p style="color: black;">Next Client</p>
+        </span>
+      </div>
+    </div>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'">
+        <%=image_tag("icons/gohome.png", class: 'task-icons')%>
+          <p style="color: black;">Home</p>
+        </span>
+      </div>
+    </div>
+    <!-- endloop -->
+  </div>
+
+
+
+</div>
+

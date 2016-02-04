@@ -87,7 +87,8 @@ img {
     
     <div class="cells" style="width: 5%; vertical-align: middle; text-align: left;">
       <span class="icons">
-        <%=image_tag("icons/Person_Undefined_Female_Dark.png", class: 'icons gender-icon')%>
+        <%gender = 'Female'%>
+        <%=image_tag("icons/Person_Undefined_#{gender}_Dark.png", class: 'icons gender-icon')%>
       </span>
     </div>
 
