@@ -12,7 +12,7 @@
 
 .cell {
   display: table-cell;
-  width: 25%;
+  width: 20%;
 }
 
 .btn {
@@ -57,7 +57,7 @@
     <!-- loop -->
     <div class="cell">
       <div class="btn" style="background-color: #666600 ;border: 1px solid #2e6da4; width: 99%;">
-        <%=image_tag("icons/symptoms.png", class: 'task-icons')%>
+        <%=image_tag("icons/symptoms-2.png", class: 'task-icons')%>
           <p style="color: white;">Symptoms</p>
         </span>
       </div>
@@ -65,8 +65,8 @@
     <!-- endloop -->
     <!-- loop -->
     <div class="cell">
-      <div class="btn" style="background-color: #ff7575;border: 1px solid #2e6da4; width: 99%;">
-        <%=image_tag("icons/outcome.png", class: 'task-icons')%>
+      <div class="btn" style="background-color: #ff2d2d ;border: 1px solid #2e6da4; width: 99%;">
+        <%=image_tag("icons/symptoms.png", class: 'task-icons')%>
           <p style="color: black;">Outcomes</p>
         </span>
       </div>
@@ -81,10 +81,6 @@
       </div>
     </div>
     <!-- endloop -->
-  </div>
-
-
-  <div class="row">
     <!-- loop -->
     <div class="cell">
       <div class="btn" style="background-color: coral;border: 1px solid #2e6da4; width: 99%;">
@@ -94,6 +90,10 @@
       </div>
     </div>
     <!-- endloop -->
+  </div>
+
+
+  <div class="row">
     <!-- loop -->
     <div class="cell">
       <div class="btn" style="background-color: pink;border: 1px solid #2e6da4; width: 99%;">
@@ -109,6 +109,22 @@
         <%=image_tag("icons/next.png", class: 'task-icons')%>
           <p style="color: black;">Next Client</p>
         </span>
+      </div>
+    </div>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: #fff4d8;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'">
+        <%=image_tag("icons/reference.png", class: 'task-icons')%>
+          <p style="color: black;">Reference material</p>
+        </span>
+      </div>
+    </div>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: snow;border: 0px solid #2e6da4; width: 99%;">
+          <p style="color: black;">&nbsp;</p>
       </div>
     </div>
     <!-- endloop -->
