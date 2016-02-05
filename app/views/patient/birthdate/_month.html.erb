@@ -1,0 +1,95 @@
+<style>
+
+.month-table  {
+  display: table;
+  width: 100%;
+  padding: 0px 1px 0px 1px;
+}
+
+.month-rows  {
+  display: table-row;
+}
+
+.month-cells {
+  display: table-cell;
+  text-align: left;
+  padding-left: 10px;
+}
+
+
+
+.options li {
+  color: black;
+  font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+  list-style: outside none none;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 1.9em;
+  line-height: 50px;
+}
+
+#tbInputMonth {
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border-color: -moz-use-text-color -moz-use-text-color silver;
+  border-style: none none solid;
+  border-width: medium medium 1px;
+  font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+  font-size: 2.2em;
+  padding-left: 5px;
+  width: 99%;
+  text-align: center;
+}
+
+</style>
+
+<label>Select Birth Month</label>
+<input id="tbInputMonth" type="text" />
+
+
+<div class="month-table">
+  <div class="month-rows">
+
+    <div class="month-cells">
+      <ul class="options">
+        <%months = []
+        (1..6).each {|m| months << [Date::MONTHNAMES[m], m]}%>
+        <%(months).each do |string,num|%>
+          <li class="cell-table" onclick="assignMonth(this)" id="<%=num%>"><%=string%></li>
+        <%end%>
+      </ul>
+    </div>
+
+    <div class="month-cells">
+      <ul class="options">
+        <%months = []
+        (7..12).each {|m| months << [Date::MONTHNAMES[m], m]}%>
+        <%(months).each do |string,num|%>
+          <li class="cell-table" onclick="assignMonth(this)" id="<%=num%>"><%=string%></li>
+        <%end%>
+        <li class="cell-table" onclick="assignMonth(this)" id="Unkown">Unkown</li>
+      </ul>
+    </div>
+
+
+
+  </div>
+</div>
+
+
+<script>
+
+function assignMonth(e) {
+  allCells = document.getElementsByClassName('cell-table');
+
+  for(var i = 0; i < allCells.length; i++){
+    allCells[i].setAttribute('style',"background-color:''");
+  }
+
+  e.setAttribute('style',"background-color:lightblue;");
+  document.getElementById('tbInputMonth').value = e.innerHTML;
+}
+
+</script>

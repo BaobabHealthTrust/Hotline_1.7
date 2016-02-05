@@ -38,7 +38,7 @@
 
   <div class="row">
     <!-- loop -->
-    <%if params[:gender]%> 
+    <%if not params[:gender]%> 
       <div class="cell">
         <div class="btn" style="background-color: #f5deb3;border: 1px solid #2e6da4; width: 99%;">
           <%=image_tag("icons/pregnacy.png", class: 'task-icons')%>
@@ -105,15 +105,6 @@
     <!-- endloop -->
     <!-- loop -->
     <div class="cell">
-      <div class="btn" style="background-color: lime;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/start_call'">
-        <%=image_tag("icons/next.png", class: 'task-icons')%>
-          <p style="color: black;">Next Client</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
       <div class="btn" style="background-color: #fff4d8;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'">
         <%=image_tag("icons/reference.png", class: 'task-icons')%>
           <p style="color: black;">Reference material</p>
@@ -125,6 +116,15 @@
     <div class="cell">
       <div class="btn" style="background-color: snow;border: 0px solid #2e6da4; width: 99%;">
           <p style="color: black;">&nbsp;</p>
+      </div>
+    </div>
+    <!-- endloop -->
+    <!-- loop -->
+    <div class="cell">
+      <div class="btn" style="background-color: lime;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/start_call'">
+        <%=image_tag("icons/next.png", class: 'task-icons')%>
+          <p style="color: black;">Next Client</p>
+        </span>
       </div>
     </div>
     <!-- endloop -->

@@ -15,6 +15,10 @@ Rails.application.routes.draw do
 
   ######################### patient start ############################################
   get 'patient/dashboard/:patient_id/:tab_name' => 'patient#dashboard'
+  get 'patient/edit/:patient_id' => 'patient#edit'
+  post 'patient/new'
+  post 'patient/search_result'
+  get 'patient/search_by_name'
   ######################### patient end ############################################
   
   # The priority is based upon order of creation: first created -> highest priority.

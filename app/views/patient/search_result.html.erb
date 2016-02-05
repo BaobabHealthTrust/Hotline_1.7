@@ -1,0 +1,182 @@
+<style>
+.main-container {
+  width:100%
+}
+
+body {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+
+img {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
+/* .................................. header starts ........................................................ */
+.table-container {
+  width: 99%;
+  display: table;
+  padding: 0px 1px 0px 1px;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+}
+
+.table-row  {
+  display: table-row;
+  width: 100%;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+.village-reach-icon {
+  width: 100px;
+  height: 100px;
+  border-style: solid;
+  border-width: 1px;
+}
+/* .................................. header ends........................................................ */
+
+
+.search-icons {
+  width: 50px;
+  height: 50px;
+  margin-top: 10%;
+  text-align: middle;
+}
+
+.divbtn p {
+  font-weight: bold;
+}
+
+.divbtn {
+  height: 135px;
+  display: table;
+  margin-top: 10px;
+  cursor:pointer;
+}
+
+.navigation {
+  height: 100px;
+}
+
+</style>
+
+<div class="table-container" style="height: 15%;">
+  <div class="table-row">
+    <div class="table-cell" style="width: 60%;">
+      <h3>Searched</h3>
+      <p><%=@given_name%>&nbsp;<%=@family_name%>&nbsp;(<%=@gender%>)</p>
+    </div>
+    <div class="table-cell" style="width: 30%;">
+      <h3>Possible match</h3>
+      <p><%=@people.length%>&nbsp;record(s)</p>
+    </div>
+    <div class="table-cell" style="width: 10%; vertical-align: middle; text-align: right;">
+      <span class="icons">
+        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- .................................................. results .......................................... -->
+
+<div class="table-container" style="height: 75%; border-width: 0px;">
+  <div class="table-row">
+    <div class="table-cell" style="width: 78%; vertical-align: top;">
+      <p>Searched</p>
+    </div>
+    <div class="table-cell" style="width: 20%; text-align: center;">
+      <!-- ... -->
+      <div class="table-container" style="height: 50%; border-width: 0px;">
+        <!-- btn starts .. -->
+        <div class="table-row">
+          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
+            <div class="divbtn" style="background-color: #008000;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/start_call'" >
+              <span>
+                <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>
+                <p>New search</p>
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- btn ends .. -->
+        <!-- btn starts .. -->
+        <div class="table-row">
+          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
+            <div class="divbtn" style="background-color: #ff8509;border: 1px solid #2e6da4; width: 99%;" onclick="javascript:addNew();" >
+              <span>
+                <%=image_tag("icons/add-person.png", class: 'search-icons')%>
+                <p>Add new person</p>
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- btn ends .. -->
+        <!-- btn starts .. -->
+        <div class="table-row">
+          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
+            <div class="divbtn" style="background-color: #d2ff4d;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+              <span>
+                <%=image_tag("icons/button_ok.png", class: 'search-icons')%>
+                <p>Select patient</p>
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- btn ends .. -->
+        <!-- btn starts .. -->
+        <div class="table-row">
+          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
+            <!-- ................................ -->
+            <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: left;" onclick="document.location='/'" >
+              <span>
+                <%=image_tag("icons/previous-track.png", class: 'search-icons')%>
+                <p>Previous page</p>
+              </span>
+            </div>
+            <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: right;" onclick="document.location='/'" >
+              <span>
+                <%=image_tag("icons/next-track.png", class: 'search-icons')%>
+                <p>Next Page</p>
+              </span>
+            </div>
+            <!-- ................................ -->
+          </div>
+        </div>
+        <!-- btn ends .. -->
+      </div>
+      <!-- ... -->
+    </div>
+  </div>
+</div>
+
+<!-- .................................................. results ends .......................................... -->
+
+<%= render :partial => 'home/footer' %>
+
+
+<%= form_tag("/patient/new", id: "new-person", method: 'post', enctype: 'multipart/form-data') do %>
+  <input type="hidden" name="given_name" value="<%=@given_name%>" />
+  <input type="hidden" name="family_name" value="<%=@family_name%>" />
+  <input type="hidden" name="gender" value="<%=@gender%>" />
+<%end%>
+
+<script>
+
+function addNew() {
+  document.getElementById('new-person').submit();
+}
+
+
+</script>
