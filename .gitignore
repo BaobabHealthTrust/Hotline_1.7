@@ -28,10 +28,7 @@
 .DS_Store
 *.swp
 *.swo
-config/database.yml
-config/email.yml
-config/application.yml
-config/settings.yml
+config/*.yml
 notes
 development.sql
 development_structure.sql
