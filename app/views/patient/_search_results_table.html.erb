@@ -1,0 +1,56 @@
+
+<script language="javascript" type="text/javascript" src="/javascripts/dataTables/jquery.js" defer="true"></script>
+<script language="javascript" type="text/javascript" src="/javascripts/dataTables/prototype.js" defer="true"></script>
+<script language="javascript" type="text/javascript" src="/javascripts/dataTables/jquery.dataTables.js" defer="true"></script>
+
+<%#= stylesheet_link_tag("dataTables/demo_table_jui") %>                                     
+<%#= stylesheet_link_tag("dataTables/jquery.dataTables") %>                                     
+<link rel="stylesheet" href="/stylesheets/dataTables/demo_table_jui.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/dataTables/jquery.dataTables.css" type="text/css">
+
+<style>
+#search-results {
+  width: 99%;
+}
+
+</style>
+
+
+
+
+<table id="search-results">
+  <thead>
+    </tr>
+      <th>Identifiers</th>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Gender</th>
+      <th>Birthdate</th>
+      <th>Atrribute(s)</th>
+    </tr>
+  </thead>  
+
+  <tbody>
+    <%(1.upto(10)).each do |n|%>
+      <tr>
+        <td><%=n%></td>
+        <td><%=n%></td>
+        <td><%=n%></td>
+        <td><%=n%></td>
+        <td><%=n%></td>
+        <td><%=n%></td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
+
+
+<script>                                                                        
+  dataT();
+
+
+  function dataT(){          
+    jQuery('#search-results').dataTable();                                                  
+  }
+
+</script>
