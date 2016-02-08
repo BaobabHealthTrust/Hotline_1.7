@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   get 'home/index'
   get 'start_call' => 'home#start_call'
   get 'house_keeping' => 'home#house_cleaning'
+  get 'admin' => 'home#admin'
+  get 'manage_user' => 'home#manage_user'
+  get 'manage_clinic' => 'home#manage_clinic'
   ######################### home end ############################################
   
   ######################### user start ############################################

@@ -11,4 +11,8 @@ class HomeController < ApplicationController
     render :layout => false
   end
 
+  def admin
+  	render :layout => false
+  end
+
 end
