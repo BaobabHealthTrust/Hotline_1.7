@@ -104,6 +104,7 @@ end
 
     region = facility_attr[3] if region.blank?
     district_code = facility_attr[0] if district_code
+    puts "#{district} >>>>>>>>>>>>>>>>>>>>>>>>> #{facility_attr[2]}"
   end
   #Updating the created district to now have a district_code and a district region
   region_id = LocationTag.find_by_name(region).id rescue LocationTag.create(name: region, description: 'Regions of Malawi')
@@ -149,7 +150,7 @@ village_location_tag = LocationTag.find_by_name('Village')
       village = Location.create(name: village_name, description: 'A village under a TA')
       LocationTagMap.create(location_id: village.id, location_tag_id: village_location_tag.id)
       village.update_attributes(parent_location: traditional_authority.id)
-      puts "#{village_name} #####{villages.length - i} to go for district: #{district_name}"
+      puts "#{village_name} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<  #{district_name}"
     end
   end
 end
@@ -177,6 +178,11 @@ end
 
 
 
+###################################### Creating Patient Identifiers ends ##############################################################
+[['AVR access ID','Hotline client number']].each do |name,desc|
+  PatientIdentifierType.create(name: name,description: desc)
+end
+###################################### Creating Patient Identifiers ends ##############################################################
 
 
 

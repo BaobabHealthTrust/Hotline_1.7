@@ -3,6 +3,7 @@ class PatientController < ApplicationController
     
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
+    @patient_obj = PatientService.get_patient(params[:patient_id])
     render :layout => false
   end
 
@@ -19,6 +20,11 @@ class PatientController < ApplicationController
     @family_name = params['family_name']
     @gender = params['gender']
     render :layout => false
+  end
+
+  def create
+    patient_obj = PatientService.create(params)
+    redirect_to "/patient/dashboard/#{patient_obj.patient_id}/current_call"
   end
 
 end
