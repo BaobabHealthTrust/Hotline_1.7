@@ -27,4 +27,24 @@ class PatientController < ApplicationController
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 
+  def given_names
+    search("given_name", params[:search_string])
+  end
+
+  def family_names
+    search("family_name", params[:search_string])
+  end
+
+  def search(field_name, search_string)
+    case field_name
+      when 'given_name'
+        @names = PersonNameCode.where(:given_name_code => search_string.soundex).joins("INNER JOIN person_name n 
+          ON n.person_name_id = person_name_code.person_name_id").collect do |rec| 
+            rec.given_name
+        end
+      when 'field_name'
+    end
+    render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
+  end
+  
 end
