@@ -24,7 +24,7 @@ class PatientController < ApplicationController
 
   def create
     patient_obj = PatientService.create(params)
-    redirect_to "/patient/dashboard/#{patient_obj.patient_id}/current_call"
+    redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 
 end

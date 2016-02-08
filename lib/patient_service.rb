@@ -34,7 +34,7 @@ module PatientService
     avr_identifier_type = PatientIdentifierType.find_by_name('AVR access ID')
     patient = Patient.create(patient_id: person.id)
     patient_avr = PatientIdentifier.create(identifier: self.next_avr_number,
-      identifier_type: avr_identifier_type.id)
+      identifier_type: avr_identifier_type.id, patient_id: person.id)
 
     patient_obj = PatientBean.new(patient)
     patient_obj.patient_id = patient.id
