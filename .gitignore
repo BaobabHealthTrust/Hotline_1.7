@@ -41,3 +41,7 @@ log/*
 .idea/*
 .ruby-version
 public/touchscreentoolkit/*
+
+#ignore public/assets file
+public/assets/*
+
