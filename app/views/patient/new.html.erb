@@ -133,23 +133,23 @@ img {
 <%= render :partial => 'patient/birthdate/button_footer' %>
 
 
-<%= form_tag("/patient/new", id: "new-person", method: 'post', enctype: 'multipart/form-data') do %>
-  <input type="hidden" name="given_name" value="<%=@given_name%>" />
-  <input type="hidden" name="family_name" value="<%=@family_name%>" />
-  <input type="hidden" name="gender" value="<%=@gender%>" />
+<%= form_tag("/patient/create", id: "new-person", method: 'post', enctype: 'multipart/form-data') do %>
+  <input type="hidden" name="person[names][given_name]" value="<%=@given_name%>" />
+  <input type="hidden" name="person[names][family_name]" value="<%=@family_name%>" />
+  <input type="hidden" name="person[gender]" value="<%=@gender%>" />
 
-  <input type="hidden" name="birthdate[year]" value="selected_year" />
-  <input type="hidden" name="birthdate[month]" value="selected_month" />
-  <input type="hidden" name="birthdate[day]" id="selected_day" />
+  <input type="hidden" name="person[birthdate][year]" id="selected_year" />
+  <input type="hidden" name="person[birthdate][month]" id="selected_month" />
+  <input type="hidden" name="person[birthdate][day]" id="selected_day" />
 <%end%>
 
 
 <script>
 
 function validateBirthdate() {
-  year = document.getElementById('tbInputYear');
-  month = document.getElementById('tbInputMonth');
-  day = document.getElementById('tbInputDay');
+  year = document.getElementById('tbInputYear').value;
+  month = document.getElementById('tbInputMonth').value;
+  day = document.getElementById('tbInputDay').value;
 
 
  document.getElementById('selected_year').value = year;

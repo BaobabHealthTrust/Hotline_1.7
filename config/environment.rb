@@ -6,6 +6,7 @@ Rails.application.initialize!
 
 APP_VERSION = `git describe`.gsub("\n", "")
 
+require "patient_service"
 require "bantu_soundex"
 require "bean"
 require "csv"

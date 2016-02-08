@@ -87,7 +87,9 @@ img {
     
     <div class="cells" style="width: 5%; vertical-align: middle; text-align: left;">
       <span class="icons">
-        <%gender = 'Female'%>
+        <%gender = @patient_obj.sex
+          gender = gender == 'F' ? 'Female' : 'Male'
+        %>
         <%=image_tag("icons/Person_Undefined_#{gender}_Dark.png", class: 'icons gender-icon')%>
       </span>
     </div>
@@ -96,19 +98,19 @@ img {
       <table class="demographics-table">
         <tr>
           <th style="width:55px;">Name:</th>
-          <td>Jane&nbsp;Doe</td>
+          <td><%=@patient_obj.name%></td>
         </tr>
         <tr>
           <th style="width:100px;">Birthdate:</th>
-          <td style="text-align: left;">~1990-01-01</td>
+          <td style="text-align: left;"><%=@patient_obj.birthdate%></td>
         </tr>
         <tr>
           <th style="width:100px;">Age:</th>
-          <td style="text-align: left;">(26)</td>
+          <td style="text-align: left;">(<%=@patient_obj.age%>)</td>
         </tr>
         <tr>
           <th style="width:100px;">National ID:</th>
-          <td style="text-align: left;">112-132</td>
+          <td style="text-align: left;"><%= %></td>
         </tr>
       </table> 
     </div>
@@ -116,8 +118,8 @@ img {
     <div class="cells" style="width: 55%;">
       <table class="attributes-table">
         <tr>
-          <th style="width:55px;">Hotline ID:</th>
-          <td>00121</td>
+          <th style="width:55px;">AVR access ID:</th>
+          <td><%=@patient_obj.avr_access_number%></td>
         </tr>
         <tr>
           <th style="width:100px;">Current TA:</th>

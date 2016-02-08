@@ -164,7 +164,7 @@ function initCell(e) {
 }
 
 function openCell(e) {
-  document.location = "/patient/dashboard/1/" + e.id;
+  document.location = "/patient/dashboard/<%=@patient_obj.patient_id%>/" + e.id;
 }
 
 initCell(document.getElementById("<%=@tab_name%>"));

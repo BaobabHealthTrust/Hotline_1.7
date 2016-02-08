@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   post 'patient/new'
   post 'patient/search_result'
   get 'patient/search_by_name'
+  post 'patient/create'
   ######################### patient end ############################################
   
   # The priority is based upon order of creation: first created -> highest priority.

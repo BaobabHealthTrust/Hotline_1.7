@@ -38,7 +38,7 @@
 
   <div class="row">
     <!-- loop -->
-    <%if not params[:gender]%> 
+    <%if @patient_obj.sex == 'F'%> 
       <div class="cell">
         <div class="btn" style="background-color: #f5deb3;border: 1px solid #2e6da4; width: 99%;">
           <%=image_tag("icons/pregnacy.png", class: 'task-icons')%>
