@@ -38,11 +38,15 @@ class PatientController < ApplicationController
   def search(field_name, search_string)
     case field_name
       when 'given_name'
-        @names = PersonNameCode.where(:given_name_code => search_string.soundex).joins("INNER JOIN person_name n 
-          ON n.person_name_id = person_name_code.person_name_id").collect do |rec| 
+        @names = PersonName.where("c.given_name_code LIKE(?)", "%#{search_string.soundex}%").joins("INNER JOIN person_name_code c 
+          ON c.person_name_id = person_name.person_name_id").group(:given_name).limit(30).collect do |rec| 
             rec.given_name
         end
-      when 'field_name'
+      when 'family_name'
+        @names = PersonName.where("c.family_name_code LIKE(?)", "%#{search_string.soundex}%").joins("INNER JOIN person_name_code c 
+          ON c.person_name_id = person_name.person_name_id").group(:family_name).limit(30).collect do |rec| 
+            rec.family_name
+        end
     end
     render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
   end
