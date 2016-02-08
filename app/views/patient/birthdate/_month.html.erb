@@ -53,7 +53,7 @@
   <div class="month-rows">
 
     <div class="month-cells">
-      <ul class="options">
+      <ul class="options" style="height: 99%;">
         <%months = []
         (1..6).each {|m| months << [Date::MONTHNAMES[m], m]}%>
         <%(months).each do |string,num|%>
@@ -63,13 +63,13 @@
     </div>
 
     <div class="month-cells">
-      <ul class="options">
+      <ul class="options" style="height: 99%;">
         <%months = []
         (7..12).each {|m| months << [Date::MONTHNAMES[m], m]}%>
         <%(months).each do |string,num|%>
           <li class="cell-table" onclick="assignMonth(this)" id="<%=num%>"><%=string%></li>
         <%end%>
-        <li class="cell-table" onclick="assignMonth(this)" id="Unkown">Unkown</li>
+        <li class="cell-table" onclick="assignMonth(this)" id="Unkown">Unknown</li>
       </ul>
     </div>
 

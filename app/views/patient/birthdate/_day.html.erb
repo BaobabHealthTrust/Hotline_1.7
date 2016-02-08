@@ -49,7 +49,7 @@
     <input id="btn8" type="button" onclick="inputDay(this);" value="8"  class="btn-day" />
     <input id="btn9" type="button" onclick="inputDay(this);" value="9"  class="btn-day" />
     <br />
-    <input id="btnUnknow" type="button" value="Unkown" onclick="inputDay(this);" class="btn-day" />
+    <input id="btnUnknow" type="button" value="Unknown" onclick="inputDay(this);" class="btn-day" />
     <input id="btn0" type="button" onclick="inputDay(this)" value="0"  class="btn-day" />
     <input id="btnCl" type="button" value="Clear" onclick="clearInputDay();" class="btn-day" />
 </div>
@@ -61,10 +61,10 @@
 
 function inputDay(e) {
     var tbInput = document.getElementById('tbInputDay');
-    if(tbInput.value == 'Unkown' && e.value != 'Unkown') 
+    if(tbInput.value == 'Unknown' && e.value != 'Unknown') 
       return;
 
-    if(e.value == 'Unkown') {
+    if(e.value == 'Unknown') {
       tbInput.value = e.value;
     }else{
       tbInput.value = tbInput.value + e.value;
