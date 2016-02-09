@@ -179,10 +179,40 @@ end
 
 
 ###################################### Creating Patient Identifiers ends ##############################################################
-[['AVR access ID','Hotline client number']].each do |name,desc|
+patient_identifier_types = [['IVR access code','Used in mnch hotline to identify individual callers'],
+  ['HTC identifier','Number used for identifying HTC clients'],
+  ['ANC Connect ID','ANC Connect Unique Identifier'],
+  ['HCC Number','HIV Care Clinic for Pre-ART patients and Exposed Children'],
+  ['National id','National ID number developed by Baobab'],
+  ['Unknown ID','Unknown ID as scanned by the system']
+]
+
+(patient_identifier_types || []).each do |name,desc|
   PatientIdentifierType.create(name: name,description: desc)
 end
 ###################################### Creating Patient Identifiers ends ##############################################################
+
+
+###################################### Creating Person attributes starts ##############################################################
+attributes = [['Cell phone number','Person primary cell phone number'],
+  ['Office phone number','Person office phone number. Usually fixed line phone number'],
+  ['Home phone number','Person home phone number, usually fixed line phone number'],
+  ['Ancestral Traditional Authority','T/A'],
+  ['Current Place Of Residence','Place of stay'],
+  ['Occupation','This is the current patient occupation'],
+  ['Home Village',"The person's home village or place of origin"],
+  ['Citizenship','Country of which this person is a member'],
+  ['Education','Maternity required this field'],
+  ['Religion','Maternity required this field'],
+  ['Civil Status','Marriage status of this person'],
+  ['Race','Group of persons related by common descent or heredity']
+]
+
+(attributes || []).each do |name,desc|
+  PersonAttributeType.create(name: name,description: desc)
+end
+###################################### Creating Person attributes ends ##############################################################
+
 
 
 

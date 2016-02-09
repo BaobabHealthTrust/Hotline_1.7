@@ -1,0 +1,24 @@
+
+
+<style>
+  #date,#qwerty,#decimal,#comma,#Unknown,#char,#percent,#slash,#plus,#minus,#star {
+    display: none;
+  }
+</style>
+
+<script>
+  var tt_cancel_destination = "/start_call"
+</script>
+
+<%= form_tag("/patient/attributes_search_results", id: "search", method: 'post', enctype: 'multipart/form-data') do %>
+
+<%= text_field_tag "attribute_value",  nil, 
+  {:field_type => 'number', :helpText => "Enter phone number", 
+   :allowFreeText => true, 
+   :tt_pageStyleClass => "nota", 
+   :validationRule => "^0\\d{7,9}$|Unknown|Not Available|N\/A", 
+   :validationMessage => "Not a valid phone number" } %>
+
+  <input type="hidden" name="attribute_name" value="phone number" />
+
+<%end%>

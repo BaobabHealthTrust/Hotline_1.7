@@ -1,0 +1,173 @@
+
+<style>
+.main-container {
+  width:100%
+}
+
+body {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+
+img {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
+/* .................................. header starts ........................................................ */
+.table-container {
+  width: 99%;
+  display: table;
+  padding: 0px 1px 0px 1px;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+}
+
+.table-row  {
+  display: table-row;
+  width: 100%;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+.village-reach-icon {
+  width: 80px;
+  height: 80px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.confirm .village-reach-icon {
+  border-width: 0px;
+}
+/*
+.confirm .table-cell {
+  position: absolute;
+  bottom: 7%;
+}*/
+/* .................................. header ends........................................................ */
+
+
+.btn-title {
+  bottom: 30px;
+  position: relative;
+  padding-right: 15px;
+
+}
+
+
+
+.search-icons {
+  width: 50px;
+  height: 50px;
+  margin-top: 10%;
+  text-align: middle;
+}
+
+.divbtn p {
+  font-weight: bold;
+}
+
+.divbtn {
+  height: 135px;
+  display: table;
+  margin-top: 10px;
+  cursor:pointer;
+}
+
+</style>
+
+
+<div class="table-container" style="height: 7%;">
+  <div class="table-row">
+    <div class="table-cell" style="width: 45%;">
+      <h3>Searched</h3>
+      <p><%=@attribute_name%>&nbsp;(<%=@attribute%>)</p>
+    </div>
+    <div class="table-cell" style="width: 45%;">
+      <h3>Possible match</h3>
+      <p>Page:&nbsp;<span id='page_number'>1</span>&nbsp;of&nbsp;<span id='total_page_number'>1</span>&nbsp;
+      (Total number of record(s) found:&nbsp;<%=@people.length%>)</p>
+    </div>
+    <div class="table-cell" style="width: 10%; vertical-align: middle; text-align: right; height: 94%;">
+      <span class="icons">
+        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ..................................... Data capture starts .............................. -->
+
+
+<div class="table-container" style="height: 78%; border-width: 0px;">
+  <div class="table-row">
+
+    <div class="table-cell" style="width: 78%; vertical-align: top; text-align: center;">
+        <p><%= render :partial => 'search_results_table'%></p>
+    </div>
+    
+    <div class="table-cell" style="width: 20%; vertical-align: top; text-align: center; padding-top: 0.5%;">
+      <!-- btn starts .. -->
+      <div class="divbtn" style="background-color: #008000;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/start_call'" >
+        <span>
+          <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>
+          <p>New search</p>
+        </span>
+      </div>
+      <!-- btn ends .. -->
+      <!-- btn starts .. -->
+      <div class="divbtn" style="background-color: #d2ff4d;border: 1px solid #2e6da4; width: 99%;" onclick="patientDashboard();" >
+        <span>
+          <%=image_tag("icons/button_ok.png", class: 'search-icons')%>
+          <p>Select patient</p>
+        </span>
+      </div>
+      <!-- btn ends .. -->
+     <!-- ................................ -->
+      <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: left;" onclick="goPrevious();" >
+        <span>
+          <%=image_tag("icons/previous-track.png", class: 'search-icons')%>
+          <p>Previous</p>
+        </span>
+      </div>
+      <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: right;" onclick="goNext();" >
+        <span>
+          <%=image_tag("icons/next-track.png", class: 'search-icons')%>
+          <p>Next</p>
+        </span>
+      </div>
+      <!-- ................................ -->
+    </div>
+
+  </div>
+</div>
+
+<!-- ..................................... Data capture ends .............................. -->
+
+
+
+<%= render :partial => 'home/footer' %>
+
+
+<script>
+
+function patientDashboard() {
+  if(selectedPersonID)
+    document.location='/patient/dashboard/'+ selectedPersonID + '/tasks';
+
+}
+
+
+</script>
+
+

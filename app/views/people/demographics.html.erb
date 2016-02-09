@@ -1,0 +1,326 @@
+<style>
+  body {
+    -moz-user-select:none;
+  }
+
+  .container table {
+    vertical-align:center;
+    width: 100%;
+    -moz-user-select:none;
+  }
+
+  .container {
+    height: 82%;
+    background-color: #FFFFDD;
+    margin: 20px 20px 20px 20px;
+    overflow: auto;
+  }
+
+  .data { 
+    padding-left: 5px;
+    width: 70%;
+  }
+
+  .container td {
+    text-align: left;
+    border-style: solid;
+    border-width: 1px;
+    text-align: left;
+    word-wrap: break-word;
+  }
+
+  .container th {
+    text-align: left;
+    border-style: solid;
+    border-width: 1px;
+    padding-left: 5px;
+    text-align: left;
+    width: 20%;
+  }
+
+  .container a {
+    background-color: grey;
+    border-bottom: 1px outset #EEEEEE;
+    border-style: outset;
+    border-top: 1px outset #EEEEEE;
+    color: white;
+    display: block;
+    padding: 10px 16px 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    width: 225px;
+  }
+</style>
+
+<script>
+  var tt_cancel_destination = "/patient/dashboard/<%=@patient_obj.patient_id%>/tasks";
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+
+/* .......................... demographics css starts ................................. */
+.demographics {
+  width: 99%;
+  display: table;
+  padding: 0px 1px 0px 1px;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  height: 15%;
+}
+
+.main-page-container-rows  {
+  display: table-row;
+}
+
+.cells {
+  display: table-cell;
+}
+
+.demographics .cells {
+  
+}
+
+.gender-icon {
+  width: 75px;
+  height: 75px;
+  padding-bottom: 35px;
+}
+
+.demographics-table {
+  width: 100%;
+}
+
+.attributes-table {
+  width: 100%;
+}
+
+.main-container th {
+  font-size: 12px;
+  text-align: left;
+}
+
+.village-reach-icon {
+  width: 100px;
+  height: 100px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+/* .......................... tabs css start ................................. */
+</style>
+
+
+<div class="main-container">
+  <div class="demographics">
+    
+    <div class="cells" style="width: 5%; vertical-align: middle; text-align: left;">
+      <span class="icons">
+        <%gender = @patient_obj.sex
+          gender = gender == 'F' ? 'Female' : 'Male'
+        %>
+        <%=image_tag("icons/Person_Undefined_#{gender}_Dark.png", class: 'icons gender-icon')%>
+      </span>
+    </div>
+
+    <div class="cells" style="width: 30%;">
+      <table class="demographics-table">
+        <tr>
+          <th style="width:55px;">Name:</th>
+          <td><%=@patient_obj.name%></td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Birthdate:</th>
+          <td style="text-align: left;"><%=@patient_obj.birthdate%></td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Age:</th>
+          <td style="text-align: left;">(<%=@patient_obj.age%>)</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">National ID:</th>
+          <td style="text-align: left;"><%= %></td>
+        </tr>
+      </table> 
+    </div>
+
+    <div class="cells" style="width: 55%;">
+      <table class="attributes-table">
+        <tr>
+          <th style="width:55px;">AVR access ID:</th>
+          <td><%=@patient_obj.avr_access_number%></td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Current TA:</th>
+          <td style="text-align: left;">~Chalasa</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Village:</th>
+          <td style="text-align: left;">Ntandile</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Phone&nbsp;#:</th>
+          <td style="text-align: left;">09999999</td>
+        </tr>
+      </table> 
+    </div>
+
+    <div class="cells" style="width: 10%; vertical-align: middle; text-align: right;">
+      <span class="icons">
+        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
+      </span>
+    </div>
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+  <table>
+
+    <tr>
+      <th>Name</th>
+      <td class="data"><%=@patient_obj.name%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/name/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Gender</th>
+      <td><%=@patient_obj.sex%></td>
+      <td class="data"><%= link_to "Edit", 
+          "/demographic_modify/sex/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Date of birth</th>
+      <td class="data"><%=@patient_obj.birth_date%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/age/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Home district</th>
+	  <td class="data"><%=@patient_obj.home_district%></td>
+      <td><%= link_to "Edit", "/demographic_modify/home_district/#{@patient_obj.patient_id}",
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Traditional authority</th>
+      <td class="data"><%=@patient_obj.traditional_authority%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/ta#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Occupation</th>
+      <td class="data"><%=@patient_obj.occupation%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/occupation/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Area of residence</th>
+      <td class="data"><%=@patient_obj.current_residence%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/location/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Land mark</th>
+      <td class="data"><%=@patient_obj.landmark%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/address/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Cell phone number</th>
+      <td class="data"><%=@patient_obj.cell_phone_number%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/cell_phone_number/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Office phone number</th>
+      <td class="data"><%=@patient_obj.office_phone_number%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/office_phone_number/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Home phone number</th>
+      <td class="data"><%=@patient_obj.home_phone_number%></td>
+      <td><%= link_to "Edit", 
+          "/demographic_modify/home_phone_number/#{@patient_obj.patient_id}", 
+          :class => "anchor_class" %>
+      </td>
+    </tr>
+
+  </table>
+</div>
+
+<%= render :partial => "patient/footers/search_footer"%> 

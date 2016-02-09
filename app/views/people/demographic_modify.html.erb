@@ -1,0 +1,51 @@
+<script>
+    var tt_cancel_destination = "/demographics/" + "<%=params[:patient_id]%>"
+</script>
+
+
+
+
+<form action = "/demographic_modify" method = "post">
+
+  <% if @edit_page == "name" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_name"  %>
+  <% end %>
+
+  <% if @edit_page == "age" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_age"  %>
+  <% end %>
+
+  <% if @edit_page == "sex" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_sex"  %>
+  <% end %>
+
+  <% if @edit_page == "location" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_location"  %>
+  <% end %>
+
+  <% if @edit_page == "occupation" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_occupation"  %>
+  <% end %>
+
+  <% if @edit_page == "guardian" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_guardian"  %>
+  <% end %>
+
+  <% if @edit_page == "address" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_address"  %>
+  <% end %>
+
+  <% if @edit_page == "ta" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_ta"  %>
+  <% end %>
+
+  <% if @edit_page == "home_district" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_home_district" %>
+  <% end %>
+
+  <% if @edit_page.match(/_phone_number/i) %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_phone_numbers" %>
+  <% end %>
+  <%= hidden_field_tag "patient_id", params[:patient_id] %>
+  <%= hidden_field_tag "field", @edit_page %>
+</form>

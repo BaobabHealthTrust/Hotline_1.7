@@ -36,6 +36,21 @@ class PatientController < ApplicationController
     search("family_name", params[:search_string])
   end
 
+  def attributes_search_results
+    @people = []
+    (Person.where('person_id > 1') || []).each do |person|
+      @people << PatientService.get_patient(person.id)
+    end
+
+    @attribute_name = params[:attribute_name].titleize
+    @attribute = params[:attribute_value]
+    render :layout => false
+  end
+
+  
+
+  private
+
   def search(field_name, search_string)
     case field_name
       when 'given_name'

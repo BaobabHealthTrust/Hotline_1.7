@@ -22,8 +22,18 @@ Rails.application.routes.draw do
   post 'patient/create'
   get '/patient/given_names'
   get '/patient/family_names'
+  get 'patient/find_by_phone'
+  get 'patient/find_by_identifier'
+  post 'patient/attributes_search_results'
   ######################### patient end ############################################
   
+
+  ######################### people start ############################################
+  get 'demographics/:patient_id' => 'people#demographics'
+  get 'demographic_modify/:field/:patient_id' => 'people#demographic_modify'
+  post '/demographic_modify' => 'people#demographic_modify'
+  ######################### people end ############################################
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
