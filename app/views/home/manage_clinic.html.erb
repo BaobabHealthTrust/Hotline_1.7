@@ -1,0 +1,129 @@
+<style>
+
+body {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */ 
+}
+
+img {
+  user-drag: none; 
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
+.main-page-container  {
+  display: table;
+  width: 100%;
+  padding: 0px 1px 0px 1px;
+}
+
+.main-page-container-rows  {
+  display: table-row;
+}
+
+.cells {
+  display: table-cell;
+}
+
+
+/* ...................................... */
+.divbtn {
+  height: 265px;
+  display: table;
+  margin-top: 10px;
+  cursor:pointer;
+}
+
+.icons {
+  width: 160px;
+  height: 160px;
+  margin-top: 10%;
+  text-align: middle;
+}
+
+.divbtn p {
+  font-weight: bold;
+}
+
+.btncells {
+  width: 25%;
+  text-align: center;
+}
+
+.small-icons {
+  width: 100px;
+  height: 100px;
+}
+
+.header .cells {
+  vertical-align: middle; 
+  padding-right: 5px;
+}
+
+#scan {
+  background-color: lightgrey;
+  border-style: solid;
+  border-width: 1px;
+  font-size: 80px;
+  margin-bottom: 6px;
+  width: 44%;
+}
+
+.header .icons {
+  width: 100px;
+  height: 100px;
+}
+
+/* ...................................... */
+</style>
+
+<%= render :partial => 'header' %>
+
+
+<div class="main-page-container">
+
+<div class="main-page-container-rows">
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/admin'" >
+        <span class="icons">
+          <%=image_tag("icons/Add.png", class: 'icons')%>
+          <p>Add Clinic</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/admin'" >
+        <span class="icons">
+          <%=image_tag("icons/DeleteRed.png", class: 'icons')%>
+          <p>Delete Clinic</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/scheduled_tasks.png", class: 'icons')%>
+          <p>Schedules</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+    
+</div>
+
+</div>
+
+<%= render :partial => 'footer' %>
