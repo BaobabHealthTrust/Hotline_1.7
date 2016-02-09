@@ -1,0 +1,99 @@
+<style>
+
+.btn-day {
+  display: inline;
+  margin: 5px 2px 2px;
+  text-align: center;
+  background-color: blue;
+  color: white;
+  font-size: 1.3em;
+  line-height: 57px;
+  min-width: 120px;
+  font-weight: bold;
+  min-height: 100px;
+}
+ 
+#tbInputDay {
+  margin-top: 10px;
+
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border-color: -moz-use-text-color -moz-use-text-color silver;
+  border-style: none none solid;
+  border-width: medium medium 1px;
+  font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+  font-size: 2.2em;
+  padding-left: 5px;
+  width: 99%;
+  text-align: center;
+}
+
+</style>
+
+<body onload="load();">
+
+
+<label>Enter Birth Day</label>
+<input id="tbInputDay" type="text" maxlength = "2" />
+
+
+<div id="day" class="virtual-keypad">
+    <input id="btn1" type="button" onclick="inputDay(this);" value="1"  class="btn-day" />
+    <input id="btn2" type="button" onclick="inputDay(this);" value="2"  class="btn-day" />
+    <input id="btn3" type="button" onclick="inputDay(this);" value="3"  class="btn-day" />
+    <br />
+    <input id="btn4" type="button" onclick="inputDay(this);" value="4"  class="btn-day" />
+    <input id="btn5" type="button" onclick="inputDay(this);" value="5"  class="btn-day" />
+    <input id="btn6" type="button" onclick="inputDay(this);" value="6"  class="btn-day" />
+    <br />
+    <input id="btn7" type="button" onclick="inputDay(this);" value="7"  class="btn-day" />
+    <input id="btn8" type="button" onclick="inputDay(this);" value="8"  class="btn-day" />
+    <input id="btn9" type="button" onclick="inputDay(this);" value="9"  class="btn-day" />
+    <br />
+    <input id="btnUnknow" type="button" value="Unkown" onclick="inputDay(this);" class="btn-day" />
+    <input id="btn0" type="button" onclick="inputDay(this)" value="0"  class="btn-day" />
+    <input id="btnCl" type="button" value="Clear" onclick="clearInputDay();" class="btn-day" />
+</div>
+
+
+</body>
+
+<script>
+
+function inputDay(e) {
+    var tbInput = document.getElementById('tbInputDay');
+    if(tbInput.value == 'Unkown' && e.value != 'Unkown') 
+      return;
+
+    if(e.value == 'Unkown') {
+      tbInput.value = e.value;
+    }else{
+      tbInput.value = tbInput.value + e.value;
+    }   
+}
+
+function clearInputDay() {
+  document.getElementById("tbInputDay").value = '';
+  /*var tbInput = document.getElementById("tbInputYear");
+  tbInput.value = tbInput.value.substr(0, tbInput.value.length - 1);*/
+}
+
+
+function load() {
+    var array = new Array();
+try { 
+    while (array.length < 10) {
+        var temp = Math.round(Math.random() * 9);
+        if (!contain(array, temp)) {
+            array.push(temp);
+        }
+    }
+    for (i = 0; i < 10; i++) {
+        var btn = document.getElementById("btn" + i);
+        btn.value = array[i];
+    }
+}catch(e) {};
+}
+
+</script>
+
+
