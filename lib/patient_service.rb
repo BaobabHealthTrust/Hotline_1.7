@@ -20,6 +20,22 @@ module PatientService
     return patient_obj
   end
 
+  def self.find_by_demographics(params)
+    @people = [] 
+    given_name_code = params[:person]['names']['given_name'].soundex
+    family_name_code = params[:person]['names']['family_name'].soundex
+    gender = params[:person]['gender'].first
+
+    PersonName.where("c.given_name_code LIKE(?) AND c.family_name_code LIKE(?) AND p.gender = ?", 
+      "%#{given_name_code}%","%#{family_name_code}%",gender).joins("INNER JOIN person_name_code c 
+      ON c.person_name_id = person_name.person_name_id 
+      INNER JOIN person p ON p.person_id = person_name.person_id").select('p.person_id pat_id').group("p.person_id").limit(30).collect do |rec|
+        @people << self.get_patient(rec.pat_id)
+    end
+
+    return @people
+  end
+
   def self.create(params)
     birthdate = self.format_birthdate_params(params[:person]['birthdate'])
     person = Person.create(birthdate: birthdate[0].to_date, birthdate_estimated: birthdate[1], 
@@ -93,7 +109,7 @@ module PatientService
     if last_identifier.identifier.blank?
       1.to_s.ljust(5,'0').to_i
     else
-      (last_identifier.identifier + 1).to_s.ljust(5,'0').to_i
+      (last_identifier.identifier.to_i + 1).to_s.ljust(5,'0').to_i
     end
   end
 

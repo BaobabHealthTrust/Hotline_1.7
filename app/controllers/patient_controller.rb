@@ -11,7 +11,8 @@ class PatientController < ApplicationController
     @given_name = params[:person]['names']['given_name']
     @family_name = params[:person]['names']['family_name']
     @gender = params[:person]['gender']
-    @people = []
+    
+    @people = PatientService.find_by_demographics(params)
     render :layout => false
   end
 
