@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'admin' => 'home#admin'
   get 'manage_user' => 'home#manage_user'
   get 'manage_clinic' => 'home#manage_clinic'
+  get 'report' => 'home#report'
   ######################### home end ############################################
   
   ######################### user start ############################################
