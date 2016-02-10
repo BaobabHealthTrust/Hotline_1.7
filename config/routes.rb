@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   post 'patient/create'
   get '/patient/given_names'
   get '/patient/family_names'
+  get '/patient/given_name_plus_family_name'
   get 'patient/find_by_phone'
   get 'patient/find_by_identifier'
   post 'patient/attributes_search_results'

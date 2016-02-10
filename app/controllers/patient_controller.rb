@@ -8,8 +8,11 @@ class PatientController < ApplicationController
   end
 
   def search_result
-    @given_name = params[:person]['names']['given_name']
-    @family_name = params[:person]['names']['family_name']
+    @given_name = params[:person]['names']['given_name'].squish.split(' ')[0]
+    @family_name = params[:person]['names']['given_name'].squish.split(' ')[1] rescue ''
+
+    params[:person]['names']['given_name'] = @given_name
+    params[:person]['names']['family_name'] = @family_name.titleize
     @gender = params[:person]['gender']
     
     @people = PatientService.find_by_demographics(params)
@@ -36,6 +39,10 @@ class PatientController < ApplicationController
     search("family_name", params[:search_string])
   end
 
+  def given_name_plus_family_name
+    search("given_name_plus_family_name", params[:search_string],params[:gender])
+  end
+
   def attributes_search_results
     @people = []
     (Person.where('person_id > 1') || []).each do |person|
@@ -51,7 +58,7 @@ class PatientController < ApplicationController
 
   private
 
-  def search(field_name, search_string)
+  def search(field_name, search_string, gender = nil)
     case field_name
       when 'given_name'
         @names = PersonName.where("c.given_name_code LIKE(?)", "%#{search_string.soundex}%").joins("INNER JOIN person_name_code c 
@@ -63,6 +70,18 @@ class PatientController < ApplicationController
           ON c.person_name_id = person_name.person_name_id").group(:family_name).limit(30).collect do |rec| 
             rec.family_name
         end
+      when 'given_name_plus_family_name'
+        given_name_code = search_string.squish.split(' ')[0].soundex rescue ''
+        family_name_code = search_string.squish.split(' ')[1].soundex rescue ''
+        family_name_code = given_name_code if family_name_code.blank?
+
+        @names = PersonName.where("(c.given_name_code LIKE(?) OR c.family_name_code LIKE(?)) AND p.gender=?", 
+          "%#{given_name_code}%","%#{family_name_code}%",gender.first).joins("INNER JOIN person_name_code c 
+          ON c.person_name_id = person_name.person_name_id INNER JOIN person p 
+          ON p.person_id = person_name.person_id").group(:family_name).limit(30).collect do |rec| 
+            [rec.given_name, rec.family_name]
+        end
+        render :text => "<li>" + @names.map{|f,l| "#{f} #{l}" } .join("</li><li>") + "</li>" and return
     end
     render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
   end

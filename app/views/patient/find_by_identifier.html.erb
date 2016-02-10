@@ -1,2 +1,10 @@
-<h1>Patient#find_by_identifier</h1>
-<p>Find me in app/views/patient/find_by_identifier.html.erb</p>
+
+<script>
+  var tt_cancel_destination = "/start_call"
+</script>
+
+
+<%= form_tag("/patient/attributes_search_results", id: "search", method: 'post', enctype: 'multipart/form-data') do %>
+  <input type="text" id="identifier" name="attribute_value" helpText="Enter Identifier" textCase="upper"/>
+  <input type="hidden" name="attribute_name" value="identifier" />
+<%end%>
