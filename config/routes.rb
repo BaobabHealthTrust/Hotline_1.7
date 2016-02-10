@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get 'manage_user' => 'home#manage_user'
   get 'manage_clinic' => 'home#manage_clinic'
   get 'report' => 'home#report'
+  get 'patient_demographic_report' => 'home#patient_demographic_report'
   ######################### home end ############################################
   
   ######################### user start ############################################
