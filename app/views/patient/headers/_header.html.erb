@@ -1,0 +1,128 @@
+
+
+
+
+
+
+
+
+
+
+
+<style>
+
+/* .......................... demographics css starts ................................. */
+.demographics {
+  width: 99%;
+  display: table;
+  padding: 0px 1px 0px 1px;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  height: 15%;
+}
+
+.main-page-container-rows  {
+  display: table-row;
+}
+
+.cells {
+  display: table-cell;
+}
+
+.demographics .cells {
+  
+}
+
+.gender-icon {
+  width: 75px;
+  height: 75px;
+  padding-bottom: 35px;
+}
+
+.demographics-table {
+  width: 100%;
+}
+
+.attributes-table {
+  width: 100%;
+}
+
+.main-container th {
+  font-size: 12px;
+  text-align: left;
+}
+
+.village-reach-icon {
+  width: 100px;
+  height: 100px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+/* .......................... tabs css start ................................. */
+</style>
+
+
+<div class="main-container">
+  <div class="demographics">
+    
+    <div class="cells" style="width: 5%; vertical-align: middle; text-align: left;">
+      <span class="icons">
+        <%gender = @patient_obj.sex
+          gender = gender == 'F' ? 'Female' : 'Male'
+        %>
+        <%=image_tag("icons/Person_Undefined_#{gender}_Dark.png", class: 'icons gender-icon')%>
+      </span>
+    </div>
+
+    <div class="cells" style="width: 30%;">
+      <table class="demographics-table">
+        <tr>
+          <th style="width:55px;">Name:</th>
+          <td><%=@patient_obj.name%></td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Birthdate:</th>
+          <td style="text-align: left;"><%=@patient_obj.birthdate%></td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Age:</th>
+          <td style="text-align: left;">(<%=@patient_obj.age%>)</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">National ID:</th>
+          <td style="text-align: left;"><%= %></td>
+        </tr>
+      </table> 
+    </div>
+
+    <div class="cells" style="width: 55%;">
+      <table class="attributes-table">
+        <tr>
+          <th style="width:55px;">AVR access ID:</th>
+          <td><%=@patient_obj.avr_access_number%></td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Current TA:</th>
+          <td style="text-align: left;">~Chalasa</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Village:</th>
+          <td style="text-align: left;">Ntandile</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">Phone&nbsp;#:</th>
+          <td style="text-align: left;">09999999</td>
+        </tr>
+      </table> 
+    </div>
+
+    <div class="cells" style="width: 10%; vertical-align: middle; text-align: right;">
+      <span class="icons">
+        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
+      </span>
+    </div>
+
+  </div>
+
+<!-- .......................... header ends ................................. -->
