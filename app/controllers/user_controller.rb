@@ -26,69 +26,29 @@ class UserController < ApplicationController
 
   def new
     @user = User.new
-    roles = Role.all.map(&:role)
+    roles = UserRole.all.map(&:role)
   end
 
 
   def create
-    existing_user = User.find(:first, :conditions => {:username => params[:user][:username]}) rescue nil
+    
+    person = Person.create(birthdate: Date.today, birthdate_estimated: 1, gender: params[:person]['gender'].first) 
+    
+    person_name = PersonName.create(given_name: params[:person]['names']['given_name'], 
+      family_name: params[:person]['names']['family_name'], person_id: person.id)
 
-    if existing_user
-      flash[:notice] = 'username already exists'
-      redirect_to :action => 'new'
-      return
-    end
-    if (params[:user][:password] != params[:user_confirm][:password])
-      flash[:notice] = 'Password Do Not Match'
-      redirect_to :action => 'new'
-      return
+    PersonNameCode.create(given_name_code: person_name.given_name.soundex, 
+      family_name_code: person_name.family_name.soundex, person_name_id: person_name.id)
 
-      @user_first_name = params[:person_name][:given_name]
-      @user_last_name = params[:person_name][:family_name]
-      @user_role = params[:user_role][:user_id]
-      @user_name = params[:user][:username]
-    end
+    User.create(username: params[:user]['username'], password: params[:user]['password'], 
+      person_id: person.id, system_id: params[:user]['role'])
 
-    person = Person.create()
-    person.names.create(params[:person_name])
-    params[:user][:user_id] = person.id
-    @user = User.new(params[:user])
-    @user.id = person.id
-    if @user.save
+    redirect_to '/admin'
+   end
 
-      user_role = UserRole.new
-      user_role.role = Role.find_by_role(params[:user_role][:role_id])
-      user_role.user_id = @user.user_id
-      user_role.save
-
-    @user.update_attributes(params[:user])
-    flash[:notice] = 'User was Created Successfully.'
-    redirect_to :action => 'show'
-
-  else
-    flash[:notice] = 'User was not Created.'
-    render :action => new
+  def edit
+    @user = User.find(params[:id])
   end
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

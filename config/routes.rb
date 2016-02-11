@@ -17,7 +17,9 @@ Rails.application.routes.draw do
   get '/login' => 'user#login'
   post '/login' => 'user#login'
   get '/logout' => 'user#login'
-  get '/user/new' => ''
+  get '/user/new'
+  post '/user/create'
+
 
   ######################### user end ############################################
 
