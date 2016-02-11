@@ -20,4 +20,6 @@ gem 'spring', group: :development
 
 gem 'passenger', '4.0.38'
 
+gem 'mysql'
+
 gem 'mysql2', '~> 0.3.10'

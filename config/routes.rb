@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   ######################### home start ############################################
   get 'home/index'
   get 'start_call' => 'home#start_call'
+  post 'start_call' => 'home#start_call'
   get 'house_keeping' => 'home#house_cleaning'
   ######################### home end ############################################
   
@@ -26,6 +27,7 @@ Rails.application.routes.draw do
   get 'patient/find_by_phone'
   get 'patient/find_by_identifier'
   post 'patient/attributes_search_results'
+  get 'patient/districts'
   ######################### patient end ############################################
   
 

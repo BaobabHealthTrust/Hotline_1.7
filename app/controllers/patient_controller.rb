@@ -12,7 +12,7 @@ class PatientController < ApplicationController
     @family_name = params[:person]['names']['given_name'].squish.split(' ')[1] rescue ''
 
     params[:person]['names']['given_name'] = @given_name
-    params[:person]['names']['family_name'] = @family_name.titleize
+    params[:person]['names']['family_name'] = @family_name
     @gender = params[:person]['gender']
     
     @people = PatientService.find_by_demographics(params)
@@ -54,6 +54,14 @@ class PatientController < ApplicationController
     render :layout => false
   end
 
+  def districts
+    location_tag = LocationTag.find_by_name("District")
+    @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
+     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
+    @location_names = @districts.collect { |location_id, location_name| location_name}
+    @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+  end
+
   
 
   private
@@ -85,5 +93,5 @@ class PatientController < ApplicationController
     end
     render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
   end
-  
+
 end

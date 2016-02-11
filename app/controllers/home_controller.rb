@@ -4,6 +4,9 @@ class HomeController < ApplicationController
   end
   
   def start_call
+    if request.post?
+      raise params.inspect
+    end
     render :layout => false
   end
 
