@@ -13,7 +13,7 @@ module PatientService
     patient_obj.birthdate = self.print_birthdate(person)
     patient_obj.birthdate_estimated = person.birthdate_estimated
     patient_obj.name = "#{patient_obj.first_name} #{patient_obj.last_name}"
-    patient_obj.avr_access_number = self.get_identifier(patient, 'AVR access ID')
+    patient_obj.avr_access_number = self.get_identifier(patient, 'IVR access code')
     patient_obj.age = self.age(person)
     patient_obj.sex = person.gender
 
@@ -47,7 +47,7 @@ module PatientService
       :family_name_code => names.family_name.soundex,:person_name_id => names.id)
 
 
-    avr_identifier_type = PatientIdentifierType.find_by_name('AVR access ID')
+    avr_identifier_type = PatientIdentifierType.find_by_name('IVR access code')
     patient = Patient.create(patient_id: person.id)
     patient_avr = PatientIdentifier.create(identifier: self.next_avr_number,
       identifier_type: avr_identifier_type.id, patient_id: person.id)
@@ -103,7 +103,7 @@ module PatientService
   end
 
   def self.next_avr_number
-    identifier_type = PatientIdentifierType.find_by_name('AVR access ID')
+    identifier_type = PatientIdentifierType.find_by_name('IVR access code')
     last_identifier = PatientIdentifier.select("MAX(identifier) identifier").where("identifier_type = ?",identifier_type.id).first
 
     if last_identifier.identifier.blank?

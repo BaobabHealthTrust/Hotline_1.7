@@ -8,13 +8,20 @@ class PatientController < ApplicationController
   end
 
   def search_result
-    @given_name = params[:person]['names']['given_name'].squish.split(' ')[0]
-    @family_name = params[:person]['names']['given_name'].squish.split(' ')[1] rescue ''
 
-    params[:person]['names']['given_name'] = @given_name
-    params[:person]['names']['family_name'] = @family_name
-    @gender = params[:person]['gender']
-    
+    unless params[:action_type] == 'new_client'
+      @given_name = params[:person]['names']['given_name'].squish.split(' ')[0]
+      @family_name = params[:person]['names']['given_name'].squish.split(' ')[1] || ''
+
+      params[:person]['names']['given_name'] = @given_name
+      params[:person]['names']['family_name'] = @family_name
+      @gender = params[:person]['gender']
+    else
+      @given_name = params[:person]['names']['given_name']
+      @family_name = params[:person]['names']['family_name']
+      @gender = params[:person]['gender']
+    end
+
     @people = PatientService.find_by_demographics(params)
     render :layout => false
   end

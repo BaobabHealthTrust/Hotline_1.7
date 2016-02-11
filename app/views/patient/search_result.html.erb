@@ -177,13 +177,19 @@ img {
 <script>
 
 function addNew() {
-  document.getElementById('new-person').submit();
+    if (<%= @family_name.blank? %>){
+        alert('Last Name missing. Please enter patient family name.');
+    }
+    else{
+        document.getElementById('new-person').submit();
+    }
+
+
 }
 
 function patientDashboard() {
   if(selectedPersonID)
     document.location='/patient/dashboard/'+ selectedPersonID + '/tasks';
-
 }
 
 </script>
