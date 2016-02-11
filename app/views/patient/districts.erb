@@ -1,0 +1,24 @@
+<script type="text/javascript">
+
+    tt_cancel_show = "/";
+    <% if @task == 'new' %>
+    var tt_cancel_destination = "/"
+    <% else %>
+    var tt_cancel_destination = "/"
+    <% end %>
+</script>
+
+
+  <%=form_tag '/start_call' do%>
+  <%= select_tag 'district',
+                 options_for_select(@location_names.sort, []), {
+                                   :helpText => 'Select the district where the caller is?',
+                                   :id => 'district'} %>
+  <%# if @task == 'new'%>
+      <%= select_tag 'call_mode', options_for_select(@call_modes), {
+                                        :helpText => 'Select the type of caller?',
+                                        :id => 'call_mode'}%>
+  <%# end%>
+  <%#=hidden_field_tag "task", params["task"] %>
+  <%= submit_tag "Finish" %>
+<% end %>
