@@ -167,12 +167,12 @@ end
 
 ###################################### Creating Global properties ##############################################################
 global_properties = [
-  ['call.modes','New,Repeat','Call Type whether New or Repeat'],
-  ['current.health.center.name',649,'Sets the current health center using the health center name for Ror.']
+  ['call.modes','New,Repeat'],
+  ['current.health.center.name',649]
 ]
 
-(global_properties || []).each do |property, property_value, description|
-  GlobalProperty.create(property: property, property_value: property_value, description: description)
+(global_properties || []).each do |description, property_value|
+  GlobalProperty.create(property_value: property_value, description: description)
 end
 ###################################### Creating Global properties ends ##############################################################
 
