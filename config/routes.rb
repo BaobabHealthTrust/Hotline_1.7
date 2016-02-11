@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
 
+
   ######################### home start ############################################
   get 'home/index'
   get 'start_call' => 'home#start_call'
@@ -16,6 +17,8 @@ Rails.application.routes.draw do
   get '/login' => 'user#login'
   post '/login' => 'user#login'
   get '/logout' => 'user#login'
+  get '/user/new' => ''
+
   ######################### user end ############################################
 
   ######################### patient start ############################################
