@@ -178,7 +178,7 @@ img {
 
 function addNew() {
     if (<%= @family_name.blank? %>){
-        alert('Last Name missing. Please enter patient family name.');
+        alert('<%= flash[:missing_family_name] %>')
     }
     else{
         document.getElementById('new-person').submit();
