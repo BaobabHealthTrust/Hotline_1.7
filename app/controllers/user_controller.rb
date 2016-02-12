@@ -50,6 +50,12 @@ class UserController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  def manage_user
+    render :layout => false
+  end
 
+  def manage_clinic
+    render :layout => false
+  end
 
 end

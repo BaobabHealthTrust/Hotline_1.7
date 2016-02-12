@@ -7,8 +7,7 @@ Rails.application.routes.draw do
   get 'start_call' => 'home#start_call'
   get 'house_keeping' => 'home#house_cleaning'
   get 'admin' => 'home#admin'
-  get 'manage_user' => 'home#manage_user'
-  get 'manage_clinic' => 'home#manage_clinic'
+  
   get 'report' => 'home#report'
   get 'patient_demographic_report' => 'home#patient_demographic_report'
   ######################### home end ############################################
@@ -17,6 +16,8 @@ Rails.application.routes.draw do
   get '/login' => 'user#login'
   post '/login' => 'user#login'
   get '/logout' => 'user#login'
+  get 'manage_user' => 'user#manage_user'
+  get 'manage_clinic' => 'user#manage_clinic'
   get '/user/new'
   post '/user/create'
 

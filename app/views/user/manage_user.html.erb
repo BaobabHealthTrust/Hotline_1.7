@@ -91,10 +91,10 @@ img {
 <div class="main-page-container-rows">
   <!-- loop -->
   <div class="cells btncells">
-    <div class="divbtn" style="background-color: ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/admin'" >
+    <div class="divbtn" style="background-color:#ffffb3;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
         <span class="icons">
-          <%=image_tag("icons/Add.png", class: 'icons')%>
-          <p>Add Clinic</p>
+          <%=image_tag("icons/change-password.png", class: 'icons')%>
+          <p style="color: black;">Change Password</p>
         </span>
     </div>
   </div>
@@ -102,10 +102,10 @@ img {
   
   <!-- loop -->
   <div class="cells btncells">
-    <div class="divbtn" style="background-color: ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/admin'" >
+    <div class="divbtn" style="background-color:#00cc00;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/user/new'" >
         <span class="icons">
-          <%=image_tag("icons/DeleteRed.png", class: 'icons')%>
-          <p>Delete Clinic</p>
+          <%=image_tag("icons/create_contact-new.png", class: 'icons')%>
+          <p>Create User</p>
         </span>
     </div>
   </div>
@@ -113,16 +113,28 @@ img {
   
   <!-- loop -->
   <div class="cells btncells">
-    <div class="divbtn" style="background-color: ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+    <div class="divbtn" style="background-color:#d24dff;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
         <span class="icons">
-          <%=image_tag("icons/scheduled_tasks.png", class: 'icons')%>
-          <p>Schedules</p>
+          <%=image_tag("icons/edit-user.png", class: 'icons')%>
+          <p>Edit User</p>
         </span>
     </div>
   </div>
   <!-- endloop -->
-    
+
+    <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/gohome.png", class: 'icons')%>
+          <p>Home</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+
 </div>
+
 
 </div>
 

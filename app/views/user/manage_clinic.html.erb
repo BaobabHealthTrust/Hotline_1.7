@@ -8,7 +8,7 @@ body {
 }
 
 img {
-  user-drag: none; 
+  user-drag: none;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-drag: none;
@@ -17,6 +17,11 @@ img {
   pointer-events: none;
 }
 
+.main-page-container  {
+  display: table;
+  width: 99.7%;
+  padding: 5px 1px 0px 1px;
+}
 .main-page-container  {
   display: table;
   width: 100%;
@@ -52,7 +57,7 @@ img {
 }
 
 .btncells {
-  width: 25%;
+  width: 10%;
   text-align: center;
 }
 
@@ -62,12 +67,12 @@ img {
 }
 
 .header .cells {
-  vertical-align: middle; 
+  vertical-align: bottom; 
   padding-right: 5px;
 }
 
 #scan {
-  background-color: lightgrey;
+  background-color: white;
   border-style: solid;
   border-width: 1px;
   font-size: 80px;
@@ -91,10 +96,21 @@ img {
 <div class="main-page-container-rows">
   <!-- loop -->
   <div class="cells btncells">
-    <div class="divbtn" style="background-color:;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+    <div class="divbtn" style="background-color:  #00FF7F;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
         <span class="icons">
-          <%=image_tag("icons/change-password.png", class: 'icons')%>
-          <p style="color: black;">Change Password</p>
+          <%=image_tag("icons/scheduled_tasks.png", class: 'icons')%>
+          <p>Schedules</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #00CED1;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/admin'" >
+        <span class="icons">
+          <%=image_tag("icons/Add.png", class: 'icons')%>
+          <p>Add Clinic</p>
         </span>
     </div>
   </div>
@@ -102,37 +118,15 @@ img {
   
   <!-- loop -->
   <div class="cells btncells">
-    <div class="divbtn" style="background-color: ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/user/new'" >
+    <div class="divbtn" style="background-color: #696969;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/admin'" >
         <span class="icons">
-          <%=image_tag("icons/create_contact-new.png", class: 'icons')%>
-          <p>Create User</p>
+          <%=image_tag("icons/DeleteRed.png", class: 'icons')%>
+          <p>Delete Clinic</p>
         </span>
     </div>
   </div>
   <!-- endloop -->
-  
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/edit-user.png", class: 'icons')%>
-          <p>Edit User</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-
-    <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/gohome.png", class: 'icons')%>
-          <p>Home</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-
+    
 </div>
 
 
