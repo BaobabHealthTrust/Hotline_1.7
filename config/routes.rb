@@ -1,17 +1,28 @@
 Rails.application.routes.draw do
 
 
+
   ######################### home start ############################################
   get 'home/index'
   get 'start_call' => 'home#start_call'
   post 'start_call' => 'home#start_call'
   get 'house_keeping' => 'home#house_cleaning'
+  get 'admin' => 'home#admin'
+  
+  get 'report' => 'home#report'
+  get 'patient_demographic_report' => 'home#patient_demographic_report'
   ######################### home end ############################################
   
   ######################### user start ############################################
   get '/login' => 'user#login'
   post '/login' => 'user#login'
   get '/logout' => 'user#login'
+  get 'manage_user' => 'user#manage_user'
+  get 'manage_clinic' => 'user#manage_clinic'
+  get '/user/new'
+  post '/user/create'
+
+
   ######################### user end ############################################
 
   ######################### patient start ############################################

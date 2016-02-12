@@ -1,0 +1,171 @@
+<style>
+
+body {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */ 
+}
+
+img {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
+.main-page-container  {
+  display: table;
+  width: 99.7%;
+  padding: 5px 1px 0px 1px;
+}
+
+.main-page-container  {
+  display: table;
+  width: 100%;
+  padding: 0px 1px 0px 1px;
+}
+
+.main-page-container-rows  {
+  display: table-row;
+}
+
+.cells {
+  display: table-cell;
+}
+
+
+/* ...................................... */
+.divbtn {
+  height: 265px;
+  display: table;
+  margin-top: 10px;
+  cursor:pointer;
+}
+
+.icons {
+  width: 160px;
+  height: 160px;
+  margin-top: 10%;
+  text-align: middle;
+}
+
+.divbtn p {
+  font-weight: bold;
+}
+
+.btncells {
+  width: 25%;
+  text-align: center;
+}
+
+.small-icons {
+  width: 100px;
+  height: 100px;
+}
+
+.header .cells {
+  vertical-align: bottom; 
+  padding-right: 5px;
+}
+
+#scan {
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  font-size: 80px;
+  margin-bottom: 6px;
+  width: 44%;
+}
+
+.header .icons {
+  width: 100px;
+  height: 100px;
+}
+
+/* ...................................... */
+</style>
+
+<%= render :partial => 'header' %>
+
+<div class="main-page-container">
+
+<div class="main-page-container-rows">
+
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color:#80bfff;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/patient_demographic_report'" >
+        <span class="icons">
+          <%=image_tag("icons/analysis-256.png", class: 'icons')%>
+          <p style="color: black;">Patient Analysis</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+
+    <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color:#D3D3D3;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/call_analysis'" >
+        <span class="icons">
+          <%=image_tag("icons/callanalysis.png", class: 'icons')%>
+          <p>Call Analysis</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+
+    <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color:#20B2AA;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/family_planning'" >
+        <span class="icons">
+          <%=image_tag("icons/family.jpeg", class: 'icons')%>
+          <p>Family Planning</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color:#BA55D3;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/tips'" >
+        <span class="icons">
+          <%=image_tag("icons/tips-256.png", class: 'icons')%>
+          <p>Tips</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+
+  </div>
+
+<div class="main-page-container-rows">
+   <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color:#F0E68C;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/anc_connect'" >
+        <span class="icons">
+          <%=image_tag("icons/connect.png", class: 'icons')%>
+          <p>ANC Connect</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+
+    <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/gohome.png", class: 'icons')%>
+          <p>Home</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+
+</div>
+
+</div>
+
+<%= render :partial => 'footer' %>

@@ -1,0 +1,7 @@
+<%=stylesheet_link_tag "adminmenu"%>
+<h1 align = "center">Admin Menu</h1>
+<div class = "">
+
+<%= link_to_onmousedown 'Create New User', :controller => 'new user', :action => 'new' %>
+<%= link_to_onmousedown 'Edit User', :controller => 'user', :action => 'search user' %>
+<%= link_to_onmousedown 'Cancel', :controller => 'home', :action => 'admin' %>

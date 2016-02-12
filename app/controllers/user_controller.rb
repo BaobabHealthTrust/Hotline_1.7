@@ -24,4 +24,38 @@ class UserController < ApplicationController
     end
   end
 
+  def new
+    @user = User.new
+    roles = UserRole.all.map(&:role)
+  end
+
+
+  def create
+    
+    person = Person.create(birthdate: Date.today, birthdate_estimated: 1, gender: params[:person]['gender'].first) 
+    
+    person_name = PersonName.create(given_name: params[:person]['names']['given_name'], 
+      family_name: params[:person]['names']['family_name'], person_id: person.id)
+
+    PersonNameCode.create(given_name_code: person_name.given_name.soundex, 
+      family_name_code: person_name.family_name.soundex, person_name_id: person_name.id)
+
+    User.create(username: params[:user]['username'], password: params[:user]['password'], 
+      person_id: person.id, system_id: params[:user]['role'])
+
+    redirect_to '/admin'
+   end
+
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  def manage_user
+    render :layout => false
+  end
+
+  def manage_clinic
+    render :layout => false
+  end
+
 end
