@@ -75,6 +75,28 @@
     margin-top: -5px;
 }
 
+.exit_button {
+    -moz-user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bolder;
+    line-height: 1.82857;
+    margin-bottom: 0;
+    padding: 0px 20px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    color: #fff;
+    float: right;
+    margin-top: -5px;
+}
+
 
 #popup-div {
     display: none;
@@ -151,6 +173,9 @@
 <div id="popup-div">
   <div id="popup-header">
     <center> Estimate Age</center>
+    <span id="no" onclick="hidePopup();" class="exit_button" >
+      <strong>X</strong>
+    </span>
   </div>
   <br />
   <div>
