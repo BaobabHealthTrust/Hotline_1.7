@@ -66,15 +66,17 @@ class UserController < ApplicationController
 
       if (params[:user][:password] != params[:user][:confirm_password])
             flash[:notice] = 'Password Does Not Match'
-            redirect_to :action => 'new' and return
+            redirect_to :action => 'change_password' and return
       else
             #if @user.update_attributes(params[:user]
               @user.password = params[:user][:password]
               if (@user.save)
-                flash[:notice] = "Password successfully changed"
-              redirect_to :action => "new",:id => @user.id and return
+                flash[:notice] = "Password Successfully Changed"
+                #raise params.inspect
+              redirect_to :action => "show",:id => @user_id and return
               else
-                flash[:notice] = "Password change failed"  
+                flash[:notice] = "Password change failed" 
+                redirect_to :action => 'change_password' and return 
               end
               
             #else
@@ -83,5 +85,16 @@ class UserController < ApplicationController
       end
     end
   end
+
+  def show
+    unless params[:id].blank?
+      @user = User.find(params[:id]) 
+      #redirect_to "/manage_user"
+
+    else
+      @user = User.find(:first, :order => 'date_created DESC')
+    end
+      #SSrender :layout => 'menu'
+    end
 
 end

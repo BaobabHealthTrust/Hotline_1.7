@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   post '/user/create'
   get '/user/change_password'
   post '/user/change_password'
+  get 'user/show'
+  post 'user/show'
 
 
 
