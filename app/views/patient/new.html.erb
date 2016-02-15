@@ -134,6 +134,8 @@ img {
   <input type = "hidden" name = "person[birthdate][year]" id = "selected_year" />
   <input type = "hidden" name = "person[birthdate][month]" id = "selected_month" />
   <input type = "hidden" name = "person[birthdate][day]" id = "selected_day" />
+
+  <input type = "hidden" name = "person[birthdate][age_estimate]" id = "age_estimate" />
 <%end%>
 
 
@@ -144,11 +146,18 @@ function validateBirthdate() {
   month = document.getElementById('tbInputMonth').value;
   day = document.getElementById('tbInputDay').value;
 
+  estimated_age = document.getElementById('tbInputAge').value;
 
- document.getElementById('selected_year').value = year;
- document.getElementById('selected_month').value = month;
- document.getElementById('selected_day').value = day;
- document.getElementById('new-person').submit();
+  if (year != 'Unknown') {
+      document.getElementById('selected_year').value = year;
+      document.getElementById('selected_month').value = month;
+      document.getElementById('selected_day').value = day;
+  }
+  else if (year == 'Unknown') {
+      document.getElementById('selected_year').value = year;
+      document.getElementById('age_estimate').value = estimated_age;
+  }
+  document.getElementById('new-person').submit();
 }
 
 </script>
