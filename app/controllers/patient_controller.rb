@@ -22,7 +22,7 @@ class PatientController < ApplicationController
       @gender = params[:person]['gender']
     end
 
-    flash[:missing_family_name] = "Family Name can not be blank, please re-register patient."
+    flash[:missing_family_name] = "Family Name can not be blank, please include patient family name."
     @people = PatientService.find_by_demographics(params)
     render :layout => false
   end

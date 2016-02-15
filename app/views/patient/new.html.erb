@@ -66,7 +66,6 @@ img {
 
 }
 
-
 </style>
 
 
@@ -124,23 +123,17 @@ img {
   </div>
 </div -->
 
-
-
-
-
-
-
 <%= render :partial => 'patient/birthdate/button_footer' %>
 
 
 <%= form_tag("/patient/create", id: "new-person", method: 'post', enctype: 'multipart/form-data') do %>
-  <input type="hidden" name="person[names][given_name]" value="<%=@given_name%>" />
-  <input type="hidden" name="person[names][family_name]" value="<%=@family_name%>" />
-  <input type="hidden" name="person[gender]" value="<%=@gender%>" />
+  <input type = "hidden" name = "person[names][given_name]" value = "<%= @given_name %>" />
+  <input type = "hidden" name = "person[names][family_name]" value = "<%= @family_name %>" />
+  <input type = "hidden" name = "person[gender]" value = "<%= @gender %>" />
 
-  <input type="hidden" name="person[birthdate][year]" id="selected_year" />
-  <input type="hidden" name="person[birthdate][month]" id="selected_month" />
-  <input type="hidden" name="person[birthdate][day]" id="selected_day" />
+  <input type = "hidden" name = "person[birthdate][year]" id = "selected_year" />
+  <input type = "hidden" name = "person[birthdate][month]" id = "selected_month" />
+  <input type = "hidden" name = "person[birthdate][day]" id = "selected_day" />
 <%end%>
 
 
