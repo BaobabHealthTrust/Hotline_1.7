@@ -58,4 +58,30 @@ class UserController < ApplicationController
     render :layout => false
   end
 
+  def change_password
+    @user = User.find(session[:user_id])
+    @user_id = @user.user_id
+    #raise params.inspect
+    unless request.get?
+
+      if (params[:user][:password] != params[:user][:confirm_password])
+            flash[:notice] = 'Password Does Not Match'
+            redirect_to :action => 'new' and return
+      else
+            #if @user.update_attributes(params[:user]
+              @user.password = params[:user][:password]
+              if (@user.save)
+                flash[:notice] = "Password successfully changed"
+              redirect_to :action => "new",:id => @user.id and return
+              else
+                flash[:notice] = "Password change failed"  
+              end
+              
+            #else
+             #flash[:notice] = "Password change failed"  
+            #end    
+      end
+    end
+  end
+
 end

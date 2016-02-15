@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   get 'manage_clinic' => 'user#manage_clinic'
   get '/user/new'
   post '/user/create'
+  get '/user/change_password'
+  post '/user/change_password'
+
 
 
   ######################### user end ############################################
