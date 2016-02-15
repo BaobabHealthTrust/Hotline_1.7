@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
 	has_many :user_properties
 	has_many :user_roles
 
-  before_create :encrypt_before_create
+  before_save :encrypt_before_create
 
   def self.authenticate(username, password)
 		user = User.where(:username => username).first
