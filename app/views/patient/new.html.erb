@@ -146,10 +146,10 @@ function validateBirthdate() {
   month = document.getElementById('tbInputMonth').value;
   day = document.getElementById('tbInputDay').value;
   estimated_age = document.getElementById('tbInputAge').value;
-  if (estimated_age.length > 2) {
+  if (estimated_age.length > 2 || day.length > 2) {
   	//alert('incorrect input');
   	notify('incorrect_input');
-  	return;
+  	load();
   }
   if (year.length == 0) {
       clearInputAge();
@@ -176,24 +176,20 @@ function notify(param) {
 		popUp();
 		
 		document.getElementById("popup-header").innerHTML = '<h1><b>Incorrect Input !</b></h1>';
-		document.getElementById("popup-content").innerHTML = '<font size="16px">Age can only have a maximum of two (2) digits.</font><div style="padding-top: 65px;"><span id="no" onclick="hidePopup();" class="my_button" style=" position: relative; right: 20px;">OK</span></div>';
-		//document.getElementById("popup-div").style.height = '50%';
-		//var popup-content = document.getElementById("popup-content");
-		/*
+		document.getElementById("popup-content").innerHTML = '<font size="6pt"><i>Age/Birth Day can only have a maximum of two (2) digits.</i></font>';
+		
 			var no_button = document.createElement('div');
-			no_button.style.padding-top = '65px';
-      			var no_button_text = document.createElement('span');
-      			no_button_text.id = 'no';
-      			no_button_text.setAttribute('onclick','hidePopup();');
-      			no_button_text.className = 'my_button';
-      			no_button_text.style.position = 'relative'; 
-      			no_button_text.style.right = '20px';
-      			no_button_text.innerHTML = 'OK';
-      			no_button.appendChild(no_button_text);*/
+			no_button.style.paddingTop = '65px';
+	      		var no_button_text = document.createElement('span');
+	      		no_button_text.id = 'no';
+	      		no_button_text.setAttribute('onclick','hidePopup(); clearInput();');
+	      		no_button_text.className = 'my_button';
+	      		no_button_text.style.position = 'relative'; 
+	      		no_button_text.style.right = '20px';
+	      		no_button_text.innerHTML = 'OK';
+	      		no_button.appendChild(no_button_text);
 
-      			//document.getElementById("popup-content").innerHTML += no_button;
-
-      		//document.getElementById("popup-content").appendChild(no_button);
+      	document.getElementById("popup-content").innerHTML += '<br><br>'+no_button.innerHTML;
 	}
 }
 
