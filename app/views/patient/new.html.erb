@@ -111,12 +111,12 @@ img {
     <div class="table-cell" style="width: 48%; vertical-align: middle; text-align: right; float: right;padding-top:10px;" onclick="createPerson();">
       <span>
         <span class="btn-title">Save</span>
-        <%=image_tag("icons/add-person.png", class: 'icons village-reach-icon')%>
+        <%#=image_tag("icons/add-person.png", class: 'icons village-reach-icon')%>
       </span>
     </div>
     <div class="table-cell" style="width: 48%; vertical-align: middle; text-align: left; float: left;padding-top:10px;" onclick="document.location='/start_call'">
       <span>
-        <%=image_tag("icons/cancel-person-creation.png", class: 'icons village-reach-icon')%>
+        <%#=image_tag("icons/cancel-person-creation.png", class: 'icons village-reach-icon')%>
         <span class="btn-title">Cancel</span>
       </span>
     </div>
@@ -142,22 +142,99 @@ img {
 <script>
 
 function validateBirthdate() {
-  year = document.getElementById('tbInputYear').value;
-  month = document.getElementById('tbInputMonth').value;
-  day = document.getElementById('tbInputDay').value;
+    // Set current Date variables ----
+    date = new Date();
+    current_year = date.getFullYear();
+    current_day = date.getDate();
 
-  estimated_age = document.getElementById('tbInputAge').value;
+    // Get entered date variables -----
+    year = document.getElementById('tbInputYear').value;
+    month = document.getElementById('tbInputMonth').value;
+    day = document.getElementById('tbInputDay').value;
 
-  if (year != 'Unknown') {
-      document.getElementById('selected_year').value = year;
-      document.getElementById('selected_month').value = month;
-      document.getElementById('selected_day').value = day;
-  }
-  else if (year == 'Unknown') {
-      document.getElementById('selected_year').value = year;
-      document.getElementById('age_estimate').value = estimated_age;
-  }
-  document.getElementById('new-person').submit();
+    // get valid year and day range variables ---
+    year_range = current_year - 150;
+    valid_month_day = day > 0 && day <= 31;
+
+    // Check if month is Leap year and validate ----
+    if ( month == 'February' ) {
+        if (year%4 == 0) { // Leap Year
+            valid_month_day = day > 0 && day <= 29;
+        }
+        else {
+            valid_month_day = day > 0 && day <= 28;
+        }
+    }
+
+    // Check if year is blank ------
+    if (year.length == 0) {
+        clearInputAge();
+        input(btnUnknow);
+        //year = 'Unknown';
+        popUp();
+        return;
+    }
+    // Check if year is not known ------------
+    else if (year != 'Unknown') {   
+        if ( year.length != 4 ) {   
+            alert('Year can only have 4 digits.');
+            return; // with a flash message.
+        }
+        else if ( year.length == 4) {
+            if ( year < year_range || year > current_year) { // chech if year is out of range ---------
+                alert('Year Out of Range. Should be between '+year_range+' and '+current_year);
+                return; // with a flash message.
+            }
+        }
+        if ( day.length > 2) {
+            alert('more than 2');
+            return; // with a flash message.
+        }
+        else if ( day.length > 0 && day.length <= 2 ) {
+            if ( valid_month_day ) {
+                // continue  processing ---------
+            }
+            else {
+                alert('Invalid day of the month.');
+                return;
+            }
+        }
+
+        // set values to the form year, month, and day ---------------
+        document.getElementById('selected_year').value = year;
+        document.getElementById('selected_month').value = month;
+        document.getElementById('selected_day').value = day;
+    }
+    // check if year is known -------------
+    else if (year == 'Unknown') {
+        document.getElementById('selected_year').value = year;
+        document.getElementById('age_estimate').value = estimated_age;
+    }
+    // submit form -------------------------
+    document.getElementById('new-person').submit();
+}
+
+function notify(param) {
+	if (param == 'incorrect_input') {
+		clearInputAge();
+		popUp();
+		
+		document.getElementById("popup-header").innerHTML = '<h1><b>Incorrect Input !</b></h1>';
+		document.getElementById("popup-content").innerHTML = '<font size="6pt"><i>Age/Birth Day can only have a maximum of two (2) digits.</i></font>';
+		
+			var no_button = document.createElement('div');
+			no_button.style.paddingTop = '65px';
+	      		var no_button_text = document.createElement('span');
+	      		no_button_text.id = 'no';
+	      		no_button_text.setAttribute('onclick','hidePopup(); clearInput();');
+	      		no_button_text.className = 'my_button';
+	      		no_button_text.style.position = 'relative'; 
+	      		no_button_text.style.right = '20px';
+	      		no_button_text.innerHTML = 'OK';
+	      		no_button.appendChild(no_button_text);
+
+      	document.getElementById("popup-content").innerHTML += '<br><br>'+no_button.innerHTML;
+	}
 }
 
 </script>

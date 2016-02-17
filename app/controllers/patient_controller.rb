@@ -28,6 +28,9 @@ class PatientController < ApplicationController
   end
 
   def new
+    flash[:age_max_digits] = 'Incorrect Input! Age should have a maximum of 3 digits.'
+    flash[:age_out_of_range] = 'Incorrect Input! Age should be between 0 and 150.'
+    flash[:age_blank] = 'Incorrect Input! Age can not be blank.'
     @given_name = params['given_name']
     @family_name = params['family_name']
     @gender = params['gender']

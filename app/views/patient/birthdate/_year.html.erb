@@ -95,6 +95,7 @@
     color: #fff;
     float: right;
     margin-top: -5px;
+    top: 0%;
 }
 
 
@@ -106,6 +107,7 @@
     height: auto;
     padding: 5px;
     top: 0%;
+    left: 0%;
     position: absolute;
     margin-top: 100px;
     width: 560px;
@@ -143,6 +145,14 @@
     box-sizing: border-box;
 }
 /* ------------------------------------------------------------------- */
+
+#flash {
+    background-color: #ff2244;
+    border-radius: 12px;
+    border: 1px solid;
+    height: 80px;
+    text-align: center;
+}
 </style>
 
 <body onload="load();">
@@ -172,13 +182,20 @@
 <!-- ================================================== PopUp ================================================= -->
 <div id="popup-div">
   <div id="popup-header">
-    <center> Estimate Age</center>
+    <center>
+        <div id="flash" style="display: none;"></div>
+        Birth Year unknown.
+        <br>
+        Estimate Age
+    </center>
     <span id="no" onclick="clearInput(); hidePopup();" class="exit_button" >
-      <strong>X</strong>
+        <strong>
+            X
+        </strong>
     </span>
   </div>
   <br />
-  <div>
+  <div id="popup-content">
     <span style="font-size: 16pt;">
       <center>
         <input id="tbInputAge" type="text" maxlength = "2" />
@@ -198,7 +215,7 @@
             <br />
             <input id="btnCancel" type="button" value="Clear" onclick="clearInputAge();" class="btn-red" />
             <input id="btn0" type="button" onclick="inputAge(this)" value="0"  class="btn-year" />
-            <input id="btnCl" type="button" value="Create" onclick="validateBirthdate();" class="btn-green" />
+            <input id="btnCl" type="button" value="Create" onclick="saveByAge();" class="btn-green" />
         </div>
         <br />
       </center>
@@ -244,7 +261,8 @@ function clearInput() {
 }
 
 function clearInputAge() {
-  document.getElementById("tbInputAge").value = '';
+    document.getElementById("flash").style.display = 'none';
+    document.getElementById("tbInputAge").value = '';
   /*var tbInput = document.getElementById("tbInputYear");
   tbInput.value = tbInput.value.substr(0, tbInput.value.length - 1);*/
 }
@@ -278,6 +296,37 @@ function load() {
     catch(e) {
 
     }
+}
+
+function saveByAge() {
+        estimated_age = document.getElementById('tbInputAge').value;
+        document.getElementById('age_estimate').value = estimated_age;
+        age_max_digits = estimated_age.length > 3
+        age_out_of_range = estimated_age > 150
+        age_blank = estimated_age.length == 0
+        incorrect_age = age_max_digits || age_out_of_range || age_blank;
+        if (incorrect_age) {
+             //alert('incorrect input');
+            var flash = document.getElementById('flash');
+            if ( incorrect_age == age_max_digits ) {
+                flash.innerHTML = '<%= flash[:age_max_digits] %><br>';
+            }
+            else if ( incorrect_age == age_out_of_range ) {
+                flash.innerHTML = '<%= flash[:age_out_of_range] %><br>';
+            }
+            else if ( incorrect_age == age_blank ) {
+                flash.innerHTML = '<%= flash[:age_blank] %><br>';
+            }
+            flash.style.display = 'inline';
+            setTimeout( function() { 
+                flash.style.display = "none" 
+            }, 4000);
+            //notify('incorrect_input');
+            return;
+        }
+        else {
+            document.getElementById('new-person').submit();
+        }
 }
 
 </script>
