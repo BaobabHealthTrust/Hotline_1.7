@@ -114,7 +114,7 @@ module PatientService
   end
 
   def self.format_birthdate_params(birthday_params)
-    if birthday_params["year"] == "Unknown"
+    if birthday_params["year"] == "Unknown" || !birthday_params['age_estimate'].blank?
         birthdate = Date.new(Date.today.year - birthday_params["age_estimate"].to_i, 7, 1)
         birthdate_estimated = 1
     else
