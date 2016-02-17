@@ -163,7 +163,9 @@ function validateBirthdate() {
         flash.innerHTML = '<%= flash[:age_blank] %><br>';
     }
     flash.style.display = 'inline';
-    setTimeout(function() { flash.style.display = "none" }, 4000);
+    setTimeout( function() { 
+        flash.style.display = "none" 
+    }, 4000);
   	//notify('incorrect_input');
     return;
   }

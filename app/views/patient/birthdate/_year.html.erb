@@ -150,7 +150,7 @@
     background-color: #ff2244;
     border-radius: 12px;
     border: 1px solid;
-    height: 24%;
+    height: 80px;
     text-align: center;
 }
 </style>
@@ -261,7 +261,8 @@ function clearInput() {
 }
 
 function clearInputAge() {
-  document.getElementById("tbInputAge").value = '';
+    document.getElementById("flash").style.display = 'none';
+    document.getElementById("tbInputAge").value = '';
   /*var tbInput = document.getElementById("tbInputYear");
   tbInput.value = tbInput.value.substr(0, tbInput.value.length - 1);*/
 }
