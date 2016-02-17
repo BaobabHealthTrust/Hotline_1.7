@@ -142,35 +142,24 @@ img {
 <script>
 
 function validateBirthdate() {
+    date = new Date();
+    current_year = date.getFullYear();
+    current_day = date.getDate();
+
     year = document.getElementById('tbInputYear').value;
     month = document.getElementById('tbInputMonth').value;
     day = document.getElementById('tbInputDay').value;
-    /*
-        estimated_age = document.getElementById('tbInputAge').value;
-        age_max_digits = estimated_age.length > 3
-        age_out_of_range = estimated_age > 150
-        age_blank = estimated_age.length == 0
-        incorrect_age = age_max_digits || age_out_of_range || age_blank;
-        if (incorrect_age) {
-    	     //alert('incorrect input');
-            var flash = document.getElementById('flash');
-            if ( incorrect_age == age_max_digits ) {
-                flash.innerHTML = '<%= flash[:age_max_digits] %><br>';
-            }
-            else if ( incorrect_age == age_out_of_range ) {
-                flash.innerHTML = '<%= flash[:age_out_of_range] %><br>';
-            }
-            else if ( incorrect_age == age_blank ) {
-                flash.innerHTML = '<%= flash[:age_blank] %><br>';
-            }
-            flash.style.display = 'inline';
-            setTimeout( function() { 
-                flash.style.display = "none" 
-            }, 4000);
-          	//notify('incorrect_input');
-            return;
+
+    year_range = current_year - 150;
+    valid_month_day = day > 0 && day <= 31;
+    if ( month == 'February' ) {
+        if (year%4 == 0) { // Leap Year
+            valid_month_day = day > 0 && day <= 29;
         }
-        */
+        else {
+            valid_month_day = day > 0 && day <= 28;
+        }
+    }
     if (year.length == 0) {
         clearInputAge();
         input(btnUnknow);
@@ -179,6 +168,29 @@ function validateBirthdate() {
         return;
     }
     else if (year != 'Unknown') {
+        if ( year.length != 4 ) {
+            alert('Year can only have 4 digits.');
+            return; // with a flash message.
+        }
+        else if ( year.length == 4) {
+            if ( year < year_range || year > current_year) {
+                alert('Year Out of Range. Should be between '+year_range+' and '+current_year);
+                return; // with a flash message.
+            }
+        }
+        if ( day.length > 2) {
+            alert('more than 2');
+            return; // with a flash message.
+        }
+        else if ( day.length > 0 && day.length <= 2 ) {
+            if ( valid_month_day ) {
+
+            }
+            else {
+                alert('Invalid day of the month.');
+                return;
+            }
+        }
         document.getElementById('selected_year').value = year;
         document.getElementById('selected_month').value = month;
         document.getElementById('selected_day').value = day;
@@ -186,10 +198,7 @@ function validateBirthdate() {
     else if (year == 'Unknown') {
         document.getElementById('selected_year').value = year;
         document.getElementById('age_estimate').value = estimated_age;
-    }/*
-    else if ( year.length > 4) {
-        return; // with a flash message.
-    }*/
+    }
     document.getElementById('new-person').submit();
 }
 
