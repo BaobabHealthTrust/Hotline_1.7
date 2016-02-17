@@ -172,7 +172,7 @@ end
 ###################################### Creating Global properties ##############################################################
 global_properties = [
   ['call.modes','New,Repeat'],
-  ['current.health.center.name',649]
+  ['current.health.center',649]
 ]
 
 (global_properties || []).each do |description, property_value|
