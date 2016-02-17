@@ -31,8 +31,7 @@ class UserController < ApplicationController
 
 
   def create
-    
-    person = Person.create(birthdate: Date.today, birthdate_estimated: 1, gender: params[:person]['gender'].first) 
+    person = Person.create(birthdate: Date.today, birthdate_estimated: 1, gender: params[:person]['gender']) 
     
     person_name = PersonName.create(given_name: params[:person]['names']['given_name'], 
       family_name: params[:person]['names']['family_name'], person_id: person.id)
@@ -44,14 +43,63 @@ class UserController < ApplicationController
       person_id: person.id, system_id: params[:user]['role'])
 
     redirect_to '/admin'
+    
    end
+
+  def search_user
+    unless request.get?
+      @user = User.find_by_username(params[:user][:username])
+      redirect_to :action =>"show", :id => @user.id
+    end
+  end
 
   def edit
     @user = User.find(params[:id])
   end
 
+  def update
+    
+    #find_by_person_id(params[:id])
+    params[:person_name] = params[:person][:names]
+    @user = User.where(user_id: params[:user_id]).first
+    #raise @user.inspect
+
+    username = params[:user]['username'] rescue current_user.username
+
+
+     if username
+       @user.username = username
+       @user.save
+     end
+
+    PersonName.find(:all,:conditions =>["voided = 0 AND person_id = ?",@user.person_id]).each do | person_name |
+      person_name.voided = 1
+      person_name.voided_by = current_user.person_id
+      person_name.date_voided = Time.now()
+      person_name.void_reason = 'Edited name'
+      person_name.save
+    end rescue nil
+
+    person_name = PersonName.new()
+    person_name.family_name = params[:person_name]["family_name"]
+    person_name.given_name = params[:person_name]["given_name"]
+    person_name
+    if person_name.save
+      flash[:notice] = 'User Successfully Updated.'
+      redirect_to :action => 'show', :id => @user.id and return
+    end rescue nil
+
+    flash[:notice] = "User Was Not Updated!."
+    render :action => 'show'
+    redirect
+  end
+ 
   def manage_user
     render :layout => false
+  end
+
+  def select_user
+    render :layout => true
   end
 
   def manage_clinic
@@ -75,7 +123,7 @@ class UserController < ApplicationController
                 #raise params.inspect
               redirect_to :action => "show",:id => @user_id and return
               else
-                flash[:notice] = "Password change failed" 
+                flash[:notice] = "Password Change Failed" 
                 redirect_to :action => 'change_password' and return 
               end
               
@@ -88,13 +136,17 @@ class UserController < ApplicationController
 
   def show
     unless params[:id].blank?
-      @user = User.find(params[:id]) 
+      @user = User.find(params[:id])
+      @person = Person.where(person_id: @user.user_id)
+      @person_name = PersonName.find(@user.user_id)
+      #raise @person.first.gender.inspect
       #redirect_to "/manage_user"
 
     else
       @user = User.find(:first, :order => 'date_created DESC')
     end
+
       #SSrender :layout => 'menu'
-    end
+  end
 
 end

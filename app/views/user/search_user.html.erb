@@ -1,0 +1,9 @@
+<%= javascript_include_tag  "cancel_to_manage_user"%>
+
+<% form_tag :action => 'search_user', :id => @user do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Search' %>
+<% end %>
+
+<%= link_to 'Show', :action => 'show', :id => @user %> |
+<%= link_to 'Back', :action => 'manage_user' %>

@@ -28,6 +28,19 @@ class User < ActiveRecord::Base
 	  	is_valid = Digest::SHA1.hexdigest("#{password}#{salt}") == encrypted_password	|| encrypt(password, salt) == encrypted_password || Digest::SHA512.hexdigest("#{password}#{salt}") == encrypted_password
 	end
 
+	def first_name
+		self.person.names.first.given_name rescue ''
+	end
+
+	def last_name
+		self.person.names.first.family_name rescue ''
+	end
+
+	def name
+		name = self.person.names.first
+		"#{name.given_name} #{name.family_name}"
+	end
+
 	def try_to_login
 		UserService.authenticate(self.username, self.password)
 	end

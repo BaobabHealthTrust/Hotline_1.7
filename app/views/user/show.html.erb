@@ -48,17 +48,55 @@
     <th class='blue'>Username:&nbsp;</th>
     <td class='blue'>&nbsp;<%=@user.username%></td>
   </tr>
+
   <tr>
     <th>Role:&nbsp;</th>
-    <td>&nbsp;<%=@user.user_roles.map{|r|r.role}.join(',') rescue '&nbsp;'%></td>
+    <td>&nbsp;<%=@user.system_id rescue '&nbsp;'%></td>
   </tr>
   <tr>
     <th class='blue'>Date created:&nbsp;</th>
     <td class='blue'>&nbsp;<%=@user.date_created.strftime('%A  %d, %B, %Y') rescue '&nbsp;'%></td>
   </tr>
+    <tr>
+    <th>First name:&nbsp;</th>
+    <td>&nbsp;<%=@person_name.given_name %></td>
+  </tr>
+  <tr>
+    <th class='blue'>Last name:&nbsp;</th>
+    <td class='blue'>&nbsp;<%=@person_name.family_name %></td>
+  </tr>
+  <tr>
+    <th>Gender:&nbsp;</th>
+    <td>&nbsp;<%=@person.first.gender rescue '&nbsp;'%></td>
+  </tr>
+  </tr>
 </table>
-<br />
-  <button id="change_password" class="silver" style="margin-top:10px;"
+<div>
+<table id = 'button_container' style="float:right;">
+  <tr>
+    <td>
+      <button id="edit" class="silver" style="margin-top:10px;"
+        onmousedown="document.location = '/user/edit?id=<%= @user.id -%>'"><span>Edit</span>
+      </button>
+    </td>
+  </tr>
+                <!-- change password should only be called when user is Admin -->  
+<!--   <tr>
+    <td>
+       <button id="change_password" class="silver" style="margin-top:10px;"
+        onmousedown="document.location = '/user/change_password?id=<%= @user.id -%>'"><span>Change Password</span>
+      </button>
+    </td>
+  </tr> -->
+                         <!--         END         -->
+  <tr>
+    <td>  
+      <button id="change_password" class="silver" style="margin-top:10px;"
         onmousedown="document.location = '/manage_user?id=<%= @user.id -%>'"><span>Finish</span>
-  </button>
+      </button>
+    </td>
+  </tr>
+</table>
 </div>
+</div>
+</style>

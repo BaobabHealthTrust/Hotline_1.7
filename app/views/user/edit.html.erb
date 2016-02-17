@@ -1,0 +1,29 @@
+<script>
+
+  var tt_cancel_destination = "/manage_user"
+
+</script>
+
+<%= form_tag("/user/update", id: "update-form", method: 'post', enctype: 'multipart/form-data') do %>i
+<input name="user_id" id="user_id" type="hidden" value="<%=params[:id] %>">
+
+<%= text_field_tag "person[names][given_name]", params[:firstname],
+                     {:id => 'given_name', :field_type => 'alpha',
+                      :helpText => 'First name',
+                      :ajaxURL => '/person_names/given_names?search_string=',
+                      :allowFreeText => true }%>
+  
+  <%= text_field_tag "person[names][family_name]", params[:lastname],
+                     {:id => 'family_name',
+                      :field_type => 'alpha',
+                      :helpText => 'Last name',
+                      :ajaxURL => '/person_names/family_names?search_string=',
+                      :allowFreeText => true }%>
+
+ <%= text_field_tag "user[username]", params[:username],
+                     {:id => 'username', :field_type => 'alpha',
+                      :helpText => 'Username',
+                      :ajaxURL => '/person_names/given_names?search_string=',
+                      :allowFreeText => true }%>
+
+<%end%>

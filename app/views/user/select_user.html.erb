@@ -1,0 +1,14 @@
+<script type="text/javascript">
+  var tt_cancel_destination = "/manage_user";
+</script>
+
+<%= form_tag("search_user", id: "update-form", method: 'post', enctype: 'multipart/form-data') do %>
+
+
+ <%= text_field_tag "user[username]", params[:username],
+                     {:id => 'username', :field_type => 'alpha',
+                      :helpText => 'Username',
+                      :ajaxURL => '/person_names/given_names?search_string=',
+                      :allowFreeText => true }%>
+     <%= submit_tag "Find user" %>
+   <% end %> 

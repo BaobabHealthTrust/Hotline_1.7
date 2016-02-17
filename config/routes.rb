@@ -19,12 +19,20 @@ Rails.application.routes.draw do
   get '/logout' => 'user#login'
   get 'manage_user' => 'user#manage_user'
   get 'manage_clinic' => 'user#manage_clinic'
-  get '/user/new'
+  get 'user/new'
   post '/user/create'
-  get '/user/change_password'
+  get 'user/change_password'
   post '/user/change_password'
   get 'user/show'
   post 'user/show'
+  get 'user/update'
+  post '/user/update'
+  get 'user/select_user'
+  post '/user/select_user'
+  get 'user/search_user'
+  post '/user/search_user'
+  get 'user/edit'
+  post '/user/edit'
 
 
 
