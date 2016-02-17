@@ -30,6 +30,7 @@
  <%= text_field_tag "user[username]", params[:username],
                      {:id => 'username', :field_type => 'alpha',
                       :helpText => 'Username',
+                      :textCase => 'lower',
                       :ajaxURL => '/person_names/given_names?search_string=',
                       :allowFreeText => true }%>
 
