@@ -142,50 +142,55 @@ img {
 <script>
 
 function validateBirthdate() {
-  year = document.getElementById('tbInputYear').value;
-  month = document.getElementById('tbInputMonth').value;
-  day = document.getElementById('tbInputDay').value;
-  estimated_age = document.getElementById('tbInputAge').value;
-  age_max_digits = estimated_age.length > 3
-  age_out_of_range = estimated_age > 150
-  age_blank = estimated_age.length == 0
-  incorrect_age = age_max_digits || age_out_of_range || age_blank;
-  if (incorrect_age) {
-  	//alert('incorrect input');
-    var flash = document.getElementById('flash');
-    if ( incorrect_age == age_max_digits ) {
-        flash.innerHTML = '<%= flash[:age_max_digits] %><br>';
+    year = document.getElementById('tbInputYear').value;
+    month = document.getElementById('tbInputMonth').value;
+    day = document.getElementById('tbInputDay').value;
+    /*
+        estimated_age = document.getElementById('tbInputAge').value;
+        age_max_digits = estimated_age.length > 3
+        age_out_of_range = estimated_age > 150
+        age_blank = estimated_age.length == 0
+        incorrect_age = age_max_digits || age_out_of_range || age_blank;
+        if (incorrect_age) {
+    	     //alert('incorrect input');
+            var flash = document.getElementById('flash');
+            if ( incorrect_age == age_max_digits ) {
+                flash.innerHTML = '<%= flash[:age_max_digits] %><br>';
+            }
+            else if ( incorrect_age == age_out_of_range ) {
+                flash.innerHTML = '<%= flash[:age_out_of_range] %><br>';
+            }
+            else if ( incorrect_age == age_blank ) {
+                flash.innerHTML = '<%= flash[:age_blank] %><br>';
+            }
+            flash.style.display = 'inline';
+            setTimeout( function() { 
+                flash.style.display = "none" 
+            }, 4000);
+          	//notify('incorrect_input');
+            return;
+        }
+        */
+    if (year.length == 0) {
+        clearInputAge();
+        input(btnUnknow);
+        //year = 'Unknown';
+        popUp();
+        return;
     }
-    else if ( incorrect_age == age_out_of_range ) {
-        flash.innerHTML = '<%= flash[:age_out_of_range] %><br>';
+    else if (year != 'Unknown') {
+        document.getElementById('selected_year').value = year;
+        document.getElementById('selected_month').value = month;
+        document.getElementById('selected_day').value = day;
     }
-    else if ( incorrect_age == age_blank ) {
-        flash.innerHTML = '<%= flash[:age_blank] %><br>';
-    }
-    flash.style.display = 'inline';
-    setTimeout( function() { 
-        flash.style.display = "none" 
-    }, 4000);
-  	//notify('incorrect_input');
-    return;
-  }
-  if (year.length == 0) {
-      clearInputAge();
-      input(btnUnknow);
-      //year = 'Unknown';
-      popUp();
-      return;
-  }
-  else if (year != 'Unknown') {
-      document.getElementById('selected_year').value = year;
-      document.getElementById('selected_month').value = month;
-      document.getElementById('selected_day').value = day;
-  }
-  else if (year == 'Unknown') {
-      document.getElementById('selected_year').value = year;
-      document.getElementById('age_estimate').value = estimated_age;
-  }
-  document.getElementById('new-person').submit();
+    else if (year == 'Unknown') {
+        document.getElementById('selected_year').value = year;
+        document.getElementById('age_estimate').value = estimated_age;
+    }/*
+    else if ( year.length > 4) {
+        return; // with a flash message.
+    }*/
+    document.getElementById('new-person').submit();
 }
 
 function notify(param) {
