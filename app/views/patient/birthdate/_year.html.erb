@@ -145,6 +145,14 @@
     box-sizing: border-box;
 }
 /* ------------------------------------------------------------------- */
+
+#flash {
+    background-color: #ff2244;
+    border-radius: 12px;
+    border: 1px solid;
+    height: 24%;
+    text-align: center;
+}
 </style>
 
 <body onload="load();">
@@ -174,9 +182,16 @@
 <!-- ================================================== PopUp ================================================= -->
 <div id="popup-div">
   <div id="popup-header">
-    <center> Birth Year unknown.<br>Estimate Age</center>
+    <center>
+        <div id="flash" style="display: none;"></div>
+        Birth Year unknown.
+        <br>
+        Estimate Age
+    </center>
     <span id="no" onclick="clearInput(); hidePopup();" class="exit_button" >
-      <strong>X</strong>
+        <strong>
+            X
+        </strong>
     </span>
   </div>
   <br />
