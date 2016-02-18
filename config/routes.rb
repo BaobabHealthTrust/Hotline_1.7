@@ -31,11 +31,9 @@ Rails.application.routes.draw do
   post '/user/select_user'
   get 'user/search_user'
   post '/user/search_user'
-  get 'user/edit'
+  get 'user/edit/:user_id' => 'user#edit'
   post '/user/edit'
-
-
-
+  get 'user/username'
   ######################### user end ############################################
 
   ######################### patient start ############################################
