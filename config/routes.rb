@@ -65,6 +65,11 @@ Rails.application.routes.draw do
 
   ######################### people end ############################################
 
+  ######################### encounters start ########################################
+  get '/encounters/new/:encounter_type' => 'encounters#new'
+  post '/encounters/new/:encounter_type' => 'encounters#new'
+  ######################### encounters end ##########################################
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

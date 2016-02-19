@@ -73,6 +73,10 @@ class PatientController < ApplicationController
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
   end
 
+  def pregnancy_status
+        
+  end
+
   
 
   private
