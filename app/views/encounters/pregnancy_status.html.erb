@@ -320,7 +320,7 @@
         <%= text_field_tag "EXPECTED DUE DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';setFinish();",
                                             :optional => "true",
                                             :id => "expected_due_date",
-                                            :helpText => 'Enter last ovulation date',
+                                            :helpText => 'Enter last mensturation period',
                                             :condition => "$('pregnancy_status').value == 'Pregnant'",
                                             :tt_pageStyleClass => "NoControls" } %>
 
@@ -336,6 +336,11 @@
         <input type = "hidden" name = "person[birthdate][day]" id = "selected_day" />
 
         <input type = "hidden" name = "person[birthdate][age_estimate]" id = "age_estimate" />
+
+        <%unless @encounter_id.nil?%>
+            <%= hidden_field_tag("encounter_id",  @encounter_id) %>
+            <%= hidden_field_tag("editing",       true) %>
+        <%end%>
     <% end %>
 
 <script>
