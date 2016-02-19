@@ -57,6 +57,12 @@ Rails.application.routes.draw do
   get 'demographics/:patient_id' => 'people#demographics'
   get 'demographic_modify/:field/:patient_id' => 'people#demographic_modify'
   post '/demographic_modify' => 'people#demographic_modify'
+  get 'people/new'
+  post '/people/create'
+  get 'people/show'
+  post 'people/show'
+  #get 'people/people'
+
   ######################### people end ############################################
 
   # The priority is based upon order of creation: first created -> highest priority.

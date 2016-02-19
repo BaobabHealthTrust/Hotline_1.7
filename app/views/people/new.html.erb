@@ -1,0 +1,127 @@
+<script>
+  var tt_cancel_destination = "/manage_user"
+
+</script>
+
+<%= form_tag("/people/create", id: "create-form", method: 'post', enctype: 'multipart/form-data') do %>
+
+  <%= text_field_tag "person[names][given_name]", params[:firstname],
+                   {:id => 'given_name', :field_type => 'alpha',
+                    :helpText => 'First name',
+                    :ajaxURL => '/patient/given_names?search_string=',
+                    :allowFreeText => true }%>
+  
+  <%= text_field_tag "person[names][family_name]", params[:lastname],
+                   {:id => 'family_name',
+                    :field_type => 'alpha',
+                    :helpText => 'Last name',
+                    :ajaxURL => '/patient/family_names?search_string=',
+                    :allowFreeText => true }%>
+
+  <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
+                   :helpText =>"Gender",
+                    :id => "gender",
+                   :allowFreeText => false)%> 
+
+ <%= text_field_tag "person[birth_year]", nil, 
+                    {:helpText => 'Year of Birth', 
+                     :field_type => 'number', 
+                     :absoluteMin => "1890", :min => "1940", 
+                     :absoluteMax => Date.today.year, 
+                     :tt_pageStyleClass => "Numeric NumbersOnly", 
+                     :tt_onLoad => "$('nextButton').style.display = 'block';",
+                     :validationJS => "setDOB();" }  %>
+
+  <%= select_tag "person[birth_month]", options_for_select('', nil), 
+              {:helpText => 'Month of Birth', :condition => '$("person_birth_year").value.toLowerCase() != "unknown"',:validationJS => "validateDOB();",:validationMessage => 'Please enter a valid date', :tt_onLoad =>"validateDate(); __$('keyboard').style.display = 'block'"}%>
+
+ <%= text_field_tag "person[age_estimate]", nil, 
+                    {:helpText => 'Age Estimate', 
+                      :absoluteMin => 1, 
+                      :field_type => 'number', 
+                      :condition => '$("person_birth_year").value == "Unknown"', 
+                      :tt_onLoad => "$('nextButton').style.display = 'block';", 
+                      :tt_pageStyleClass => "Numeric NumbersOnly"} %>
+
+
+  <%= text_field_tag "person[birth_day]",  nil, :field_type => 'number', :helpText => 'Birth Day', :condition => '($("person_birth_year").value != "Unknown") && ($("person_birth_month").value != "Unknown")', :tt_onLoad =>  "validateDay(); getDayOfMonthPicker($('person_birth_year').value, $('person_birth_month').value);$('nextButton').style.display = 'block';" ,:validationJS => "validateDOB()",:validationMessage => 'Please enter a valid date'%>
+
+
+  <p><label for="region_region_name">Region of Origin</label></br>
+  <%= text_field "region" , 'region_name', :xhelpText => 'Region', :ajaxURL => '/people/region/Region?field=role&value=', :tt_onLoad => ""%></p>
+
+  <%= text_field_tag "person[addresses][address2]", params[:address2],
+                  {
+                  :field_type => 'alpha',
+                  :helpText => "Home Village",
+                  :ajaxURL => '/people/village?search_string=',
+                  :allowFreeText => false } %>
+
+<%= text_field_tag "person[addresses][city_village]", params[:city_village],
+                 {
+                  :field_type => 'alpha',
+                  :helpText => 'Current Village (residence)',
+                  :ajaxURL => '/people/village?search_string=',
+                  :allowFreeText => false }%>
+    
+<%= text_field_tag "person[addresses][county_district]", params[:county_district], 
+                  {:id => 'ta', :field_type => 'alpha', 
+                  :helpText => 'Current Traditional Authority (TA)', 
+                  :ajaxURL => '/people/traditional_authority/TraditionalAuthority?search_string=',
+                  :allowFreeText => true }%>
+
+<%= text_field_tag "person[addresses][subregion]", params[:group_village_head],
+                {
+                  :field_type => 'alpha',
+                  :helpText => 'Group Village Head',
+                 :ajaxURL => '/people/village?search_string=',
+                  :allowFreeText => false } %>
+
+<%= text_field_tag "person[attributes][cell_phone_number]", params[:cell_phone_number],
+             {
+               :field_type => 'number',
+               :helpText => 'Cell Phone Number',
+               :validationMessage => "Not a valid phone number",
+               :tt_pageStyleClass => "nota",
+               :id => 'cellphone'} %>
+
+<label for='summary'>Summary</label>
+  <%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';", 
+      :optional => "true", 
+      :tt_pageStyleClass => "NoControls" } %>
+      <% end %>
+
+<%= submit_tag "Create person" %>
+
+
+  <script>
+
+function summary() {
+
+  var first_name = document.getElementById('given_name').value;
+  var last_name = document.getElementById('family_name').value;
+  var gender = document.getElementById('gender').value;
+
+  display += "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
+  display += "<div><span class='title'>Last Name:</span><span class='data'> " + last_name + "</span></div>";
+  display += "<div><span class='title'>Gender:</span><span class='data'> " + gender + "</span></div>";
+
+
+  $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
+  $("clearButton").style.display = "none";
+    
+
+}
+
+</script>
+
+<style>
+.title {
+  font-size: 50px;
+}
+
+.data {
+  font-size: 40px;
+  color: orangered;
+}
+</style>
