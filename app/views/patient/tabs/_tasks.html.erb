@@ -40,7 +40,7 @@
     <!-- loop -->
     <%if @patient_obj.sex == 'F'%> 
       <div class="cell">
-        <div class="btn" style="background-color: #f5deb3;border: 1px solid #2e6da4; width: 99%;">
+        <div class="btn" style="background-color: #f5deb3;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/encounters/pregnancy_status'">
           <%=image_tag("icons/pregnacy.png", class: 'task-icons')%>
             <p style="color: black;">Pregnancy status</p>
           </span>

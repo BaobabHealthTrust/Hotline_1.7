@@ -4,7 +4,7 @@ class PatientController < ApplicationController
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
-    render :layout => false
+    #render :layout => false
   end
 
   def search_result
@@ -71,6 +71,10 @@ class PatientController < ApplicationController
      ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
     @location_names = @districts.collect { |location_id, location_name| location_name}
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+  end
+
+  def pregnancy_status
+        
   end
 
   

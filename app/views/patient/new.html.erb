@@ -215,29 +215,6 @@ function validateBirthdate() {
     document.getElementById('new-person').submit();
 }
 
-function notify(param) {
-	if (param == 'incorrect_input') {
-		clearInputAge();
-		popUp();
-		
-		document.getElementById("popup-header").innerHTML = '<h1><b>Incorrect Input !</b></h1>';
-		document.getElementById("popup-content").innerHTML = '<font size="6pt"><i>Age/Birth Day can only have a maximum of two (2) digits.</i></font>';
-		
-			var no_button = document.createElement('div');
-			no_button.style.paddingTop = '65px';
-	      		var no_button_text = document.createElement('span');
-	      		no_button_text.id = 'no';
-	      		no_button_text.setAttribute('onclick','hidePopup(); clearInput();');
-	      		no_button_text.className = 'my_button';
-	      		no_button_text.style.position = 'relative'; 
-	      		no_button_text.style.right = '20px';
-	      		no_button_text.innerHTML = 'OK';
-	      		no_button.appendChild(no_button_text);
-
-      	document.getElementById("popup-content").innerHTML += '<br><br>'+no_button.innerHTML;
-	}
-}
-
 </script>
 
 

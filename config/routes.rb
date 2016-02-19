@@ -59,6 +59,11 @@ Rails.application.routes.draw do
   post '/demographic_modify' => 'people#demographic_modify'
   ######################### people end ############################################
 
+  ######################### encounters start ########################################
+  get '/encounters/pregnancy_status' => 'encounters#pregnancy_status'
+  post '/encounters/pregnancy_status' => 'encounters#pregnancy_status'
+  ######################### encounters end ##########################################
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
