@@ -60,8 +60,8 @@ Rails.application.routes.draw do
   ######################### people end ############################################
 
   ######################### encounters start ########################################
-  get '/encounters/pregnancy_status' => 'encounters#pregnancy_status'
-  post '/encounters/pregnancy_status' => 'encounters#pregnancy_status'
+  get '/encounters/new/:encounter_type' => 'encounters#new'
+  post '/encounters/new/:encounter_type' => 'encounters#new'
   ######################### encounters end ##########################################
 
   # The priority is based upon order of creation: first created -> highest priority.
