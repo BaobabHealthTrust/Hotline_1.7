@@ -1,5 +1,6 @@
 class EncountersController < ApplicationController
   def pregnancy_status
+    raise params.inspect
     @selected_value = []
     @select_options = select_options
   end

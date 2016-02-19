@@ -312,11 +312,21 @@
                :id => "pregnancy_status",
                :allowFreeText => false)
         %>
-        <!-- ================ -->
-        <%= text_field_tag :summary, nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';setFinish();",
+        <!-- ======= for Pregnant, enter expected date of delivery ========= -->
+        <%= text_field_tag "EXPECTED DUE DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';setFinish();",
                                             :optional => "true",
-                                            :helpText => 'Last Date',
+                                            :id => "expected_due_date",
+                                            :helpText => 'Enter last ovulation date',
+                                            :condition => "$('pregnancy_status').value == 'Pregnant'",
                                             :tt_pageStyleClass => "NoControls" } %>
+
+        <!-- ======= for Delivered, enter delivery date ========= -->
+        <%= text_field_tag "DELIVERY DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';setFinish();",
+                                              :optional => "true",
+                                              :helpText => 'Enter Delivery Date',
+                                              :condition => "$('pregnancy_status').value == 'Delivered'",
+                                              :tt_pageStyleClass => "NoControls" } %>
+
         <input type = "hidden" name = "person[birthdate][year]" id = "selected_year" />
         <input type = "hidden" name = "person[birthdate][month]" id = "selected_month" />
         <input type = "hidden" name = "person[birthdate][day]" id = "selected_day" />
