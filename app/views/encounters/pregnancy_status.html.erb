@@ -316,8 +316,13 @@
                :id => "pregnancy_status",
                :allowFreeText => false
         %>
+        <input type = "hidden" name = "person[birthdate][year]" id = "selected_year" />
+        <input type = "hidden" name = "person[birthdate][month]" id = "selected_month" />
+        <input type = "hidden" name = "person[birthdate][day]" id = "selected_day" />
+
+        <input type = "hidden" name = "person[birthdate][age_estimate]" id = "age_estimate" />
         <!-- ======= for Pregnant, enter expected date of delivery ========= -->
-        <%= text_field_tag "EXPECTED DUE DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';setFinish();",
+        <%= text_field_tag "EXPECTED DUE DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';",
                                             :optional => "true",
                                             :id => "expected_due_date",
                                             :helpText => 'Enter last mensturation period',
@@ -325,17 +330,19 @@
                                             :tt_pageStyleClass => "NoControls" } %>
 
         <!-- ======= for Delivered, enter delivery date ========= -->
-        <%= text_field_tag "DELIVERY DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';setFinish();",
+        <%= text_field_tag "DELIVERY DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; setFinish();",
                                               :optional => "true",
                                               :helpText => 'Enter Delivery Date',
+                                              :id => 'delivery_date',
                                               :condition => "$('pregnancy_status').value == 'Delivered'",
                                               :tt_pageStyleClass => "NoControls" } %>
 
-        <input type = "hidden" name = "person[birthdate][year]" id = "selected_year" />
-        <input type = "hidden" name = "person[birthdate][month]" id = "selected_month" />
-        <input type = "hidden" name = "person[birthdate][day]" id = "selected_day" />
-
-        <input type = "hidden" name = "person[birthdate][age_estimate]" id = "age_estimate" />
+        <%= text_field_tag :summary, nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; summary(); setFinish();",
+                                            :id => 'summary',
+                                            :optional => "true",
+                                            :helpText => 'Summary',
+                                            :condition => "$('pregnancy_status').value == 'Pregnant' || $('pregnancy_status').value == 'Delivered';",
+                                            :tt_pageStyleClass => "NoControls" } %>
 
         <%unless @encounter_id.nil?%>
             <%= hidden_field_tag("encounter_id",  @encounter_id) %>
@@ -346,9 +353,9 @@
 <script>
     function inputDay(e) {
         var tbInput = document.getElementById('tbInputDay');
-        if(tbInput.value == 'Unknown' && e.value != 'Unknown')
+        if(tbInput.value == 'Unknown' && e.value != 'Unknown') {
             return;
-
+        }
         if(e.value == 'Unknown') {
             tbInput.value = e.value;
         }else{
@@ -417,7 +424,7 @@
                     table_row.appendChild(year_table_cell);
                     // append year
                         var label = document.createElement('label');
-                        label.innerHTML = 'Enter Birth Year';
+                        label.innerHTML = 'Enter Year';
                         year_table_cell.appendChild(label);
 
                         var year_input_field = document.createElement('input');
@@ -427,7 +434,7 @@
                         year_table_cell.appendChild(year_input_field);
 
                         var year_div = document.createElement('div');
-                        year_div.setAttribute('id','year');
+                        year_div.setAttribute('id','year_id');
                         year_div.className = 'virtual-keypad';
                         year_table_cell.appendChild(year_div);
                         for(var j = 1; j <= 9; j++){
@@ -478,7 +485,7 @@
                     table_row.appendChild(table_cell);
                     // append month
                         var label = document.createElement('label');
-                        label.innerHTML = 'Select Birth Month';
+                        label.innerHTML = 'Select Month';
                         table_cell.appendChild(label);
 
                         var month_input_field = document.createElement('input');
@@ -531,7 +538,7 @@
                                     li_options.innerHTML = '<%= string %>';
                                     ul_options.appendChild(li_options);
                                     <% end %>
-        //===========================================
+                    //===========================================
                     var table_cell = document.createElement('div');
                     table_cell.className = 'table-cell';
                     table_cell.style.width = '29%';
@@ -540,7 +547,7 @@
                     table_row.appendChild(table_cell);
                     // append day
                         var label = document.createElement('label');
-                        label.innerHTML = 'Enter Birth Day';
+                        label.innerHTML = 'Enter Day';
                         table_cell.appendChild(label);
 
                         var day_input_field = document.createElement('input');
@@ -609,6 +616,23 @@
     function setFinish() {
         var finish = document.getElementById('nextButton');
         finish.setAttribute('onmousedown','validateBirthdate();');
+    }
+
+    function summary() {
+
+        var entered_year = document.getElementById('username').value;
+        var entered_month = document.getElementById('given_name').value;
+        var entered_day = document.getElementById('family_name').value;
+        var pregnancy_status = document.getElementById('gender').value;
+
+        var display = "<div><span class='title'>Pregnancy Status:</span><span class='data'> " + pregnancy_status + "</span></div>";
+        display += "<div><span class='title'>Birthdate:</span><span class='data'> " + entered_year + entered_month + entered_day +"</span></div>";
+
+
+        $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
+        $("clearButton").style.display = "none";
+
+
     }
 
     function validateBirthdate() {
