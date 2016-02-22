@@ -40,6 +40,7 @@
     <%= select_tag "maternal_health_symptoms", options_for_select(@select_options['maternal_health_symptoms'].sort , nil),
                    :helpText =>"Experiencing any of the following symptoms?",
                    :multiple => true,
+                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
                    :id => "pregnancy_status",
                    :allowFreeText => false
     %>
