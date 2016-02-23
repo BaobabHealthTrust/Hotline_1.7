@@ -8,7 +8,6 @@ class PatientController < ApplicationController
   end
 
   def search_result
-
     unless params[:action_type] == 'new_client'
       @given_name = params[:person]['names']['given_name'].squish.split(' ')[0]
       @family_name = params[:person]['names']['given_name'].squish.split(' ')[1] || ''

@@ -68,6 +68,9 @@ Rails.application.routes.draw do
   ######################### encounters start ########################################
   get '/encounters/new/:encounter_type' => 'encounters#new'
   post '/encounters/new/:encounter_type' => 'encounters#new'
+
+  get '/encounters/create'
+  post '/encounters/create'
   ######################### encounters end ##########################################
 
   # The priority is based upon order of creation: first created -> highest priority.
