@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 0) do
 end
 #end
 =end
-birthdate_entered = params[:person][:birthdate]
+birthdate_entered = Date.today
 person = Person.create(:birthdate => birthdate_entered, :birthdate_estimated => 1, :creator => 1)
 person_name = PersonName.create(:given_name => "System", :family_name => "Admininistrator",:person_id => person.id)
 PersonNameCode.create(:given_name_code => "System".soundex, :family_name_code => "Admininistrator".soundex,:person_name_id => person_name.id)
@@ -48,7 +48,7 @@ User.current = user
 
 puts "Creating user roles ...."
 ["System Developer","Provider"].each do |role|
-  Role.create(:description => :role => role)
+  Role.create(:description => '', :role => role)
 end
 
 puts "Assigning #{user.username} roles ...."
