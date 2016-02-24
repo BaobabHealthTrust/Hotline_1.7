@@ -300,6 +300,14 @@
   #num{
     display: none;
   }
+  .title {
+      font-size: 50px;
+  }
+
+  .data {
+      font-size: 40px;
+      color: orangered;
+  }
 </style>
 
     <%= render :partial => 'patient/birthdate/button_footer' %>
@@ -322,15 +330,15 @@
 
         <input type = "hidden" name = "person[birthdate][age_estimate]" id = "age_estimate" />
         <!-- ======= for Pregnant, enter expected date of delivery ========= -->
-        <%= text_field_tag "EXPECTED DUE DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';",
+        <%= text_field_tag "EXPECTED DUE DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
                                             :optional => "true",
                                             :id => "expected_due_date",
-                                            :helpText => 'Enter last mensturation period',
+                                            :helpText => 'Last menstural period (LMP)',
                                             :condition => "$('pregnancy_status').value == 'Pregnant'",
                                             :tt_pageStyleClass => "NoControls" } %>
 
         <!-- ======= for Delivered, enter delivery date ========= -->
-        <%= text_field_tag "DELIVERY DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; setFinish();",
+        <%= text_field_tag "DELIVERY DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';",
                                               :optional => "true",
                                               :helpText => 'Enter Delivery Date',
                                               :id => 'delivery_date',
@@ -342,7 +350,7 @@
                                             :optional => "true",
                                             :helpText => 'Summary',
                                             :condition => "$('pregnancy_status').value == 'Pregnant' || $('pregnancy_status').value == 'Delivered';",
-                                            :tt_pageStyleClass => "NoControls" } %>
+                                            :tt_pageStyleClass => "NoControls"} %>
 
         <%unless @encounter_id.nil?%>
             <%= hidden_field_tag("encounter_id",  @encounter_id) %>
@@ -351,6 +359,15 @@
     <% end %>
 
 <script>
+    function nextDate() {
+        var next_button = document.getElementById('nextButton');
+        next_button.setAttribute('onmousedown','passDateValues(); gotoNextPage();');
+    }
+    function passDateValues() {
+        document.getElementById('selected_year').value = document.getElementById('tbInputYear').value;
+        document.getElementById('selected_month').value = document.getElementById('tbInputMonth').value;
+        document.getElementById('selected_day').value = document.getElementById('tbInputDay').value;
+    }
     function inputDay(e) {
         var tbInput = document.getElementById('tbInputDay');
         if(tbInput.value == 'Unknown' && e.value != 'Unknown') {
@@ -619,20 +636,99 @@
     }
 
     function summary() {
-
-        var entered_year = document.getElementById('username').value;
-        var entered_month = document.getElementById('given_name').value;
-        var entered_day = document.getElementById('family_name').value;
-        var pregnancy_status = document.getElementById('gender').value;
-
+        var pregnancy_status = document.getElementById('pregnancy_status').value;
+        var year = document.getElementById('selected_year').value;
+        var month = document.getElementById('selected_month').value;
+        var day = document.getElementById('selected_day').value;
         var display = "<div><span class='title'>Pregnancy Status:</span><span class='data'> " + pregnancy_status + "</span></div>";
-        display += "<div><span class='title'>Birthdate:</span><span class='data'> " + entered_year + entered_month + entered_day +"</span></div>";
-
+        // Client Pregnant ------------
+        if (pregnancy_status == 'Pregnant') {
+            var edd_month;
+            switch(month) {
+                case 'January':
+                    edd_month = 0;
+                    break;
+                case 'February':
+                    edd_month = 1;
+                case 'March':
+                    edd_month = 2;
+                    break;
+                case 'April':
+                    edd_month = 3;
+                case 'May':
+                    edd_month = 4;
+                    break;
+                case 'June':
+                    edd_month = 5;
+                case 'July':
+                    edd_month = 6;
+                    break;
+                case 'August':
+                    edd_month = 7;
+                case 'September':
+                    edd_month = 8;
+                    break;
+                case 'October':
+                    edd_month = 9;
+                case 'November':
+                    edd_month = 10;
+                case 'December':
+                    edd_month = 11;
+                    break;
+            }
+            var edd_day = parseInt(day);
+            edd_day += 280;
+            var expected_edd_month;
+            var expected_date_of_delivery = new Date(year, edd_month, edd_day);
+            var expected_year = expected_date_of_delivery.getFullYear();
+            var expected_month = expected_date_of_delivery.getMonth();
+            var expected_day = expected_date_of_delivery.getDate();
+            switch(expected_month) {
+                case 0:
+                    expected_edd_month = 'January';
+                    break;
+                case 1:
+                    expected_edd_month = 'February';
+                case 2:
+                    expected_edd_month = 'March';
+                    break;
+                case 3:
+                    expected_edd_month = 'April';
+                case 4:
+                    expected_edd_month = 'May';
+                    break;
+                case 5:
+                    expected_edd_month = 'June';
+                case 6:
+                    expected_edd_month = 'July';
+                    break;
+                case 7:
+                    expected_edd_month = 'August';
+                case 8:
+                    expected_edd_month = 'September';
+                    break;
+                case 9:
+                    expected_edd_month = 'October';
+                case 10:
+                    expected_edd_month = 'November';
+                case 11:
+                    expected_edd_month = 'December';
+                    break;
+            }
+            display += "<div><span class='title'>Last Mensturation Period (LMP):</span><span class='data'> " + day + " " + month + " "+ year +"</span></div>";
+            display += "<div><span class='title'>Expected Date of Delivery (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
+        }
+        // Client Delivered ------------
+        else if (pregnancy_status == 'Delivered') {
+            display += "<div><span class='title'>Delivery Date:</span><span class='data'> " + day + " " + month + " "+ year +"</span></div>";
+        }
+        // Client Not Pregnant or Miscarried ------
+        else {
+            display += "<div><span class='title'>Date:</span><span class='data'> " + day + " " + month.toUpperCase() + " "+ year +"</span></div>";
+        }
 
         $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
         $("clearButton").style.display = "none";
-
-
     }
 
     function validateBirthdate() {
@@ -642,9 +738,9 @@
         current_day = date.getDate();
 
         // Get entered date variables -----
-        year = document.getElementById('tbInputYear').value;
-        month = document.getElementById('tbInputMonth').value;
-        day = document.getElementById('tbInputDay').value;
+        year = document.getElementById('selected_year').value;
+        month = document.getElementById('selected_month').value;
+        day = document.getElementById('selected_day').value;
 
         // get valid year and day range variables ---
         year_range = current_year - 150;
@@ -705,6 +801,7 @@
             document.getElementById('selected_year').value = year;
             document.getElementById('age_estimate').value = estimated_age;
         }
+
         // submit form -------------------------
         document.getElementById('pregnancy-status').submit();
     }

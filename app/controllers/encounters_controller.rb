@@ -1,6 +1,7 @@
 class EncountersController < ApplicationController
 
   def create
+    #raise params.inspect
     if (params[:edit_anc_connect])
       session[:edit_anc_connect] = true
     end
