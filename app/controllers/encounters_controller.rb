@@ -139,7 +139,8 @@ class EncountersController < ApplicationController
     end
 
     # Identifier handling
-    arv_number_identifier_type = PatientIdentifierType.find_by_name('ARV Number').id
+    #arv_number_identifier_type = PatientIdentifierType.find_by_name('ARV Number').id
+    arv_number_identifier_type = PatientIdentifierType.find_by_name('IVR access code').id
     (params[:identifiers] || []).each do |identifier|
       # Look up the identifier if the patient_identfier_id is set      
       @patient_identifier = PatientIdentifier.find(identifier[:patient_identifier_id]) unless identifier[:patient_identifier_id].blank?

@@ -310,7 +310,7 @@
   }
 </style>
 
-    <%= render :partial => 'patient/birthdate/button_footer' %>
+    <%#= render :partial => 'patient/birthdate/button_footer' %>
 
     <%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
         <%= hidden_field_tag "encounter[encounter_type_name]", "PREGNANCY STATUS" %>
