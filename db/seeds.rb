@@ -47,7 +47,7 @@ User.current = user
 
 puts "Creating user roles ...."
 ["System Developer","Provider"].each do |role|
-  Role.create(:description => :role => role)
+  Role.create(description: 'User roles', role: role)
 end
 
 puts "Assigning #{user.username} roles ...."
