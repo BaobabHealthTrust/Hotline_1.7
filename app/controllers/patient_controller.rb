@@ -8,7 +8,6 @@ class PatientController < ApplicationController
   end
 
   def search_result
-
     unless params[:action_type] == 'new_client'
       @given_name = params[:person]['names']['given_name'].squish.split(' ')[0]
       @family_name = params[:person]['names']['given_name'].squish.split(' ')[1] || ''
@@ -71,6 +70,10 @@ class PatientController < ApplicationController
      ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
     @location_names = @districts.collect { |location_id, location_name| location_name}
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+  end
+
+  def pregnancy_status
+        
   end
 
   

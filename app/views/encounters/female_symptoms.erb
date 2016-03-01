@@ -1,0 +1,47 @@
+<script>
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient.id %>/tasks"
+    var symptoms_values = [];
+
+    function setConceptNamesAndValues(symptoms, observations, obs_type){
+
+        var values_string = selectedValue(observations);
+
+        /* clear the fields*/
+        for (var index = 0; index < symptoms.length; index++){
+            var concept_name        = obs_type + index +"_concept_name";
+            var value_coded_or_text = obs_type + index +"_value_coded_or_text";
+
+            if(values_string.contains(symptoms[index][0]) && symptoms[index][1] != ""){
+                $(concept_name).value         = symptoms[index][1];
+                $(value_coded_or_text).value  = 'YES';
+            }
+            else{
+                $(concept_name).value         = '';
+                $(value_coded_or_text).value  = '';
+            }
+        }
+    }
+</script>
+
+<style>
+    #num{
+        display: none;
+    }
+</style>
+
+<%= render :partial => 'patient/birthdate/button_footer' %>
+
+<%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
+    <%= hidden_field_tag "encounter[encounter_type_name]", "MATERNAL HEALTH SYMPTOMS" %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+    <%= select_tag "maternal_health_symptoms", options_for_select(@select_options['maternal_health_symptoms'].sort , nil),
+                   :helpText =>"Experiencing any of the following symptoms?",
+                   :multiple => true,
+                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
+                   :id => "pregnancy_status",
+                   :allowFreeText => false
+    %>
+<% end %>

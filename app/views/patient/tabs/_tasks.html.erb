@@ -40,7 +40,7 @@
     <!-- loop -->
     <%if @patient_obj.sex == 'F'%> 
       <div class="cell">
-        <div class="btn" style="background-color: #f5deb3;border: 1px solid #2e6da4; width: 99%;">
+        <div class="btn" style="background-color: #f5deb3;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/encounters/new/pregnancy_status?patient_id=<%=@patient_obj.patient_id%>'">
           <%=image_tag("icons/pregnacy.png", class: 'task-icons')%>
             <p style="color: black;">Pregnancy status</p>
           </span>
@@ -56,7 +56,7 @@
     <!-- endloop -->
     <!-- loop -->
     <div class="cell">
-      <div class="btn" style="background-color: #666600 ;border: 1px solid #2e6da4; width: 99%;">
+      <div class="btn" style="background-color: #666600 ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/encounters/new/female_symptoms?patient_id=<%=@patient_obj.patient_id%>'">
         <%=image_tag("icons/symptoms-2.png", class: 'task-icons')%>
           <p style="color: white;">Symptoms</p>
         </span>
