@@ -14,7 +14,6 @@ class PeopleController < ApplicationController
 
   def new_hsa
     @person = Person.new
-    @role = ["","HSA"]
   end
 
   def search_hsa
@@ -24,14 +23,16 @@ class PeopleController < ApplicationController
     end
   end
   
-
   def edit_hsa
     render :layout => false
   end
 
   def create_hsa
-    person = Person.create(birthdate: Date.today, birthdate_estimated: 1, gender: params[:person]['gender']) 
-    
+    person = Person.create(birthdate: Date.today, birthdate_estimated: 1, gender: params[:person]['gender'])
+
+    person_attribute = PersonAttribute.create(person_id: person.id,
+     person_attribute_type_id: PersonAttributeType.where("name = 'Health Surveillance Assistant'").first.person_attribute_type_id)
+
     person_name = PersonName.create(given_name: params[:person]['names']['given_name'], 
       family_name: params[:person]['names']['family_name'], person_id: person.id)
 
