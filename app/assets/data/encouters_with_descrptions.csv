@@ -1,0 +1,10 @@
+name,description
+REGISTRATION,Patient Registration Encounter
+UPDATE OUTCOME,update patient outcome
+TIPS AND REMINDERS,An encounter for patient's enrolment for tips and 
+MATERNAL HEALTH SYMPTOMS,Maternal health symptoms
+CHILD HEALTH SYMPTOMS,Child health symptoms
+BABY DELIVERY,This encounter occurs when a mother delivers a bab
+PREGNANCY STATUS,MNCH pregnancy status encounter
+BIRTH PLAN,This encounter specificies where and when the baby
+ANC VISIT,Thise encounter records if a pregnant woman has at

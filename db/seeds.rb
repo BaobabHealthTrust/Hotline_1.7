@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 0) do
 end
 #end
 =end
-birthdate_entered = params[:person][:birthdate]
+birthdate_entered = Date.today
 person = Person.create(:birthdate => birthdate_entered, :birthdate_estimated => 1, :creator => 1)
 person_name = PersonName.create(:given_name => "System", :family_name => "Admininistrator",:person_id => person.id)
 PersonNameCode.create(:given_name_code => "System".soundex, :family_name_code => "Admininistrator".soundex,:person_name_id => person_name.id)
@@ -69,7 +69,8 @@ CSV.foreach("#{Rails.root}/app/assets/data/health_facilities.csv", :headers => t
   facility_location = row[7] ; latitude = row[8] ; longitude = row[9]
   
   
-  next if district_name.blank?   
+  next if district_name.blank?  
+  district_name = "Nkhata-bay" if district_name.match(/nkhata/i) 
   location_tags << row[5]
   districts[district_name] = [] if districts[district_name].blank?
   districts[district_name] << [
@@ -117,7 +118,7 @@ end
 end
 
 
-
+=begin
 districts_with_ta_and_villages = {}
 CSV.foreach("#{Rails.root}/app/assets/data/districts_with_ta_and_villages.csv", :headers => true).each_with_index do |row, i|
   district_name = row[0].gsub('-',' ').strip ; ta_name = row[1] ; village_name = row[2]
@@ -156,6 +157,64 @@ village_location_tag = LocationTag.find_by_name('Village')
       LocationTagMap.create(location_id: village.id, location_tag_id: village_location_tag.id)
       village.update_attributes(parent_location: traditional_authority.id)
       puts "#{village_name} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<  #{district_name}"
+    end
+  end
+end
+=end
+
+
+
+districts_with_ta_and_villages = {}
+district_ta_and_villages_json = JSON.parse(`cat #{Rails.root}/app/assets/data/districts.json`)
+
+(district_ta_and_villages_json || {}).each do |raw_district_name, ta_and_thier_villages|
+  if raw_district_name.match(/-/)
+    district_name = raw_district_name.strip.capitalize
+  else
+    district_name = raw_district_name.strip
+  end
+  puts "setting up TAs and villages for .......... #{district_name}"
+
+  district = Location.where("t.name = 'District' AND location.name = ?",
+             district_name).joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id
+             INNER JOIN location_tag t ON t.location_tag_id = m.location_tag_id").first rescue nil
+             
+
+  if district.blank?
+    new_district = Location.create(name: district_name, description: "A sub district")
+    tag_map_id = LocationTag.find_by_name('District').id
+    LocationTagMap.create(location_id: new_district.id, location_tag_id: tag_map_id)
+    parent_district = Location.find_by_name('Lilongwe') if district_name.match(/Lilongwe/i)
+    parent_district = Location.find_by_name('Blantyre') if district_name.match(/Blantyre/i)
+    parent_district = Location.find_by_name('Mzimba') if district_name.match(/Mzuzu/i)
+    parent_district = Location.find_by_name('Zomba') if district_name.match(/Zomba/i)
+    new_district.update_attributes(parent_location: parent_district.id)
+    district = new_district
+  end
+
+  districts_with_ta_and_villages[district.name] = {} if districts_with_ta_and_villages[district.name].blank?
+  (district_ta_and_villages_json[district.name].keys || []).each do |ta_name|
+    districts_with_ta_and_villages[district.name][ta_name] = [] if districts_with_ta_and_villages[district.name][ta_name].blank?
+    (district_ta_and_villages_json[district.name][ta_name] || []).each do |village_name|
+      districts_with_ta_and_villages[district.name][ta_name] << village_name
+    end
+  end
+end
+
+ta_location_tag = LocationTag.find_by_name('Traditional Authority')
+village_location_tag = LocationTag.find_by_name('Village')
+(districts_with_ta_and_villages || {}).each_with_index do |(district_name, ta_and_villages), i|
+  district = Location.find_by_name(district_name)
+  (ta_and_villages || {}).each do |ta, villages|
+    traditional_authority = Location.create(name: ta, description: 'Traditional Authority')
+    LocationTagMap.create(location_id: traditional_authority.id, location_tag_id: ta_location_tag.id)
+    traditional_authority.update_attributes(parent_location: district.id)
+
+    (villages || []).each_with_index do |village_name, i|
+      village = Location.create(name: village_name, description: 'A village under a TA')
+      LocationTagMap.create(location_id: village.id, location_tag_id: village_location_tag.id)
+      village.update_attributes(parent_location: traditional_authority.id)
+      puts "#{traditional_authority.name} >>>>  #{village_name}"
     end
   end
 end
@@ -210,7 +269,8 @@ attributes = [['Cell phone number','Person primary cell phone number'],
   ['Education','Maternity required this field'],
   ['Religion','Maternity required this field'],
   ['Civil Status','Marriage status of this person'],
-  ['Race','Group of persons related by common descent or heredity']
+  ['Race','Group of persons related by common descent or heredity'],
+  ['Health surveillance assistant','HSA: Health Surveillance Assistants provide a life-saving link between communities and the health care system']
 ]
 
 (attributes || []).each do |name,desc|
@@ -219,6 +279,107 @@ end
 ###################################### Creating Person attributes ends ##############################################################
 
 
+###################################### Creating Concepts starts ##############################################################
+diagnosis_concept_datatype = ConceptDataType.create(:name => 'Coded', :hl7_abbreviation => 'CWE',
+  :description => "Value determined by term dictionary lookup (i.e., term identifier)")
+diagnosis_concept_class = ConceptClass.create(:name => 'Diagnosis', :description => "Conclusion drawn through findings")
 
+concept_diagnosis = Concept.create(:datatype_id => diagnosis_concept_datatype.concept_datatype_id,
+  :class_id => diagnosis_concept_class.concept_class_id)
+diagnosis_set = ConceptName.create(:name => 'Danger sign',:concept_id => concept_diagnosis.concept_id, :locale => 'en')
+
+
+
+health_information_concept_class = ConceptClass.create(:name => 'Question', :description => "Question (eg, patient history, SF36 items)")
+health_information_concept_datatype = ConceptDataType.find_by_name('Coded')
+concept_health_information = Concept.create(:datatype_id => health_information_concept_datatype.concept_datatype_id,
+  :class_id => health_information_concept_class.concept_class_id)
+health_information_set = ConceptName.create(:name => 'Health information',:concept_id => concept_health_information.concept_id, :locale => 'en')
+
+
+health_symptom_concept_class = ConceptClass.find_by_name('Question')
+health_symptom_concept_datatype = ConceptDataType.find_by_name('Coded')
+concept_symptom = Concept.create(:datatype_id => health_symptom_concept_datatype.concept_datatype_id,
+  :class_id => health_symptom_concept_class.concept_class_id)
+health_information_set = ConceptName.create(:name => 'Health symptom',:concept_id => concept_symptom.concept_id, :locale => 'en')
+
+
+anc_visit_concept_class = ConceptClass.find_by_name('Question')
+anc_visit_concept_datatype = ConceptDataType.find_by_name('Coded')
+concept_anc_visit = Concept.create(:datatype_id => anc_visit_concept_datatype.concept_datatype_id,
+  :class_id => anc_visit_concept_class.concept_class_id)
+anc_visit_set = ConceptName.create(:name => 'Reason for not visiting ANC client',:concept_id => concept_anc_visit.concept_id, :locale => 'en')
+
+
+concept_name = nil ; set = nil ; concept_class = nil ; concept_datatype = nil
+CSV.foreach("#{Rails.root}/app/assets/data/concept_sets_details.csv", :headers => true).with_index do |row, i|
+  concept_name = row[0].strip rescue nil
+  next if concept_name.blank?
+
+  if concept_name == 'group concept = "Danger sign"'
+    concept_class = ConceptClass.find_by_name('Diagnosis')
+    concept_datatype = ConceptDataType.find_by_name('Coded')
+    set = ConceptName.find_by_name('Danger sign')
+    next
+  elsif concept_name == 'group concept = "Health information"'
+    concept_class = ConceptClass.find_by_name('Question')
+    concept_datatype = ConceptDataType.find_by_name('Coded')
+    set = ConceptName.find_by_name('Health information')
+    next
+  elsif concept_name == 'group concept = "Health symptom"'
+    concept_class = ConceptClass.find_by_name('Question')
+    concept_datatype = ConceptDataType.find_by_name('Coded')
+    set = ConceptName.find_by_name('Health symptom')
+    next
+  elsif concept_name == 'group concept = "Reason for not visiting ANC client"'
+    concept_class = ConceptClass.find_by_name('Question')
+    concept_datatype = ConceptDataType.find_by_name('Coded')
+    set = ConceptName.find_by_name('Reason for not visiting ANC client')
+    next
+  end
+ 
+  concept = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
+  ConceptName.create(name: concept_name, concept_id: concept.concept_id, locale: 'en')
+  ConceptSet.create(concept_id: set.concept_id, concept_set: concept.concept_id)
+  puts "Created concept: #{concept_name} ...."
+end
+###################################### Creating Concepts ends ##############################################################
+
+
+
+
+
+###################################### Encounter Type starts ##############################################################
+CSV.foreach("#{Rails.root}/app/assets/data/encouters_with_descrptions.csv", :headers => true).with_index do |row, i|
+  name = row[0].capitalize ; des = row[1].capitalize
+  EncounterType.create(name: name, description: des)
+  puts "EncounterType ---- #{name}"
+end
+###################################### Encounter Type end ##############################################################
+
+
+
+
+
+###################################### Creating Additional Concepts starts ##############################################################
+concept_class = ConceptClass.find_by_name('Question')
+concept_datatype = ConceptDataType.create(:name => 'N/A', :hl7_abbreviation => 'ZZ',
+  :description => "Not associated with a datatype (e.g., term answers, sets)")
+
+
+CSV.foreach("#{Rails.root}/app/assets/data/additional_concept_names.csv", :headers => true).with_index do |row, i|
+  concept_name = row[0].capitalize 
+  concept = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
+  ConceptName.create(name: concept_name, concept_id: concept.concept_id, locale: 'en')
+  puts "Additional concept: ---- #{concept_name}"
+end
+
+['Pregnant','Not Pregnant','Yes','No'].each do |concept_name|
+  concept_name = concept_name.capitalize 
+  concept = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
+  ConceptName.create(name: concept_name, concept_id: concept.concept_id, locale: 'en')
+  puts "Additional concept: ---- #{concept_name}"
+end
+###################################### Creating Additional Concepts ends ##############################################################
 
 puts "Your new user is: admin, password: adminhotline"
