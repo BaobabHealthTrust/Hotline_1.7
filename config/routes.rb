@@ -57,6 +57,15 @@ Rails.application.routes.draw do
   get 'demographics/:patient_id' => 'people#demographics'
   get 'demographic_modify/:field/:patient_id' => 'people#demographic_modify'
   post '/demographic_modify' => 'people#demographic_modify'
+  get 'people/new'
+  post '/people/create_hsa'
+  get 'people/search_hsa'
+  post '/people/search_hsa'
+  post 'patient/:create' => 'people#create'
+  get '/patient/:given_names' => 'people#given_names'
+  get '/patient/:family_names' => 'people#family_names'
+  get '/patient/:given_name_plus_family_name' => 'people#given_name_plus_family_name'
+
   ######################### people end ############################################
 
   ######################### encounters start ########################################

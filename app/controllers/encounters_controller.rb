@@ -1,7 +1,29 @@
 class EncountersController < ApplicationController
 
   def create
+    raise params[:person].inspect
+    ####
+    #### Get global Variables for encounter --------------
     @patient = Patient.find(params[:encounter][:patient_id])
+    encounter = params[:encounter][:encounter_type_name]
+    person = params[:person] unless params[:person].blank?
+
+    ##
+    ##### Record Pregnancy Status Encounter ---------------
+    if encounter.upcase == "PREGNANCY"
+      pregnancy_status = params["pregnancy_status"] # save pregnancy status for client
+      if pregnancy_status.upcase == "DELIVERED"
+        ##
+        ##### Do delivered observations
+      elsif pregnancy_status.upcase == "PREGNANT"
+        ##
+        ##### Do pregnant observations
+      else
+        ##
+        ##### Do otherwise (Miscarried or Not Pregnant)
+      end
+    end
+
   end
 
   def new

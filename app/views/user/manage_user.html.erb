@@ -124,10 +124,10 @@ img {
 
     <!-- loop -->
   <div class="cells btncells">
-    <div class="divbtn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+    <div class="divbtn" style="background-color: lightgreen ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/people/new'" >
         <span class="icons">
-          <%=image_tag("icons/gohome.png", class: 'icons')%>
-          <p>Home</p>
+          <%=image_tag("icons/add_group.png", class: 'icons')%>
+          <p>Create HSA</p>
         </span>
     </div>
   </div>
@@ -137,5 +137,55 @@ img {
 
 
 </div>
+
+<div>
+
+<div class="main-page-container">
+
+<div class="main-page-container-rows">
+
+ <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: grey;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/people/edit_hsa'" >
+        <span class="icons">
+          <%=image_tag("icons/user_edit.png", class: 'icons')%>
+          <p>Edit HSA</p>
+        </span>
+    </div>
+  </div>
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="width: 99%;" onclick="document.location='/user/change_password'" >
+        <span class="icons">
+          <%#=image_tag("icons/change-password.png", class: 'icons')%>
+          <p style="color: black;">&nbsp;</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="width: 99%;" >
+        <span class="icons">
+          <%#=image_tag("icons/register.png", class: 'icons')%>
+          <p>&nbsp;</p>
+        </span>
+    </div>
+  </div>
+  <!-- endloop -->
+  <!-- loop -->
+  <div class="cells btncells">
+    <div class="divbtn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
+        <span class="icons">
+          <%=image_tag("icons/gohome.png", class: 'icons')%>
+          <p>Home</p>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</style>
 
 <%= render :partial => 'footer' %>

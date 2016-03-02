@@ -319,7 +319,7 @@
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
         <% session_date = session[:datetime] || Time.now() %>
 
-        <%= select_tag "PREGNANCY STATUS", options_for_select(@select_options['pregnancy_status'] , nil),
+        <%= select_tag "pregnancy_status", options_for_select(@select_options['pregnancy_status'] , nil),
                :helpText =>"Pregnancy Status",
                :id => "pregnancy_status",
                :allowFreeText => false
@@ -330,7 +330,7 @@
 
         <input type = "hidden" name = "person[birthdate][age_estimate]" id = "age_estimate" />
         <!-- ======= for Pregnant, enter expected date of delivery ========= -->
-        <%= text_field_tag "EXPECTED DUE DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
+        <%= text_field_tag "expected_due_date", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
                                             :optional => "true",
                                             :id => "expected_due_date",
                                             :helpText => 'Last menstural period (LMP)',
@@ -338,7 +338,7 @@
                                             :tt_pageStyleClass => "NoControls" } %>
 
         <!-- ======= for Delivered, enter delivery date ========= -->
-        <%= text_field_tag "DELIVERY DATE", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';",
+        <%= text_field_tag "delivery_date", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';",
                                               :optional => "true",
                                               :helpText => 'Enter Delivery Date',
                                               :id => 'delivery_date',
