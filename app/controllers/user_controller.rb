@@ -85,14 +85,6 @@ class UserController < ApplicationController
 
     redirect_to '/manage_user'
   end
-
-  def edit_hsa
-    render :layout => false
-  end
-
-  def create_hsa
-    render :layout => false
-  end
  
   def manage_user
     render :layout => false
