@@ -32,7 +32,7 @@ class EncountersController < ApplicationController
     @patient = Patient.find(params[:patient_id] || session[:patient_id])
     render :action => params[:encounter_type] if params[:encounter_type]
   end
-
+=begin
   def select_options
     select_options = {
         'maternal_health_info' => [
@@ -207,4 +207,15 @@ class EncountersController < ApplicationController
         ]
     }
   end
+=end
+ 
+  def select_options
+    @select_options = {}
+    concept = ConceptName.where(name: 'Pregnancy status').first.concept
+    (concept.concept_sets || []).each do |set|
+      @select_options['Pregnancy status'] = [] if @select_options['Pregnancy status'].blank?
+      @select_options['Pregnancy status'] << set.concept.concept_names.first.name
+    end
+  end
+    
 end
