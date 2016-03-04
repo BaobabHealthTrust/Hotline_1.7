@@ -374,12 +374,6 @@ CSV.foreach("#{Rails.root}/app/assets/data/additional_concept_names.csv", :heade
   puts "Additional concept: ---- #{concept_name}"
 end
 
-['Pregnant','Not Pregnant','Yes','No'].each do |concept_name|
-  concept_name = concept_name.capitalize 
-  concept = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
-  ConceptName.create(name: concept_name, concept_id: concept.concept_id, locale: 'en')
-  puts "Additional concept: ---- #{concept_name}"
-end
 ###################################### Creating Additional Concepts ends ##############################################################
 
 puts "Your new user is: admin, password: adminhotline"
