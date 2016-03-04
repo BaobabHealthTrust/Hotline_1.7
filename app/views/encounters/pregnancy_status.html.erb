@@ -319,7 +319,7 @@
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
         <% session_date = session[:datetime] || Time.now() %>
 
-        <%= select_tag "pregnancy_status", options_for_select(@select_options['Pregnancy status'] , nil),
+        <%= select_tag "pregnancy_status", options_for_select(@select_options , nil),
                :helpText =>"Pregnancy Status",
                :id => "pregnancy_status",
                :allowFreeText => false

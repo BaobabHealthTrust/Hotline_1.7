@@ -8,6 +8,14 @@ class EncountersController < ApplicationController
     encounter = params[:encounter][:encounter_type_name]
     person = params[:person] unless params[:person].blank?
 
+
+
+    #######################################################
+
+    #e  = Encounter.create(encounter_type: ConceptName.find_by_name('Pregnancy status').concept_id, patient_id: 122,encounter_datetime: "")
+    #Observation.create(concept_id:  ConceptName.find_by_name('Pregnancy status').concept_id,
+    #                   person_id: e.patient_id, value_coded: ConceptName.find_by_name(params[sss].concept_id))
+    #######################################################
     ##
     ##### Record Pregnancy Status Encounter ---------------
     if encounter.upcase == "PREGNANCY"
@@ -210,11 +218,11 @@ class EncountersController < ApplicationController
 =end
  
   def select_options
-    @select_options = {}
+    select_options = {}
     concept = ConceptName.where(name: 'Pregnancy status').first.concept
     (concept.concept_sets || []).each do |set|
-      @select_options['Pregnancy status'] = [] if @select_options['Pregnancy status'].blank?
-      @select_options['Pregnancy status'] << set.concept.concept_names.first.name
+      select_options['Pregnancy status'] = [] if select_options['Pregnancy status'].blank?
+      select_options['Pregnancy status'] << set.concept.concept_names.first.name
     end
   end
     
