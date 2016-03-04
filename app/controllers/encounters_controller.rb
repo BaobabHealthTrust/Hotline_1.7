@@ -218,12 +218,14 @@ class EncountersController < ApplicationController
 =end
  
   def select_options
-    select_options = {}
+    select_options = []
     concept = ConceptName.where(name: 'Pregnancy status').first.concept
     (concept.concept_sets || []).each do |set|
-      select_options['Pregnancy status'] = [] if select_options['Pregnancy status'].blank?
-      select_options['Pregnancy status'] << set.concept.concept_names.first.name
+      #select_options['Pregnancy status'] = [] if select_options['Pregnancy status'].blank?
+      #select_options['Pregnancy status'] << [set.concept.concept_names.first.name, set.concept_set]
+      select_options << [set.concept.concept_names.first.name, set.concept_set]
     end
+    return select_options
   end
     
 end
