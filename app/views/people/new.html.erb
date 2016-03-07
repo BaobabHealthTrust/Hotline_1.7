@@ -256,16 +256,6 @@
   %>
   <%end%>
 
-  <%#@role = ["","HSA",] %>
-                                        
-  <%#= select_tag("person[role]", options_for_select(@role ,params[:role]),
-      :helpText =>"Role",
-      :id => "role",
-      :allowFreeText => false, 
-      :tt_onLoad => "seen(tstCurrentPage);__$('keyboard').style.display = 'none'",
-      :ttMatchFromBeginning => "true")
-  %>
-
 
 <label for='summary'>Summary</label>
   <%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';", 
