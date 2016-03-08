@@ -313,13 +313,13 @@
     <%#= render :partial => 'patient/birthdate/button_footer' %>
 
     <%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
-        <%= hidden_field_tag "encounter[encounter_type_name]", "PREGNANCY STATUS" %>
+        <%= hidden_field_tag "encounter[encounter_type_name]", "Pregnancy status" %>
         <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
         <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
         <% session_date = session[:datetime] || Time.now() %>
 
-        <%= select_tag "pregnancy_status", options_for_select(@select_options['Pregnancy status'] , nil),
+        <%= select_tag "observations[value_coded]", options_for_select(@select_options , nil),
                :helpText =>"Pregnancy Status",
                :id => "pregnancy_status",
                :allowFreeText => false
@@ -345,6 +345,7 @@
                                               :condition => "$('pregnancy_status').value == 'Delivered'",
                                               :tt_pageStyleClass => "NoControls" } %>
 
+        <!-- ======= Give summary of input if Pregnancy Status is Pregnant or Delivered ========= -->
         <%= text_field_tag :summary, nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; summary(); setFinish();",
                                             :id => 'summary',
                                             :optional => "true",
