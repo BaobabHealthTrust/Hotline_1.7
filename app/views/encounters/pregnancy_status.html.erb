@@ -603,7 +603,7 @@
                         var btn0 = document.createElement('input');
                         btn0.setAttribute('id','btn0');
                         btn0.setAttribute('type','button');
-                        btn0.setAttribute('onclick','input(this);');
+                        btn0.setAttribute('onclick','inputDay(this);');
                         btn0.setAttribute('value','0');
                         btn0.className = 'btn-day';
                         day_div.appendChild(btn0);
@@ -651,28 +651,34 @@
                     break;
                 case 'February':
                     edd_month = 1;
+                    break;
                 case 'March':
                     edd_month = 2;
                     break;
                 case 'April':
                     edd_month = 3;
+                    break;
                 case 'May':
                     edd_month = 4;
                     break;
                 case 'June':
                     edd_month = 5;
+                    break;
                 case 'July':
                     edd_month = 6;
                     break;
                 case 'August':
                     edd_month = 7;
+                    break;
                 case 'September':
                     edd_month = 8;
                     break;
                 case 'October':
                     edd_month = 9;
+                    break;
                 case 'November':
                     edd_month = 10;
+                    break;
                 case 'December':
                     edd_month = 11;
                     break;
@@ -690,34 +696,41 @@
                     break;
                 case 1:
                     expected_edd_month = 'February';
+                    break;
                 case 2:
                     expected_edd_month = 'March';
                     break;
                 case 3:
                     expected_edd_month = 'April';
+                    break;
                 case 4:
                     expected_edd_month = 'May';
                     break;
                 case 5:
                     expected_edd_month = 'June';
+                    break;
                 case 6:
                     expected_edd_month = 'July';
                     break;
                 case 7:
                     expected_edd_month = 'August';
+                    break;
                 case 8:
                     expected_edd_month = 'September';
                     break;
                 case 9:
                     expected_edd_month = 'October';
+                    break;
                 case 10:
                     expected_edd_month = 'November';
+                    break;
                 case 11:
                     expected_edd_month = 'December';
                     break;
             }
             display += "<div><span class='title'>Last Mensturation Period (LMP):</span><span class='data'> " + day + " " + month + " "+ year +"</span></div>";
             display += "<div><span class='title'>Expected Date of Delivery (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
+            document.getElementById('expected_due_date').value = expected_date_of_delivery;
         }
         // Client Delivered ------------
         else if (pregnancy_status == 'Delivered') {
