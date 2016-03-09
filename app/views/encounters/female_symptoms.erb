@@ -44,4 +44,11 @@
                    :id => "pregnancy_status",
                    :allowFreeText => false
     %>
+    <%= select_tag "observations[:value_coded]", options_for_select(@select_options , nil),
+                   :helpText =>"Select danger signs",
+                   :multiple => true,
+                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
+                   :id => "pregnancy_status",
+                   :allowFreeText => false
+    %>
 <% end %>

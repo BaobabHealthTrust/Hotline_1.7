@@ -735,10 +735,50 @@
         // Client Delivered ------------
         else if (pregnancy_status == 'Delivered') {
             display += "<div><span class='title'>Delivery Date:</span><span class='data'> " + day + " " + month + " "+ year +"</span></div>";
+            switch(month) {
+                case 'January':
+                    month = 0;
+                    break;
+                case 'February':
+                    month = 1;
+                    break;
+                case 'March':
+                    month = 2;
+                    break;
+                case 'April':
+                    month = 3;
+                    break;
+                case 'May':
+                    month = 4;
+                    break;
+                case 'June':
+                    month = 5;
+                    break;
+                case 'July':
+                    month = 6;
+                    break;
+                case 'August':
+                    month = 7;
+                    break;
+                case 'September':
+                    month = 8;
+                    break;
+                case 'October':
+                    month = 9;
+                    break;
+                case 'November':
+                    month = 10;
+                    break;
+                case 'December':
+                    month = 11;
+                    break;
+            }
+            var delivery_date = new Date(year, month, day);
+            document.getElementById('delivery_date').value = delivery_date;
         }
         // Client Not Pregnant or Miscarried ------
         else {
-            display += "<div><span class='title'>Date:</span><span class='data'> " + day + " " + month.toUpperCase() + " "+ year +"</span></div>";
+            display += "<div><span class='title'>Date:</span><span class='data'> " + day + " " + month + " "+ year +"</span></div>";
         }
 
         $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;

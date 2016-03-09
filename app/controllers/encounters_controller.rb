@@ -1,7 +1,7 @@
 class EncountersController < ApplicationController
 
   def create
-    #raise params[:expected_due_date].to_datetime.to_s.inspect
+    #raise params.inspect
     ####
     #### Get global Variables for encounter --------------
     current_datetime = session[:datetime].to_datetime rescue DateTime.now
@@ -28,6 +28,10 @@ class EncountersController < ApplicationController
       if pregnancy_status.upcase == "DELIVERED"
         ##
         ##### Get expected delivery date
+        delivery_date = params[:delivery_date].to_datetime.to_s
+        obs = Observation.where(person_id: encounter.patient_id, value_coded: ConceptName.find_by_name(pregnancy_status).concept_id).first
+        obs.value_datetime = delivery_date
+        obs.save
       elsif pregnancy_status.upcase == "PREGNANT"
         ##
         ##### Get last menstural period
@@ -233,18 +237,40 @@ class EncountersController < ApplicationController
     encounter_name = encounter.gsub('_',' ').capitalize
     case encounter_name
       when 'Pregnancy status'
-        concept_name = 'Pregnancy status'
+        concept_name = encounter_name
       when 'Female symptoms'
-        concept_name = 'maternal_health_symptoms'.gsub('_',' ').capitalize
+        concept_names = ['maternal_health_symptoms', 'danger_signs']
+        concept_name = concept_names[0].gsub('_',' ').capitalize
     end
     concept = ConceptName.where(name: concept_name).first.concept
     (concept.concept_sets || []).collect do |set|
-      #select_options['Pregnancy status'] = [] if select_options['Pregnancy status'].blank?
-      #select_options['Pregnancy status'] << [set.concept.concept_names.first.name, set.concept_set]
       name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
       next if name.blank?
-      [name]#, set.concept_set]
+      [name]
     end
   end
-    
+
+=begin
+  def select_options(encounter)
+    select_options = {}
+    encounter_name = encounter.gsub('_',' ').capitalize
+    case encounter_name
+      when 'Pregnancy status'
+        concept_name = encounter_name
+      when 'Female symptoms'
+        concept_names = ['maternal_health_symptoms', 'danger_signs']
+        select_options[0] = (concept_names || []).each do |name|
+          concept_name = name.gsub('_',' ').capitalize
+        end
+    end
+    concept = ConceptName.where(name: concept_name).first.concept
+    (concept.concept_sets || []).collect do |set|
+      name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
+      next if name.blank?
+      [name]
+    end
+  end
+=end
+
+
 end
