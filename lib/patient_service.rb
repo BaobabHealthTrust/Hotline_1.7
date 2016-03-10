@@ -114,13 +114,13 @@ module PatientService
   end
 
   def self.format_birthdate_params(birthday_params)
-    if birthday_params["year"] == "Unknown" || !birthday_params['age_estimate'].blank?
+    if birthday_params["birth_year"] == "Unknown" and not birthday_params['age_estimate'].blank?
         birthdate = Date.new(Date.today.year - birthday_params["age_estimate"].to_i, 7, 1)
         birthdate_estimated = 1
     else
-      year = birthday_params["year"]
-      month = birthday_params["month"]
-      day = birthday_params["day"]
+      year = birthday_params["birth_year"]
+      month = birthday_params["birth_month"]
+      day = birthday_params["birth_day"]
 
       month_i = (month || 0).to_i
       month_i = Date::MONTHNAMES.index(month) if month_i == 0 || month_i.blank?

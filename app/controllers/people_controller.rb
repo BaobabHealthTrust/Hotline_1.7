@@ -71,12 +71,9 @@ class PeopleController < ApplicationController
 
 
   def create_hsa
-    birth_month = params[:person]['birth_month']
-    if params[:person]['birth_month'].to_i < 10
-      birth_month = "0#{params[:person]['birth_month']}"
-    end
-    birthdate = "#{params[:person]['birth_year']}-#{birth_month}-#{params[:person]['birth_day']}"
-    person = Person.create(birthdate: birthdate, birthdate_estimated: 1, gender: params[:person]['gender'])
+    birthdate = PatientService.format_birthdate_params(params[:person])
+    person = Person.create(birthdate: birthdate[0].to_date, birthdate_estimated: birthdate[1], 
+      gender: params[:person]['gender'].first)
 
     person_attribute = PersonAttribute.create(person_id: person.id,
      person_attribute_type_id: PersonAttributeType.where("name = 'Health Surveillance Assistant'").first.person_attribute_type_id)
@@ -86,8 +83,6 @@ class PeopleController < ApplicationController
 
     PersonNameCode.create(given_name_code: person_name.given_name.soundex, 
       family_name_code: person_name.family_name.soundex, person_name_id: person_name.id)
-
-    #Person.create(person_id: person.id, gender: params[:person]['gender'], birthdate: params[:person]['birthdate'])
 
     redirect_to '/manage_user'
 
