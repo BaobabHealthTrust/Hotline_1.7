@@ -7,6 +7,15 @@ class PatientController < ApplicationController
 
     @current_encounters = Encounter.where(patient_id: params[:patient_id], 
       encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) .. (Date.today.strftime('%Y-%m-%d 23:59:59')))
+    
+    @previous_encounters = Encounter.where("patient_id = ? AND encounter_datetime < ?",
+      params[:patient_id], Date.today.strftime('%Y-%m-%d 00:00:00'))
+
+    symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
+    @symptom_encounters = Encounter.where("patient_id = ? AND encounter_type = ?",
+      params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
+
+
     render :layout => false
   end
 
@@ -103,6 +112,10 @@ class PatientController < ApplicationController
 
       if value.blank?
         value = ob.value_numeric rescue nil
+      end
+
+      if value.blank?
+        value = ob.value_text rescue nil
       end
 
       observations << [ob.concept.concept_names.first.name, value]

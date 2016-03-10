@@ -38,8 +38,11 @@
 }
 
 .encounters {
-  border-style: solid;
-  border-width: 0px;
+  border-radius: 25px;
+  background: lightgrey; /*#73AD21;*/
+  padding: 5px;
+  height: 30px;
+  width: 250px;
 }
 
 .selected_encounter {
@@ -49,6 +52,43 @@
   border-width: 0px;
 }
 
+.encounters p {
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.encounters p small {
+  font-size: 16px;
+  color: #73AD21;
+}
+
+#selected_encounter_table td {
+   border-style: solid;
+   border-width: 0px 0px 1px;
+   line-height: 50px;
+}
+
+#selected_encounter_table {
+   border-collapse: collapse;
+}
+
+.obs_title {
+  font-weight: bold;
+}
+
+.obs_value {
+  color: green;
+  font-weight: bold;
+}
+
+.selected_encounter span {
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  position: absolute;
+  padding-top: 5%;
+}
+
 </style>
 
 
@@ -56,20 +96,26 @@
   <div class="main-container-table-row">
     <div class="main-container-table-cell" style="width: 38%;">
       <div class="min-container-table">
-      <%1.upto(5).each do|n|%>
+      <%(@previous_encounters || []).each do|e|%>
         <div class="min-container-table-row">
-          <div class="min-container-table-cell" style="width: 10%;" onclick="javascript:voidEncounter(this)" id="<%=n%>">
+          <div class="min-container-table-cell" style="width: 10%;" onclick="javascript:voidEncounter(this)" id="<%=e.id%>">
             <%=image_tag("icons/Remove.png", class: 'remove-icon')%>
           </div>
-          <div class="min-container-table-cell encounters" style="width: 88%; padding-left: 10px;"
-              onclick = "javascript:selectEncounter(this)">
-            <%= n %>&nbsp;QWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+          <div class="min-container-table-cell encounters" id="<%=e.id%>"
+          style="width: 88%; padding-left: 10px;" onclick = "javascript:selectEncounter(this)">
+            <p><%= e.type.name %>&nbsp;<small><%=e.encounter_datetime.strftime('%H:%M:%S')%></small></p>
           </div>
         </div>
+        <br />
       <%end%>
       </div>
     </div>
-    <div class="main-container-table-cell selected_encounter" id="selected_encounter">
+    <div class="main-container-table-cell selected_encounter"> 
+        <%if @previous_encounters.blank?%>
+          <span>No recent calls made</span>
+        <%end%>
+      <table style="width: 99%;" id="selected_encounter_table">
+      </table>
     </div>
   </div>
 </div>
@@ -82,7 +128,62 @@ function voidEncounter(e) {
   alert(e.id)
 }
 
+function changeColor(e) {
+  allDivs = document.getElementsByClassName('encounters');
+  for(var i = 0; i < allDivs.length; i++) {
+    allDivs[i].style.background = "lightgrey";
+  }
+  e.style.background = "lightblue";
+}
+
 function selectEncounter(e) {
-  document.getElementById('selected_encounter').innerHTML = e.innerHTML;
+  changeColor(e);
+
+  if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari  
+      xmlhttp=new XMLHttpRequest();                                             
+    }else{// code for IE6, IE5                                                  
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");                           
+    }                                                                           
+    xmlhttp.onreadystatechange=function() {                                     
+      if (xmlhttp.readyState==4 && xmlhttp.status==200) {                       
+        var results = xmlhttp.responseText;                                     
+        if(results == 'undefined' || results == '' || results == '"not validate"') {                           
+          return;                                                               
+        }else{
+          addRows(results)                                                                  
+        }                                                                       
+      }                                                                         
+    }                                                                           
+    xmlhttp.open("GET","/patient_obs/" + e.id, true);           
+    xmlhttp.send();                                                             
+  } 
+
+  
+function addRows(data) {
+  t = document.getElementById('selected_encounter_table')
+  var rowCount = t.rows.length;
+  for (var i = 0; i < rowCount; i++) {
+    try{ 
+      t.deleteRow(i);
+    }catch(e){
+      t.deleteRow(0);
+    }
+  }
+
+  observations = JSON.parse(data);
+  
+  for(var i = 0; i < observations.length; i++) {        
+    tr = document.createElement('tr');       
+    td = document.createElement('td');
+    td.setAttribute('class','obs_title')
+    tr.appendChild(td);
+    td.innerHTML = observations[i][0];       
+    td = document.createElement('td');
+    td.setAttribute('class','obs_value')
+    tr.appendChild(td);
+    td.innerHTML = observations[i][1];  
+    t.appendChild(tr);     
+  }        
+          
 }
 </script>
