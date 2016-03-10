@@ -7,6 +7,8 @@ class EncountersController < ApplicationController
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]
 
     encounter = Encounter.new(params[:encounter].to_h)
+    encounter.location_id = session[:location_id]
+    encounter.creator = session[:user_id]
     encounter.save
 
     # Observation handling
@@ -28,6 +30,8 @@ class EncountersController < ApplicationController
       observation[:encounter_id] = encounter.id
       observation[:obs_datetime] = encounter.encounter_datetime || Time.now()
       observation[:person_id] ||= encounter.patient_id
+      observation[:location_id] = session[:location_id]
+      observation[:creator] = session[:user_id]
       # Handle multiple select
       if observation[:value_coded_or_text_multiple] && observation[:value_coded_or_text_multiple].is_a?(Array)
         observation[:value_coded_or_text_multiple].compact!
@@ -76,6 +80,7 @@ class EncountersController < ApplicationController
       when 'Female symptoms'
         @maternal_health_symptoms = concept_set('Maternal health symptoms')
         @danger_signs = concept_set('Danger signs')
+        @maternal_health_info = concept_set('Maternal health info')
       when 'Update outcomes'
         @general_outcomes = concept_set('General outcome')
     end

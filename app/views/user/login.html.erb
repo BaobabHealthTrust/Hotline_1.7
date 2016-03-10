@@ -13,35 +13,6 @@
         var tt_cancel_destination = "/";
         doListSuggestions = false; //speeds up keyboard response
 
-        var setFocusTimeout = 1000;
-        var checkForBarcodeTimeout = 1500;
-       
-        function loadBarcodePage() {
-           focusForBarcodeInput();
-           moveNext();
-        }
-
-        function focusForBarcodeInput(){
-          var barcode = document.getElementById("touchscreenInput2");
-          if (barcode) {
-             barcode.focus();
-             window.setTimeout("focusForBarcodeInput()", setFocusTimeout);
-          }
-        }
-        
-       
-        function moveNext(){
-          usertext = document.getElementById("touchscreenInput2");
-          try {
-          if (usertext.value.match(/.+\$$/i) != null){
-            usertext.value=usertext.value.substring(0,usertext.value.length -1);
-            gotoNextPage();
-          }
-          }catch(e) {};
-          window.setTimeout("moveNext()", checkForBarcodeTimeout);
-        } 
-           
-        window.addEventListener("load", loadBarcodePage, false);
       </script>
 	</head>
 <body>
@@ -49,7 +20,12 @@
 <%=form_tag '/login' do%>
 <input type="text" id="username" name="username" helpText="Enter username" textCase="lower"/>
 <input type="password" id="password" name="password" helpText ="Enter password" textCase="lower"/>
-<input type="text"  id="location" name="location" helpText="Scan location barcode" tt_pageonload="loadBarcodePage" />
+<%= select_tag("location", options_for_select(@locations.map{|l|l.name} ,''),
+    :helpText =>"Select the computer's location",
+    :id => "location",
+    :allowFreeText => false)
+%>
+
 <%end%>
 
 </body>

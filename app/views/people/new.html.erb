@@ -165,7 +165,7 @@
 <%= form_tag("/people/create_hsa", id: "create-form", method: 'post', enctype: 'multipart/form-data') do %>
 
   <%= text_field_tag "person[names][given_name]", params[:firstname],
-                     {:id => 'given_name', :field_type => 'alpha',
+                    {:id => 'given_name', :field_type => 'alpha',
                       :helpText => 'First name',
                       :ajaxURL => '/person_names/given_names?search_string=',
                       :allowFreeText => true,
@@ -173,7 +173,7 @@
                       :tt_onLoad => 'seen(tstCurrentPage);' } %>
   
   <%= text_field_tag "person[names][family_name]", params[:lastname],
-                     {:id => 'family_name',
+                    {:id => 'family_name',
                       :field_type => 'alpha',
                       :helpText => 'Last name',
                       :ajaxURL => '/person_names/family_names?search_string=',
@@ -183,77 +183,76 @@
 
   <% #gender = params[:gender] == '0' ? 'Male' : 'Female' %>
   <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
-      :helpText =>"Gender",
-      :id => "gender",
-      :allowFreeText => false, 
-      :condition => '$("gender").value == "" || skipped[tstCurrentPage] == 1',
-      :tt_onLoad => 'seen(tstCurrentPage);')
-  %>
+                      :helpText =>"Gender",
+                      :id => "gender",
+                      :allowFreeText => false, 
+                      :condition => '$("gender").value == "" || skipped[tstCurrentPage] == 1',
+                      :tt_onLoad => 'seen(tstCurrentPage);') %>
 
   <%= text_field_tag "person[birth_year]", nil, 
-                  {:helpText => 'Year of Birth', 
-                  :field_type => 'number', 
-                  :absoluteMin => "1890", 
-                  :min => "1940", 
-                  :absoluteMax => Date.today.year, 
-                  :tt_pageStyleClass => "Numeric NumbersOnly", 
-                  :tt_onLoad => 'seen(tstCurrentPage);',
-                  :validationJS => "setDOB();" }  %>
+                    {:helpText => 'Year of Birth', 
+                      :field_type => 'number', 
+                      :absoluteMin => "1890", 
+                      :min => "1940", 
+                      :absoluteMax => Date.today.year, 
+                      :tt_pageStyleClass => "Numeric NumbersOnly", 
+                      :tt_onLoad => 'seen(tstCurrentPage);',
+                      :validationJS => "setDOB();" }  %>
 
   <%= select_tag "person[birth_month]", month_name_options,
-                 {:helpText => 'Month of Birth', 
-                  :condition => '$("person_birth_year").value.toLowerCase() != "unknown"', 
-                  :validationJS => "validateDOB();", 
-                  :validationMessage => 'Please enter a valid date', 
-                  :tt_onLoad => "__$('keyboard').style.display = 'none'"}%>
+                    {:helpText => 'Month of Birth', 
+                      :condition => '$("person_birth_year").value.toLowerCase() != "unknown"', 
+                      :validationJS => "validateDOB();", 
+                      :validationMessage => 'Please enter a valid date', 
+                      :tt_onLoad => "__$('keyboard').style.display = 'none'"}%>
 
   <%= text_field_tag "person[age_estimate]", nil, 
-                {:helpText => 'Age Estimate', 
-                :absoluteMin => 1,  
-                :field_type => 'number', 
-                :condition => '$("person_birth_year").value == "Unknown"', 
-                :tt_onLoad => "$('nextButton').style.display = 'block';", 
-                :tt_pageStyleClass => "Numeric NumbersOnly"} %> 
+                    {:helpText => 'Age Estimate', 
+                      :absoluteMin => 1,  
+                      :field_type => 'number', 
+                      :condition => '$("person_birth_year").value == "Unknown"', 
+                      :tt_onLoad => "$('nextButton').style.display = 'block';", 
+                      :tt_pageStyleClass => "Numeric NumbersOnly"} %> 
 
   <%= text_field_tag "person[birth_day]",  nil, 
-                :field_type => 'number', :helpText => 'Birth Day', 
-          :condition => '($("person_birth_year").value != "Unknown") && ($("person_birth_month").value != "Unknown")', 
-  :tt_onLoad => "getDayOfMonthPicker($('person_birth_year').value, $('person_birth_month').value);$('nextButton').style.display = 'block';" ,
-            :validationJS => "validateDOB()",
-            :validationMessage => 'Please enter a valid date'%>
+                      :field_type => 'number', :helpText => 'Birth Day', 
+                      :condition => '($("person_birth_year").value != "Unknown") && ($("person_birth_month").value != "Unknown")', 
+                      :tt_onLoad => "getDayOfMonthPicker($('person_birth_year').value, $('person_birth_month').value);$('nextButton').style.display = 'block';" ,
+                      :validationJS => "validateDOB()",
+                      :validationMessage => 'Please enter a valid date'%>
 
   <%= text_field_tag "person[cell_phone_number]",  params[:cell_phone_number], 
-      {
-        :field_type => 'number',
-        :helpText => 'Cell Phone Number', 
-        :validationRule => "^0\\d{7}$|Unknown|Not Available|N\/A|^0\\d{9}$",
-        :validationMessage => "Not a valid phone number",
-        :tt_pageStyleClass => "nota",
-        :id => 'cellphone',
-        :tt_requireNextClick => true, :tt_onLoad => "$('nextButton').style.display = 'block';"
-      }
-  %>
+                    {
+                      :field_type => 'number',
+                      :helpText => 'Cell Phone Number', 
+                      :validationRule => "^0\\d{7}$|Unknown|Not Available|N\/A|^0\\d{9}$",
+                      :validationMessage => "Not a valid phone number",
+                      :tt_pageStyleClass => "nota",
+                      :id => 'cell_phone_number',
+                      :tt_requireNextClick => true, :tt_onLoad => "$('nextButton').style.display = 'block';"
+                    }
+                %>
 
   <% ask_multiple_phone_numbers = get_global_property_value("ask.multiple.phone.numbers") rescue 'false'
      if ask_multiple_phone_numbers == 'true' 
   %>
   <%= text_field_tag "person[office_phone_number]",  params[:office_phone_number], 
-      {
-        :field_type => 'number', 
-        :helpText => 'Office Phone Number',
-        :validationRule => "^0\\d{7}$|Unknown|Not Available|^0\\d{9}$", 
-        :validationMessage => "Not a valid phone number"
-      }
-  %>
+                    {
+                      :field_type => 'number', 
+                      :helpText => 'Office Phone Number',
+                      :validationRule => "^0\\d{7}$|Unknown|Not Available|^0\\d{9}$", 
+                      :validationMessage => "Not a valid phone number"
+                    }
+                %>
 
   <%= text_field_tag "person[home_phone_number]",  params[:home_phone_number], 
-      {
-        :field_type => 'number', 
-        :helpText => 'Home Phone Number',  
-        :validationRule => "^0\\d{7}$|Unknown|Not Available|^0\\d{9}$", 
-        :validationMessage => "Not a valid phone number"
-      }
-  %>
+                    {
+                      :field_type => 'number', 
+                      :helpText => 'Home Phone Number',  
+                      :validationRule => "^0\\d{7}$|Unknown|Not Available|^0\\d{9}$", 
+                      :validationMessage => "Not a valid phone number"
+                    }
+                %>
   <%end%>
 
 
@@ -270,10 +269,12 @@ function summary() {
   var first_name = document.getElementById('given_name').value;
   var last_name = document.getElementById('family_name').value;
   var gender = document.getElementById('gender').value;
+  var phone_number = document.getElementById('cell_phone_number').value;
 
   var display = "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
   display += "<div><span class='title'>Last Name:</span><span class='data'> " + last_name + "</span></div>";
   display += "<div><span class='title'>Gender:</span><span class='data'> " + gender + "</span></div>";
+  display += "<div><span class='title'>Phone Number:</span><span class='data'> " + phone_number + "</span></div>";
 
   $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
   $("clearButton").style.display = "none";

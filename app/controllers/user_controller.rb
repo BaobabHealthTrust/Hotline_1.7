@@ -9,11 +9,11 @@ class UserController < ApplicationController
           params[:location], params[:location]).joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id AND
           location_tag_id = #{location_tag_id}").first rescue nil
 
-        Location.current = location
-        User.current = user
-
         if location.blank?
           flash[:error] = "Invalid Workstation Location" 
+          location_tag = LocationTag.find_by_name('Facility location')
+          @locations = Location.where("location_tag_id =?", 
+            location_tag.id).joins("INNER JOIN location_tag_map t USING(location_id)")
           redirect_to '/login' and return
         end
         User.current = user
@@ -21,9 +21,15 @@ class UserController < ApplicationController
         session[:location_id] = location.id
         redirect_to '/'
       end
+      location_tag = LocationTag.find_by_name('Facility location')
+      @locations = Location.where("location_tag_id =?", 
+        location_tag.id).joins("INNER JOIN location_tag_map t USING(location_id)")
     else
       flash[:error] = "Invalid username or password"
-      reset_session  
+      reset_session 
+      location_tag = LocationTag.find_by_name('Facility location')
+      @locations = Location.where("location_tag_id =?", 
+        location_tag.id).joins("INNER JOIN location_tag_map t USING(location_id)")
     end
   end
 

@@ -37,16 +37,18 @@ class PeopleController < ApplicationController
    end
 
   def edit_hsa
-    @person = PersonName.find(params[:person_id])
+    #raise params.inspect
+    @person = Person.find(params[:person_id])
   end
 
 
   def update_hsa
-    
-    person_name = PersonName.find(params[:person_id])
-    person_name.update_attributes(given_name: params[:person]['names']['given_name'], family_name: params[:person]['names']['family_name'] )
     person = Person.find(params[:person_id])
-    person.update_attributes(gender: params[:person]['gender'])
+    person.update_attribute(:gender, params[:person]['gender'])
+    person_name = PersonName.where(person_id: person.person_id).first
+    person_name.update_attributes(:given_name => params[:person]['names']['given_name'], :family_name => params[:person]['names']['family_name'] )
+
+    
     # params[:person_name] = params[:person][:names]
     # @person = Person.where(person_id: params[:person_id]).first
     # raise params[:person]['names']['given_name'].inspect
@@ -71,11 +73,13 @@ class PeopleController < ApplicationController
 
 
   def create_hsa
+    
     birthdate = PatientService.format_birthdate_params(params[:person])
     person = Person.create(birthdate: birthdate[0].to_date, birthdate_estimated: birthdate[1], 
       gender: params[:person]['gender'].first)
 
     person_attribute = PersonAttribute.create(person_id: person.id,
+      value: params[:person]['cell_phone_number'],
      person_attribute_type_id: PersonAttributeType.where("name = 'Health Surveillance Assistant'").first.person_attribute_type_id)
 
     person_name = PersonName.create(given_name: params[:person]['names']['given_name'], 
@@ -83,6 +87,12 @@ class PeopleController < ApplicationController
 
     PersonNameCode.create(given_name_code: person_name.given_name.soundex, 
       family_name_code: person_name.family_name.soundex, person_name_id: person_name.id)
+    
+    # unless params[:person]['cell_phone_number'].blank?
+    #   person_attribute_type = PersonAttributeType.find_by_name('Health Surveillance Assistant')
+    #   PersonAttribute.create(value: params[:person]['cell_phone_number'], 
+    #     person_id: person.id, person_attribute_type_id: person_attribute_type.id)
+    # end
 
     redirect_to '/manage_user'
 

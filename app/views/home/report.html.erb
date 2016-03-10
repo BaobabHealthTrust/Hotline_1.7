@@ -1,193 +1,208 @@
 <style>
 
-body {
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */ 
-}
+  body {
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
+  }
 
-img {
-  user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  pointer-events: none;
-}
+  img {
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none;
+  }
 
-.main-page-container  {
-  display: table;
-  width: 99.7%;
-  padding: 5px 1px 0px 1px;
-}
+  .main-page-container  {
+    display: table;
+    width: 99.7%;
+    padding: 5px 1px 0px 1px;
+  }
 
-.main-page-container  {
-  display: table;
-  width: 100%;
-  padding: 0px 1px 0px 1px;
-}
+  .main-page-container  {
+    display: table;
+    width: 100%;
+    padding: 0px 1px 0px 1px;
+  }
 
-.main-page-container-rows  {
-  display: table-row;
-}
+  .main-page-container-rows  {
+    display: table-row;
+  }
 
-.cells {
-  display: table-cell;
-}
+  .cells {
+    display: table-cell;
+  }
 
 
-/* ...................................... */
-.divbtn {
-  height: 265px;
-  display: table;
-  margin-top: 10px;
-  cursor:pointer;
-}
+  /* ...................................... */
+  .divbtn {
+    height: 265px;
+    display: table;
+    margin-top: 10px;
+    cursor:pointer;
+    box-shadow: inset 2px -4px 2px 0px;
+    background-color: white;
+    border-radius: 7px;
+    width: 99%;
+    border: solid black 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-box-shadow:    inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow:         inset 0 0 10px #000000;
+  }
 
-.icons {
-  width: 160px;
-  height: 160px;
-  margin-top: 10%;
-  text-align: middle;
-}
+  .icons {
+    width: 160px;
+    height: 160px;
+    margin-top: 10%;
+    text-align: middle;
+  }
 
-.divbtn p {
-  font-weight: bold;
-}
+  .divbtn p {
+    font-weight: bold;
+  }
 
-.btncells {
-  width: 25%;
-  text-align: center;
-}
+  .btncells {
+    width: 25%;
+    text-align: center;
+  }
 
-.small-icons {
-  width: 100px;
-  height: 100px;
-}
+  .small-icons {
+    width: 100px;
+    height: 100px;
+  }
 
-.header .cells {
-  vertical-align: bottom; 
-  padding-right: 5px;
-}
+  .header .cells {
+    vertical-align: bottom;
+    padding-right: 5px;
+  }
 
-#scan {
-  background-color: white;
-  border-style: solid;
-  border-width: 1px;
-  font-size: 80px;
-  margin-bottom: 6px;
-  width: 44%;
-}
+  #scan {
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 80px;
+    margin-bottom: 6px;
+    width: 44%;
+  }
 
-.header .icons {
-  width: 100px;
-  height: 100px;
-}
+  .header .icons {
+    width: 100px;
+    height: 100px;
+  }
 
-/* ...................................... */
+  .button-label{
+    /*font: italic small-caps bolder 16px/3 cursive;*/
+    font: italic small-caps bolder condensed 17px/3 cursive;
+  }
+  /* ...................................... */
 </style>
 
 <%= render :partial => 'header' %>
 
 <div class="main-page-container">
 
-<div class="main-page-container-rows">
+  <div class="main-page-container-rows">
 
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color:#80bfff;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/patient_demographic_report'" >
+    <!-- loop -->
+    <div class="cells btncells">
+      <div class="divbtn" onclick="document.location='/patient_demographic_report'" >
         <span class="icons">
           <%=image_tag("icons/analysis-256.png", class: 'icons')%>
-          <p style="color: black;">Patient Analysis</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-
-    <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color:#D3D3D3;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/call_analysis'" >
-        <span class="icons">
-          <%=image_tag("icons/callanalysis.png", class: 'icons')%>
-          <p>Call Analysis</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-
-    <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color:#cde4e2;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/family_planning'" >
-        <span class="icons">
-          <%=image_tag("icons/family_icon.png", class: 'icons')%>
-          <p>Family Planning</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-  
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color:#e19b8e;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/tips'" >
-        <span class="icons">
-          <%=image_tag("icons/tips-256.png", class: 'icons')%>
-          <p>Tips</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-
-  </div>
-
-<div class="main-page-container-rows">
-   <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style= "width: 99%;" onclick="document.location='/anc_connect'" >
-        <span class="icons">
-          <%#=image_tag("icons/connect.png", class: 'icons')%>
-          <p>&nbsp;</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
+            <p class="button-label">Patient Analysis</p>
+          </span>
+        </div>
+      </div>
+      <!-- endloop -->
 
       <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%#=image_tag("icons/gohome.png", class: 'icons')%>
-          <p>&nbsp;</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
+      <div class="cells btncells">
+        <div class="divbtn" onclick="document.location='/call_analysis'" >
+          <span class="icons">
+            <%=image_tag("icons/callanalysis.png", class: 'icons')%>
+              <p class="button-label">Call Analysis</p>
+            </span>
+          </div>
+        </div>
+        <!-- endloop -->
 
-      <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%#=image_tag("icons/gohome.png", class: 'icons')%>
-          <p>&nbsp;</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
+        <!-- loop -->
+        <div class="cells btncells">
+          <div class="divbtn" onclick="document.location='/family_planning'" >
+            <span class="icons">
+              <%=image_tag("icons/family_icon.png", class: 'icons')%>
+                <p class="button-label">Family Planning</p>
+              </span>
+            </div>
+          </div>
+          <!-- endloop -->
 
-    <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/gohome.png", class: 'icons')%>
-          <p>Home</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
+          <!-- loop -->
+          <div class="cells btncells">
+            <div class="divbtn" onclick="document.location='/tips'" >
+              <span class="icons">
+                <%=image_tag("icons/tips-256.png", class: 'icons')%>
+                  <p class="button-label">Tips</p>
+                </span>
+              </div>
+            </div>
+            <!-- endloop -->
 
-</div>
+          </div>
 
-</div>
+          <div class="main-page-container-rows">
+            <!-- loop -->
+            <div class="cells btncells">
+              <div class="divbtn" style= "width: 99%; display: none;" onclick="document.location='/anc_connect'" >
+                <span class="icons">
+        <%#=image_tag("icons/connect.png", class: 'icons')%>
+                  <p>&nbsp;</p>
+                </span>
+              </div>
+            </div>
+            <!-- endloop -->
 
-<%= render :partial => 'footer' %>
+            <!-- loop -->
+            <div class="cells btncells">
+              <div class="divbtn" style="width: 99%; display: none;" onclick="document.location='/'" >
+                <span class="icons">
+        <%#=image_tag("icons/gohome.png", class: 'icons')%>
+                  <p>&nbsp;</p>
+                </span>
+              </div>
+            </div>
+            <!-- endloop -->
+
+            <!-- loop -->
+            <div class="cells btncells">
+              <div class="divbtn" style="width: 99%; display: none;" onclick="document.location='/'" >
+                <span class="icons">
+        <%#=image_tag("icons/gohome.png", class: 'icons')%>
+                  <p>&nbsp;</p>
+                </span>
+              </div>
+            </div>
+            <!-- endloop -->
+
+            <!-- loop -->
+            <div class="cells btncells">
+              <div class="divbtn" onclick="document.location='/'" >
+                <span class="icons">
+                  <%=image_tag("icons/gohome.png", class: 'icons')%>
+                    <p class="button-label">Home</p>
+                  </span>
+                </div>
+              </div>
+              <!-- endloop -->
+
+            </div>
+
+          </div>
+
+          <%= render :partial => 'footer' %>

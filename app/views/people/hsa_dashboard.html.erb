@@ -24,16 +24,21 @@ function changeButton() {
 }
 
 function summary() {
+  <% person_attribute_type = PersonAttributeType.find_by_name('Health Surveillance Assistant')
+     cell_phone_number = PersonAttribute.where(person_id: @person.id, 
+       person_attribute_type_id: person_attribute_type.id).first.value rescue '' %>
 
   var first_name = "<%= @person.person_names.last.given_name%>";
   var last_name = "<%= @person.person_names.last.family_name%>";
   var gender = "<%= @person.gender%>";
   var birthdate = "<%= PatientService.print_birthdate(@person)%>";
+  var phone_number = "<%= cell_phone_number%>";
 
   var display = "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
   display += "<div><span class='title'>Last Name:</span><span class='data'> " + last_name + "</span></div>";
   display += "<div><span class='title'>Gender:</span><span class='data'> " + gender + "</span></div>";
   display += "<div><span class='title'>Birthdate:</span><span class='data'> " + birthdate + "</span></div>";
+  display += "<div><span class='title'>Phone Number:</span><span class='data'> " + phone_number + "</span></div>";
 
   $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
   $("clearButton").style.display = "none";

@@ -60,8 +60,18 @@
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
                    :helpText =>"Select danger signs",
                    :multiple => true,
+                   :optional => false,
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "danger_status",
+                   :allowFreeText => false
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Maternal health info") %>
+    <%= select_tag "More info topics", options_for_select(@maternal_health_info , nil),
+                   :helpText =>"Does the caller want more information from below?",
+                   :multiple => true,
+                   :tt_pageStyleClass => 'longSelectList',
+                   :id => "more_info_topics",
                    :allowFreeText => false
     %>
 

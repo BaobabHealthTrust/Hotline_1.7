@@ -1,86 +1,101 @@
 <style>
 
-body {
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */ 
-}
+  body {
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
+  }
 
-img {
-  user-drag: none; 
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  pointer-events: none;
-}
+  img {
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none;
+  }
 
-.main-page-container  {
-  display: table;
-  width: 100%;
-  padding: 0px 1px 0px 1px;
-}
+  .main-page-container  {
+    display: table;
+    width: 100%;
+    padding: 0px 1px 0px 1px;
+  }
 
-.main-page-container-rows  {
-  display: table-row;
-}
+  .main-page-container-rows  {
+    display: table-row;
+  }
 
-.cells {
-  display: table-cell;
-}
+  .cells {
+    display: table-cell;
+  }
 
 
-/* ...................................... */
-.divbtn {
-  height: 265px;
-  display: table;
-  margin-top: 10px;
-  cursor:pointer;
-}
+  /* ...................................... */
+  .divbtn {
+    height: 265px;
+    display: table;
+    margin-top: 10px;
+    cursor:pointer;
+    box-shadow: inset 2px -4px 2px 0px;
+    background-color: white;
+    border-radius: 7px;
+    width: 99%;
+    border: solid black 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-box-shadow:    inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow:         inset 0 0 10px #000000;
+  }
 
-.icons {
-  width: 160px;
-  height: 160px;
-  margin-top: 10%;
-  text-align: middle;
-}
+  .icons {
+    width: 160px;
+    height: 160px;
+    margin-top: 10%;
+    text-align: middle;
+  }
 
-.divbtn p {
-  font-weight: bold;
-}
+  .divbtn p {
+    font-weight: bold;
+  }
 
-.btncells {
-  width: 25%;
-  text-align: center;
-}
+  .btncells {
+    width: 25%;
+    text-align: center;
+  }
 
-.small-icons {
-  width: 100px;
-  height: 100px;
-}
+  .small-icons {
+    width: 100px;
+    height: 100px;
+  }
 
-.header .cells {
-  vertical-align: middle; 
-  padding-right: 5px;
-}
+  .header .cells {
+    vertical-align: middle;
+    padding-right: 5px;
+  }
 
-#scan {
-  background-color: lightgrey;
-  border-style: solid;
-  border-width: 1px;
-  font-size: 80px;
-  margin-bottom: 6px;
-  width: 44%;
-}
+  #scan {
+    background-color: lightgrey;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 80px;
+    margin-bottom: 6px;
+    width: 44%;
+  }
 
-.header .icons {
-  width: 100px;
-  height: 100px;
-}
+  .header .icons {
+    width: 100px;
+    height: 100px;
+  }
 
-/* ...................................... */
+  .button-label{
+    /*font: italic small-caps bolder 16px/3 cursive;*/
+    font: italic small-caps bolder condensed 17px/3 cursive;
+  }
+  /* ...................................... */
 </style>
 
 <%= render :partial => 'header' %>
@@ -88,104 +103,104 @@ img {
 
 <div class="main-page-container">
 
-<div class="main-page-container-rows">
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color:gold;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/user/change_password'" >
+  <div class="main-page-container-rows">
+    <!-- loop -->
+    <div class="cells btncells">
+      <div class="divbtn" onclick="document.location='/user/change_password'" >
         <span class="icons">
           <%=image_tag("icons/change-password.png", class: 'icons')%>
-          <p style="color: black;">Change Password</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-  
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color:#00cc00;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/user/new'" >
-        <span class="icons">
-          <%=image_tag("icons/register.png", class: 'icons')%>
-          <p>Create User</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-  
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color:lightgray;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/user/select_user'" >
-        <span class="icons">
-          <%=image_tag("icons/demographic.png", class: 'icons')%>
-          <p>Edit User</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-
-    <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: lightgreen ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/people/new'" >
-        <span class="icons">
-          <%=image_tag("icons/add_group.png", class: 'icons')%>
-          <p>Create HSA</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-
-</div>
-
-
-</div>
-
-<div>
-
-<div class="main-page-container">
-
-<div class="main-page-container-rows">
-
- <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: grey;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/hsa_list'" >
-        <span class="icons">
-          <%=image_tag("icons/user_edit.png", class: 'icons')%>
-          <p>Edit HSA</p>
-        </span>
-    </div>
-  </div>
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="width: 99%;" onclick="document.location='/user/change_password'" >
-        <span class="icons">
-          <%#=image_tag("icons/change-password.png", class: 'icons')%>
-          <p style="color: black;">&nbsp;</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-  
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="width: 99%;" >
-        <span class="icons">
-          <%#=image_tag("icons/register.png", class: 'icons')%>
-          <p>&nbsp;</p>
-        </span>
-    </div>
-  </div>
-  <!-- endloop -->
-  <!-- loop -->
-  <div class="cells btncells">
-    <div class="divbtn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/gohome.png", class: 'icons')%>
-          <p>Home</p>
-        </span>
+            <p class="button-label">Change Password</p>
+          </span>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-</div>
-</style>
+      <!-- endloop -->
 
-<%= render :partial => 'footer' %>
+      <!-- loop -->
+      <div class="cells btncells">
+        <div class="divbtn" onclick="document.location='/user/new'" >
+          <span class="icons">
+            <%=image_tag("icons/register.png", class: 'icons')%>
+              <p class="button-label">Create User</p>
+            </span>
+          </div>
+        </div>
+        <!-- endloop -->
+
+        <!-- loop -->
+        <div class="cells btncells">
+          <div class="divbtn" onclick="document.location='/user/select_user'" >
+            <span class="icons">
+              <%=image_tag("icons/demographic.png", class: 'icons')%>
+                <p class="button-label">Edit User</p>
+              </span>
+            </div>
+          </div>
+          <!-- endloop -->
+
+          <!-- loop -->
+          <div class="cells btncells">
+            <div class="divbtn" onclick="document.location='/people/new'" >
+              <span class="icons">
+                <%=image_tag("icons/add_group.png", class: 'icons')%>
+                  <p class="button-label">Create HSA</p>
+                </span>
+              </div>
+            </div>
+            <!-- endloop -->
+
+          </div>
+
+
+        </div>
+
+        <div>
+
+          <div class="main-page-container">
+
+            <div class="main-page-container-rows">
+
+              <!-- loop -->
+              <div class="cells btncells">
+                <div class="divbtn" onclick="document.location='/hsa_list'" >
+                  <span class="icons">
+                    <%=image_tag("icons/user_edit.png", class: 'icons')%>
+                      <p class="button-label">Edit HSA</p>
+                    </span>
+                  </div>
+                </div>
+                <!-- loop -->
+                <div class="cells btncells">
+                  <div class="divbtn" style="width: 99%; display: none;" onclick="document.location='/user/change_password'" >
+                    <span class="icons">
+          <%#=image_tag("icons/change-password.png", class: 'icons')%>
+                      <p class="button-label">&nbsp;</p>
+                    </span>
+                  </div>
+                </div>
+                <!-- endloop -->
+
+                <!-- loop -->
+                <div class="cells btncells">
+                  <div class="divbtn" style="width: 99%; display: none;" >
+                    <span class="icons">
+          <%#=image_tag("icons/register.png", class: 'icons')%>
+                      <p>&nbsp;</p>
+                    </span>
+                  </div>
+                </div>
+                <!-- endloop -->
+                <!-- loop -->
+                <div class="cells btncells">
+                  <div class="divbtn" onclick="document.location='/'" >
+                    <span class="icons">
+                      <%=image_tag("icons/gohome.png", class: 'icons')%>
+                        <p class="button-label">Home</p>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </style>
+
+            <%= render :partial => 'footer' %>
