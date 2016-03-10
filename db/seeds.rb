@@ -496,7 +496,7 @@ select_options = {
     concept_set = ConceptName.where(name: concept_set_name).first 
     if concept_set.blank?
       concept_set = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
-      ConceptName.create(name: concept_set, concept_id: concept.concept_id, locale: 'en')
+      ConceptName.create(name: concept_set.name, concept_id: concept.concept_id, locale: 'en')
     end
     ConceptSet.create(concept_id: concept.concept_id, concept_set: concept_set.concept_id)
     puts "Created concept set: #{concept_name} .... #{concept_set_name}"
