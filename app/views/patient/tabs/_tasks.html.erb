@@ -1,35 +1,52 @@
 <style>
 
-.table-div  {
-  display: table;
-  width: 100%;
-  padding: 0px 1px 0px 1px;
-}
+  .table-div  {
+    display: table;
+    width: 100%;
+    padding: 0px 1px 0px 1px;
+  }
 
-.row  {
-  display: table-row;
-}
+  .row  {
+    display: table-row;
+  }
 
-.cell {
-  display: table-cell;
-  width: 20%;
-}
+  .cell {
+    display: table-cell;
+    width: 20%;
+  }
 
-.btn {
- padding-bottom: 5px; 
- text-align: center;
- margin: 5px;
-}
+  .btn {
+    padding-bottom: 5px;
+    text-align: center;
+    margin: 5px;
+    border: 1px solid #2e6da4;
+    width: 99%;
 
-.btn p {
-  font-weight: bold;
-}
+    cursor: pointer;
+    box-shadow: inset 2px -4px 2px 0px;
+    background-color: white;
+    border-radius: 7px;
+    width: 99%;
+    border: solid black 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-box-shadow:    inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow:         inset 0 0 10px #000000;
 
-.task-icons {
-  height: 90px;
-  width: 90px;
-  margin-top: 10%;
-}
+
+  }
+
+  .btn p {
+    font-weight: bold;
+  }
+
+  .task-icons {
+    height: 90px;
+    width: 90px;
+    margin-top: 10%;
+  }
 </style>
 
 
@@ -38,108 +55,108 @@
 
   <div class="row">
     <!-- loop -->
-    <%if @patient_obj.sex == 'F'%> 
+    <%if @patient_obj.sex == 'F'%>
       <div class="cell">
-        <div class="btn" style="background-color: #f5deb3;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/encounters/new/pregnancy_status?patient_id=<%=@patient_obj.patient_id%>'">
+        <div class="btn" onclick="document.location='/encounters/new/pregnancy_status?patient_id=<%=@patient_obj.patient_id%>'">
           <%=image_tag("icons/pregnacy.png", class: 'task-icons')%>
-            <p style="color: black;">Pregnancy status</p>
-          </span>
+            <p class="button-label">Pregnancy status</p>
+            </span>
+          </div>
         </div>
-      </div>
-    <%else%>
+      <%else%>
+        <div class="cell">
+          <div class="btn" style="display: none;">
+            <p class="button-label">&nbsp;</p>
+          </div>
+        </div>
+      <%end%>
+      <!-- endloop -->
+      <!-- loop -->
       <div class="cell">
-        <div class="btn" style="background-color: snow;border: 0px solid #2e6da4; width: 99%;">
-            <p style="color: black;">&nbsp;</p>
+        <div class="btn" onclick="document.location='/encounters/new/female_symptoms?patient_id=<%=@patient_obj.patient_id%>'">
+          <%=image_tag("icons/symptoms-2.png", class: 'task-icons')%>
+            <p class="button-label">Symptoms</p>
+            </span>
+          </div>
         </div>
-      </div>
-    <%end%>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: #666600 ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/encounters/new/female_symptoms?patient_id=<%=@patient_obj.patient_id%>'">
-        <%=image_tag("icons/symptoms-2.png", class: 'task-icons')%>
-          <p style="color: white;">Symptoms</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: #ff2d2d ;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/encounters/new/update_outcomes?patient_id=<%=@patient_obj.patient_id%>'">
-        <%=image_tag("icons/symptoms.png", class: 'task-icons')%>
-          <p style="color: black;">Outcomes</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: #dcdcdc;border: 1px solid #2e6da4; width: 99%;">
-        <%=image_tag("icons/calendar-and-tasks.png", class: 'task-icons')%>
-          <p style="color: black;">Clinic schedule</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: coral;border: 1px solid #2e6da4; width: 99%;">
-        <%=image_tag("icons/notification.png", class: 'task-icons')%>
-          <p style="color: black;">Edit reminders</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-  </div>
+        <!-- endloop -->
+        <!-- loop -->
+        <div class="cell">
+          <div class="btn" onclick="document.location='/encounters/new/update_outcomes?patient_id=<%=@patient_obj.patient_id%>'">
+            <%=image_tag("icons/symptoms.png", class: 'task-icons')%>
+              <p class="button-label">Outcomes</p>
+              </span>
+            </div>
+          </div>
+          <!-- endloop -->
+          <!-- loop -->
+          <div class="cell">
+            <div class="btn">
+              <%=image_tag("icons/calendar-and-tasks.png", class: 'task-icons')%>
+                <p class="button-label">Clinic schedule</p>
+                </span>
+              </div>
+            </div>
+            <!-- endloop -->
+            <!-- loop -->
+            <div class="cell">
+              <div class="btn">
+                <%=image_tag("icons/notification.png", class: 'task-icons')%>
+                  <p class="button-label">Edit reminders</p>
+                  </span>
+                </div>
+              </div>
+              <!-- endloop -->
+            </div>
 
 
-  <div class="row">
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: pink;border: 1px solid #2e6da4; width: 99%;" onclick='document.location="/demographics/<%=@patient_obj.patient_id%>"'>
-        <%=image_tag("icons/demographic.png", class: 'task-icons')%>
-          <p style="color: black;">Edit demographics</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: #fff4d8;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'">
-        <%=image_tag("icons/reference.png", class: 'task-icons')%>
-          <p style="color: black;">Reference material</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: snow;border: 0px solid #2e6da4; width: 99%;">
-          <p style="color: black;">&nbsp;</p>
-      </div>
-    </div>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: lime;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/patient/districts'">
-        <%=image_tag("icons/next.png", class: 'task-icons')%>
-          <p style="color: black;">Next Client</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-    <!-- loop -->
-    <div class="cell">
-      <div class="btn" style="background-color: #4682b4;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/'">
-        <%=image_tag("icons/gohome.png", class: 'task-icons')%>
-          <p style="color: black;">Home</p>
-        </span>
-      </div>
-    </div>
-    <!-- endloop -->
-  </div>
+            <div class="row">
+              <!-- loop -->
+              <div class="cell">
+                <div class="btn" onclick='document.location="/demographics/<%=@patient_obj.patient_id%>"'>
+                  <%=image_tag("icons/demographic.png", class: 'task-icons')%>
+                    <p class="button-label">Edit demographics</p>
+                    </span>
+                  </div>
+                </div>
+                <!-- endloop -->
+                <!-- loop -->
+                <div class="cell">
+                  <div class="btn" onclick="document.location='/'">
+                    <%=image_tag("icons/reference.png", class: 'task-icons')%>
+                      <p class="button-label">Reference material</p>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- endloop -->
+                  <!-- loop -->
+                  <div class="cell">
+                    <div class="btn" style="display: none;">
+                      <p class="button-label">&nbsp;</p>
+                    </div>
+                  </div>
+                  <!-- endloop -->
+                  <!-- loop -->
+                  <div class="cell">
+                    <div class="btn" onclick="document.location='/patient/districts'">
+                      <%=image_tag("icons/next.png", class: 'task-icons')%>
+                        <p class="button-label">Next Client</p>
+                        </span>
+                      </div>
+                    </div>
+                    <!-- endloop -->
+                    <!-- loop -->
+                    <div class="cell">
+                      <div class="btn" onclick="document.location='/'">
+                        <%=image_tag("icons/gohome.png", class: 'task-icons')%>
+                          <p class="button-label">Home</p>
+                          </span>
+                        </div>
+                      </div>
+                      <!-- endloop -->
+                    </div>
 
 
 
-</div>
+                  </div>
 
