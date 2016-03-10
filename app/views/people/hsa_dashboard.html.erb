@@ -24,9 +24,9 @@ function changeButton() {
 }
 
 function summary() {
-  <% person_attribute_type = PersonAttributeType.find_by_name('Cell phone number')
+  <% person_attribute_type = PersonAttributeType.find_by_name('Health Surveillance Assistant')
      cell_phone_number = PersonAttribute.where(person_id: @person.id, 
-       person_attribute_type_id: person_attribute_type.id).first.value rescue %>
+       person_attribute_type_id: person_attribute_type.id).first.value rescue '' %>
 
   var first_name = "<%= @person.person_names.last.given_name%>";
   var last_name = "<%= @person.person_names.last.family_name%>";
