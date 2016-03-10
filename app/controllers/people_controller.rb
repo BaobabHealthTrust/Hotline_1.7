@@ -44,12 +44,26 @@ class PeopleController < ApplicationController
 
   def update_hsa
     person = Person.find(params[:person_id])
-    person.update_attribute(:gender, params[:person]['gender'])
+    person.update_attribute(:gender, params[:person]['gender'].first)
     person_name = PersonName.where(person_id: person.person_id).first
     person_name.update_attributes(:given_name => params[:person]['names']['given_name'],
       :family_name => params[:person]['names']['family_name'] )
 
-    
+    birthdate = PatientService.format_birthdate_params(params[:person])
+    person.update_attributes(birthdate: birthdate[0].to_date, birthdate_estimated: birthdate[1])
+
+    if params[:person]['cell_phone_number']
+      attribute_type = PersonAttributeType.find_by_name('Cell phone number')
+      person_attribute = PersonAttribute.where(person_id: person.id,
+        person_attribute_type_id: attribute_type.id)
+
+      if person_attribute.blank?
+        PersonAttribute.create(value: params[:person]['cell_phone_number'],
+          person_id: person.id, person_attribute_type_id: attribute_type.id)
+      else
+        person_attribute.first.update_attributes(value: params[:person]['cell_phone_number'])
+      end
+    end
     # params[:person_name] = params[:person][:names]
     # @person = Person.where(person_id: params[:person_id]).first
     # raise params[:person]['names']['given_name'].inspect
