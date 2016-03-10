@@ -40,7 +40,7 @@ class PatientController < ApplicationController
   end
 
   def new_with_demo
-
+    @location_names = districts
   end
 
   def create
@@ -87,6 +87,8 @@ class PatientController < ApplicationController
      ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
     @location_names = @districts.collect { |location_id, location_name| location_name}
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+
+    return @location_names
   end
 
   def pregnancy_status

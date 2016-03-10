@@ -49,8 +49,6 @@ module PatientService
           uuid: uuid
       )
     end
-
-    #return patient_attribute
   end
 
   def self.find_by_demographics(params)
