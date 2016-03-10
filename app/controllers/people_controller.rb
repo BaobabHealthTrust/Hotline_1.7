@@ -124,6 +124,21 @@ class PeopleController < ApplicationController
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
   end
 
+  def hsa_list
+    person_attribute_type = PersonAttributeType.find_by_name('Health surveillance assistant')
+    @people = Person.where("a.person_attribute_type_id = ?",
+      person_attribute_type.id).joins("INNER JOIN person_attribute a USING(person_id)")
+    render :layout => false
+  end 
+
+  def hsa_dashboard
+    @person = Person.find(params[:person_id])
+  end
+
+  def edit_selected_hsa
+    redirect_to "/people/edit_hsa/#{params[:person_id]}" 
+  end
+
 end
 
   # def show

@@ -128,8 +128,4 @@ class UserController < ApplicationController
     render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>" and return
   end
 
-  def hsa_list
-    render :layout => false
-  end
-
 end
