@@ -50,7 +50,7 @@
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_symptoms , nil),
                    :helpText =>"Experiencing any of the following symptoms?",
                    :multiple => true,
-                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
+                   :tt_pageStyleClass => 'longSelectList',
                    :id => "maternal_health_symptoms",
                    :allowFreeText => false
     %>
@@ -60,8 +60,7 @@
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
                    :helpText =>"Select danger signs",
                    :multiple => true,
-                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
-                   :tt_onUnLoad => "setInitialDangerSigns();",
+                   :tt_pageStyleClass => 'longSelectList',
                    :id => "danger_status",
                    :allowFreeText => false
     %>
