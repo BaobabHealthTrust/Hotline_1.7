@@ -318,37 +318,44 @@
         <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
-        <%= hidden_field_tag("observations[][concept_name]", "Maternal Health Symptoms") %>
+        <%= hidden_field_tag("observations[][concept_name]", "Pregnancy status") %>
         <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , nil),
                :helpText =>"Pregnancy Status",
                :id => "pregnancy_status",
                :allowFreeText => false
         %>
-        <input type = "hidden" name = "person[birthdate][year]" id = "selected_year" />
-        <input type = "hidden" name = "person[birthdate][month]" id = "selected_month" />
-        <input type = "hidden" name = "person[birthdate][day]" id = "selected_day" />
 
-        <input type = "hidden" name = "person[birthdate][age_estimate]" id = "age_estimate" />
+
+        <input type = "hidden" id = "selected_year" />
+        <input type = "hidden" id = "selected_month" />
+        <input type = "hidden" id = "selected_day" />
+
+        <input type = "hidden" id = "age_estimate" />
         <!-- ======= for Pregnant, enter expected date of delivery ========= -->
-        <%= text_field_tag "expected_due_date", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
-                                            :optional => "true",
-                                            :id => "expected_due_date",
-                                            :helpText => 'Last menstural period (LMP)',
+        <%= hidden_field_tag("observations[][concept_name]", "Last menstrual period") %>
+        <%= text_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
+                                            :id => "last_menstrual_period",
+                                            :helpText => 'Last menstrual period (LMP)',
                                             :condition => "$('pregnancy_status').value == 'Pregnant'",
                                             :tt_pageStyleClass => "NoControls" } %>
 
+        <%= hidden_field_tag("observations[][concept_name]", "Pregnancy due date") %>
+        <%= hidden_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
+                                                                :id => "expected_due_date",
+                                                                :condition => "$('pregnancy_status').value == 'Pregnant'",
+                                                                :tt_pageStyleClass => "NoControls" } %>
+
         <!-- ======= for Delivered, enter delivery date ========= -->
-        <%= text_field_tag "delivery_date", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none';",
-                                              :optional => "true",
+        <%= hidden_field_tag("observations[][concept_name]", "Delivery date") %>
+        <%= text_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
                                               :helpText => 'Enter Delivery Date',
                                               :id => 'delivery_date',
                                               :condition => "$('pregnancy_status').value == 'Delivered'",
                                               :tt_pageStyleClass => "NoControls" } %>
 
         <!-- ======= Give summary of input if Pregnancy Status is Pregnant or Delivered ========= -->
-        <%= text_field_tag :summary, nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; summary(); setFinish();",
+        <%= text_field_tag '', nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; summary(); setFinish();",
                                             :id => 'summary',
-                                            :optional => "true",
                                             :helpText => 'Summary',
                                             :condition => "$('pregnancy_status').value == 'Pregnant' || $('pregnancy_status').value == 'Delivered';",
                                             :tt_pageStyleClass => "NoControls"} %>
@@ -728,8 +735,53 @@
                     expected_edd_month = 'December';
                     break;
             }
-            display += "<div><span class='title'>Last Mensturation Period (LMP):</span><span class='data'> " + day + " " + month + " "+ year +"</span></div>";
+            var last_menstrual_period = new Date(year, edd_month, day);
+            var lmp_year = last_menstrual_period.getFullYear();
+            var lmp_month = last_menstrual_period.getMonth();
+            switch(lmp_month) {
+                case 0:
+                    lmp_month = 'January';
+                    break;
+                case 1:
+                    lmp_month = 'February';
+                    break;
+                case 2:
+                    lmp_month = 'March';
+                    break;
+                case 3:
+                    lmp_month = 'April';
+                    break;
+                case 4:
+                    lmp_month = 'May';
+                    break;
+                case 5:
+                    lmp_month = 'June';
+                    break;
+                case 6:
+                    lmp_month = 'July';
+                    break;
+                case 7:
+                    lmp_month = 'August';
+                    break;
+                case 8:
+                    lmp_month = 'September';
+                    break;
+                case 9:
+                    lmp_month = 'October';
+                    break;
+                case 10:
+                    lmp_month = 'November';
+                    break;
+                case 11:
+                    lmp_month = 'December';
+                    break;
+            }
+            var lmp_day = last_menstrual_period.getDate();
+            //document.getElementById('last_menstrual_period').value = last_menstrual_period;
+            display += "<div><span class='title'>Last Menstrual Period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
             display += "<div><span class='title'>Expected Date of Delivery (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
+
+            document.getElementById('last_menstrual_period').value = last_menstrual_period;
             document.getElementById('expected_due_date').value = expected_date_of_delivery;
         }
         // Client Delivered ------------
