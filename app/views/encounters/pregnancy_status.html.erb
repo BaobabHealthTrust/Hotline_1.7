@@ -313,13 +313,13 @@
     <%#= render :partial => 'patient/birthdate/button_footer' %>
 
     <%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
-        <%= hidden_field_tag "encounter[encounter_type_name]", "Pregnancy status" %>
+        <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("PREGNANCY STATUS").id %>
         <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
-        <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
+        <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
-        <% session_date = session[:datetime] || Time.now() %>
 
-        <%= select_tag "observations[value_coded]", options_for_select(@pregnancy_options , nil),
+        <%= hidden_field_tag("observations[][concept_name]", "Maternal Health Symptoms") %>
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , nil),
                :helpText =>"Pregnancy Status",
                :id => "pregnancy_status",
                :allowFreeText => false
