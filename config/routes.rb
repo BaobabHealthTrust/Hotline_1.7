@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   post 'start_call' => 'home#start_call'
   get 'house_keeping' => 'home#house_cleaning'
   get 'admin' => 'home#admin'
-  
+  get 'home/health_facilities'
+
   get 'report' => 'home#report'
   get 'patient_demographic_report' => 'home#patient_demographic_report'
   ######################### home end ############################################
