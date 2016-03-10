@@ -128,6 +128,9 @@ class EncountersController < ApplicationController
       when 'Female symptoms'
         @maternal_health_symptoms = concept_set('Maternal health symptoms')
         @danger_signs = concept_set('Danger signs')
+      when 'Update outcomes'
+        @general_outcomes = concept_set('General outcome')
+        raise @general_outcomes.inspect
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]

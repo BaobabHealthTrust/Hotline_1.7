@@ -14,7 +14,6 @@ module ApplicationHelper
     Time.now.year - 1890
   end
 
-
   def session_date
     session[:datetime]
   end
