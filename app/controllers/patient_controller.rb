@@ -40,7 +40,13 @@ class PatientController < ApplicationController
   end
 
   def create
+
     patient_obj = PatientService.create(params)
+
+    if params[:action_type] && params[:action_type] == 'guardian'
+      redirect_to "/encounters/new/reminders?patient_id=#{params[:patient_id]}&guardian_id=#{patient_obj.patient_id}" and return
+    end
+
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 
@@ -95,7 +101,25 @@ class PatientController < ApplicationController
     end
 
     render text: observations.to_json and return
-  end   
+  end
+
+  def number_of_booked_patients
+    date = params[:date].to_date
+    encounter_type = EncounterType.find_by_name('APPOINTMENT')
+    concept_id = ConceptName.find_by_name('Next anc visit date').concept_id
+
+    start_date = date.strftime('%Y-%m-%d 00:00:00')
+    end_date = date.strftime('%Y-%m-%d 23:59:59')
+
+    appointments = Observation.find_by_sql("SELECT count(*) AS count FROM obs
+      INNER JOIN encounter e USING(encounter_id) WHERE concept_id = #{concept_id}
+      AND encounter_type = #{encounter_type.id} AND value_datetime >= '#{start_date}'
+      AND value_datetime <= '#{end_date}' AND obs.voided = 0 GROUP BY value_datetime")
+    count = appointments.first.count unless appointments.blank?
+    count = '0' if count.blank?
+
+    render :text => (count.to_i >= 0 ? {params[:date] => count}.to_json : 0)
+  end
 
   private
 

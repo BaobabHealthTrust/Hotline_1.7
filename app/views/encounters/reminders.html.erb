@@ -1,0 +1,74 @@
+<script>
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient.id %>/tasks";
+
+    function checkGuardian(){
+
+        if(__$('touchscreenInput' + tstCurrentPage).value == "Yes"){
+            window.location = "/patient/search_by_name?action_type=guardian&patient_id=<%= @patient.id%>";
+        };
+    }
+</script>
+
+<style>
+    #num{
+        display: none;
+    }
+</style>
+
+
+<%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
+    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("Tips and reminders").id %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+    <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
+                   :helpText =>"Is guardian present?",
+                   :tt_onUnLoad =>"checkGuardian(); ",
+                   :id => "guardian_present"
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "On tips and reminders program") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([['', ''], ['No', 'No'], ['Yes', 'Yes']]),
+                   :helpText =>"Enroll for tips and reminders program?",
+                   :id => "enroll"
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Phone type") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @phone_types),
+                   :helpText =>"Select phone type",
+                   :condition => "__$('enroll').value == 'Yes' ",
+                   :id => "phone_type"
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Telephone number") %>
+    <%= text_field_tag "observations[][value_numeric]",nil,
+                       :field_type => "number",
+                       :helpText =>"Enter telephone number",
+                       :tt_pageStyleClass => "NumbersOnly",
+                       :condition => "__$('enroll').value == 'Yes' ",
+                       :id => "telephone_number"
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Language preference") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @language_types),
+                   :helpText =>"Language preference",
+                   :condition => "__$('enroll').value == 'Yes' ",
+                   :id => "language_preference"
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Message type") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @message_types),
+                   :helpText =>"Message type",
+                   :condition => "__$('enroll').value == 'Yes' ",
+                   :id => "message_type"
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Type of message content") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @content_types),
+                   :helpText =>"Type of message content",
+                   :condition => "__$('enroll').value == 'Yes' ",
+                   :id => "message_content"
+    %>
+
+<% end %>

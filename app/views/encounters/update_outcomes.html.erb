@@ -16,31 +16,34 @@
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
     <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , nil),
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes),
                    :helpText =>"Selected recommended  referral?",
-                   :tt_pageStyleClass => 'longSelectList',
+                   :tt_pageStyleClass => 'longSelectList NoKeyboard',
                    :id => "general_outcome"
     %>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Health Centre") %>
+    <%= hidden_field_tag("observations[][concept_name]", "Health facility name") %>
     <%= select_tag "observations[][value_text]", nil,
                        {:id => 'health_centre_name',
                         :field_type => 'alpha',
+                        :condition => "__$('general_outcome').value.trim() == 'Hospital'  ||
+                            __$('general_outcome').value.trim() == 'Referred to a health centre' ",
                         :helpText => 'Select health centre name',
                         :ajaxURL => '/home/health_facilities?search_string=',
                         :allowFreeText => true }%>
 
-    <%= hidden_field_tag("observations[][concept_name]", "secondary outcome") %>
+    <%= hidden_field_tag("observations[][concept_name]", "Secondary Outcome") %>
     <%= text_field_tag "observations[][value_text]",nil,
-                   :helpText =>"Select the secondary outcome if any",
+                   :helpText =>"Secondary outcome if any",
                    :condition => "__$('general_outcome').value.trim() == 'Given advice'",
                    :id => "secondary_outcome",
+                   :optional =>true,
                    :allowFreeText => true
     %>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Reason for referral") %>
+    <%= hidden_field_tag("observations[][concept_name]", "Reason for Referral") %>
     <%= text_field_tag "observations[][value_text]",nil,
-                       :helpText =>"Select the reason for referral",
+                       :helpText =>"Reason for referral",
                        :id => "referral_reason",
                        :allowFreeText => true
     %>

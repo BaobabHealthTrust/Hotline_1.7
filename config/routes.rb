@@ -7,9 +7,9 @@ Rails.application.routes.draw do
   get 'house_keeping' => 'home#house_cleaning'
   get 'admin' => 'home#admin'
   get 'home/health_facilities'
-
   get 'report' => 'home#report'
   get 'patient_demographic_report' => 'home#patient_demographic_report'
+  get '/quick_summary' => 'home#quick_summary'
   ######################### home end ############################################
   
   ######################### user start ############################################
@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   post 'patient/attributes_search_results'
   get 'patient/districts'
   get 'patient_obs/:encounter_id' => 'patient#observations'
+  get 'patient/number_of_booked_patients'
   ######################### patient end ############################################
   
 
