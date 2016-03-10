@@ -31,11 +31,20 @@
     <% end %>
 
     <% if params[:guardian_id] %>
-        <%= hidden_field_tag("observations[][concept_name]", "Who is present as guardian?") %> bro. sis, uncle Aut, Grandpa, Grand
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select([['', ''],['Mother', 'No'], ['Father', 'Yes']]),
+
+        <%= hidden_field_tag "guardian_id", params[:guardian_id] %>
+
+        <%= hidden_field_tag("observations[][concept_name]", "Who is present as guardian?") %>
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(
+                        ['', 'Spouse/Partner','Mother', 'Father',
+                         'Brother', 'Sister', 'Uncle', 'Aunt',
+                         'Grandfather', 'Grandmother', 'Other']
+                    ),
                        :helpText =>"Specify guardian relationship type",
+                       :tt_pageStyleClass => "longSelectList NoKeyboard",
                        :id => "guardian_relationship"
         %>
+
     <% end %>
 
     <%= hidden_field_tag("observations[][concept_name]", "On tips and reminders program") %>
