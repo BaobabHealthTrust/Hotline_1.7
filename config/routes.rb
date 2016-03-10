@@ -65,7 +65,7 @@ Rails.application.routes.draw do
   get '/patient/:given_names' => 'people#given_names'
   get '/patient/:family_names' => 'people#family_names'
   get '/patient/:given_name_plus_family_name' => 'people#given_name_plus_family_name'
-
+  get '/hsa_list' => 'people#hsa_list'
   ######################### people end ############################################
 
   ######################### encounters start ########################################
