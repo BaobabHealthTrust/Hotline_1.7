@@ -129,12 +129,7 @@ class EncountersController < ApplicationController
         @maternal_health_symptoms = concept_set('Maternal health symptoms')
         @danger_signs = concept_set('Danger signs')
       when 'Update outcomes'
-        @general_outcomes = ['Given advice','Referred to nearest village clinic','Referred to a health centre',
-            'Hospital',       'Nurse consultation',          'Registered for Tips and reminders',       'Referral to emergency transport',
-            'Other']
-
-        @health_centres = Location.select('name')
-            #concept_set('General outcome')
+        @general_outcomes = concept_set('General outcome')
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
