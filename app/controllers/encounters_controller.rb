@@ -85,8 +85,9 @@ class EncountersController < ApplicationController
         observation[:value_coded_or_text_multiple].reject!{|value| value.blank?}
       end
       if observation[:value_coded_or_text_multiple] && observation[:value_coded_or_text_multiple].is_a?(Array) && !observation[:value_coded_or_text_multiple].blank?
-        next if value.blank?
-        observation[:value_coded_or_text_multiple].each{|value| observation[:value_coded_or_text] = value
+        observation[:value_coded_or_text_multiple].each{|value|
+          next if value.blank?
+          observation[:value_coded_or_text] = value
         create_obs(observation.to_h)
         }
       else
