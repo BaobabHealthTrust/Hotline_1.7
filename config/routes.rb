@@ -58,14 +58,35 @@ Rails.application.routes.draw do
   get 'demographic_modify/:field/:patient_id' => 'people#demographic_modify'
   post '/demographic_modify' => 'people#demographic_modify'
   get 'people/new'
-  post '/people/create_hsa'
-  get 'people/search_hsa'
-  post '/people/search_hsa'
   post 'patient/:create' => 'people#create'
   get '/patient/:given_names' => 'people#given_names'
   get '/patient/:family_names' => 'people#family_names'
   get '/patient/:given_name_plus_family_name' => 'people#given_name_plus_family_name'
+<<<<<<< HEAD
   get '/hsa_list' => 'people#hsa_list'
+=======
+
+  #########################hsa start #################################
+  post '/people/create_hsa'
+  get 'people/search_hsa'
+  post '/people/search_hsa'
+  get 'people/select_hsa'
+  post '/people/select_hsa'
+  get 'people/edit_hsa/:person_id' => 'people#edit_hsa'
+  post '/people/edit_hsa/:person_id' => 'people#edit_hsa'
+  post '/people/update'
+  get 'people/update_hsa'
+  post '/people/update_hsa'
+  get '/people/given_names'
+  get 'people/family_names'
+  get '/people/given_name_plus_family_name'
+  get 'people/show'
+  post 'people/show'
+
+
+  ######################### hsa end ##################################
+
+>>>>>>> 77d3a1c0cc0f05aae7df2fb4d7c8c7ef7d03ce97
   ######################### people end ############################################
 
   ######################### encounters start ########################################
