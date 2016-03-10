@@ -37,14 +37,20 @@
     <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
-    <%= select_tag "observations[:value_coded]", options_for_select(@select_options , nil),
+    orm_tag :controller => "encounters", :action => "create" do %>
+    <%= hidden_field_tag "encounter[encounter_type_name]", "MATERNAL HEALTH SYMPTOMS" %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+    <%= select_tag "observations[][concept_name]Maternal health symptoms", options_for_select(@maternal_health_symptoms , nil),
                    :helpText =>"Experiencing any of the following symptoms?",
                    :multiple => true,
                    :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
                    :id => "pregnancy_status",
                    :allowFreeText => false
     %>
-    <%= select_tag "observations[:value_coded]", options_for_select(@select_options , nil),
+    <%= select_tag "Danger signs", options_for_select(@danger_signs , nil),
                    :helpText =>"Select danger signs",
                    :multiple => true,
                    :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
