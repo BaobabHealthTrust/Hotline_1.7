@@ -71,6 +71,7 @@ class PeopleController < ApplicationController
 
 
   def create_hsa
+    
     birthdate = PatientService.format_birthdate_params(params[:person])
     person = Person.create(birthdate: birthdate[0].to_date, birthdate_estimated: birthdate[1], 
       gender: params[:person]['gender'].first)
@@ -83,6 +84,12 @@ class PeopleController < ApplicationController
 
     PersonNameCode.create(given_name_code: person_name.given_name.soundex, 
       family_name_code: person_name.family_name.soundex, person_name_id: person_name.id)
+    
+    unless params[:person]['cell_phone_number'].blank?
+      person_attribute_type = PersonAttributeType.find_by_name('Cell phone number')
+      PersonAttribute.create(value: params[:person]['cell_phone_number'], 
+        person_id: person.id, person_attribute_type_id: person_attribute_type.id)
+    end
 
     redirect_to '/manage_user'
 
