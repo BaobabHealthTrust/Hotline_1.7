@@ -47,7 +47,7 @@ user = User.create(:username => 'admin',:password => "adminhotline", :creator =>
 User.current = user
 
 puts "Creating user roles ...."
-["System Developer","Provider"].each do |role|
+["Administrator","Provider"].each do |role|
   Role.create(description: 'User roles', role: role)
 end
 

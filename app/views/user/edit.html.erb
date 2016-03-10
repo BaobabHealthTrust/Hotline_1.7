@@ -27,13 +27,13 @@
   %>
 
  <%if User.current.admin?%>
-   <%= text_field_tag "user[username]", params[:username],
+   <%#= text_field_tag "user[username]", params[:username],
                        {:id => 'username', :field_type => 'alpha',
                         :helpText => 'Username',
                         :ajaxURL => '/user/username?search_string=',
                         :allowFreeText => true }%>
 
-    <%= @roles = ['System Developer', 'Provider'] %> 
+    <%= @roles = ['Administrator', 'Provider'] %> 
     <%= select_tag("user[role]", options_for_select(@roles ,params[:role]),
         :helpText =>"Role",
         :id => "role",
@@ -53,14 +53,12 @@
 function summary() {
 
  <%if User.current.admin?%>
-    var username = document.getElementById('username').value;
     var first_name = document.getElementById('given_name').value;
     var last_name = document.getElementById('family_name').value;
     var gender = document.getElementById('gender').value;
     var role = document.getElementById('role').value;
 
-    var display = "<div><span class='title'>Username:</span><span class='data'> " + username + "</span></div>";
-    display += "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
+    display = "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
     display += "<div><span class='title'>Last Name:</span><span class='data'> " + last_name + "</span></div>";
     display += "<div><span class='title'>Gender:</span><span class='data'> " + gender + "</span></div>";
     display += "<div><span class='title'>Role:</span><span class='data'> " + role + "</span></div>";
