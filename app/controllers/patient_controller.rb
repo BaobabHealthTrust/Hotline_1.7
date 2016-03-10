@@ -4,6 +4,9 @@ class PatientController < ApplicationController
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
+
+    @current_encounters = Encounter.where(patient_id: params[:patient_id], 
+      encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) .. (Date.today.strftime('%Y-%m-%d 23:59:59')))
     render :layout => false
   end
 
@@ -76,7 +79,23 @@ class PatientController < ApplicationController
         
   end
 
-  
+  def observations
+    observations = []
+    (Encounter.find(params[:encounter_id]).observations || []).each do |ob|
+      value = ConceptName.where(concept_id: ob.value_coded).first.name rescue nil
+      if value.blank?
+        value = obs.value_numeric 
+      end
+
+      if value.blank?
+        value = obs.value_datetime.to_date.strftime('%d/%b/%Y %H:%M:%S') rescue nil
+      end
+
+      observations << [ob.concept.concept_names.first.name, value]
+    end
+
+    render text: observations.to_json and return
+  end   
 
   private
 
