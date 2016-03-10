@@ -31,4 +31,10 @@ class HomeController < ApplicationController
   def report
     render :layout => false
   end
+
+  def health_facilities
+    search_string = params[:search_string] || ''
+    @names = Location.where("name LIKE '%#{search_string}%'").limit(10).map(&:name).sort
+    render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
+  end
 end
