@@ -13,5 +13,9 @@ module ApplicationHelper
   def age_limit
     Time.now.year - 1890
   end
-  
+
+
+  def session_date
+    session[:datetime]
+  end
 end
