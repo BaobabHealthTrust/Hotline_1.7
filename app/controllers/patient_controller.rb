@@ -39,8 +39,19 @@ class PatientController < ApplicationController
     render :layout => false
   end
 
+  def new_with_demo
+
+  end
+
   def create
     patient_obj = PatientService.create(params)
+    redirect_to "/patient/new_with_demo/#{patient_obj.patient_id}"
+    #redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
+  end
+
+  def add_patient_attributes
+    patient_obj = PatientService.get_patient(params[:patient_id])
+    patient_attributes = PatientService.add_patient_attributes(patient_obj, params)
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 

@@ -136,6 +136,7 @@ img {
   <input type = "hidden" name = "person[birthdate][birth_day]" id = "selected_day" />
 
   <input type = "hidden" name = "person[birthdate][age_estimate]" id = "age_estimate" />
+
 <%end%>
 
 
@@ -213,6 +214,7 @@ function validateBirthdate() {
     }
     // submit form -------------------------
     document.getElementById('new-person').submit();
+    //window.location = "/patient/new_with_demo";
 }
 
 </script>
