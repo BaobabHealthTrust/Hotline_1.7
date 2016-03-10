@@ -384,7 +384,6 @@ select_options = {
       ['Umbilicus infection','UMBILICUS INFECTION'],
       ['Growth milestones','GROWTH MILESTONES'],
       ['Accessing healthcare services','ACCESSING HEALTHCARE SERVICES'],
-      #        ['Family planning','Family planning'],
       ['Other','OTHER']
   ],
   'type_of_message_content' => [
@@ -392,7 +391,6 @@ select_options = {
       ['Postnatal', 'Postnatal'],
       ['Child', 'Child'],
       ['WCBA', 'WCBA'],
-      #['Family planning', 'Family planning'], #TODO check if the reports will work well after adding this to the list
       ['Observer', 'Observer']
   ],
   'message_type' => [
@@ -446,7 +444,6 @@ select_options = {
       ['Other','OTHER' ]
   ],
   'referral_reasons' => [
-      ['',''],
       ['Danger signs observed', 'DANGER SIGNS OBSERVED'],
       ['Physical exam needed', 'PHYSICAL EXAM NEEDED'],
       ['Village clinic not accessible', 'VILLAGE CLINIC NOT ACCESSIBLE'],
