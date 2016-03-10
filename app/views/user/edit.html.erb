@@ -39,6 +39,18 @@
         :id => "role",
         :allowFreeText => false) %>
 	
+   <%= password_field_tag "user[password]", params[:password],
+                       {:id => 'password', :field_type => 'alpha',
+                        :helpText => 'Password',
+                        :ajaxURL => '/person_names/given_names?search_string=',
+                        :allowFreeText => true }%>
+
+    <%= password_field_tag "user[confirm password]", params[:confirm_password],
+                       {:id => 'confirm_password', :field_type => 'alpha',
+                        :helpText => 'Confirm Password',
+                        :ajaxURL => '/person_names/given_names?search_string=',
+                        :allowFreeText => true }%>
+
   <%end%>
 
   <label for='summary'>Summary</label>
@@ -57,11 +69,19 @@ function summary() {
     var last_name = document.getElementById('family_name').value;
     var gender = document.getElementById('gender').value;
     var role = document.getElementById('role').value;
+    var password = document.getElementById('password').value;
+    var confirm_password = document.getElementById('confirm_password').value;
 
     display = "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
     display += "<div><span class='title'>Last Name:</span><span class='data'> " + last_name + "</span></div>";
     display += "<div><span class='title'>Gender:</span><span class='data'> " + gender + "</span></div>";
     display += "<div><span class='title'>Role:</span><span class='data'> " + role + "</span></div>";
+    if(password != confirm_password) {
+      display += "<div><span class='title mismatch'>Password mismatch:&nbsp;</span><span class='data mismatch'> New password will not be saved</span></div>";
+    }else{
+      display += "<div><span class='title'>Password match:</span><span class='data match'>The two passwords match</span></div>";
+    }
+
   <%else%>
     var first_name = document.getElementById('given_name').value;
     var last_name = document.getElementById('family_name').value;
@@ -83,6 +103,14 @@ function summary() {
 <style>
 .title {
   font-size: 50px;
+}
+
+.match {
+  color: green !important;
+}
+
+.mismatch {
+  color: red !important;
 }
 
 .data {

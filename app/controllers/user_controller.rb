@@ -90,8 +90,12 @@ class UserController < ApplicationController
     
     PersonNameCode.create(given_name_code: new_name.given_name.soundex,
       family_name_code: new_name.family_name.soundex, person_name_id: new_name.id)
-    
-
+   
+    unless params[:user]['password'].blank?
+      if params[:user]['password'] == params[:user]['confirm password'] 
+        @user.update_attributes(password: params[:user]['password'])
+      end
+    end
     redirect_to '/manage_user'
   end
  
