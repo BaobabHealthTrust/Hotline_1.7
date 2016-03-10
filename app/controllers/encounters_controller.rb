@@ -128,6 +128,7 @@ class EncountersController < ApplicationController
       when 'Female symptoms'
         @maternal_health_symptoms = concept_set('Maternal health symptoms')
         @danger_signs = concept_set('Danger signs')
+        @maternal_health_info = concept_set('Maternal health info')
       when 'Update outcomes'
         @general_outcomes = concept_set('General outcome')
     end
