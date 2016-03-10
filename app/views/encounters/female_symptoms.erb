@@ -41,25 +41,23 @@
 <%= render :partial => 'patient/birthdate/button_footer' %>
 
 <%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
-    <%= hidden_field_tag "encounter[encounter_type_name]", "MATERNAL HEALTH SYMPTOMS" %>
+    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("MATERNAL HEALTH SYMPTOMS").id %>
     <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
-    <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
-    orm_tag :controller => "encounters", :action => "create" do %>
-    <%= hidden_field_tag "encounter[encounter_type_name]", "MATERNAL HEALTH SYMPTOMS" %>
-    <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
-    <%= hidden_field_tag "encounter[encounter_datetime]", DateTime.now() %>
-    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
-
-    <%= select_tag "observations[][concept_name]Maternal health symptoms", options_for_select(@maternal_health_symptoms , nil),
+    <%= hidden_field_tag("observations[][concept_name]", "Maternal Health Symptoms") %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_symptoms , nil),
                    :helpText =>"Experiencing any of the following symptoms?",
                    :multiple => true,
                    :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
                    :id => "maternal_health_symptoms",
                    :allowFreeText => false
     %>
-    <%= select_tag "Danger signs", options_for_select(@danger_signs , nil),
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
                    :helpText =>"Select danger signs",
                    :multiple => true,
                    :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
@@ -67,18 +65,22 @@
                    :id => "danger_status",
                    :allowFreeText => false
     %>
-    <%= select_tag "More info topics", options_for_select(['','info1','info2'] , nil),
-                   :helpText =>"Select topics for more information",
-                   :multiple => true,
-                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
-                   :id => "more_info_topics",
-                   :allowFreeText => false
-    %>
-    <%= select_tag "Additional Danger signs", options_for_select(@danger_signs , nil),
-                   :helpText =>"Select additional danger signs",
-                   :multiple => true,
-                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%'; getInitialDangerSigns();",
-                   :id => "additional_danger_signs",
-                   :allowFreeText => false
-    %>
+
+    <% if false %>
+            <%= select_tag "More info topics", options_for_select(['','info1','info2'] , nil),
+                           :helpText =>"Select topics for more information",
+                           :multiple => true,
+                           :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
+                           :id => "more_info_topics",
+                           :allowFreeText => false
+            %>
+            <%= select_tag "Additional Danger signs", options_for_select(@danger_signs , nil),
+                           :helpText =>"Select additional danger signs",
+                           :multiple => true,
+                           :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%'; getInitialDangerSigns();",
+                           :id => "additional_danger_signs",
+                           :allowFreeText => false
+            %>
+
+    <% end %>
 <% end %>

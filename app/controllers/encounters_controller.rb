@@ -51,14 +51,11 @@ class EncountersController < ApplicationController
     end
 =end
 
-
     @patient = Patient.find(params[:encounter][:patient_id])
 
-    redirect_to "patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]
+    redirect_to "/patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]
 
-    # Encounter handling
-
-    encounter = Encounter.new(params[:encounter])
+    encounter = Encounter.new(params[:encounter].to_h)
     encounter.save
 
     # Observation handling
@@ -71,9 +68,14 @@ class EncountersController < ApplicationController
       values = ['coded_or_text', 'coded_or_text_multiple', 'group_id', 'boolean', 'coded', 'drug', 'datetime', 'numeric', 'modifier', 'text'].map{|value_name|
         observation["value_#{value_name}"] unless observation["value_#{value_name}"].blank? rescue nil
       }.compact
-
       next if values.length == 0
 
+      concept_id = ConceptName.find_by_name(observation[:concept_name]).concept_id
+      observation.delete(:concept_name)
+
+      next if concept_id.blank?
+
+      observation[:concept_id] = concept_id
       observation[:encounter_id] = encounter.id
       observation[:obs_datetime] = encounter.encounter_datetime || Time.now()
       observation[:person_id] ||= encounter.patient_id
@@ -83,16 +85,34 @@ class EncountersController < ApplicationController
         observation[:value_coded_or_text_multiple].reject!{|value| value.blank?}
       end
       if observation[:value_coded_or_text_multiple] && observation[:value_coded_or_text_multiple].is_a?(Array) && !observation[:value_coded_or_text_multiple].blank?
-        values = observation.delete(:value_coded_or_text_multiple)
-        values.each{|value| observation[:value_coded_or_text] = value;
-        Observation.create(observation) }
+        observation[:value_coded_or_text_multiple].each{|value| observation[:value_coded_or_text] = value
+        create_obs(observation.to_h)
+        }
       else
-        observation.delete(:value_coded_or_text_multiple)
-        Observation.create(observation)
+        create_obs(observation.to_h)
       end
     end
     # Go to the next task in the workflow (or dashboard)
-    redirect_to "patient/dashboard/#{@patient.id}/tasks"
+    redirect_to "/patient/dashboard/#{@patient.id}/tasks"
+  end
+
+  def create_obs(paramz)
+
+    if !paramz['value_coded_or_text'].blank?
+      value = ConceptName.find_by_name(paramz['value_coded_or_text']) rescue nil
+      if value.blank?
+        paramz.delete('value_coded')
+        paramz['value_text'] = paramz['value_coded_or_text']
+      else
+        paramz['value_coded'] = value.concept_id
+        paramz['value_coded_name_id'] = value.id
+      end
+    end
+
+    ['value_coded_or_text_multiple', 'value_coded_or_text', 'concept_name'].each do |key|
+     paramz.delete(key) if !paramz[key].blank?
+    end
+    Observation.create(paramz)
   end
 
   def new
