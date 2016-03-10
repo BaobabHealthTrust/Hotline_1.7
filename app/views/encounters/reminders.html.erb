@@ -16,17 +16,36 @@
 </style>
 
 
-<%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
+<%= form_tag("/encounters/create", id: "reminders", method: 'post', enctype: 'multipart/form-data') do %>
     <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("Tips and reminders").id %>
     <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
     <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
-    <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
-                   :helpText =>"Is guardian present?",
-                   :tt_onUnLoad =>"checkGuardian(); ",
-                   :id => "guardian_present"
-    %>
+    <% if !@guardian %>
+        <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
+                       :helpText =>"Is guardian present?",
+                       :tt_onUnLoad =>"checkGuardian(); ",
+                       :id => "guardian_present"
+        %>
+    <% end %>
+
+    <% if params[:guardian_id] %>
+
+        <%= hidden_field_tag "guardian_id", params[:guardian_id] %>
+
+        <%= hidden_field_tag("observations[][concept_name]", "Who is present as guardian?") %>
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(
+                        ['', 'Spouse/Partner','Mother', 'Father',
+                         'Brother', 'Sister', 'Uncle', 'Aunt',
+                         'Grandfather', 'Grandmother', 'Other']
+                    ),
+                       :helpText =>"Specify guardian relationship type",
+                       :tt_pageStyleClass => "longSelectList NoKeyboard",
+                       :id => "guardian_relationship"
+        %>
+
+    <% end %>
 
     <%= hidden_field_tag("observations[][concept_name]", "On tips and reminders program") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select([['', ''], ['No', 'No'], ['Yes', 'Yes']]),

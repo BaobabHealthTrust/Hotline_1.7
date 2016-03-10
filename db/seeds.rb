@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 0) do
 end
 #end
 =end
+
 birthdate_entered = Date.today
 person = Person.create(:birthdate => birthdate_entered, :birthdate_estimated => 1, :creator => 1)
 person_name = PersonName.create(:given_name => "System", :family_name => "Admininistrator",:person_id => person.id)
@@ -45,6 +46,30 @@ PersonNameCode.create(:given_name_code => "System".soundex, :family_name_code =>
 user = User.create(:username => 'admin',:password => "adminhotline", :creator => 1, :person_id => person.id,:system_id => "admin")
 
 User.current = user
+
+
+puts '<<<<<<<  Adding Relationships  >>>>>>>>>>'
+[
+	['Doctor', 'Patient', 'Relationship from a primary care provider to the patient'],
+	['Sibling', 'Sibling', 'Relationship between brother/sister, brother/brother, and sister/sister'],
+	['Parent', 'Child', 'Relationship from a mother/father to the child'],
+	['Aunt/Uncle', 'Niece/Nephew', ''],
+	['Patient', 'Guardian', 'Patient Guardian'],
+	['Patient', 'Village Health Worker', 'Specifies village health worker for a particular patient.'],
+	['Treatment Supporter', 'Treatment Suportee', 'Used by the mdrtb module.'],
+	['TB Contact Person', 'TB Index Person', 'This is a relationship between a TB contact person and a current TB patient who referred them to clinic'],
+	['Child', 'Parent', 'Relationship from child to parent'],
+	['Spouse/Partner', 'Spouse/Partner', 'Spouse to spouse relationship'],
+	['Other', 'Other', 'Other type of relationship to the person']].each do |a_is_to_b, b_is_to_a, desc|
+	relationship_type =  RelationshipType.where(:a_is_to_b => a_is_to_b, :b_is_to_a => b_is_to_a).first
+	if relationship_type.blank?
+		RelationshipType.create(
+			:a_is_to_b => a_is_to_b,
+			:b_is_to_a => b_is_to_a,
+			:creator => user.id
+		)
+	end
+end
 
 puts "Creating user roles ...."
 ["Administrator","Provider"].each do |role|
