@@ -83,7 +83,8 @@ class User < ActiveRecord::Base
   end
 
 	def admin?
-		admin = self.user_roles.map{|user_role| user_role.role }.include? 'Informatics Manager'
+		admin = self.user_roles.map{|user_role| user_role.role }.include? 'Administrator'
+		admin = self.user_roles.map{|user_role| user_role.role }.include? 'Informatics Manager' unless admin
 		admin = self.user_roles.map{|user_role| user_role.role }.include? 'System Developer' unless admin
 		admin = self.user_roles.map{|user_role| user_role.role }.include? 'Superuser' unless admin
 		admin

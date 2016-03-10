@@ -55,41 +55,40 @@
 row_counter = 0
 row_page = 1
 number_of_records = 0
-(@people || []).each_with_index do |person, i|
+(@users || []).each_with_index do |user, i|
   color = 'nostripes'
   color = 'stripes' if i.odd?
   
 %>
   
-  <div class="table-results-row color_<%=color%> all-table-rows row_number_<%=row_page%>" id="person_<%=person.id%>" onclick="selectRow(this);">
+  <div class="table-results-row color_<%=color%> all-table-rows row_number_<%=row_page%>" id="person_<%=user.id%>" onclick="selectRow(this);">
     <div class="table-results-cell">
       <table class="table-data">
         <tr>
           <th>Name:</th>
           <td>
-            <%=person.person_names.last.given_name%>&nbsp;
-            <%=person.person_names.last.family_name%>
+            <%=user.person.person_names.last.given_name%>&nbsp;
+            <%=user.person.person_names.last.family_name%>
           </td>
           <th>Gender:</th>
-          <td>(<%=person.gender%>)</td>
+          <td>(<%=user.person.gender%>)</td>
         </tr>
         <tr>
           <th>Birthdate:</th>
-          <td><%=PatientService.print_birthdate(person)%></td>
+          <td><%=PatientService.print_birthdate(user.person)%></td>
           <th>Age:</th>
-          <td>(<%=person.age rescue 23%>)</td>
+          <td>(<%=user.person.age rescue 23%>)</td>
         </tr>
       </table>
     </div>
   </div>
-  </br>
 
   <!-- div class="table-results-row">
     <div class="table-results-cell" style="height: 2px; border-width: 0px;"></div>
   </div-->
 <%
 if row_counter == 6
-  row_page += 1 if i < @people.length
+  row_page += 1 if i < @users.length
   row_counter = 0
 else
   row_counter+= 1

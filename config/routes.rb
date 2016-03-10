@@ -33,6 +33,9 @@ Rails.application.routes.draw do
   get 'user/edit/:user_id' => 'user#edit'
   post '/user/edit'
   get 'user/username'
+  get 'user/list'
+  get 'user_dashboard/:user_id' => 'user#dashboard'
+  post '/edit_selected_user' => 'user#edit_selected_user' 
   ######################### user end ############################################
 
   ######################### patient start ############################################

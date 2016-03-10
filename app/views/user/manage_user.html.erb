@@ -114,7 +114,8 @@
         </div>
       </div>
       <!-- endloop -->
-
+      
+      <%if User.current.admin?%>
       <!-- loop -->
       <div class="cells btncells">
         <div class="divbtn" onclick="document.location='/user/new'" >
@@ -125,10 +126,20 @@
           </div>
         </div>
         <!-- endloop -->
+        
+        <%else%>
+        <div class="cells btncells">
+        </div>
+        <%end%>
+
 
         <!-- loop -->
         <div class="cells btncells">
-          <div class="divbtn" onclick="document.location='/user/select_user'" >
+          <%if User.current.admin?%>
+            <div class="divbtn" onclick="document.location='/user/list'" >
+          <%else%>
+            <div class="divbtn" onclick="document.location='/user/edit/<%=User.current.id%>'" >
+          <%end%>
             <span class="icons">
               <%=image_tag("icons/demographic.png", class: 'icons')%>
                 <p class="button-label">Edit User</p>
@@ -139,12 +150,14 @@
 
           <!-- loop -->
           <div class="cells btncells">
+            <%if User.current.admin?%>
             <div class="divbtn" onclick="document.location='/people/new'" >
               <span class="icons">
                 <%=image_tag("icons/add_group.png", class: 'icons')%>
                   <p class="button-label">Create HSA</p>
                 </span>
               </div>
+            <%end%>
             </div>
             <!-- endloop -->
 
@@ -161,12 +174,14 @@
 
               <!-- loop -->
               <div class="cells btncells">
+                <%if User.current.admin?%>
                 <div class="divbtn" onclick="document.location='/hsa_list'" >
                   <span class="icons">
                     <%=image_tag("icons/user_edit.png", class: 'icons')%>
                       <p class="button-label">Edit HSA</p>
                     </span>
                   </div>
+                <%end%>
                 </div>
                 <!-- loop -->
                 <div class="cells btncells">
