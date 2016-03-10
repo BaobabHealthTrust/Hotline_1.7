@@ -83,6 +83,11 @@ class EncountersController < ApplicationController
         @maternal_health_info = concept_set('Maternal health info')
       when 'Update outcomes'
         @general_outcomes = concept_set('General outcome')
+      when 'Reminders'
+        @phone_types = concept_set('Phone Type')
+        @message_types = concept_set('Message Type')
+        @language_types = concept_set('Language Type')
+        @content_types = concept_set('Type of message content')
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
@@ -90,34 +95,11 @@ class EncountersController < ApplicationController
 
   def concept_set(concept_name)
     concept = ConceptName.where(name: concept_name).first.concept
-    (concept.concept_sets || []).collect do |set|
+    [''] + (concept.concept_sets || []).collect do |set|
       name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
       next if name.blank?
       [name]
     end
   end
-
-=begin
-  def select_options(encounter)
-    select_options = {}
-    encounter_name = encounter.gsub('_',' ').capitalize
-    case encounter_name
-      when 'Pregnancy status'
-        concept_name = encounter_name
-      when 'Female symptoms'
-        concept_names = ['maternal_health_symptoms', 'danger_signs']
-        select_options[0] = (concept_names || []).each do |name|
-          concept_name = name.gsub('_',' ').capitalize
-        end
-    end
-    concept = ConceptName.where(name: concept_name).first.concept
-    (concept.concept_sets || []).collect do |set|
-      name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
-      next if name.blank?
-      [name]
-    end
-  end
-=end
-
 
 end
