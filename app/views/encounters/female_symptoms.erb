@@ -60,26 +60,29 @@
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
                    :helpText =>"Select danger signs",
                    :multiple => true,
+                   :optional => false,
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "danger_status",
                    :allowFreeText => false
     %>
 
-    <% if false %>
-            <%= select_tag "More info topics", options_for_select(['','info1','info2'] , nil),
-                           :helpText =>"Select topics for more information",
-                           :multiple => true,
-                           :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
-                           :id => "more_info_topics",
-                           :allowFreeText => false
-            %>
-            <%= select_tag "Additional Danger signs", options_for_select(@danger_signs , nil),
-                           :helpText =>"Select additional danger signs",
-                           :multiple => true,
-                           :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%'; getInitialDangerSigns();",
-                           :id => "additional_danger_signs",
-                           :allowFreeText => false
-            %>
+    <%= hidden_field_tag("observations[][concept_name]", "Maternal health info") %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_info , nil),
+                   :helpText =>"Does the caller want more information from below?",
+                   :multiple => true,
+                   :optional => false,
+                   :tt_pageStyleClass => 'longSelectList',
+                   :id => "more_info_topics",
+                   :allowFreeText => false
+    %>
 
-    <% end %>
+    <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
+                   :helpText =>"Select additional danger signs",
+                   :multiple => true,
+                   :optional => false,
+                   :tt_pageStyleClass => 'longSelectList',
+                   :id => "additional_danger_signs",
+                   :allowFreeText => false
+    %>
 <% end %>

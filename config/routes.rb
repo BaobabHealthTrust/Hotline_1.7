@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   post 'patient/attributes_search_results'
   get 'patient/districts'
   get 'patient_obs/:encounter_id' => 'patient#observations'
+  get 'patient/number_of_booked_patients'
   ######################### patient end ############################################
   
 
