@@ -84,11 +84,11 @@ class PatientController < ApplicationController
     (Encounter.find(params[:encounter_id]).observations || []).each do |ob|
       value = ConceptName.where(concept_id: ob.value_coded).first.name rescue nil
       if value.blank?
-        value = obs.value_numeric 
+        value = obs.value_numeric rescue nil
       end
 
       if value.blank?
-        value = obs.value_datetime.to_date.strftime('%d/%b/%Y %H:%M:%S') rescue nil
+        value = obs.value_datetime.to_time.strftime('%d/%b/%Y %H:%M:%S') rescue nil
       end
 
       observations << [ob.concept.concept_names.first.name, value]
