@@ -46,7 +46,8 @@ class PeopleController < ApplicationController
     person = Person.find(params[:person_id])
     person.update_attribute(:gender, params[:person]['gender'])
     person_name = PersonName.where(person_id: person.person_id).first
-    person_name.update_attributes(:given_name => params[:person]['names']['given_name'], :family_name => params[:person]['names']['family_name'] )
+    person_name.update_attributes(:given_name => params[:person]['names']['given_name'],
+      :family_name => params[:person]['names']['family_name'] )
 
     
     # params[:person_name] = params[:person][:names]
@@ -145,23 +146,3 @@ class PeopleController < ApplicationController
   end
 
 end
-
-  # def show
-  #   unless params[:person_id].blank?
-  #     @person = Person.find(params[:person_id])
-  #     @person = Person.where(person_id: @person.person_id)
-  #     @person_name = PersonName.find(@person.person_id)
-  #     #raise @person.first.gender.inspect
-  #     #redirect_to "/manage_user"
-
-  #   else
-  #     @person = Person.find(:first, :order => 'date_created DESC')
-  #   end
-  # end
-
-  # def given_names
-  #   @names = Person.where("given_name LIKE(?)", "%#{params[:search_string]}%").limit(30).collect do |rec| 
-  #     rec.given_name
-  #   end
-  #   render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>" and return
-  # end
