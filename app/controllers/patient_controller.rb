@@ -44,9 +44,12 @@ class PatientController < ApplicationController
   end
 
   def create
+
     patient_obj = PatientService.create(params)
+    if params[:action_type] && params[:action_type] == 'guardian'
+      redirect_to "/encounters/new/reminders?patient_id=#{params[:patient_id]}&guardian_id=#{patient_obj.patient_id}" and return
+    end
     redirect_to "/patient/new_with_demo/#{patient_obj.patient_id}"
-    #redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 
   def add_patient_attributes

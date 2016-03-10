@@ -128,10 +128,10 @@
 
         <!-- loop -->
         <div class="cells btncells">
-          <div class="divbtn" onclick="document.location='/'" >
+          <div class="divbtn" onclick="document.location='/quick_summary'" >
             <span class="icons">
               <%=image_tag("icons/stats.png", class: 'icons')%>
-                <p class="button-label">Current patient statistics</p>
+                <p class="button-label">Captured data summary</p>
               </span>
             </div>
           </div>
@@ -139,10 +139,10 @@
 
           <!-- loop -->
           <div class="cells btncells">
-            <div class="divbtn" onclick="document.location='/'" >
+            <div class="divbtn" onclick="document.location='/report'" >
               <span class="icons">
-                <%=image_tag("icons/red_phone.png", class: 'icons')%>
-                  <p class="button-label">Incomplete calls</p>
+                <%=image_tag("icons/reports.png", class: 'icons')%>
+                  <p class="button-label">Reports</p>
                 </span>
               </div>
             </div>
@@ -153,16 +153,16 @@
 
 
           <div class="main-page-container-rows">
-            <!-- loop -->
-            <div class="cells btncells">
-              <div class="divbtn" onclick="document.location='/report'" >
-                <span class="icons">
-                  <%=image_tag("icons/reports.png", class: 'icons')%>
-                    <p class="button-label">Reports</p>
-                  </span>
-                </div>
+          <!-- loop -->
+          <div class="cells btncells">
+            <div class="divbtn" onclick="document.location='/'" >
+              <span class="icons">
+                <%=image_tag("icons/red_phone.png", class: 'icons')%>
+                  <p class="button-label">Incomplete calls</p>
+                </span>
               </div>
-              <!-- endloop -->
+            </div>
+            <!-- endloop -->
 
               <!-- loop -->
               <div class="cells btncells">

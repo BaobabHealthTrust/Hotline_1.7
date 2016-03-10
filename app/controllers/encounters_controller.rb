@@ -47,6 +47,18 @@ class EncountersController < ApplicationController
         create_obs(observation.to_h)
       end
     end
+
+    #create relationship if provided
+    if params[:guardian_id]
+      rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
+      Relationship.create(
+          :relationship => rel_type.id,
+          :person_a => @patient.id,
+          :person_b => params[:guardian_id],
+          :date_created => Date.today,
+          :creator => session[:user_id]
+      )
+    end
     # Go to the next task in the workflow (or dashboard)
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"
   end
@@ -83,41 +95,38 @@ class EncountersController < ApplicationController
         @maternal_health_info = concept_set('Maternal health info')
       when 'Update outcomes'
         @general_outcomes = concept_set('General outcome')
+      when 'Reminders'
+        @phone_types = concept_set('Phone Type')
+        @message_types = concept_set('Message Type')
+        @language_types = concept_set('Language Type')
+        @content_types = concept_set('Type of message content')
+        @guardian = current_guardian(params[:guardian_id], @patient.id)
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
   end
 
+  def current_guardian(guardian_id=nil, patient_id=nil)
+    if guardian_id
+      return Person.find(guardian_id) rescue nil
+    end
+
+    #search for guardian created same day
+    rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
+    rel = Relationship.where(:relationship => rel_type.id, :person_a => patient_id).order("date_created DESC").first
+    if rel
+      return Person.find(rel.person_b) if rel.date_created.to_date == Date.today
+    end
+    return nil
+  end
+
   def concept_set(concept_name)
     concept = ConceptName.where(name: concept_name).first.concept
-    (concept.concept_sets || []).collect do |set|
+    [''] + (concept.concept_sets || []).collect do |set|
       name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
       next if name.blank?
       [name]
     end
   end
-
-=begin
-  def select_options(encounter)
-    select_options = {}
-    encounter_name = encounter.gsub('_',' ').capitalize
-    case encounter_name
-      when 'Pregnancy status'
-        concept_name = encounter_name
-      when 'Female symptoms'
-        concept_names = ['maternal_health_symptoms', 'danger_signs']
-        select_options[0] = (concept_names || []).each do |name|
-          concept_name = name.gsub('_',' ').capitalize
-        end
-    end
-    concept = ConceptName.where(name: concept_name).first.concept
-    (concept.concept_sets || []).collect do |set|
-      name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
-      next if name.blank?
-      [name]
-    end
-  end
-=end
-
 
 end

@@ -130,6 +130,10 @@ img {
   <input type = "hidden" name = "person[names][given_name]" value = "<%= @given_name %>" />
   <input type = "hidden" name = "person[names][family_name]" value = "<%= @family_name %>" />
   <input type = "hidden" name = "person[gender]" value = "<%= @gender %>" />
+  <input type = "hidden" name = "action_type" value = "<%= params[:action_type] %>" />
+  <% if params[:action_type] && params[:action_type] == 'guardian' %>
+        <input type = "hidden" name = "patient_id" value = "<%= params[:patient_id] %>" />
+  <% end %>
 
   <input type = "hidden" name = "person[birthdate][birth_year]" id = "selected_year" />
   <input type = "hidden" name = "person[birthdate][birth_month]" id = "selected_month" />
