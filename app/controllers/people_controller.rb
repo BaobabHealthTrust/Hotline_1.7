@@ -45,7 +45,8 @@ class PeopleController < ApplicationController
     
     person_name = PersonName.find(params[:person_id])
     person_name.update_attributes(given_name: params[:person]['names']['given_name'], family_name: params[:person]['names']['family_name'] )
-
+    person = Person.find(params[:person_id])
+    person.update_attributes(gender: params[:person]['gender'])
     # params[:person_name] = params[:person][:names]
     # @person = Person.where(person_id: params[:person_id]).first
     # raise params[:person]['names']['given_name'].inspect
