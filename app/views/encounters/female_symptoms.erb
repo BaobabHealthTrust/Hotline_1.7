@@ -21,6 +21,15 @@
             }
         }
     }
+    var danger_signs;
+    function setInitialDangerSigns() {
+        danger_signs = __$('touchscreenInput' + tstCurrentPage).value;
+    }
+    function getInitialDangerSigns() {
+        alert(danger_signs);
+        __$('touchscreenInput' + tstCurrentPage).value = danger_signs;
+        return danger_signs;
+    }
 </script>
 
 <style>
@@ -47,14 +56,29 @@
                    :helpText =>"Experiencing any of the following symptoms?",
                    :multiple => true,
                    :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
-                   :id => "pregnancy_status",
+                   :id => "maternal_health_symptoms",
                    :allowFreeText => false
     %>
     <%= select_tag "Danger signs", options_for_select(@danger_signs , nil),
                    :helpText =>"Select danger signs",
                    :multiple => true,
                    :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
-                   :id => "pregnancy_status",
+                   :tt_onUnLoad => "setInitialDangerSigns();",
+                   :id => "danger_status",
+                   :allowFreeText => false
+    %>
+    <%= select_tag "More info topics", options_for_select(['','info1','info2'] , nil),
+                   :helpText =>"Select topics for more information",
+                   :multiple => true,
+                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%';",
+                   :id => "more_info_topics",
+                   :allowFreeText => false
+    %>
+    <%= select_tag "Additional Danger signs", options_for_select(@danger_signs , nil),
+                   :helpText =>"Select additional danger signs",
+                   :multiple => true,
+                   :tt_onLoad => "$('keyboard').style.display = 'none'; $('inputFrame'+tstCurrentPage).style.height = '90%'; $('viewport').style.height = '90%'; getInitialDangerSigns();",
+                   :id => "additional_danger_signs",
                    :allowFreeText => false
     %>
 <% end %>
