@@ -1,0 +1,100 @@
+
+<script>
+
+  var tt_cancel_destination = "/manage_user"
+
+</script>
+
+<%= form_tag("/people/update_hsa", id: "update-form", method: 'post', enctype: 'multipart/form-data') do %>i
+<input name="person_id" id="person_id" type="hidden" value="<%=params[:person_id] %>">
+
+<%= text_field_tag "person[names][given_name]", params[:firstname],
+                     {:id => 'given_name', :field_type => 'alpha',
+                      :helpText => 'First name',
+                      :ajaxURL => '/patient/given_names?search_string=',
+                      :allowFreeText => true }%>
+  
+  <%= text_field_tag "person[names][family_name]", params[:lastname],
+                     {:id => 'family_name',
+                      :field_type => 'alpha',
+                      :helpText => 'Last name',
+                      :ajaxURL => '/patient/family_names?search_string=',
+                      :allowFreeText => true }%>
+
+  <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
+                     :helpText =>"Gender",
+                    :id => "gender",
+                     :allowFreeText => false)%>
+
+  
+
+   <%#= text_field_tag "person[birth_year]", nil, 
+                  {:helpText => 'Year of Birth', 
+                    :field_type => 'number', 
+                    :absoluteMin => "1890", 
+                    :min => "1940", 
+                    :absoluteMax => Date.today.year, 
+                    :tt_pageStyleClass => "Numeric NumbersOnly", 
+                    :tt_onLoad => 'seen(tstCurrentPage);',
+                    :validationJS => "setDOB();" }  %>
+
+  <%#= select_tag "person[birth_month]", month_name_options,
+                  {:helpText => 'Month of Birth', 
+                    :condition => '$("person_birth_year").value.toLowerCase() != "unknown"', 
+                    :validationJS => "validateDOB();", 
+                    :validationMessage => 'Please enter a valid date', 
+                    :tt_onLoad => "__$('keyboard').style.display = 'none'"}%>
+
+  <%#= text_field_tag "person[age_estimate]", nil, 
+                  {:helpText => 'Age Estimate', 
+                    :absoluteMin => 1,  
+                    :field_type => 'number', 
+                    :condition => '$("person_birth_year").value == "Unknown"', 
+                    :tt_onLoad => "$('nextButton').style.display = 'block';", 
+                    :tt_pageStyleClass => "Numeric NumbersOnly"} %> 
+
+  <%#= text_field_tag "person[birth_day]",  nil, 
+                :field_type => 'number', :helpText => 'Birth Day', 
+            :condition => '($("person_birth_year").value != "Unknown") && ($("person_birth_month").value != "Unknown")', 
+                :tt_onLoad => "getDayOfMonthPicker($('person_birth_year').value, $('person_birth_month').value);$('nextButton').style.display = 'block';" ,
+                :validationJS => "validateDOB()",
+                :validationMessage => 'Please enter a valid date'%>
+
+  <%#= @client.name.split.map(&:capitalize).join(' ') %>
+  <label for='summary'>Summary for</label>
+	<%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';", 
+      :optional => "true", 
+      :tt_pageStyleClass => "NoControls" } %>
+
+<%end%>
+
+<script>
+
+function summary() {
+
+    var first_name = document.getElementById('given_name').value;
+    var last_name = document.getElementById('family_name').value;
+    var gender = document.getElementById('gender').value;
+
+    var display = "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
+    display += "<div><span class='title'>Last Name:</span><span class='data'> " + last_name + "</span></div>";
+    display += "<div><span class='title'>Gender:</span><span class='data'> " + gender + "</span></div>";
+
+	$('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
+	$("clearButton").style.display = "none";
+		
+
+}
+
+</script>
+
+<style>
+.title {
+  font-size: 50px;
+}
+
+.data {
+  font-size: 40px;
+  color: orangered;
+}
+</style>

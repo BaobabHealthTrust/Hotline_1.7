@@ -1,0 +1,48 @@
+
+
+
+
+
+<style>
+
+.header .cells {
+  vertical-align: middle;
+  padding-right: 5px;
+}
+
+
+.header .icons {
+  width: 100px;
+  height: 100px;
+}
+
+</style>
+
+
+<div class="main-page-container" style="padding-top: 0px;">
+
+
+ <div class="main-page-container-rows header">
+  
+  <div class="cells" style="width:45%;">
+    <span class="icons small-icons" style=" border-right: 0px solid #ccc; color: #999;font-size: 1.5em; font-style: italic;">
+      <b>Facility Name:</b>&nbsp;<%=GlobalProperty.current_health_center.name%>
+    </span>
+  </div>
+  
+  <div class="cells" style="width:45%">
+    <span class="icons small-icons" style=" border-right: 0px solid #ccc; color: #999;font-size: 1.5em; font-style: italic;">
+      <b>Location:</b>&nbsp;<%=Location.current.name%>
+    </span>
+  </div>
+  
+  <div class="cells" style="border-style: solid; text-align: center; border-width: 1px; width: 10%;">
+    <span class="icons small-icons">
+      <%=image_tag("vr.jpeg", class: 'icons')%>
+    </span>
+  </div>
+
+</div>
+
+
+</div>

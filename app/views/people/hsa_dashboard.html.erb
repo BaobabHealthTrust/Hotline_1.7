@@ -1,0 +1,56 @@
+
+<script>
+  var tt_cancel_destination = "/manage_user"
+
+</script>
+
+<%= form_tag("/edit_selected_hsa", id: "create-form", method: 'post', enctype: 'multipart/form-data') do %>
+<label for='summary'>HSA Dashboard</label>
+  <%= text_field_tag :summary, nil, { 
+      :tt_onLoad => "summary();__$('keyboard').style.display = 'none'; changeButton();", 
+      :optional => "true",
+      :tt_pageStyleClass => "NoControls" } %>
+
+
+<input type="hidden" name="person_id" value="<%= @person.id%>" />
+<%end%>
+  
+  
+<script>
+
+function changeButton() {
+  button = document.getElementById('nextButton');
+  button.innerHTML = "<span>Edit</span>"
+}
+
+function summary() {
+
+  var first_name = "<%= @person.person_names.last.given_name%>";
+  var last_name = "<%= @person.person_names.last.family_name%>";
+  var gender = "<%= @person.gender%>";
+  var birthdate = "<%= PatientService.print_birthdate(@person)%>";
+
+  var display = "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
+  display += "<div><span class='title'>Last Name:</span><span class='data'> " + last_name + "</span></div>";
+  display += "<div><span class='title'>Gender:</span><span class='data'> " + gender + "</span></div>";
+  display += "<div><span class='title'>Birthdate:</span><span class='data'> " + birthdate + "</span></div>";
+
+  $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
+  $("clearButton").style.display = "none";
+    
+
+}
+
+</script>
+
+      
+<style>
+.title {
+  font-size: 50px;
+}
+
+.data {
+  font-size: 40px;
+  color: orangered;
+}
+</style>

@@ -4,6 +4,7 @@ class PeopleController < ApplicationController
     render :layout => false
   end
 
+
   def demographic_modify
     if request.post?
     else
@@ -12,28 +13,67 @@ class PeopleController < ApplicationController
     end
   end
 
+
   def new_hsa
     @person = Person.new
   end
 
+
   def search_hsa
-    unless request.get
-      person = PersonName.find_by_name(params[:person]['names']['given_name'], params[:person]['names']['family_name'])
-      redirect_to '/manage_user'
+    unless request.get?
+      #raise params.inspect
+      family_name = params[:person]['names']['family_name']
+      given_name = params[:person]['names']['given_name']
+      gender = params[:person][:gender]
+      @person = PersonName.where(family_name: family_name, given_name: given_name).first
+      #raise @person.inspect
+      redirect_to "/people/edit_hsa/#{@person.id}"
     end
-  end
-  
-  def edit_hsa
-    render :layout => false
   end
 
+
+   def select_hsa
+     render :layout => true
+   end
+
+  def edit_hsa
+    @person = PersonName.find(params[:person_id])
+  end
+
+
+  def update_hsa
+    
+    person_name = PersonName.find(params[:person_id])
+    person_name.update_attributes(given_name: params[:person]['names']['given_name'], family_name: params[:person]['names']['family_name'] )
+    person = Person.find(params[:person_id])
+    person.update_attributes(gender: params[:person]['gender'])
+    # params[:person_name] = params[:person][:names]
+    # @person = Person.where(person_id: params[:person_id]).first
+    # raise params[:person]['names']['given_name'].inspect
+    # PersonName.update_attributes(person: params[:person]['names']['family_name'])
+
+    # unless params[:person]['names']['family_name'].blank?
+    # @person.update_attributes(person: params[:person]['names']['family_name'])
+    # end unless params[:person].blank?
+
+    # PersonName.where(person_id: @person.person_id).each do | person_name |
+    #   person_name.update_attributes(void_reason: 'Edited name', voided: true)
+    # end 
+
+    # new_name = PersonName.create(given_name: params[:person]['names']['given_name'],
+    #   family_name: params[:person]['names']['family_name'])
+    
+    # PersonNameCode.create(given_name_code: new_name.given_name.soundex,
+    #   family_name_code: new_name.family_name.soundex, person_name_id: new_name.id)
+    
+    redirect_to '/manage_user'
+  end
+
+
   def create_hsa
-    birth_month = params[:person]['birth_month']
-    if params[:person]['birth_month'].to_i < 10
-      birth_month = "0#{params[:person]['birth_month']}"
-    end
-    birthdate = "#{params[:person]['birth_year']}-#{birth_month}-#{params[:person]['birth_day']}"
-    person = Person.create(birthdate: birthdate, birthdate_estimated: 1, gender: params[:person]['gender'])
+    birthdate = PatientService.format_birthdate_params(params[:person])
+    person = Person.create(birthdate: birthdate[0].to_date, birthdate_estimated: birthdate[1], 
+      gender: params[:person]['gender'].first)
 
     person_attribute = PersonAttribute.create(person_id: person.id,
      person_attribute_type_id: PersonAttributeType.where("name = 'Health Surveillance Assistant'").first.person_attribute_type_id)
@@ -43,8 +83,6 @@ class PeopleController < ApplicationController
 
     PersonNameCode.create(given_name_code: person_name.given_name.soundex, 
       family_name_code: person_name.family_name.soundex, person_name_id: person_name.id)
-
-    #Person.create(person_id: person.id, gender: params[:person]['gender'], birthdate: params[:person]['birthdate'])
 
     redirect_to '/manage_user'
 
@@ -61,7 +99,6 @@ class PeopleController < ApplicationController
   def given_name_plus_family_name
     search("given_name_plus_family_name", params[:search_string],params[:gender])
   end
-end
 
   def attributes_search_results
     @people = []
@@ -82,45 +119,39 @@ end
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
   end
 
+  def hsa_list
+    person_attribute_type = PersonAttributeType.find_by_name('Health surveillance assistant')
+    @people = Person.where("a.person_attribute_type_id = ?",
+      person_attribute_type.id).joins("INNER JOIN person_attribute a USING(person_id)")
+    render :layout => false
+  end 
 
+  def hsa_dashboard
+    @person = Person.find(params[:person_id])
+  end
 
+  def edit_selected_hsa
+    redirect_to "/people/edit_hsa/#{params[:person_id]}" 
+  end
 
+end
 
+  # def show
+  #   unless params[:person_id].blank?
+  #     @person = Person.find(params[:person_id])
+  #     @person = Person.where(person_id: @person.person_id)
+  #     @person_name = PersonName.find(@person.person_id)
+  #     #raise @person.first.gender.inspect
+  #     #redirect_to "/manage_user"
 
+  #   else
+  #     @person = Person.find(:first, :order => 'date_created DESC')
+  #   end
+  # end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  #def create_hsa
-    # person_name = PersonName.create(given_name: params[:person]['names']['given_name'], 
-    #   family_name: params[:person]['names']['family_name'], person_id: person.id)
-
-    # person = Person.create(birthdate: Date.today, birthdate_estimated: 1, gender: params[:person]['gender']) 
-
-    # PersonNameCode.create(given_name_code: person_name.given_name.soundex, 
-    #   family_name_code: person_name.family_name.soundex, person_name_id: person_name.id)
-    
-    # People.create(given_name: params[:people]['given_name'], family_name: params[:people]['family_name'], 
-    #  given_name_code: params[:given_name_code][person_name.given_name.soundex], 
-    #  family_name_code: params[:family_name_code][person_name.family_name.soundex], 
-    #  gender: params[:people]['gender'], birthdate: params[:people]['birthdate'], 
-    #  birthdate_estimated: params[:people]['birthdate_estimated']) 
-
-    # redirect_to '/manage_user'
-    
-   #end
+  # def given_names
+  #   @names = Person.where("given_name LIKE(?)", "%#{params[:search_string]}%").limit(30).collect do |rec| 
+  #     rec.given_name
+  #   end
+  #   render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>" and return
+  # end

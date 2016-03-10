@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-
-
   ######################### home start ############################################
   get 'home/index'
   get 'start_call' => 'home#start_call'
@@ -58,14 +56,30 @@ Rails.application.routes.draw do
   get 'demographic_modify/:field/:patient_id' => 'people#demographic_modify'
   post '/demographic_modify' => 'people#demographic_modify'
   get 'people/new'
-  post '/people/create_hsa'
-  get 'people/search_hsa'
-  post '/people/search_hsa'
   post 'patient/:create' => 'people#create'
   get '/patient/:given_names' => 'people#given_names'
   get '/patient/:family_names' => 'people#family_names'
   get '/patient/:given_name_plus_family_name' => 'people#given_name_plus_family_name'
-
+  #########################hsa start #################################
+  post '/people/create_hsa'
+  get 'people/search_hsa'
+  post '/people/search_hsa'
+  get 'people/select_hsa'
+  post '/people/select_hsa'
+  get 'people/edit_hsa/:person_id' => 'people#edit_hsa'
+  post 'people/update_hsa' 
+  post '/people/update'
+  get 'people/update_hsa'
+  post '/people/update_hsa'
+  get '/people/given_names'
+  get 'people/family_names'
+  get '/people/given_name_plus_family_name'
+  get 'people/show'
+  post 'people/show'
+  get '/hsa_list' => 'people#hsa_list'
+  get 'hsa_dashboard/:person_id' => 'people#hsa_dashboard'
+  post '/edit_selected_hsa' => 'people#edit_selected_hsa'
+  ######################### hsa end ##################################
   ######################### people end ############################################
 
   ######################### encounters start ########################################
