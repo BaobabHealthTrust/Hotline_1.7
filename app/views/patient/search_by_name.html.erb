@@ -44,6 +44,11 @@
               :id => "gender",
               :allowFreeText => false)
           %>
-        <input type="hidden" name="action_type" value="<%= params[:action_type]%>" />
+    <% end %>
+
+    <input type="hidden" name="action_type" value="<%= params[:action_type]%>" />
+
+    <% if params[:action_type] == 'guardian'%>
+        <input type="hidden" name="patient_id" value="<%= params[:patient_id]%>" />
     <% end %>
 <%end%>
