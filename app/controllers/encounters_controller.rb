@@ -1,55 +1,6 @@
 class EncountersController < ApplicationController
 
   def create
-=begin
-    #raise params.inspect
-    ####
-    #### Get global Variables for encounter --------------
-    current_datetime = session[:datetime].to_datetime rescue DateTime.now
-    patient = Patient.find(params[:encounter][:patient_id])
-    encounter_type_name = params[:encounter][:encounter_type_name]
-    encounter_datetime = params[:encounter][:encounter_datetime]
-    #person = params[:person] unless params[:person].blank?
-
-    ###### Create Encounter ---------------------------
-    encounter = Encounter.create(encounter_type: ConceptName.find_by_name(encounter_type_name).concept_id, patient_id: patient.id, encounter_datetime: encounter_datetime)
-
-    #######################################################
-    # e  = Encounter.create(encounter_type: ConceptName.find_by_name('Pregnancy status').concept_id, patient_id: 122,encounter_datetime: "")
-    # Observation.create(concept_id:  ConceptName.find_by_name('Pregnancy status').concept_id,
-    #                   person_id: e.patient_id, value_coded: ConceptName.find_by_name(params[sss].concept_id))
-    #######################################################
-
-    ##
-    ##### Record Pregnancy Status Encounter ---------------
-    if encounter_type_name.upcase == "PREGNANCY STATUS"
-      pregnancy_status = params[:observations][:value_coded] # save pregnancy status for client
-      ###### Create Observation -------------------------
-      Observation.create(concept_id: ConceptName.find_by_name(encounter_type_name).concept_id, obs_datetime: current_datetime, person_id: encounter.patient_id, value_coded: ConceptName.find_by_name(pregnancy_status).concept_id)
-      if pregnancy_status.upcase == "DELIVERED"
-        ##
-        ##### Get expected delivery date
-        delivery_date = params[:delivery_date].to_datetime.to_s
-        obs = Observation.where(person_id: encounter.patient_id, value_coded: ConceptName.find_by_name(pregnancy_status).concept_id).first
-        obs.value_datetime = delivery_date
-        obs.save
-      elsif pregnancy_status.upcase == "PREGNANT"
-        ##
-        ##### Get last menstural period
-        expected_due_date = params[:expected_due_date].to_datetime.to_s
-        obs = Observation.where(person_id: encounter.patient_id, value_coded: ConceptName.find_by_name(pregnancy_status).concept_id).first
-        obs.value_datetime = expected_due_date
-        obs.save
-      end
-      redirect_to "/encounters/new/female_symptoms?patient_id=#{patient.id}"
-    end
-
-    ##
-    ##### Record Female Symptoms Encounter -----------------
-    if encounter_type_name.upcase == "MATERNAL HEALTH SYMPTOMS"
-
-    end
-=end
 
     @patient = Patient.find(params[:encounter][:patient_id])
 
@@ -71,8 +22,6 @@ class EncountersController < ApplicationController
       next if values.length == 0
 
       concept_id = ConceptName.find_by_name(observation[:concept_name]).concept_id
-      observation.delete(:concept_name)
-
       next if concept_id.blank?
 
       observation[:concept_id] = concept_id
@@ -99,7 +48,6 @@ class EncountersController < ApplicationController
   end
 
   def create_obs(paramz)
-
     if !paramz['value_coded_or_text'].blank?
       value = ConceptName.find_by_name(paramz['value_coded_or_text']) rescue nil
       if value.blank?
@@ -114,11 +62,11 @@ class EncountersController < ApplicationController
     ['value_coded_or_text_multiple', 'value_coded_or_text', 'concept_name'].each do |key|
      paramz.delete(key) if !paramz[key].blank?
     end
+
     Observation.create(paramz)
   end
 
   def new
-
     @patient = Patient.find(params[:patient_id] || session[:patient_id])
     encounter_type = params[:encounter_type].humanize
 
@@ -133,12 +81,6 @@ class EncountersController < ApplicationController
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
-  end
-
-  def select_options(encounter)
-    encounter_name = encounter.humanize
-
-
   end
 
   def concept_set(concept_name)

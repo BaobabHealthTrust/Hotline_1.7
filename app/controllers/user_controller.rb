@@ -4,10 +4,13 @@ class UserController < ApplicationController
       user = User.authenticate(params[:username],params[:password])
       if user
         location_tag_id = LocationTag.find_by_name('Facility location').id
-        
+
         location = Location.where("location.location_id = ? OR location.name = ?", 
           params[:location], params[:location]).joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id AND
-          location_tag_id = #{location_tag_id}").first rescue nil     
+          location_tag_id = #{location_tag_id}").first rescue nil
+
+        Location.current = location
+        User.current = user
 
         if location.blank?
           flash[:error] = "Invalid Workstation Location" 
