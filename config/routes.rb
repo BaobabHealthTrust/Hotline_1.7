@@ -61,6 +61,7 @@ Rails.application.routes.draw do
   get 'patient/districts'
   get 'patient/ta'
   get 'patient/village'
+  get 'patient/district'
 
 
 

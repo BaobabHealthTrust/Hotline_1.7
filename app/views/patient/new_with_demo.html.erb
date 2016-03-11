@@ -43,7 +43,7 @@
     {:id => "current_district",
     :tt_requireNextClick => false,
     :ajaxURL => "",
-    :tt_onLoad => "set_ajaxURL_for_suggestions('/patient/districts?filter_value=', __$('current_region').value); ",
+    :tt_onLoad => "set_ajaxURL_for_suggestions('/patient/district?filter_value=', __$('current_region').value); ",
     :helptext => "Current district"}  %>
 
   <%= text_field_tag "person[addresses][township_division]", nil,

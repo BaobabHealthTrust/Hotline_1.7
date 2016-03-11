@@ -123,7 +123,7 @@ class PatientController < ApplicationController
     return @region_names
   end
 
-  def districts
+  def district
     unless params[:filter_value].blank?
       region_id = LocationTag.find_by_name('Northern').id if params[:filter_value].match(/North/i)
       region_id = LocationTag.find_by_name('Central').id if params[:filter_value].match(/Centr/i)
