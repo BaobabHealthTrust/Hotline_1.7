@@ -279,7 +279,6 @@ img {
   <input type="hidden" name="family_name" value="<%=@family_name%>" />
   <input type="hidden" name="gender" value="<%=@gender%>" />
   <input type="hidden" name="action_type" value="<%= params[:action_type]%>" />
-
   <%if params[:action_type] == "guardian" %>
         <input type="hidden" name="patient_id" value="<%=params[:patient_id]%>" />
   <% end %>
@@ -302,7 +301,7 @@ function patientDashboard() {
       <% unless params[:action_type] == 'guardian'%>
         document.location = '/patient/dashboard/' + selectedPersonID + '/tasks';
       <% else %>
-        document.location = '/encounters/new/reminders?patient_id<% params[:patient_id]%>&guardian_id=' + selectedPersonID;
+        document.location = '/encounters/new/reminders?patient_id=<%= params[:patient_id]%>&guardian_id=' + selectedPersonID;
       <% end %>
   }
 }

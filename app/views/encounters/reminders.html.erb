@@ -63,8 +63,11 @@
     <%= hidden_field_tag("observations[][concept_name]", "Telephone number") %>
     <%= text_field_tag "observations[][value_numeric]",nil,
                        :field_type => "number",
+                       :validationRule => "^0\\d{7,9}$|Unknown|Not Available|N\/A",
+                       :validationMessage => "Not a valid phone number",
                        :helpText =>"Enter telephone number",
                        :tt_pageStyleClass => "NumbersOnly",
+                       :optional => true,
                        :condition => "__$('enroll').value == 'Yes' ",
                        :id => "telephone_number"
     %>
