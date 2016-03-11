@@ -20,6 +20,37 @@ module PatientService
     return patient_obj
   end
 
+  def self.add_patient_attributes(patient_obj, para)
+    type = PersonAttributeType.where("name = 'Cell Phone Number'").first.id
+    #patient_attribute = PersonAttribute.new(patient_obj)
+    #patient_attribute.person_id = patient_obj.patient_id
+    #patient_attribute.value = params[:person][:cell_phone_number]
+    #patient_attribute.person_attribute_type = type
+    #patient_attribute = PersonAttribute.create(person_id: patient_obj.patient_id, value: para, person_attribute_type: type)
+    #raise para.inspect
+    uuid_names = ["Occupation", "Cell Phone Number", "Office Phone Number", "Home Phone Number"]
+    i = 0
+    ["occupation", "cell_phone_number", "office_phone_number", "home_phone_number"].each do |name|
+
+      next if para[:person]["#{name}"].blank?
+
+      uuid =  ActiveRecord::Base.connection.select_one("SELECT UUID() as uuid")['uuid']
+      value = para[:person]["#{name}"]
+      type = PersonAttributeType.where("name = ?", uuid_names[i]).first.id
+      i = i+1
+
+      next if type.blank?
+
+      patient_attribute = PersonAttribute.create(
+          person_id: patient_obj.patient_id,
+          value: value,
+          creator: 1,
+          person_attribute_type_id: type,
+          uuid: uuid
+      )
+    end
+  end
+
   def self.find_by_demographics(params)
     @people = [] 
     given_name_code = params[:person]['names']['given_name'].soundex

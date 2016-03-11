@@ -62,13 +62,13 @@
   color: #73AD21;
 }
 
-#selected_encounter td {
+#selected_encounter_table td {
    border-style: solid;
    border-width: 0px 0px 1px;
    line-height: 50px;
 }
 
-#selected_encounter {
+#selected_encounter_table {
    border-collapse: collapse;
 }
 
@@ -79,6 +79,14 @@
 .obs_value {
   color: green;
   font-weight: bold;
+}
+
+.selected_encounter span {
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  position: absolute;
+  padding-top: 5%;
 }
 
 </style>
@@ -103,7 +111,10 @@
       </div>
     </div>
     <div class="main-container-table-cell selected_encounter"> 
-      <table style="width: 99%;" id="selected_encounter">
+        <%if @current_encounters.blank?%>
+          <span>No current call</span>
+        <%end%>
+      <table style="width: 99%;" id="selected_encounter_table">
       </table>
     </div>
   </div>
@@ -149,7 +160,7 @@ function selectEncounter(e) {
 
   
 function addRows(data) {
-  t = document.getElementById('selected_encounter')
+  t = document.getElementById('selected_encounter_table')
   var rowCount = t.rows.length;
   for (var i = 0; i < rowCount; i++) {
     try{ 

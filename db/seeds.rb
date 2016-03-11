@@ -72,7 +72,7 @@ puts '<<<<<<<  Adding Relationships  >>>>>>>>>>'
 end
 
 puts "Creating user roles ...."
-["System Developer","Provider"].each do |role|
+["Administrator","Provider"].each do |role|
   Role.create(description: 'User roles', role: role)
 end
 

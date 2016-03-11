@@ -77,7 +77,7 @@ class UserController < ApplicationController
 
     unless params[:user]['role'].blank?
       @user.update_attributes(system_id: params[:user]['role'].downcase)
-      (@user.user_roles || []).each { |r| r.destroy }
+      ActiveRecord::Base.connection.execute("DELETE FROM user_role WHERE user_id = #{@user.id}")
       UserRole.create(user_id: @user.id, role: params[:user]['role'].titleize)
     end unless params[:user].blank?
 
@@ -86,12 +86,16 @@ class UserController < ApplicationController
     end 
 
     new_name = PersonName.create(given_name: params[:person]['names']['given_name'],
-      family_name: params[:person]['names']['family_name'])
+      family_name: params[:person]['names']['family_name'], person_id: @user.person.id)
     
     PersonNameCode.create(given_name_code: new_name.given_name.soundex,
       family_name_code: new_name.family_name.soundex, person_name_id: new_name.id)
-    
-
+   
+    unless params[:user]['password'].blank?
+      if params[:user]['password'] == params[:user]['confirm password'] 
+        @user.update_attributes(password: params[:user]['password'])
+      end
+    end
     redirect_to '/manage_user'
   end
  
@@ -136,5 +140,19 @@ class UserController < ApplicationController
     end
     render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>" and return
   end
+
+  def list
+    @users = User.all
+    render :layout => false
+  end
+
+  def dashboard
+    @user = User.find(params[:user_id])
+  end
+
+  def edit_selected_user
+    redirect_to "/user/edit/#{params[:user_id]}"
+  end
+
 
 end

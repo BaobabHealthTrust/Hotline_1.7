@@ -7,6 +7,15 @@ class PatientController < ApplicationController
 
     @current_encounters = Encounter.where(patient_id: params[:patient_id], 
       encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) .. (Date.today.strftime('%Y-%m-%d 23:59:59')))
+    
+    @previous_encounters = Encounter.where("patient_id = ? AND encounter_datetime < ?",
+      params[:patient_id], Date.today.strftime('%Y-%m-%d 00:00:00'))
+
+    symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
+    @symptom_encounters = Encounter.where("patient_id = ? AND encounter_type = ?",
+      params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
+
+
     render :layout => false
   end
 
@@ -39,14 +48,22 @@ class PatientController < ApplicationController
     render :layout => false
   end
 
+  def new_with_demo
+    @location_names = districts
+  end
+
   def create
 
     patient_obj = PatientService.create(params)
-
     if params[:action_type] && params[:action_type] == 'guardian'
       redirect_to "/encounters/new/reminders?patient_id=#{params[:patient_id]}&guardian_id=#{patient_obj.patient_id}" and return
     end
+    redirect_to "/patient/new_with_demo/#{patient_obj.patient_id}"
+  end
 
+  def add_patient_attributes
+    patient_obj = PatientService.get_patient(params[:patient_id])
+    patient_attributes = PatientService.add_patient_attributes(patient_obj, params)
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 
@@ -95,6 +112,8 @@ class PatientController < ApplicationController
      ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
     @location_names = @districts.collect { |location_id, location_name| location_name}
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+
+    return @location_names
   end
 
   def pregnancy_status
@@ -111,6 +130,10 @@ class PatientController < ApplicationController
 
       if value.blank?
         value = ob.value_numeric rescue nil
+      end
+
+      if value.blank?
+        value = ob.value_text rescue nil
       end
 
       observations << [ob.concept.concept_names.first.name, value]

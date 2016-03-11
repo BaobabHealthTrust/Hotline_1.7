@@ -33,6 +33,9 @@ Rails.application.routes.draw do
   get 'user/edit/:user_id' => 'user#edit'
   post '/user/edit'
   get 'user/username'
+  get 'user/list'
+  get 'user_dashboard/:user_id' => 'user#dashboard'
+  post '/edit_selected_user' => 'user#edit_selected_user' 
   ######################### user end ############################################
 
   ######################### patient start ############################################
@@ -40,6 +43,13 @@ Rails.application.routes.draw do
   get 'patient/edit/:patient_id' => 'patient#edit'
   post 'patient/new'
   post 'patient/search_result'
+
+  get 'patient/new_with_demo/:patient_id' => 'patient#new_with_demo'
+  post 'patient/new_with_demo/:patient_id' => 'patient#new_with_demo'
+
+  get 'patient/add_patient_attributes'
+  post 'patient/add_patient_attributes'
+
   get 'patient/search_by_name'
   post 'patient/create'
   get '/patient/given_names'
