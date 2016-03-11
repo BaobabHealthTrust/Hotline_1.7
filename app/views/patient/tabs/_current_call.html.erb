@@ -104,7 +104,7 @@
             <%=image_tag("icons/Remove.png", class: 'remove-icon')%>
           </div>
           <div class="min-container-table-cell encounters" id="<%=e.id%>"
-          style="width: 88%; padding-left: 10px;" onclick = "javascript:selectEncounter(this, )">
+          style="width: 88%; padding-left: 10px;" onclick = "javascript:selectEncounter(this)">
             <p><%= e.type.name %>&nbsp;<small><%=e.encounter_datetime.strftime('%H:%M:%S')%></small></p>
           </div>
         </div>
