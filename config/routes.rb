@@ -59,6 +59,8 @@ Rails.application.routes.draw do
   get 'patient/find_by_identifier'
   post 'patient/attributes_search_results'
   get 'patient/districts'
+  get 'patient/ta'
+  get 'patient/village'
 
 
 

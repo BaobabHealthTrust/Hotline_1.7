@@ -49,9 +49,6 @@ class PatientController < ApplicationController
   end
 
   def new_with_demo
-    @location_names = districts
-    @villages = villages
-    @regions = regions
   end
 
   def create
@@ -127,26 +124,55 @@ class PatientController < ApplicationController
   end
 
   def districts
-    location_tag = LocationTag.find_by_name("District")
-    @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
-     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
-    @location_names = @districts.collect { |location_id, location_name| location_name}
-    @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+    unless params[:filter_value].blank?
+      region_id = LocationTag.find_by_name('Northern').id if params[:filter_value].match(/North/i)
+      region_id = LocationTag.find_by_name('Central').id if params[:filter_value].match(/Centr/i)
+      region_id = LocationTag.find_by_name('Southern').id if params[:filter_value].match(/Sout/i)
+    else
+      region_id = 0
+    end
+    
+    @districts = Location.where("region = ? AND name LIKE(?)",region_id,"%#{params[:search_string]}%")
+    data = @districts.collect { |l | l.name }
 
-    return @location_names
+    unless data.blank?
+      render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
+    else
+      #render text: [].to_json and return
+      render text: "<li></li>" and return
+    end
   end
 
   def ta
+    location_tag = LocationTag.find_by_name('Traditional Authority')
+    district = Location.where(name: params[:filter_value]).first
 
+    @ta = Location.where("parent_location = ? AND m.location_tag_id = ? 
+      AND name LIKE(?)",district.id, location_tag.id, "%#{params[:search_string]}%").joins("INNER JOIN location_tag_map m USING(location_id)")
+    data = @ta.collect { |l | l.name }
+
+    unless data.blank?
+      render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
+    else
+      #render text: [].to_json and return
+      render text: "<li></li>" and return
+    end
   end
-  def villages
+
+  def village
     location_tag = LocationTag.find_by_name("Village")
-    @villages = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
-     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
+    ta = Location.where(name: params[:filter_value]).first
 
-    @village_names = @villages.collect { |v_id, v_name| v_name }
+    @villages = Location.where("parent_location = ? AND m.location_tag_id = ? 
+      AND name LIKE(?)",ta.id, location_tag.id, "%#{params[:search_string]}%").joins("INNER JOIN location_tag_map m USING(location_id)")
+    data = @villages.collect { |l | l.name }
 
-    return @village_names
+    unless data.blank?
+      render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
+    else
+      #render text: [].to_json and return
+      render text: "<li></li>" and return
+    end
   end
 
   def pregnancy_status
