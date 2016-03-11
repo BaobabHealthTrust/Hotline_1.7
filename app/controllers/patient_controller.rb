@@ -161,8 +161,9 @@ class PatientController < ApplicationController
   end
 
   def village
+    district = Location.find_by_name(params[:district])
+    ta = Location.where(name: params[:filter_value], parent_location: district.id).first
     location_tag = LocationTag.find_by_name("Village")
-    ta = Location.where(name: params[:filter_value]).first
 
     @villages = Location.where("parent_location = ? AND m.location_tag_id = ? 
       AND name LIKE(?)",ta.id, location_tag.id, "%#{params[:search_string]}%").joins("INNER JOIN location_tag_map m USING(location_id)")
