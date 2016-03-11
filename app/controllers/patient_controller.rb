@@ -15,7 +15,9 @@ class PatientController < ApplicationController
     @symptom_encounters = Encounter.where("patient_id = ? AND encounter_type = ?",
       params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
 
+    @patient_obj_attributes = PersonAttribute.where(person_id: @patient_obj.patient_id).first
 
+    @patient_obj_addresses = PersonAddress.where(person_id: @patient_obj.patient_id).first
     render :layout => false
   end
 
@@ -67,7 +69,7 @@ class PatientController < ApplicationController
     PersonAddress.create(
         person_id: patient_obj.patient_id,
         state_province: params[:person][:addresses][:state_province],
-        township_division: params[:person][:township_divison],
+        township_division: params[:person][:addresses][:township_division],
         city_village: params[:person][:addresses][:city_village]
     )
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
