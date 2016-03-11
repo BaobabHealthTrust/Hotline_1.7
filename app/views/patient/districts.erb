@@ -20,7 +20,7 @@
       <%= select_tag 'call_mode', options_for_select(@call_modes), {
                                         :helpText => 'Select the type of caller?',
                                         :id => 'call_mode',
-                                        :tt_onLoad => '$(nextButton).style.display = "inline";'}%>
+                                        :tt_onLoad => '__$(nextButton).style.display = "inline"; __$(nextButton).innerHTML = "Next";'}%>
   <%# end%>
   <%#=hidden_field_tag "task", params["task"] %>
   <%= submit_tag "Finish" %>

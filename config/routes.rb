@@ -59,6 +59,9 @@ Rails.application.routes.draw do
   get 'patient/find_by_identifier'
   post 'patient/attributes_search_results'
   get 'patient/districts'
+
+
+
   get 'patient_obs/:encounter_id' => 'patient#observations'
   get 'patient/number_of_booked_patients'
   get 'void_encounter/:encounter_id/:tab_name' => 'patient#void_encounter' 
@@ -74,6 +77,12 @@ Rails.application.routes.draw do
   get '/patient/:given_names' => 'people#given_names'
   get '/patient/:family_names' => 'people#family_names'
   get '/patient/:given_name_plus_family_name' => 'people#given_name_plus_family_name'
+
+  get 'people/villages'
+  post 'people/villages'
+
+  get 'people/regions'
+  post 'people/regions'
   #########################hsa start #################################
   post '/people/create_hsa'
   get 'people/search_hsa'

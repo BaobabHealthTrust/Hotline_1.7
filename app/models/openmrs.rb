@@ -10,7 +10,7 @@ module Openmrs
   def check_record_complteness_before_creating
     self.creator = User.current.id if self.attribute_names.include?("creator") and (self.creator.blank? || self.creator == 0)and User.current != nil
     self.provider_id = User.current.person.id if self.attribute_names.include?("provider_id") and (self.provider_id.blank? || self.provider_id == 0)and User.current != nil
-    self.date_created = Time.now if self.attribute_names.include?("date_created")
+    self.date_created = Time.now if self.attribute_names.include?("date_created") and self.date_created.blank?
     self.uuid = ActiveRecord::Base.connection.select_one("SELECT UUID() as uuid")['uuid'] if self.attribute_names.include?("uuid")
   end
   

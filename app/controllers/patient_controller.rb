@@ -49,7 +49,9 @@ class PatientController < ApplicationController
   end
 
   def new_with_demo
-
+    @location_names = districts
+    @villages = villages
+    @regions = regions
   end
 
   def create
@@ -62,8 +64,16 @@ class PatientController < ApplicationController
   end
 
   def add_patient_attributes
+    #raise params[:person][:addresses][:city_village].inspect
     patient_obj = PatientService.get_patient(params[:patient_id])
     patient_attributes = PatientService.add_patient_attributes(patient_obj, params)
+    #raise patient_attributes.inspect
+    PersonAddress.create(
+        person_id: patient_obj.patient_id,
+        state_province: params[:person][:addresses][:state_province],
+        city_village: params[:person][:addresses][:city_village]
+    )
+
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 
@@ -80,14 +90,40 @@ class PatientController < ApplicationController
   end
 
   def attributes_search_results
-    @people = []
-    (Person.where('person_id > 1') || []).each do |person|
-      @people << PatientService.get_patient(person.id)
-    end
+    people = []
 
     @attribute_name = params[:attribute_name].titleize
     @attribute = params[:attribute_value]
+
+    case @attribute_name
+      when 'Phone Number'
+        types = [-1] + PersonAttributeType.where("name IN ('Cell Phone Number', 'Office Phone Number', 'Home Phone Number')").map(&:person_attribute_type_id)
+        patient_ids = PersonAttribute.where(["person_attribute_type_id IN (?) AND value LIKE '%#{@attribute.to_i}%' ", types]).select('person_id').collect{|o| o.person_id}
+
+        concept_ids = ["Telephone Number"].collect{|num| ConceptName.find_by_name(num).concept_id rescue -1}
+        patient_ids << Observation.where(["concept_id = ? AND value_numeric LIKE '%#{@attribute.to_i}%'", concept_ids, ]).select('person_id').collect{|o| o.person_id}
+
+        people = Person.where(['person_id > 1 AND person_id IN (?)', patient_ids.flatten])
+      when 'Identifier'
+        types = ['IVR access code', 'National id'].collect{|type| PatientIdentifierType.find_by_name(type).id rescue -1}
+        patient_ids = PatientIdentifier.where(["identifier_type IN (?) AND value LIKE '%#{@attribute}%'", types])
+    end
+
+    @people = []
+    people.each do |person|
+      @people << PatientService.get_patient(person.id)
+    end
     render :layout => false
+  end
+
+  def regions
+    #location_tag = LocationTag.find_by_name("Region")
+    location_tag = LocationTag.find_by_description("Regions of Malawi")
+    @regions = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
+     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
+    @region_names = @regions.collect { |region_id, region_name| region_name}
+
+    return @region_names
   end
 
   def districts
@@ -96,6 +132,21 @@ class PatientController < ApplicationController
      ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
     @location_names = @districts.collect { |location_id, location_name| location_name}
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+
+    return @location_names
+  end
+
+  def ta
+
+  end
+  def villages
+    location_tag = LocationTag.find_by_name("Village")
+    @villages = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
+     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
+
+    @village_names = @villages.collect { |v_id, v_name| v_name }
+
+    return @village_names
   end
 
   def pregnancy_status
