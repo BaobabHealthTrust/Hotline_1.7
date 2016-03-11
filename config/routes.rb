@@ -61,6 +61,7 @@ Rails.application.routes.draw do
   get 'patient/districts'
   get 'patient_obs/:encounter_id' => 'patient#observations'
   get 'patient/number_of_booked_patients'
+  get 'void_encounter/:encounter_id/:tab_name' => 'patient#void_encounter' 
   ######################### patient end ############################################
   
 

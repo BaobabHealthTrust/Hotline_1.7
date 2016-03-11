@@ -142,6 +142,16 @@ class PatientController < ApplicationController
     render :text => (count.to_i >= 0 ? {params[:date] => count}.to_json : 0)
   end
 
+  def void_encounter
+    e = Encounter.find(params[:encounter_id])
+    (e.observations || []).each do |ob|
+      ob.update_attributes(voided: true, void_reason: 'N/A')
+    end
+    patient_id = e.patient_id
+    e.update_attributes(voided: true, void_reason: 'N/A')
+    redirect_to "/patient/dashboard/#{patient_id}/#{params[:tab_name]}"
+  end
+
   private
 
   def search(field_name, search_string, gender = nil)

@@ -96,9 +96,10 @@
   <div class="main-container-table-row">
     <div class="main-container-table-cell" style="width: 38%;">
       <div class="min-container-table">
-      <%(@symptom_encounters || []).each do|e|%>
+      <%tab_name = params[:tab_name]
+      (@symptom_encounters || []).each do|e|%>
         <div class="min-container-table-row">
-          <div class="min-container-table-cell" style="width: 10%;" onclick="javascript:voidEncounter(this)" id="<%=e.id%>">
+          <div class="min-container-table-cell" style="width: 10%;" onclick="javascript:voidEncounter(this,'<%=tab_name%>')" id="<%=e.id%>">
             <%=image_tag("icons/Remove.png", class: 'remove-icon')%>
           </div>
           <div class="min-container-table-cell encounters" id="<%=e.id%>"
@@ -123,10 +124,6 @@
 
 
 <script>
-
-function voidEncounter(e) {
-  alert(e.id)
-}
 
 function changeColor(e) {
   allDivs = document.getElementsByClassName('encounters');
