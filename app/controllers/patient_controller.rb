@@ -61,16 +61,15 @@ class PatientController < ApplicationController
   end
 
   def add_patient_attributes
-    #raise params[:person][:addresses][:city_village].inspect
     patient_obj = PatientService.get_patient(params[:patient_id])
     patient_attributes = PatientService.add_patient_attributes(patient_obj, params)
-    #raise patient_attributes.inspect
+
     PersonAddress.create(
         person_id: patient_obj.patient_id,
         state_province: params[:person][:addresses][:state_province],
+        township_division: params[:person][:township_divison],
         city_village: params[:person][:addresses][:city_village]
     )
-
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 

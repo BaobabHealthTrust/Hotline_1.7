@@ -21,13 +21,7 @@ module PatientService
   end
 
   def self.add_patient_attributes(patient_obj, para)
-    type = PersonAttributeType.where("name = 'Cell Phone Number'").first.id
-    #patient_attribute = PersonAttribute.new(patient_obj)
-    #patient_attribute.person_id = patient_obj.patient_id
-    #patient_attribute.value = params[:person][:cell_phone_number]
-    #patient_attribute.person_attribute_type = type
-    #patient_attribute = PersonAttribute.create(person_id: patient_obj.patient_id, value: para, person_attribute_type: type)
-    #raise para.inspect
+
     uuid_names = ["Occupation", "Cell Phone Number", "Office Phone Number", "Home Phone Number"]
     i = 0
     ["occupation", "cell_phone_number", "office_phone_number", "home_phone_number"].each do |name|
