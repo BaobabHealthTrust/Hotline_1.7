@@ -50,6 +50,8 @@ class PatientController < ApplicationController
 
   def new_with_demo
     @location_names = districts
+    @villages = villages
+    @regions = regions
   end
 
   def create
@@ -62,8 +64,16 @@ class PatientController < ApplicationController
   end
 
   def add_patient_attributes
+    #raise params[:person][:addresses][:city_village].inspect
     patient_obj = PatientService.get_patient(params[:patient_id])
     patient_attributes = PatientService.add_patient_attributes(patient_obj, params)
+    #raise patient_attributes.inspect
+    PersonAddress.create(
+        person_id: patient_obj.patient_id,
+        state_province: params[:person][:addresses][:state_province],
+        city_village: params[:person][:addresses][:city_village]
+    )
+
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end
 
@@ -90,6 +100,16 @@ class PatientController < ApplicationController
     render :layout => false
   end
 
+  def regions
+    #location_tag = LocationTag.find_by_name("Region")
+    location_tag = LocationTag.find_by_description("Regions of Malawi")
+    @regions = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
+     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
+    @region_names = @regions.collect { |region_id, region_name| region_name}
+
+    return @region_names
+  end
+
   def districts
     location_tag = LocationTag.find_by_name("District")
     @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
@@ -98,6 +118,19 @@ class PatientController < ApplicationController
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
 
     return @location_names
+  end
+
+  def ta
+
+  end
+  def villages
+    location_tag = LocationTag.find_by_name("Village")
+    @villages = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
+     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
+
+    @village_names = @villages.collect { |v_id, v_name| v_name }
+
+    return @village_names
   end
 
   def pregnancy_status

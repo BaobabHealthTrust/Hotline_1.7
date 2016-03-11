@@ -15,36 +15,41 @@
                        }
     %>
 
-    <%= text_field "region" , 'region', {:helpText => 'Current Region',
-                                         :tt_requireNextClick => false,
-                                         :tt_onLoad => "$('nextButton').style.display = 'none';",
-                                         :ajaxURL => '/people/region'} %>
+    <%#= select_tag "region", options_for_select(@regions, []), {
+                                                              :helpText => 'Current Region',
+                                                              :id => 'current_region',
+                                                              :tt_requireNextClick => true} %>
 
     <%= select_tag "person[addresses][state_province]", options_for_select(@location_names.sort, []), {
                                                               :helpText => 'Current District',
                                                               :id => 'current_district',
                                                               :tt_requireNextClick => true} %>
-    <%= text_field "person[addresses][county_district" ,
-                   :condition => '$("address2").value != "Other"',
-                   :helpText => 'Traditional Authority (T/A)',
-                   :tt_requireNextClick => false, :ajaxURL => '',
-                   :tt_pageStyleClass => "azButton",
-                   :tt_onLoad => "$('nextButton').style.display = 'none';" %></p>
+    <%#= text_field "person[addresses][county_district]" ,
+                    {
+                            :condition => '$("address2").value != "Other"',
+                            :helpText => 'Traditional Authority (T/A)',
+                            :tt_requireNextClick => true, :ajaxURL => '',
+                            :tt_pageStyleClass => "azButton",
+                            :tt_onLoad => "$('nextButton').style.display = 'none';" }%>
 
+    <%#= select_tag "person[addresses][county_district]", options_for_select(@ta.sort, []), {
+                                                            :field_type => 'alpha',
+                                                            :helpText => 'Traditional Authority (T/A)',
+                                                            :tt_requireNextClick => true,
+                                                            :tt_pageStyleClass => "azButton",
+                                                            :allowFreeText => false,
+                                                            :tt_onLoad => '($nextButton).style.display = "none";'} %>
 
-    <%= text_field_tag "person[addresses][city_village]", params[:city_village],
-                       {
-                        :field_type => 'alpha',
-                        :helpText => 'Current Village',
-                        :tt_requireNextClick => false,
-                        :tt_pageStyleClass => "azButton",
-                        :ajaxURL => "/people/village?search_string=",
-                        :allowFreeText => false,
-                        :tt_onLoad => '($nextButton).style.display = "none";'} %>
-
-
+    <%= select_tag "person[addresses][city_village]", options_for_select(@villages.sort, []), {
+                                                            :field_type => 'alpha',
+                                                            :helpText => 'Current Village',
+                                                            :tt_requireNextClick => true,
+                                                            :tt_pageStyleClass => "azButton",
+                                                            :allowFreeText => false} %>
 
 <% end %>
+
+
 <script>
     tt_cancel_destination = '/';
     function set_ajaxURL_for_suggestions(url, filter_value) {
