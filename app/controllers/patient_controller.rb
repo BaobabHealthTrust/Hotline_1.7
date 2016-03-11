@@ -127,7 +127,7 @@ class PatientController < ApplicationController
     unless params[:filter_value].blank?
       region_id = LocationTag.find_by_name('Northern').id if params[:filter_value].match(/North/i)
       region_id = LocationTag.find_by_name('Central').id if params[:filter_value].match(/Centr/i)
-      region_id = LocationTag.find_by_name('Southern').id if params[:filter_value].match(/Sout/i)
+      region_id = LocationTag.find_by_name('South').id if params[:filter_value].match(/Sout/i)
     else
       region_id = 0
     end
@@ -173,6 +173,16 @@ class PatientController < ApplicationController
       #render text: [].to_json and return
       render text: "<li></li>" and return
     end
+  end
+
+  def districts
+    location_tag = LocationTag.find_by_name("District")
+    @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
+     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
+
+
+    @location_names = @districts.collect { |location_id, location_name| location_name}
+    @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
   end
 
   def pregnancy_status
