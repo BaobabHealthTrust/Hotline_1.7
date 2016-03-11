@@ -12,6 +12,8 @@ class EncountersController < ApplicationController
     encounter.save
 
     # Observation handling
+    attrs = PersonAttributeType.all.inject({}){|result, k| result[k.name.upcase] = k.name; result }
+
     (params[:observations] || []).each do |observation|
 
       next if observation[:concept_name].blank?
@@ -24,6 +26,7 @@ class EncountersController < ApplicationController
       next if values.length == 0
 
       concept_id = ConceptName.find_by_name(observation[:concept_name]).concept_id
+
       next if concept_id.blank?
 
       observation[:concept_id] = concept_id
@@ -46,18 +49,32 @@ class EncountersController < ApplicationController
       else
         create_obs(observation.to_h)
       end
+
+      #handle available attributes
+      attrs["TELEPHONE NUMBER"] = 'Cell Phone Number'
+      if attrs.keys.include?(observation[:concept_name].upcase)
+        attr_type = PersonAttributeType.find_by_name(attrs[observation[:concept_name].upcase])
+        PersonAttribute.create(
+            :person_attribute_type_id => attr_type.id,
+            :person_id => @patient.id,
+            :creator => session[:user_id],
+            :date_created => DateTime.now,
+            :value => observation[:value_numeric] || observation[:value_text] || observation[:value_datetime] || observation[:value_coded_or_text]
+        )
+      end
     end
 
+    #handle a few attributes[]
     #create relationship if provided
     if params[:guardian_id]
       rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
-      Relationship.create(
-          :relationship => rel_type.id,
-          :person_a => @patient.id,
-          :person_b => params[:guardian_id],
-          :date_created => Date.today,
-          :creator => session[:user_id]
-      )
+      rel = Relationship.new()
+      rel.relationship = rel_type.id
+      rel.person_a = @patient.id
+      rel.person_b = params[:guardian_id]
+      rel.date_created = DateTime.now.to_s(:db)
+      rel.creator = session[:user_id]
+      rel.save
     end
     # Go to the next task in the workflow (or dashboard)
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"
@@ -114,6 +131,7 @@ class EncountersController < ApplicationController
     #search for guardian created same day
     rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
     rel = Relationship.where(:relationship => rel_type.id, :person_a => patient_id).order("date_created DESC").first
+
     if rel
       return Person.find(rel.person_b) if rel.date_created.to_date == Date.today
     end

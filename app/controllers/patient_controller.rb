@@ -90,13 +90,29 @@ class PatientController < ApplicationController
   end
 
   def attributes_search_results
-    @people = []
-    (Person.where('person_id > 1') || []).each do |person|
-      @people << PatientService.get_patient(person.id)
-    end
+    people = []
 
     @attribute_name = params[:attribute_name].titleize
     @attribute = params[:attribute_value]
+
+    case @attribute_name
+      when 'Phone Number'
+        types = [-1] + PersonAttributeType.where("name IN ('Cell Phone Number', 'Office Phone Number', 'Home Phone Number')").map(&:person_attribute_type_id)
+        patient_ids = PersonAttribute.where(["person_attribute_type_id IN (?) AND value LIKE '%#{@attribute.to_i}%' ", types]).select('person_id').collect{|o| o.person_id}
+
+        concept_ids = ["Telephone Number"].collect{|num| ConceptName.find_by_name(num).concept_id rescue -1}
+        patient_ids << Observation.where(["concept_id = ? AND value_numeric LIKE '%#{@attribute.to_i}%'", concept_ids, ]).select('person_id').collect{|o| o.person_id}
+
+        people = Person.where(['person_id > 1 AND person_id IN (?)', patient_ids.flatten])
+      when 'Identifier'
+        types = ['IVR access code', 'National id'].collect{|type| PatientIdentifierType.find_by_name(type).id rescue -1}
+        patient_ids = PatientIdentifier.where(["identifier_type IN (?) AND value LIKE '%#{@attribute}%'", types])
+    end
+
+    @people = []
+    people.each do |person|
+      @people << PatientService.get_patient(person.id)
+    end
     render :layout => false
   end
 
