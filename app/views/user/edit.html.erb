@@ -33,7 +33,7 @@
                         :ajaxURL => '/user/username?search_string=',
                         :allowFreeText => true }%>
 
-    <%= @roles = ['Administrator', 'Provider'] %> 
+    <%= @roles = ['Administrator','System Developer', 'Provider'] %> 
     <%= select_tag("user[role]", options_for_select(@roles ,params[:role]),
         :helpText =>"Role",
         :id => "role",
