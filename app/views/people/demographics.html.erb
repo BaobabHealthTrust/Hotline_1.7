@@ -214,10 +214,12 @@
             <h2>Cell Phone Number</h2>
           </th>
           <td class='data' style='border-width:1px 1px 1px'><%= @patient_obj.cell_phone_number %></td>
-          <td class='anchor_class'><a href="/demographic_modify/phone_number/<%= @patient_obj.patient_id %>">
-            <span>
-              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-            </span></a>
+          <td class='anchor_class'>
+            <a href="/demographic_modify/phone_numbers/<%= @patient_obj.patient_id %>">
+                <span>
+                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+                </span>
+            </a>
           </td>
         </tr>
       </table>
