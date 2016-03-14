@@ -137,7 +137,6 @@
 <%= render :partial => 'patient/headers/header' %>
 
 <div class="main-container">
-    <div id="general_dashboard" style="margin:10px;">
       <div id="details" style="float:none; width:97%;">
         <div class="container">
           <table class="demographics_container">
@@ -195,7 +194,9 @@
                 <h2>Current Region</h2>
               </th>
               <td class='data' style='border-width:1px 1px 1px'>
-                <%= @patient_obj.region %>
+                <p>
+                  <%= @patient_obj.region %>
+                </p>
               </td>
               <td class='anchor_class'>
                 <a href="/demographic_modify/region/<%= @patient_obj.patient_id %>">
@@ -209,7 +210,11 @@
               <th class="data_header">
                 <h2>Current District</h2>
               </th>
-              <td class='data'><%= @patient_obj.state_province %></td>
+              <td class='data'>
+                <p>
+                    <%= @patient_obj.state_province %>
+                </p>
+              </td>
               <td class='anchor_class'><a href="/demographic_modify/home_district/<%= @patient_obj.patient_id %>">
                 <span>
                   <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
@@ -221,7 +226,9 @@
                 <h2>Current TA</h2>
               </th>
               <td class='data' style='border-width:1px 1px 1px'>
-                <%= @patient_obj.township_division %>
+                <p>
+                  <%= @patient_obj.township_division %>
+                </p>
               </td>
               <td class='anchor_class'>
                 <a href="/demographic_modify/ta/<%= @patient_obj.patient_id %>">
@@ -235,7 +242,11 @@
               <th class="data_header">
                 <h2>Current Village</h2>
               </th>
-              <td class='data'><%= @patient_obj.city_village %></td>
+              <td class='data'>
+                <p>
+                    <%= @patient_obj.city_village %>
+                </p>
+              </td>
               <td class='anchor_class'>
                 <a href="/demographic_modify/location/<%= @patient_obj.patient_id %>">
                 <span>
@@ -247,7 +258,11 @@
               <th class="data_header">
                 <h2>Cell Phone Number</h2>
               </th>
-              <td class='data' style='border-width:1px 1px 1px'><%= @patient_obj.cell_phone_number %></td>
+              <td class='data'>
+                <p>
+                    <%= @patient_obj.cell_phone_number %>
+                </p>
+              </td>
               <td class='anchor_class'>
                 <a href="/demographic_modify/phone_numbers/<%= @patient_obj.patient_id %>">
                     <span>
@@ -269,7 +284,6 @@
           </table>
         </div>
       <div>
-    </div>
 </div>
 
 
