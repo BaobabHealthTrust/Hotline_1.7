@@ -31,11 +31,10 @@
                        }
     %>
 
-  <%= select_tag "CURRENT REGION", options_for_select([["Northern Region", "Northern+Region"],
-      ["Central Region", "Central+Region"], ["Southern Region", "Southern+Region"], ["", ""]]),
+  <%= select_tag "person[addresses][current_region]", options_for_select([["", ""], ["Northern Region", "Northern"],
+      ["Central Region", "Central"], ["Southern Region", "Southern"]]),
     {:id => "current_region",
     :tt_requireNextClick => false,
-    :condition => "__$('country') == null || __$('country').value == 'Malawi'",
     :tt_onLoad => "$('nextButton').style.display = 'none';",
     :helptext => "Current region"}  %>
 

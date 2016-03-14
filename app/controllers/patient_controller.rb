@@ -15,9 +15,7 @@ class PatientController < ApplicationController
     @symptom_encounters = Encounter.where("patient_id = ? AND encounter_type = ?",
       params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
 
-    @patient_obj_attributes = PersonAttribute.where(person_id: @patient_obj.patient_id).first
 
-    @patient_obj_addresses = PersonAddress.where(person_id: @patient_obj.patient_id).first
     render :layout => false
   end
 
@@ -66,11 +64,14 @@ class PatientController < ApplicationController
     patient_obj = PatientService.get_patient(params[:patient_id])
     patient_attributes = PatientService.add_patient_attributes(patient_obj, params)
 
+    #location = LocationTag.find_by_name(params[:person][:current_region]).location_tag_id
+
     PersonAddress.create(
         person_id: patient_obj.patient_id,
         state_province: params[:person][:addresses][:state_province],
         township_division: params[:person][:addresses][:township_division],
-        city_village: params[:person][:addresses][:city_village]
+        city_village: params[:person][:addresses][:city_village],
+        region: params[:person][:addresses][:current_region]
     )
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end

@@ -83,67 +83,7 @@ img {
 </style>
 
 <div class="main-container">
-  <div class="demographics">
-    
-    <div class="cells" style="width: 5%; vertical-align: middle; text-align: left;">
-      <span class="icons">
-        <%gender = @patient_obj.sex
-          gender = gender == 'F' ? 'Female' : 'Male'
-        %>
-        <%=image_tag("icons/Person_Undefined_#{gender}_Dark.png", class: 'icons gender-icon')%>
-      </span>
-    </div>
-
-    <div class="cells" style="width: 30%;">
-      <table class="demographics-table">
-        <tr>
-          <th style="width:55px;">Name:</th>
-          <td><%=@patient_obj.name%></td>
-        </tr>
-        <tr>
-          <th style="width:100px;">Birthdate:</th>
-          <td style="text-align: left;"><%=@patient_obj.birthdate%></td>
-        </tr>
-        <tr>
-          <th style="width:100px;">Age:</th>
-          <td style="text-align: left;">(<%=@patient_obj.age%>)</td>
-        </tr>
-        <tr>
-          <th style="width:100px;">National ID:</th>
-          <td style="text-align: left;"><%= %></td>
-        </tr>
-      </table> 
-    </div>
-
-    <div class="cells" style="width: 55%;">
-      <table class="attributes-table">
-        <tr>
-          <th style="width:55px;">AVR access ID:</th>
-          <td><%=@patient_obj.avr_access_number%></td>
-        </tr>
-        <tr>
-          <th style="width:100px;">Current TA:</th>
-          <td style="text-align: left;"><%= @patient_obj_addresses.township_division %></td>
-        </tr>
-        <tr>
-          <th style="width:100px;">Village:</th>
-          <td style="text-align: left;"><%= @patient_obj_addresses.city_village %></td>
-        </tr>
-        <tr>
-          <th style="width:100px;">Phone&nbsp;#:</th>
-          <td style="text-align: left;"><%= @patient_obj_attributes.value %></td>
-        </tr>
-      </table> 
-    </div>
-
-    <div class="cells" style="width: 10%; vertical-align: middle; text-align: right;">
-      <span class="icons">
-        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
-      </span>
-    </div>
-
-
-  </div>
+  <%= render :partial => 'patient/headers/header' %>
 
 <!--       ............................. Tab section .................................... -->
 <%= render :partial => 'dashboard_tabs' %>
