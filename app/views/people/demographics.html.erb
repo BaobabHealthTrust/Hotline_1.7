@@ -1,244 +1,236 @@
 <script>
-  var tt_cancel_destination = "/patient/dashboard/<%=@patient_obj.patient_id%>/tasks";
+    var tt_cancel_destination = "/patient/dashboard/<%=@patient_obj.patient_id%>/tasks";
 </script>
 
 
 <%= render :partial => 'patient/headers/header' %>
 
 <style>
-body {
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */
-}
+    body {
+        -webkit-user-select: none;  /* Chrome all / Safari all */
+        -moz-user-select: none;     /* Firefox all */
+        -ms-user-select: none;      /* IE 10+ */
+        user-select: none;          /* Likely future */
+    }
 
-img {
-  user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  pointer-events: none;
-}
+    img {
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        pointer-events: none;
+    }
 
-/* ............................. Table like DIV starts ............................... */
-.div-table, .container {
-  display: table;
-  width: 100%;
-  padding: 0px 1px 0px 1px;
-}
+    /* ............................. Table like DIV starts ............................... */
+    .div-table, .container {
+        height: 50%;
+        display: table;
+        width: 100%;
+        padding: 0px 1px 0px 1px;
+    }
 
-.div-table-row , .container-row{
-  display: table-row;
-}
+    .div-table-row , .container-row{
+        display: table-row;
+    }
 
-.div-table-cell, .container-cell {
-  display: table-cell;
-}
-/* ............................. Table like DIV ends ............................... */
+    .div-table-cell, .container-cell {
+        display: table-cell;
+    }
+    /* ............................. Table like DIV ends ............................... */
 
 
 
-/* ............................. Row contents starts ............................... */
-.edit-divbtn p {
-  font-weight: bold;
-}
+    /* ............................. Row contents starts ............................... */
+    .edit-divbtn p {
+        font-weight: bold;
+    }
 
-.edit-divbtn {
-  height: 125px;
-  display: table;
-  margin-top: 10px;
-  cursor:pointer;
-  text-align: center;
-  width: 180px;
-}
+    .edit-divbtn {
+        height: 125px;
+        display: table;
+        margin-top: 10px;
+        cursor:pointer;
+        text-align: center;
+        width: 180px;
+    }
 
-.edit-icons {
-  width: 80px;
-  height: 80px;
-  margin-top: 10%;
-  text-align: middle;
-}
+    .edit-icons {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+    }
+    .anchor_class {
+        border: 2px grey solid;
+        border-style: outset;
+        /*color: white;*/
+        display: block;
+        padding: 10px 16px 10px 10px;
+        text-align: center;
+    }
+    a {
 
-.data p {
-  font-size: 18px;
-  margin-left: 5px;
-}
+        text-decoration: none;
+    }
 
-.data {
-  width: 70%;
-  border-width: 0px 0px 1px 1px;
-  border-style: solid;
-}
+    .data p {
+        font-size: 18px;
+        margin-left: 5px;
+    }
 
-/* ............................. Row contents ends ............................... */
+    .data {
+        width: 70%;
+        /*border-width: 0px 0px 1px 1px;*/
+        border-style: solid;
+        padding-left: 5px;
+        text-align: left;
+        border-style: solid;
+        border-width: 1px;
+        text-align: left;
+        word-wrap: break-word;
+    }
+
+    /* ............................. Row contents ends ............................... */
+    body {
+        -moz-user-select:none;
+    }
+
+    table {
+        vertical-align:center;
+        width: 100%;
+        -moz-user-select:none;
+    }
+
+    .demographics_container {
+        background-color: #FFFFDD;
+        margin: 20px 20px 20px 20px;
+        overflow: auto;
+    }
+
+    .data_header {
+        text-align: left;
+        border-style: solid;
+        border-width: 1px;
+        padding-left: 5px;
+        text-align: left;
+        font-size: 14px;
+    }
+
 
 
 </style>
 
-<div class="container">
-  <div class="container-row">
-    <div class="container-cell" style="width: 30%;">
-      <div class="div-table">
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
+<div id="general_dashboard" style="margin:10px;">
+  <div id="details" style="float:none; width:97%;">
+    <div class="container">
+      <table class="demographics_container">
+        <tr>
+          <th class="data_header"><h2>Name</h2></th>
+          <td class='data' style='border-width:1px 1px 1px'>
+            <p>
+              <%= @patient_obj.name %>
+            </p>
+          </td>
+          <td class='anchor_class'>
+            <a href="/start_call">
                 <span>
                   <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">Name</p>
                 </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%=@patient_obj.name%></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
-
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th class="data_header">
+            <h2>Gender</h2>
+          </th>
+          <td class='data'>
+            <p>
+              <%= @patient_obj.sex == 'F'?@patient_obj.sex = 'Female' : @patient_obj.sex = 'Male' %>
+            </p>
+          </td>
+          <td class='anchor_class'>
+            <a href="/start_call">
                 <span>
-                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">Gender</p>
+                    <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                 </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%=@patient_obj.sex == 'M' ? 'Male' : 'Female'%></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
-
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
-                <span>
-                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">Birthdate</p>
-                </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%=@patient_obj.birthdate%></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
-
-        </div>
-    </div> 
-    <div class="container-cell" style="width: 40%;">
-	<div class="div-table">
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
-                <span>
-                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">District of origin</p>
-                </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%= @patient_obj.state_province %></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
-
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
-                <span>
-                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">District of residence</p>
-                </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%= @patient_obj.city_village  %></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
-
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
-                <span>
-                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">Occupation</p>
-                </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%= @patient_obj.township_division %></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
-
-        </div>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th class="data_header">
+            <h2>Birthdate</h2>
+          </th>
+          <td class='data' style='border-width:1px 1px 1px'>
+            <p>
+              <%= @patient_obj.birthdate %>
+            </p>
+          </td>
+          <td class='anchor_class'><a href="/start_call">
+            <span>
+              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+            </span></a>
+          </td>
+        </tr>
+        <tr>
+          <th class="data_header">
+            <h2>Current Region</h2>
+          </th>
+          <td class='data' style='border-width:1px 1px 1px'><%= @patient_obj.region %></td>
+          <td class='anchor_class'><a href="/start_call">
+            <span>
+              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+            </span></a>
+          </td>
+        </tr>
+        <tr>
+          <th class="data_header">
+            <h2>Current District</h2>
+          </th>
+          <td class='data'><%= @patient_obj.state_province %></td>
+          <td class='anchor_class'><a href="/start_call">
+            <span>
+              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+            </span></a>
+          </td>
+        </tr>
+        <tr>
+          <th class="data_header">
+            <h2>Current TA</h2>
+          </th>
+          <td class='data' style='border-width:1px 1px 1px'><%= @patient_obj.township_division %></td>
+          <td class='anchor_class'><a href="/start_call">
+            <span>
+              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+            </span></a>
+          </td>
+        </tr>
+        <tr>
+          <th class="data_header">
+            <h2>Current Village</h2>
+          </th>
+          <td class='data'><%= @patient_obj.city_village %></td>
+          <td class='anchor_class'><a href="/start_call">
+            <span>
+              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+            </span></a>
+          </td>
+        </tr>
+        <tr>
+          <th class="data_header">
+            <h2>Cell Phone Number</h2>
+          </th>
+          <td class='data' style='border-width:1px 1px 1px'><%= @patient_obj.cell_phone_number %></td>
+          <td class='anchor_class'><a href="/start_call">
+            <span>
+              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+            </span></a>
+          </td>
+        </tr>
+      </table>
     </div>
-    <div class="container-cell" style="width: 30%;">
-      <div class="div-table">
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
-                <span>
-                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">Cell phone</p>
-                </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%= @patient_obj.cell_phone_number %></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
+    <div>
 
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
-                <span>
-                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">Region</p>
-                </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%= @patient_obj.region  %></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
-
-          <!-- Row contents starts -->
-          <div class="div-table-row">
-            <div class="div-table-cell">
-              <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
-                <span>
-                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">Occupation</p>
-                </span>
-              </div>
-            </div>
-            <div class="div-table-cell data">
-              <p><%= %></p>
-            </div>
-          </div>
-          <!-- Row contents ends -->
-
-        </div>
-    </div>		
-  </div>
-</div>
-
-<!--
--->
-<%= render :partial => "patient/footers/search_footer"%> 
+      <!--
+      -->
+<%= render :partial => "patient/footers/search_footer"%>
