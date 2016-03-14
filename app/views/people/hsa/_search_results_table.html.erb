@@ -25,14 +25,25 @@
   background-color: #fbfcfc;
 }
 
-.table-data th {
-  text-align: justify;
+.table-data th, .table-data td{
+  text-align: left;
   width: 155px;
 }
 
-.table-data td {
-  text-align: justify;
+.table-data tr td:first-child, .table-data tr th:first-child {
+  text-align: left;
+  width: 155px;
+  padding: 2px;
 }
+
+.table-data tr td:nth-child(2), .table-data tr th:nth-child(2) {
+  text-align: left;
+  width: 400px;
+}
+
+/*.table-data td {
+  text-align: justify;
+}*/
 
 .table-data {
   width: 99%;
@@ -74,9 +85,9 @@ number_of_records = 0
           <td>(<%=person.gender%>)</td>
         </tr>
         <tr>
-          <th>Birthdate:</th>
+          <th align="center">Birthdate:</th>
           <td><%=PatientService.print_birthdate(person)%></td>
-          <th>Age:</th>
+          <th align="right">Age:</th>
           <td>(<%=person.age rescue 23%>)</td>
         </tr>
       </table>
