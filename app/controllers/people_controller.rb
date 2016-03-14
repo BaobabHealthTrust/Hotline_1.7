@@ -4,6 +4,10 @@ class PeopleController < ApplicationController
     render :layout => false
   end
 
+  def demographics_2
+    @patient_obj = PatientService.get_patient(params[:patient_id])
+    render :layout => false
+  end
 
   def demographic_modify
     if request.post?
