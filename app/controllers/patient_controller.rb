@@ -134,9 +134,14 @@ class PatientController < ApplicationController
       region_id = 0
     end
     
+    location_tag = LocationTag.find_by_name('District')
     @districts = Location.where("region = ? AND name LIKE(?)",region_id,"%#{params[:search_string]}%")
+    Location.where("parent_location IN(?) AND t.location_tag_id = ?", 
+      @districts.map(&:id), location_tag.id).joins("INNER JOIN location_tag_map t USING(location_id)").map do |l|
+      @districts << l
+    end
     data = @districts.collect { |l | l.name }
-
+    
     unless data.blank?
       render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
     else
@@ -162,8 +167,9 @@ class PatientController < ApplicationController
   end
 
   def village
+    district = Location.find_by_name(params[:district])
+    ta = Location.where(name: params[:filter_value], parent_location: district.id).first
     location_tag = LocationTag.find_by_name("Village")
-    ta = Location.where(name: params[:filter_value]).first
 
     @villages = Location.where("parent_location = ? AND m.location_tag_id = ? 
       AND name LIKE(?)",ta.id, location_tag.id, "%#{params[:search_string]}%").joins("INNER JOIN location_tag_map m USING(location_id)")

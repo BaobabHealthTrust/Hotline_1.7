@@ -56,7 +56,7 @@
     {:id => "current_location_or_village",
     :tt_requireNextClick => true,
     :ajaxURL => "",
-    :tt_onLoad => "$('nextButton').style.display = 'block'; set_ajaxURL_for_suggestions('/patient/village?filter_value=', __$('current_area_of_residence').value);",
+    :tt_onLoad => "$('nextButton').style.display = 'block'; set_ajaxURL_for_suggestions('/patient/village?district=' + __$('current_district').value + '&filter_value=' , __$('current_area_of_residence').value);",
     :helptext => "Current village"}  %>
 
 

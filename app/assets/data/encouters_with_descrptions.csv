@@ -1,10 +1,10 @@
 name,description
+APPOINTMENT,This encounter specificities when the next appointment is expected
 REGISTRATION,Patient Registration Encounter
 UPDATE OUTCOME,update patient outcome
-TIPS AND REMINDERS,An encounter for patient's enrolment for tips and 
+TIPS AND REMINDERS,An encounter for patient's enrollment for tips and 
 MATERNAL HEALTH SYMPTOMS,Maternal health symptoms
 CHILD HEALTH SYMPTOMS,Child health symptoms
-BABY DELIVERY,This encounter occurs when a mother delivers a bab
+BABY DELIVERY,This encounter occurs when a mother delivers a baby
 PREGNANCY STATUS,MNCH pregnancy status encounter
-BIRTH PLAN,This encounter specificies where and when the baby
-ANC VISIT,Thise encounter records if a pregnant woman has at
+BIRTH PLAN,This encounter specificities where and when the baby
