@@ -30,8 +30,14 @@
   width: 155px;
 }
 
+.table-data tr td:nth-child(2), .table-data tr th:nth-child(2) {
+  text-align: left;
+  width: 500px;
+}
+
 .table-data td {
-  text-align: justify;
+  text-align: left;
+  width:200px;
 }
 
 .table-data {
@@ -76,12 +82,13 @@ number_of_records = 0
         <tr>
           <th>Birthdate:</th>
           <td><%=PatientService.print_birthdate(user.person)%></td>
-          <th>Age:</th>
+          <th>Date Created:</th>
           <td>(<%=user.person.age rescue 23%>)</td>
         </tr>
       </table>
     </div>
   </div>
+  </br>
 
   <!-- div class="table-results-row">
     <div class="table-results-cell" style="height: 2px; border-width: 0px;"></div>
