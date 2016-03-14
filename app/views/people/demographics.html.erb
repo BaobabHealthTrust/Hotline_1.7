@@ -145,7 +145,7 @@ img {
               </div>
             </div>
             <div class="div-table-cell data">
-              <p><%=%></p>
+              <p><%= @patient_obj.state_province %></p>
             </div>
           </div>
           <!-- Row contents ends -->
@@ -161,7 +161,7 @@ img {
               </div>
             </div>
             <div class="div-table-cell data">
-              <p><%=%></p>
+              <p><%= @patient_obj.city_village  %></p>
             </div>
           </div>
           <!-- Row contents ends -->
@@ -177,7 +177,7 @@ img {
               </div>
             </div>
             <div class="div-table-cell data">
-              <p><%=@patient_obj.occupation%></p>
+              <p><%= @patient_obj.township_division %></p>
             </div>
           </div>
           <!-- Row contents ends -->
@@ -197,7 +197,7 @@ img {
               </div>
             </div>
             <div class="div-table-cell data">
-              <p><%=%></p>
+              <p><%= @patient_obj.cell_phone_number %></p>
             </div>
           </div>
           <!-- Row contents ends -->
@@ -208,12 +208,12 @@ img {
               <div class="edit-divbtn" style="background-color: #ccff00;border: 1px solid #2e6da4;" onclick="document.location='/start_call'" >
                 <span>
                   <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-                  <p style="color: black;">Home phone</p>
+                  <p style="color: black;">Region</p>
                 </span>
               </div>
             </div>
             <div class="div-table-cell data">
-              <p><%=%></p>
+              <p><%= @patient_obj.region  %></p>
             </div>
           </div>
           <!-- Row contents ends -->
@@ -229,7 +229,7 @@ img {
               </div>
             </div>
             <div class="div-table-cell data">
-              <p><%=%></p>
+              <p><%= %></p>
             </div>
           </div>
           <!-- Row contents ends -->

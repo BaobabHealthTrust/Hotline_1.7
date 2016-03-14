@@ -5,6 +5,8 @@ module PatientService
     person = Person.find(person_id)
     patient = person.patient
     names = PersonName.where(:person_id => person.id).first
+    attributes = PersonAttribute.where(:person_id => person.id).first
+    addresses = PersonAddress.where(:person_id => person.id).first
 
     patient_obj = PatientBean.new(patient)
     patient_obj.patient_id = patient.id
@@ -16,6 +18,15 @@ module PatientService
     patient_obj.avr_access_number = self.get_identifier(patient, 'IVR access code')
     patient_obj.age = self.age(person)
     patient_obj.sex = person.gender
+
+    unless addresses.blank?
+      patient_obj.city_village = addresses.city_village
+      patient_obj.township_division = addresses.township_division
+      patient_obj.state_province = addresses.state_province
+      patient_obj.region = addresses.region
+    end
+
+    patient_obj.cell_phone_number = attributes.value unless attributes.blank?
 
     return patient_obj
   end
