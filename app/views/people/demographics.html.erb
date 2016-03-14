@@ -40,7 +40,7 @@
         height: 50px;
         text-align: center;
     }
-    .anchor_class {
+    .anchor_class a{
         border: 1px solid black;
         border-style: outset;
         border-radius: 7px;
@@ -56,9 +56,6 @@
         box-sizing: border-box;
         -moz-box-shadow: inset 0 0 10px #000000;
         -webkit-box-shadow: inset 0 0 10px #000000;
-    }
-
-    a {
         text-decoration: none;
     }
 
@@ -118,7 +115,7 @@
             </p>
           </td>
           <td class='anchor_class'>
-            <a href="/start_call">
+            <a href="/demographic_modify/name/<%= @patient_obj.patient_id %>">
                 <span>
                   <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                 </span>
@@ -135,7 +132,7 @@
             </p>
           </td>
           <td class='anchor_class'>
-            <a href="/start_call">
+            <a href="/demographic_modify/sex/<%= @patient_obj.patient_id %>">
                 <span>
                     <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                 </span>
@@ -151,21 +148,27 @@
               <%= @patient_obj.birthdate %>
             </p>
           </td>
-          <td class='anchor_class'><a href="/start_call">
-            <span>
-              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-            </span></a>
+          <td class='anchor_class'>
+            <a href="/demographic_modify/age/<%= @patient_obj.patient_id %>">
+                <span>
+                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+                </span>
+            </a>
           </td>
         </tr>
         <tr>
           <th class="data_header">
             <h2>Current Region</h2>
           </th>
-          <td class='data' style='border-width:1px 1px 1px'><%= @patient_obj.region %></td>
-          <td class='anchor_class'><a href="/start_call">
-            <span>
-              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-            </span></a>
+          <td class='data' style='border-width:1px 1px 1px'>
+            <%= @patient_obj.region %>
+          </td>
+          <td class='anchor_class'>
+            <a href="/demographic_modify/region/<%= @patient_obj.patient_id %>">
+                <span>
+                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+                </span>
+            </a>
           </td>
         </tr>
         <tr>
@@ -173,7 +176,7 @@
             <h2>Current District</h2>
           </th>
           <td class='data'><%= @patient_obj.state_province %></td>
-          <td class='anchor_class'><a href="/start_call">
+          <td class='anchor_class'><a href="/demographic_modify/home_district/<%= @patient_obj.patient_id %>">
             <span>
               <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
             </span></a>
@@ -183,11 +186,15 @@
           <th class="data_header">
             <h2>Current TA</h2>
           </th>
-          <td class='data' style='border-width:1px 1px 1px'><%= @patient_obj.township_division %></td>
-          <td class='anchor_class'><a href="/start_call">
-            <span>
-              <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
-            </span></a>
+          <td class='data' style='border-width:1px 1px 1px'>
+            <%= @patient_obj.township_division %>
+          </td>
+          <td class='anchor_class'>
+            <a href="/demographic_modify/ta/<%= @patient_obj.patient_id %>">
+                <span>
+                  <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+                </span>
+            </a>
           </td>
         </tr>
         <tr>
@@ -195,7 +202,8 @@
             <h2>Current Village</h2>
           </th>
           <td class='data'><%= @patient_obj.city_village %></td>
-          <td class='anchor_class'><a href="/start_call">
+          <td class='anchor_class'>
+            <a href="/demographic_modify/location/<%= @patient_obj.patient_id %>">
             <span>
               <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
             </span></a>
@@ -206,7 +214,7 @@
             <h2>Cell Phone Number</h2>
           </th>
           <td class='data' style='border-width:1px 1px 1px'><%= @patient_obj.cell_phone_number %></td>
-          <td class='anchor_class'><a href="/start_call">
+          <td class='anchor_class'><a href="/demographic_modify/phone_number/<%= @patient_obj.patient_id %>">
             <span>
               <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
             </span></a>
