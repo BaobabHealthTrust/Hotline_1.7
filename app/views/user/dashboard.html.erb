@@ -28,13 +28,13 @@ function summary() {
   var first_name = "<%= @user.person.person_names.last.given_name%>";
   var last_name = "<%= @user.person.person_names.last.family_name%>";
   var gender = "<%= @user.person.gender%>";
-  var birthdate = "<%= PatientService.print_birthdate(@user.person)%>";
-  var role = "<%= @user.user_roles.first.role %>";
+  var date_created = "<%= PatientService.print_birthdate(@user.person)%>";
+  var role = "<%= @user.system_id %>";
 
   var display = "<div><span class='title'>First Name:</span><span class='data'> " + first_name + "</span></div>";
   display += "<div><span class='title'>Last Name:</span><span class='data'> " + last_name + "</span></div>";
   display += "<div><span class='title'>Gender:</span><span class='data'> " + gender + "</span></div>";
-  display += "<div><span class='title'>Birthdate:</span><span class='data'> " + birthdate + "</span></div>";
+  display += "<div><span class='title'>Date Created:</span><span class='data'> " + date_created + "</span></div>";
   display += "<div><span class='title'>Role:</span><span class='data'> " + role + "</span></div>";
 
   $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
