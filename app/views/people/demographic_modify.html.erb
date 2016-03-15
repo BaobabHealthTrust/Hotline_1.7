@@ -4,9 +4,7 @@
 
 
 
-
-<form action = "/demographic_modify" method = "post">
-
+<%= form_tag "/demographic_modify", method: "post" do %>
   <% if @edit_page == "name" %>
     <%= render :partial => "people/demographic_modify/mastercard_modify_name"  %>
   <% end %>
@@ -43,9 +41,10 @@
     <%= render :partial => "people/demographic_modify/mastercard_modify_home_district" %>
   <% end %>
 
-  <% if @edit_page.match(/_phone_number/i) %>
+  <%# if @edit_page.match(/_phone_number/i) %>
+  <% if @edit_page == "phone_numbers" %>
     <%= render :partial => "people/demographic_modify/mastercard_modify_phone_numbers" %>
   <% end %>
   <%= hidden_field_tag "patient_id", params[:patient_id] %>
   <%= hidden_field_tag "field", @edit_page %>
-</form>
+<% end %>
