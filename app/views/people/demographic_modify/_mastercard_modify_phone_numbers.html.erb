@@ -4,7 +4,7 @@
   }
 </style>
 
-<%= text_field_tag "person[#{params[:field]}]",  nil, 
+<%= text_field_tag "person[#{params[:field]}]",  nil,
   {:field_type => 'number', :helpText => "#{params[:field].gsub('_',' ').humanize}", 
    :allowFreeText => true, 
    :tt_pageStyleClass => "nota", 

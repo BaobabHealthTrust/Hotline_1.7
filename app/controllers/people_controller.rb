@@ -4,13 +4,40 @@ class PeopleController < ApplicationController
     render :layout => false
   end
 
+  def get_patient_names(patient_id)
+      patient_names = PersonName.where(person_id: patient_id).first
+      return patient_names
+  end
+
+  def get_patient_addresses(patient_id)
+    patient_addresses = PersonAddress.where(person_id: patient_id).first
+    return patient_addresses
+  end
+
+  def get_patient_attributes(patient_id)
+    patient_attributes = PersonAttribute.where(person_id: patient_id).first
+    return patient_attributes
+  end
+
+  def update_patient_names(names)
+    names.save
+  end
+
+  def update_patient(patient)
+    patient.save
+  end
+
+  def update_attributes(patient_attributes)
+    patient_attributes.save
+  end
+
   def demographic_modify
     if request.post?
       #------ get records for patient -----
       patient = Person.find(params[:patient_id])
-      patient_names = PersonName.where(person_id: patient.person_id).first
-      patient_addresses = PersonAddress.where(person_id: patient.person_id).first
-      patient_attributes = PersonAttribute.where(person_id: patient.person_id).first
+      patient_names = get_patient_names(patient.person_id)
+      patient_addresses = get_patient_addresses(patient.person_id)
+      patient_attributes = get_patient_attributes(patient.person_id)
 
       case params[:field]
         #------ set names -------------------------
@@ -29,19 +56,27 @@ class PeopleController < ApplicationController
 
         #------- set addresses ---------------------
         when 'region'
-        when 'district'
-        when 'ta'
-        when 'location'
+          patient_addresses.region = params[:addresses][:address2]
 
+        when 'district'
+          patient_addresses.state_province = params[:addresses][:address2]
+
+        when 'ta'
+          patient_addresses.township_division = params[:addresses][:county_district]
+
+        when 'location'
+          patient_addresses.city_village = params[:addresses][:city_village]
 
         #------- set attributes --------------------
         when 'phone_numbers'
-
+          patient_attributes.value = params[:person][:phone_numbers]
       end
 
       #------ save modified records --------
-      patient.save
-      patient_names.save
+      update_patient(patient)
+      update_patient_names(patient_names)
+      update_attributes(patient_attributes)
+
       redirect_to "/demographics/#{patient.person_id}"
     else
       @edit_page = params[:field]
