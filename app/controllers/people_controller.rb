@@ -6,6 +6,43 @@ class PeopleController < ApplicationController
 
   def demographic_modify
     if request.post?
+      #------ get records for patient -----
+      patient = Person.find(params[:patient_id])
+      patient_names = PersonName.where(person_id: patient.person_id).first
+      patient_addresses = PersonAddress.where(person_id: patient.person_id).first
+      patient_attributes = PersonAttribute.where(person_id: patient.person_id).first
+
+      case params[:field]
+        #------ set names -------------------------
+        when 'name'
+          patient_names.given_name = params[:given_name]
+          patient_names.family_name = params[:family_name]
+
+        #------ set person (gender) -----------------
+        when 'sex'
+          patient.gender = params[:gender] unless params[:gender].blank?
+
+        #------ set person(birthdate) ----------------
+        when 'age'
+          birthdate = PatientService.format_birthdate_params(params[:person])
+          patient.birthdate = birthdate[0].to_date
+
+        #------- set addresses ---------------------
+        when 'region'
+        when 'district'
+        when 'ta'
+        when 'location'
+
+
+        #------- set attributes --------------------
+        when 'phone_numbers'
+
+      end
+
+      #------ save modified records --------
+      patient.save
+      patient_names.save
+      redirect_to "/demographics/#{patient.person_id}"
     else
       @edit_page = params[:field]
       @patient_obj = PatientService.get_patient(params[:patient_id])
