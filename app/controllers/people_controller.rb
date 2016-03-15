@@ -84,11 +84,9 @@ class PeopleController < ApplicationController
     end
   end
 
-
   def new_hsa
     @person = Person.new
   end
-
 
   def search_hsa
     unless request.get?
