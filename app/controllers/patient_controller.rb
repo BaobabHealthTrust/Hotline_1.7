@@ -49,6 +49,7 @@ class PatientController < ApplicationController
   end
 
   def new_with_demo
+    @patient_obj = PatientService.get_patient(params[:patient_id])
   end
 
   def create
