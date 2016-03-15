@@ -1,2 +1,4 @@
-<%= text_field_tag "person[addresses][region]",  params[:region], {:field_type => 'alpha', :helpText => 'Current Region', :ajaxURL => '/person_addresses/address2?search_string=', :allowFreeText => true }%>
-
+<%= select_tag "person[addresses][current_region]", options_for_select([["", ""], ["Northern Region", "Northern"],
+                                                                        ["Central Region", "Central"], ["Southern Region", "Southern"]]),
+               {:id => "current_region",
+                :helptext => "Current region"}  %>

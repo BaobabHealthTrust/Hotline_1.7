@@ -31,9 +31,14 @@ class PeopleController < ApplicationController
     patient_attributes.save
   end
 
+  def update_addresses(patient_addresses)
+    patient_addresses.save
+  end
+
   def demographic_modify
     if request.post?
       #------ get records for patient -----
+      params[:addresses] = params[:person][:addresses]
       patient = Person.find(params[:patient_id])
       patient_names = get_patient_names(patient.person_id)
       patient_addresses = get_patient_addresses(patient.person_id)
@@ -56,7 +61,7 @@ class PeopleController < ApplicationController
 
         #------- set addresses ---------------------
         when 'region'
-          patient_addresses.region = params[:addresses][:address2]
+          patient_addresses.region = params[:addresses][:current_region]
 
         when 'district'
           patient_addresses.state_province = params[:addresses][:address2]
@@ -75,6 +80,7 @@ class PeopleController < ApplicationController
       #------ save modified records --------
       update_patient(patient)
       update_patient_names(patient_names)
+      update_addresses(patient_addresses)
       update_attributes(patient_attributes)
 
       redirect_to "/demographics/#{patient.person_id}"
