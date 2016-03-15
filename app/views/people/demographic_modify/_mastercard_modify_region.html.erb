@@ -1,4 +1,5 @@
 <%= select_tag "person[addresses][current_region]", options_for_select([["", ""], ["Northern Region", "Northern"],
                                                                         ["Central Region", "Central"], ["Southern Region", "Southern"]]),
                {:id => "current_region",
+                :ajaxURL => "",
                 :helptext => "Current region"}  %>
