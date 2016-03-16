@@ -31,6 +31,10 @@ class PeopleController < ApplicationController
     patient_attributes.save
   end
 
+  def update_addresses(patient_addresses)
+    patient_addresses.save
+  end
+
   def demographic_modify
     if request.post?
       #------ get records for patient -----
@@ -55,16 +59,11 @@ class PeopleController < ApplicationController
           patient.birthdate = birthdate[0].to_date
 
         #------- set addresses ---------------------
-        when 'region'
-          patient_addresses.region = params[:addresses][:address2]
-
-        when 'district'
-          patient_addresses.state_province = params[:addresses][:address2]
-
-        when 'ta'
-          patient_addresses.township_division = params[:addresses][:county_district]
-
         when 'location'
+          params[:addresses] = params[:person][:addresses]
+          patient_addresses.region = params[:addresses][:current_region]
+          patient_addresses.state_province = params[:addresses][:state_province]
+          patient_addresses.township_division = params[:addresses][:township_division]
           patient_addresses.city_village = params[:addresses][:city_village]
 
         #------- set attributes --------------------
@@ -75,6 +74,7 @@ class PeopleController < ApplicationController
       #------ save modified records --------
       update_patient(patient)
       update_patient_names(patient_names)
+      update_addresses(patient_addresses)
       update_attributes(patient_attributes)
 
       redirect_to "/demographics/#{patient.person_id}"
@@ -84,11 +84,9 @@ class PeopleController < ApplicationController
     end
   end
 
-
   def new_hsa
     @person = Person.new
   end
-
 
   def search_hsa
     unless request.get?

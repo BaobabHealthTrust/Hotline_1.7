@@ -102,15 +102,12 @@
     .btn {
         padding-bottom: 5px;
         text-align: center;
-        margin: 5px;
-        border: 1px solid #2e6da4;
         width: 99%;
-
+        height: 50%;
         cursor: pointer;
         box-shadow: inset 2px -4px 2px 0px;
         background-color: white;
         border-radius: 7px;
-        width: 99%;
         border: solid black 3px;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -196,7 +193,7 @@
                 </p>
               </td>
               <td class='anchor_class'>
-                <a href="/demographic_modify/region/<%= @patient_obj.patient_id %>">
+                <a href="/demographic_modify/location/<%= @patient_obj.patient_id %>">
                     <span>
                       <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                     </span>
@@ -212,7 +209,7 @@
                     <%= @patient_obj.state_province %>
                 </p>
               </td>
-              <td class='anchor_class'><a href="/demographic_modify/home_district/<%= @patient_obj.patient_id %>">
+              <td class='anchor_class'><a href="/demographic_modify/location/<%= @patient_obj.patient_id %>">
                 <span>
                   <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                 </span></a>
@@ -228,7 +225,7 @@
                 </p>
               </td>
               <td class='anchor_class'>
-                <a href="/demographic_modify/ta/<%= @patient_obj.patient_id %>">
+                <a href="/demographic_modify/location/<%= @patient_obj.patient_id %>">
                     <span>
                       <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                     </span>
@@ -273,8 +270,7 @@
               <td>&nbsp;</td>
               <td>
                   <div class="btn" onclick="document.location='/patient/dashboard/<%= @patient_obj.patient_id %>/tasks'">
-                    <%=image_tag("icons/demographic.png", class: 'task-icons')%>
-                    <p class="button-label">Back to Dashboard</p>
+                    <%=image_tag("icons/back_white.svg", class: 'task-icons')%>
                   </div>
               </td>
             </tr>
@@ -286,6 +282,5 @@
 
       <!--
       -->
-<%#= render :partial => "patient/footers/search_footer"%>
 <%= render :partial => 'home/footer'%>
 
