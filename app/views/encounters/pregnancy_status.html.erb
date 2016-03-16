@@ -1,4 +1,6 @@
 
+ <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
+
 <!-- ===================== Temporal CSS for date layout ========================= -->
 <style>
 
@@ -327,6 +329,8 @@
         <%= hidden_field_tag("observations[][concept_name]", "Pregnancy status") %>
         <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , nil),
                :helpText =>"Pregnancy Status",
+               :tt_onLoad => "showHelpButton();",
+               :tt_onUnLoad => "hideHelpButton();",
                :id => "pregnancy_status",
                :allowFreeText => false
         %>
