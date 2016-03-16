@@ -29,10 +29,9 @@
                       :allowFreeText => true }%>
 
   <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
-      :helpText =>"Gender",
-      :id => "gender",
-      :allowFreeText => false)
-  %>
+                      :helpText =>"Gender",
+                      :id => "gender",
+                      :allowFreeText => false) %>
 
  <%= password_field_tag "user[password]", params[:password],
                      {:id => 'password', :field_type => 'alpha',
@@ -48,15 +47,14 @@
 
 <%= @roles = ['System Developer', 'Provider'] %> 
   <%= select_tag("user[role]", options_for_select(@roles ,params[:role]),
-      :helpText =>"Role",
-      :id => "role",
-      :allowFreeText => false)
-  %>
+                      :helpText =>"Role",
+                      :id => "role",
+                      :allowFreeText => false)%>
 	
   <label for='summary'>Summary</label>
 	<%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';", 
-      :optional => "true", 
-      :tt_pageStyleClass => "NoControls" } %>
+                      :optional => "true", 
+                      :tt_pageStyleClass => "NoControls" } %>
 
 <%end%>
 

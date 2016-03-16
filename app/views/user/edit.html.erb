@@ -7,7 +7,7 @@
 <%= form_tag("/user/update", id: "update-form", method: 'post', enctype: 'multipart/form-data') do %>i
 <input name="user_id" id="user_id" type="hidden" value="<%=params[:user_id] %>">
 
-<%= text_field_tag "person[names][given_name]", params[:firstname],
+  <%= text_field_tag "person[names][given_name]", params[:firstname],
                      {:id => 'given_name', :field_type => 'alpha',
                       :helpText => 'First name',
                       :ajaxURL => '/patient/given_names?search_string=',
@@ -21,30 +21,29 @@
                       :allowFreeText => true }%>
 
   <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
-      :helpText =>"Gender",
-      :id => "gender",
-      :allowFreeText => false)
-  %>
+                      :helpText =>"Gender",
+                      :id => "gender",
+                      :allowFreeText => false)%>
 
- <%if User.current.admin?%>
-   <%#= text_field_tag "user[username]", params[:username],
-                       {:id => 'username', :field_type => 'alpha',
-                        :helpText => 'Username',
-                        :ajaxURL => '/user/username?search_string=',
-                        :allowFreeText => true }%>
+  <%if User.current.admin?%>
+  <%#= text_field_tag "user[username]", params[:username],
+                    {:id => 'username', :field_type => 'alpha',
+                      :helpText => 'Username',
+                      :ajaxURL => '/user/username?search_string=',
+                      :allowFreeText => true }%>
 
-    <%= @roles = ['Administrator','System Developer', 'Provider'] %> 
-    <%= select_tag("user[role]", options_for_select(@roles ,params[:role]),
-        :helpText =>"Role",
-        :id => "role",
-        :allowFreeText => false) %>
+  <%= @roles = ['Administrator','System Developer', 'Provider'] %> 
+  <%= select_tag("user[role]", options_for_select(@roles ,params[:role]),
+                      :helpText =>"Role",
+                      :id => "role",
+                      :allowFreeText => false) %>
 	
   <%end%>
 
   <label for='summary'>Summary</label>
-	<%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';", 
-      :optional => "true", 
-      :tt_pageStyleClass => "NoControls" } %>
+  <%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';", 
+                      :optional => "true", 
+                      :tt_pageStyleClass => "NoControls" } %>
 
 <%end%>
 

@@ -80,10 +80,8 @@ number_of_records = 0
           <td>(<%=user.person.gender%>)</td>
         </tr>
         <tr>
-          <th>Birthdate:</th>
-          <td><%=PatientService.print_birthdate(user.person)%></td>
           <th>Date Created:</th>
-          <td>(<%=user.person.age rescue 23%>)</td>
+          <td><%=PatientService.print_birthdate(user.person)%></td>
         </tr>
       </table>
     </div>
