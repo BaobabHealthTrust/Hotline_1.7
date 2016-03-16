@@ -102,15 +102,12 @@
     .btn {
         padding-bottom: 5px;
         text-align: center;
-        margin: 5px;
-        border: 1px solid #2e6da4;
         width: 99%;
-
+        height: 50%;
         cursor: pointer;
         box-shadow: inset 2px -4px 2px 0px;
         background-color: white;
         border-radius: 7px;
-        width: 99%;
         border: solid black 3px;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -273,8 +270,7 @@
               <td>&nbsp;</td>
               <td>
                   <div class="btn" onclick="document.location='/patient/dashboard/<%= @patient_obj.patient_id %>/tasks'">
-                    <%=image_tag("icons/demographic.png", class: 'task-icons')%>
-                    <p class="button-label">Back to Dashboard</p>
+                    <%=image_tag("icons/back_white.svg", class: 'task-icons')%>
                   </div>
               </td>
             </tr>
