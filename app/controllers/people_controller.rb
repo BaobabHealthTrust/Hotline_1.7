@@ -38,7 +38,6 @@ class PeopleController < ApplicationController
   def demographic_modify
     if request.post?
       #------ get records for patient -----
-      params[:addresses] = params[:person][:addresses]
       patient = Person.find(params[:patient_id])
       patient_names = get_patient_names(patient.person_id)
       patient_addresses = get_patient_addresses(patient.person_id)
@@ -60,16 +59,11 @@ class PeopleController < ApplicationController
           patient.birthdate = birthdate[0].to_date
 
         #------- set addresses ---------------------
-        when 'region'
-          patient_addresses.region = params[:addresses][:current_region]
-
-        when 'district'
-          patient_addresses.state_province = params[:addresses][:address2]
-
-        when 'ta'
-          patient_addresses.township_division = params[:addresses][:county_district]
-
         when 'location'
+          params[:addresses] = params[:person][:addresses]
+          patient_addresses.region = params[:addresses][:current_region]
+          patient_addresses.state_province = params[:addresses][:state_province]
+          patient_addresses.township_division = params[:addresses][:township_division]
           patient_addresses.city_village = params[:addresses][:city_village]
 
         #------- set attributes --------------------
