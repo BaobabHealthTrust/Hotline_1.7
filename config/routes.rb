@@ -16,6 +16,9 @@ Rails.application.routes.draw do
   get 'view_tags' => 'home#view_tags'
   get 'view_tips' => 'home#view_tips'
   post 'home/create_tag_concept_relationships'
+
+  get 'home/reference_article/:article_id' => 'home#reference_article'
+  get 'home/reference_material'
   ######################### home end ############################################
   
   ######################### user start ############################################

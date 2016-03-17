@@ -7,6 +7,15 @@ class HomeController < ApplicationController
     render :layout => false
   end
     
+  def reference_material
+    @material = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article'")
+    render :layout => false
+  end
+
+  def reference_article
+    @article = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article' AND id = #{params[:article_id]}").first
+    render :layout => false
+  end
 
   def concept_sets
     search_string = params[:search_string] || ''
