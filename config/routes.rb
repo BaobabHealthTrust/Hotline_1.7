@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   post 'home/retrieve_articles'
   post 'home/next_article'
   post 'home/previous_article'
+  get 'tag_concepts/:tag_id' => 'home#tag_concepts'
+
   ######################### home end ############################################
   
   ######################### user start ############################################

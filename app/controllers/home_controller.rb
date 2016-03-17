@@ -71,6 +71,7 @@ class HomeController < ApplicationController
   end
 
   def view_tags
+=begin
     tag_concepts = TagConceptRelationship.all
     @tag_concept_hash = {}
     
@@ -82,9 +83,21 @@ class HomeController < ApplicationController
       @tag_concept_hash[concept_name] = {} if @tag_concept_hash[concept_name].blank?
       @tag_concept_hash[concept_name][tag_id] = tag_name
     end
- 
+=end
+    @tags = Publify.all
     render :layout => false
   end
+
+  def tag_concepts
+    concept_names = []
+    tag_concepts = TagConceptRelationship.where(tag_id: params[:tag_id])
+    (tag_concepts || []).each  do |t|
+      concept_names << [ConceptName.where(concept_id: t.concept_id).last.name, t.created_at.strftime('%d.%b.%Y %H:%M:%S')]
+    end
+      
+    render text: concept_names.to_json and return
+  end
+
 
   def view_tips
     render :layout => false

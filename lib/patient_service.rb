@@ -143,9 +143,9 @@ module PatientService
     last_identifier = PatientIdentifier.select("MAX(identifier) identifier").where("identifier_type = ?",identifier_type.id).first
 
     if last_identifier.identifier.blank?
-      1.to_s.ljust(5,'0').to_i
+      1.to_s.ljust(6,'0').to_i
     else
-      (last_identifier.identifier.to_i + 1).to_s.ljust(5,'0').to_i
+      (last_identifier.identifier.to_i + 1).to_s.ljust(6,'0').to_i
     end
   end
 
