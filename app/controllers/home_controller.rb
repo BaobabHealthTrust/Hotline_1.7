@@ -32,6 +32,16 @@ class HomeController < ApplicationController
     render :layout => false
   end
 
+  def list
+    @people = Person.joins(" INNER JOIN patient ON person.person_id = patient.patient_id ").select("person.*").where(voided: 0)
+
+      #raise @people.inspect
+
+    #@people = Person.where("a.person_attribute_type_id = ?",
+     # person_attribute_type.id).joins("INNER JOIN person_attribute a USING(person_id)")
+    render :layout => false
+  end 
+
   def health_facilities
     search_string = params[:search_string] || ''
     @names = Location.where("name LIKE '%#{search_string}%'").limit(10).map(&:name).sort
