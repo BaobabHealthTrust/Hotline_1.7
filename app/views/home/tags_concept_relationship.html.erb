@@ -1,0 +1,62 @@
+
+<script>
+  var tt_cancel_destination = "/configurations"
+
+
+</script>
+
+
+
+<%= form_tag("/user/create", id: "create-form", method: 'post', enctype: 'multipart/form-data') do %>
+
+ <%= text_field_tag "concept", params[:username],
+                     {:id => 'concept_name', :field_type => 'alpha',
+                      :helpText => 'Select concept',
+                      :ajaxURL => '/home/concept_sets?search_string=',
+                      :allowFreeText => false }%>
+
+
+<% @tags = Publify.all.map(&:name) %> 
+  <%= select_tag("user[role]", options_for_select(@tags ,params[:role]),
+                      :helpText =>"Select relevant #Tags for:",
+                      :id => "tag",
+                      :multiple => true,
+                      :allowFreeText => false)%>
+	
+  <label for='summary'>Summary</label>
+	<%= text_field_tag :summary, nil, { :tt_onLoad => "summary();__$('keyboard').style.display = 'none';", 
+                      :optional => "true", 
+                      :tt_pageStyleClass => "NoControls" } %>
+
+<%end%>
+
+<script>
+
+function summary() {
+
+  var concept_name = document.getElementById('concept_name').value;
+  var display = "<div><span class='title'>Concept:</span><span class='data'> " + concept_name + "</span></div>";
+  tags = document.getElementById('tag').selectedOptions;
+  for(var i = 0; i < tags.length; i++){
+    display += "<div><span class='title'>Tag " + (i+1) + ":</span><span class='data'> " + tags[i].value + "</span></div>";
+  }
+
+	$('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
+	$("clearButton").style.display = "none";
+		
+
+}
+
+</script>
+
+<style>
+.title {
+  font-size: 50px;
+}
+
+.data {
+  font-size: 40px;
+  color: orangered;
+}
+</style>
+

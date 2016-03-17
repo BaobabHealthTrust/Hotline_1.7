@@ -13,3 +13,11 @@ production:
   <<: *default
   database: Hotline_1_7_production
   
+
+publify:
+  adapter: mysql
+  username: username
+  database: publify_dev
+  password: password
+  host: localhost
+  pool: 500

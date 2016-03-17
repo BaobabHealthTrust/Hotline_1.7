@@ -2,7 +2,19 @@ class HomeController < ApplicationController
   def index
     render :layout => false
   end
-  
+
+  def configuration
+    render :layout => false
+  end
+    
+
+  def concept_sets
+    search_string = params[:search_string] || ''
+    @names = ConceptName.where("name LIKE '%#{search_string}%'").joins("INNER JOIN concept_set s 
+      ON concept_name.concept_id = s.concept_set").limit(10).map(&:name).sort
+    render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
+  end
+
   def start_call
     if request.post?
       district = params[:district]

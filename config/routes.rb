@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   get 'report' => 'home#report'
   get 'patient_demographic_report' => 'home#patient_demographic_report'
   get '/quick_summary' => 'home#quick_summary'
+  get 'configurations' => 'home#configuration'
+  get '/tags_concept_relationship' => 'home#tags_concept_relationship'
+  get 'home/concept_sets'
   ######################### home end ############################################
   
   ######################### user start ############################################
