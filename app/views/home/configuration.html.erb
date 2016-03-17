@@ -17,10 +17,11 @@
     pointer-events: none;
   }
 
+
   .main-page-container  {
     display: table;
-    width: 100%;
-    padding: 0px 1px 0px 1px;
+    width: 99.7%;
+    padding: 5px 1px 0px 1px;
   }
 
   .main-page-container-rows  {
@@ -100,38 +101,37 @@
 
 <%= render :partial => 'header' %>
 
-
 <div class="main-page-container">
 
   <div class="main-page-container-rows">
     <!-- loop -->
-    <div class="cells btncells">
-      <div class="divbtn" onclick="document.location='/patient/districts'" >
+    <!--div class="cells btncells">
+      <div class="divbtn" onclick="document.location='/start_call'" >
         <span class="icons">
-          <%=image_tag("icons/start-call-4.png", class: 'icons')%>
-            <p class="button-label">Start call</p>
+          <%=image_tag("icons/pregnacy.png", class: 'icons')%>
+            <p class="button-label">ANC follow-up</p>
           </span>
         </div>
-      </div>
+      </div-->
       <!-- endloop -->
 
       <!-- loop -->
       <div class="cells btncells">
-        <div class="divbtn" onclick="document.location='/house_keeping'" >
+        <!--div class="divbtn" onclick="document.location='/'" >
           <span class="icons">
-            <%=image_tag("icons/clear.png", class: 'icons')%>
-              <p class="button-label">House Keeping</p>
+            <%=image_tag("icons/follow-up.png", class: 'icons')%>
+              <p class="button-label">Follow-up</p>
             </span>
-          </div>
+          </div-->
         </div>
         <!-- endloop -->
 
         <!-- loop -->
         <div class="cells btncells">
-          <div class="divbtn" onclick="document.location='/quick_summary'" >
+          <div class="divbtn" onclick="document.location='/view_tags'" >
             <span class="icons">
-              <%=image_tag("icons/stats.png", class: 'icons')%>
-                <p class="button-label">Captured data summary</p>
+              <%=image_tag("icons/tags.png", class: 'icons')%>
+                <p class="button-label">View #Tags</p>
               </span>
             </div>
           </div>
@@ -139,59 +139,69 @@
 
           <!-- loop -->
           <div class="cells btncells">
-            <div class="divbtn" onclick="document.location='/report'" >
+            <div class="divbtn" onclick="document.location='/view_tips'" >
               <span class="icons">
-                <%=image_tag("icons/reports.png", class: 'icons')%>
-                  <p class="button-label">Reports</p>
+                <%=image_tag("icons/tips-256.png", class: 'icons')%>
+                  <p class="button-label">View Tips</p>
                 </span>
               </div>
             </div>
             <!-- endloop -->
 
+            <!-- loop -->
+            <div class="cells btncells">
+              <div class="divbtn" onclick="document.location='/tags_concept_relationship'" >
+                <span class="icons">
+                  <%=image_tag("icons/tag_concept.png", class: 'icons')%>
+                    <p class="button-label">#Tags/Concept relationships</p>
+                  </span>
+                </div>
+              </div>
+              <!-- endloop -->
 
           </div>
 
 
           <div class="main-page-container-rows">
-          <!-- loop -->
-          <div class="cells btncells">
-            <div class="divbtn" onclick="document.location='/'" >
-              <span class="icons">
-                <%=image_tag("icons/red_phone.png", class: 'icons')%>
-                  <p class="button-label">Incomplete calls</p>
-                </span>
-              </div>
-            </div>
-            <!-- endloop -->
 
+            <!-- loop -->
+            <div class="cells btncells">
+              <!--div class="divbtn" onclick="document.location='/'" >
+                <span class="icons">
+                  <%=image_tag("icons/kuser.png", class: 'icons')%>
+                    <p class="button-label">Find by name</p>
+                  </span>
+                </div-->
+              </div>
+              <!-- endloop -->
               <!-- loop -->
               <div class="cells btncells">
-                <div class="divbtn" onclick="document.location='/configurations'" >
+                <!--div class="divbtn" onclick="document.location='/'" >
                   <span class="icons">
-                    <%=image_tag("icons/config.png", class: 'icons')%>
-                      <p class="button-label">Configurations</p>
+                    <%=image_tag("icons/birth-plan.png", class: 'icons')%>
+                      <p class="button-label">Birth plan</p>
                     </span>
-                  </div>
+                  </div-->
                 </div>
                 <!-- endloop -->
 
                 <!-- loop -->
                 <div class="cells btncells">
-                  <div class="divbtn" onclick="document.location='/manage_user'" >
+                  <!--div class="divbtn" onclick="document.location='/'" >
                     <span class="icons">
-                      <%=image_tag("icons/Admin.png", class: 'icons')%>
-                        <p class="button-label">Admin</p>
+                      <%=image_tag("icons/delivery.png", class: 'icons')%>
+                        <p class="button-label">Delivery</p>
                       </span>
-                    </div>
+                    </div-->
                   </div>
                   <!-- endloop -->
 
                   <!-- loop -->
                   <div class="cells btncells">
-                    <div class="divbtn" onclick="document.location='/logout'" >
+                    <div class="divbtn" onclick="document.location='/'" >
                       <span class="icons">
-                        <%=image_tag("icons/Logout.png", class: 'icons')%>
-                          <p class="button-label">Logout</p>
+                        <%=image_tag("icons/gohome.png", class: 'icons')%>
+                          <p class="button-label">Home</p>
                         </span>
                       </div>
                     </div>
@@ -199,7 +209,6 @@
 
 
                   </div>
-
 
                 </div>
 

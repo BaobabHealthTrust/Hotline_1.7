@@ -10,6 +10,12 @@ Rails.application.routes.draw do
   get 'report' => 'home#report'
   get 'patient_demographic_report' => 'home#patient_demographic_report'
   get '/quick_summary' => 'home#quick_summary'
+  get 'configurations' => 'home#configuration'
+  get '/tags_concept_relationship' => 'home#tags_concept_relationship'
+  get 'home/concept_sets'
+  get 'view_tags' => 'home#view_tags'
+  get 'view_tips' => 'home#view_tips'
+  post 'home/create_tag_concept_relationships'
   ######################### home end ############################################
   
   ######################### user start ############################################
@@ -63,11 +69,12 @@ Rails.application.routes.draw do
   get 'patient/village'
   get 'patient/district'
 
-
-
   get 'patient_obs/:encounter_id' => 'patient#observations'
   get 'patient/number_of_booked_patients'
   get 'void_encounter/:encounter_id/:tab_name' => 'patient#void_encounter' 
+
+  get 'patient/reference_article/:article_id/:patient_id' => 'patient#reference_article'
+  get 'patient/reference_material/:patient_id' => 'patient#reference_material'
   ######################### patient end ############################################
   
 
