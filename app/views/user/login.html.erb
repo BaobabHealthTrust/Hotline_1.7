@@ -20,12 +20,13 @@
 <%=form_tag '/login' do%>
 <input type="text" id="username" name="username" helpText="Enter username" textCase="lower"/>
 <input type="password" id="password" name="password" helpText ="Enter password" textCase="lower"/>
-<%= select_tag("location", options_for_select(@locations.map{|l|l.name} ,''),
+<%#= select_tag("location", options_for_select(@locations.map{|l|l.name} ,''),
     :helpText =>"Select the computer's location",
     :id => "location",
     :allowFreeText => false)
 %>
 
+<input type="hidden" value="Call booth" name="location" />
 <%end%>
 
 </body>
