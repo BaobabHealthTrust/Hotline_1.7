@@ -183,7 +183,7 @@
 
 
 
-    .options li {
+    .month-options li {
         color: black;
         font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
         list-style: outside none none;
@@ -454,7 +454,7 @@
 
                     var year_table_cell = document.createElement('div');
                     year_table_cell.className = 'table-cell';
-                    year_table_cell.style.width = '36%';
+                    year_table_cell.style.width = '35%';
                     year_table_cell.style.verticalAlign = 'top';
                     year_table_cell.style.textAlign = 'center';
                     table_row.appendChild(year_table_cell);
@@ -513,7 +513,7 @@
 
                     var table_cell = document.createElement('div');
                     table_cell.className = 'table-cell';
-                    table_cell.style.width = '35%';
+                    table_cell.style.width = '30%';
                     table_cell.style.verticalAlign = 'top';
                     table_cell.style.textAlign = 'center';
                     table_cell.style.borderStyle = 'solid';
@@ -542,7 +542,7 @@
                                 month_rows.appendChild(month_cells);
 
                                     var ul_options = document.createElement('ul');
-                                    ul_options.className = 'options';
+                                    ul_options.className = 'month-options';
                                     ul_options.style.height = '99%';
                                     month_cells.appendChild(ul_options);
                                     <% months = []
@@ -561,7 +561,7 @@
                                 month_rows.appendChild(month_cells);
 
                                     var ul_options = document.createElement('ul');
-                                    ul_options.className = 'options';
+                                    ul_options.className = 'month-options';
                                     ul_options.style.height = '99%';
                                     month_cells.appendChild(ul_options);
                                     <% months = []
@@ -577,7 +577,7 @@
                     //===========================================
                     var table_cell = document.createElement('div');
                     table_cell.className = 'table-cell';
-                    table_cell.style.width = '36%';
+                    table_cell.style.width = '35%';
                     table_cell.style.verticalAlign = 'top';
                     table_cell.style.textAlign = 'center';
                     table_row.appendChild(table_cell);
