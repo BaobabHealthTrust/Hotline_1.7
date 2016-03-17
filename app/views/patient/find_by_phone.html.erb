@@ -7,7 +7,14 @@
 </style>
 
 <script>
-  var tt_cancel_destination = "/start_call"
+    var tt_cancel_destination;
+    if (<%= params[:redirect] == 'house_keeping'%>){
+        tt_cancel_destination = "/house_keeping";
+    }
+    else {
+        tt_cancel_destination = "/start_call";
+    }
+
 </script>
 
 <%= form_tag("/patient/attributes_search_results", id: "search", method: 'post', enctype: 'multipart/form-data') do %>
