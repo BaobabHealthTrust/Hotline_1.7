@@ -92,20 +92,24 @@
           <!-- endloop -->
           <!-- loop -->
           <div class="cell">
+            <%if @patient_obj.sex == 'Female' || @patient_obj.sex == 'F'%>
             <div class="btn"   onclick="document.location='/encounters/new/schedule?patient_id=<%=@patient_obj.patient_id%>'">
               <%=image_tag("icons/calendar-and-tasks.png", class: 'task-icons')%>
                 <p class="button-label">Clinic schedule</p>
                 </span>
               </div>
+              <%end%>
             </div>
             <!-- endloop -->
             <!-- loop -->
             <div class="cell">
+              <%if @patient_obj.sex == 'Female' || @patient_obj.sex == 'F'%>
               <div class="btn" onclick="document.location='/encounters/new/reminders?patient_id=<%=@patient_obj.patient_id%>'">
                 <%=image_tag("icons/notification.png", class: 'task-icons')%>
                   <p class="button-label">Edit reminders</p>
                   </span>
                 </div>
+              <%end%>
               </div>
               <!-- endloop -->
             </div>
