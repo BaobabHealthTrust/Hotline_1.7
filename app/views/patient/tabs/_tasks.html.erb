@@ -73,11 +73,13 @@
       <!-- endloop -->
       <!-- loop -->
       <div class="cell">
+        <%if @patient_obj.sex == 'Female' || @patient_obj.sex == 'F'%>
         <div class="btn" onclick="document.location='/encounters/new/female_symptoms?patient_id=<%=@patient_obj.patient_id%>'">
           <%=image_tag("icons/symptoms-2.png", class: 'task-icons')%>
             <p class="button-label">Symptoms</p>
             </span>
           </div>
+        <%end%>
         </div>
 
         <!-- endloop -->
