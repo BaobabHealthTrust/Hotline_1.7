@@ -30,6 +30,7 @@
         __$('touchscreenInput' + tstCurrentPage).value = danger_signs;
         return danger_signs;
     }
+        var age = '<%= @age %>';
 </script>
 
 <style>
@@ -50,6 +51,7 @@
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_symptoms , nil),
                    :helpText =>"Experiencing any of the following symptoms?",
                    :multiple => true,
+                   :condition => 'parseInt(age) >= 5;',
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "maternal_health_symptoms",
                    :allowFreeText => false
@@ -67,7 +69,7 @@
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Maternal health info") %>
-    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_info , nil),
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_info , nil),
                    :helpText =>"Does the caller want more information from below?",
                    :multiple => true,
                    :optional => false,
