@@ -19,6 +19,10 @@ Rails.application.routes.draw do
 
   get 'home/reference_article/:article_id' => 'home#reference_article'
   get 'home/reference_material'
+  get 'home/retrieve_articles'
+  post 'home/retrieve_articles'
+  post 'home/next_article'
+  post 'home/previous_article'
   ######################### home end ############################################
   
   ######################### user start ############################################

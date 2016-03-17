@@ -73,8 +73,8 @@ function showLibPopup(){
     popupFooter.style.marginBottom = '60px';
 
     okaySpan = document.createElement('span');
-    okaySpan.className = 'okay-button';
-    okaySpan.innerHTML = 'Okay';
+    okaySpan.className = 'prevButton';
+    okaySpan.innerHTML = '<< Prev Article';
     okaySpan.style.backgroundImage = 'none';
     okaySpan.style.border = '1px solid transparent';
     okaySpan.style.borderRadius = '4px';
@@ -85,23 +85,90 @@ function showLibPopup(){
     okaySpan.style.lineHeight = '1.94857';
     okaySpan.style.position = 'absolute';
     okaySpan.style.bottom = '10px';
-    okaySpan.style.padding = '6px 56px';
+    okaySpan.style.padding = '6px 30px';
     okaySpan.style.textAlign = 'center';
     okaySpan.style.verticalAlign = 'middle';
     okaySpan.style.whiteSpace = 'nowrap';
-    okaySpan.style.backgroundColor = '#6495ED';
+    okaySpan.style.backgroundColor = 'gray';
     okaySpan.style.borderColor = '#2e6da4';
-    okaySpan.style.left = '0px';
     okaySpan.style.color = '#fff';
-    okaySpan.style.width = '90.6%';
+    
     okaySpan.onclick = function(){
+        /*popupCover = document.getElementsByClassName("popup-cover")[0];
+        popupDiv = document.getElementsByClassName("popup-div")[0];
+        if (popupCover) popupCover.parentNode.removeChild(popupCover);
+        if (popupDiv) popupDiv.parentNode.removeChild(popupDiv);*/
+        loadPrevArticle()
+    }
+    popupDiv.appendChild(okaySpan);
+
+    //prev article//
+
+    prevSpan = document.createElement('span');
+    prevSpan.className = 'nextButton';
+    prevSpan.innerHTML = 'Next Article  >>';
+    prevSpan.style.backgroundImage = 'none';
+    prevSpan.style.border = '1px solid transparent';
+    prevSpan.style.borderRadius = '4px';
+    prevSpan.style.cursor = 'pointer';
+    prevSpan.style.display = 'inline-block';
+    prevSpan.style.fontSize = '16px';
+    prevSpan.style.fontWeight = 'bolder';
+    prevSpan.style.lineHeight = '1.94857';
+    prevSpan.style.position = 'absolute';
+    prevSpan.style.bottom = '10px';
+    prevSpan.style.padding = '6px 30px';
+    prevSpan.style.textAlign = 'center';
+    prevSpan.style.verticalAlign = 'middle';
+    prevSpan.style.whiteSpace = 'nowrap';
+    prevSpan.style.backgroundColor = '#6495ED';
+    prevSpan.style.borderColor = '#2e6da4';
+    prevSpan.style.color = '#fff';
+    prevSpan.style.left = '22.6%';
+    prevSpan.onclick = function(){
+        /*popupCover = document.getElementsByClassName("popup-cover")[0];
+        popupDiv = document.getElementsByClassName("popup-div")[0];
+        if (popupCover) popupCover.parentNode.removeChild(popupCover);
+        if (popupDiv) popupDiv.parentNode.removeChild(popupDiv);*/
+        loadNextArticle();
+    }
+
+    popupDiv.appendChild(prevSpan);
+
+
+    //START cancel Button article
+    cancelSpan = document.createElement('span');
+    cancelSpan.className = 'cancelButton';
+    cancelSpan.innerHTML = 'Cancel';
+    cancelSpan.style.backgroundImage = 'none';
+    cancelSpan.style.border = '1px solid transparent';
+    cancelSpan.style.borderRadius = '4px';
+    cancelSpan.style.cursor = 'pointer';
+    cancelSpan.style.display = 'inline-block';
+    cancelSpan.style.fontSize = '16px';
+    cancelSpan.style.fontWeight = 'bolder';
+    cancelSpan.style.lineHeight = '1.94857';
+    cancelSpan.style.position = 'absolute';
+    cancelSpan.style.bottom = '10px';
+    cancelSpan.style.padding = '6px 30px';
+    cancelSpan.style.textAlign = 'center';
+    cancelSpan.style.verticalAlign = 'middle';
+    cancelSpan.style.whiteSpace = 'nowrap';
+    cancelSpan.style.backgroundColor = '#EE6363';
+    cancelSpan.style.borderColor = '#2e6da4';
+    cancelSpan.style.color = '#fff';
+    cancelSpan.style.left = '90%';
+    cancelSpan.onclick = function(){
         popupCover = document.getElementsByClassName("popup-cover")[0];
         popupDiv = document.getElementsByClassName("popup-div")[0];
         if (popupCover) popupCover.parentNode.removeChild(popupCover);
         if (popupDiv) popupDiv.parentNode.removeChild(popupDiv);
     }
-    //popupFooter.appendChild(okaySpan);
-    popupDiv.appendChild(okaySpan);
+
+    popupDiv.appendChild(cancelSpan);
+    //END cancel Button
+
+
     popupDiv.appendChild(popupFooter);
 
     popupCover = document.createElement('div');
@@ -115,4 +182,6 @@ function showLibPopup(){
     popupCover.style.zIndex = '990';
     popupCover.style.opacity = '0.65';
     content.appendChild(popupCover);
+
+    loadArticles();
 }

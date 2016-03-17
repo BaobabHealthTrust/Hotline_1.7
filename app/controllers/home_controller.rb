@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  skip_before_action :verify_authenticity_token
+  
   def index
     render :layout => false
   end
@@ -102,6 +104,66 @@ class HomeController < ApplicationController
     end
     
     redirect_to("/configurations") and return
+  end
+
+  def retrieve_articles
+      concept_id = ConceptName.where("name = '#{params[:concept]}'").last.concept_id
+      tag_ids = TagConceptRelationship.where("concept_id = #{concept_id}").map(&:tag_id).join(",")
+      tag_ids = '0' if tag_ids.blank?
+
+      article_ids = Publify.find_by_sql("SELECT * FROM articles_tags  WHERE tag_id IN (#{tag_ids})"
+          ).map(&:article_id).join(",")
+      article_ids = '0' if article_ids.blank?
+      articles = Publify.find_by_sql("SELECT * FROM contents WHERE id IN (#{article_ids})")
+      
+      articles_hash = {}
+      articles.each do |article|
+        article_id = article.id
+        articles_hash[article_id]= {}
+        articles_hash[article_id]["title"] = article.title
+        articles_hash[article_id]["author"] = article.author
+        articles_hash[article_id]["body"] = article.body
+      end
+
+      session[:articles_hash] = articles_hash
+      first_key = articles_hash.keys.first
+      article = articles_hash[first_key]
+      hash = {:key => first_key, :data => article}
+      render :text => hash.to_json
+  end
+
+  def next_article
+    key = params[:key]
+    next_item_pos = (session[:articles_hash].keys.index(key) + 1)
+    disabled = false
+    if (next_item_pos > (session[:articles_hash].keys.count - 2))
+      disabled = true
+    end
+    if (next_item_pos > (session[:articles_hash].keys.count - 1))
+      disabled = true
+      next_item_pos = session[:articles_hash].keys.count - 1
+    end
+
+    my_key = session[:articles_hash].keys[next_item_pos]
+    article = session[:articles_hash][my_key]
+    hash = {:key => my_key, :data => article, :disabled => disabled}
+    render :text => hash.to_json
+  end
+
+  def previous_article
+    key = params[:key].to_s
+    prev_item_pos = (session[:articles_hash].keys.index(key) - 1)
+    disabled = false
+
+    disabled = true if (prev_item_pos == 0)
+    if prev_item_pos < 0
+      prev_item_pos = 0
+      disabled = true
+    end
+    my_key = session[:articles_hash].keys[prev_item_pos]
+    article = session[:articles_hash][my_key]
+    hash = {:key => my_key, :data => article , :disabled => disabled}
+    render :text => hash.to_json
   end
   
 end
