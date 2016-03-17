@@ -13,7 +13,7 @@
 </style>
 
 
-<%= form_tag("/user/create", id: "create-form", method: 'post', enctype: 'multipart/form-data') do %>
+<%= form_tag("/home/create_tag_concept_relationships", id: "create-form", method: 'post', enctype: 'multipart/form-data') do %>
 
  <%= text_field_tag "concept", params[:username],
                      {:id => 'concept_name', :field_type => 'alpha',
@@ -23,7 +23,7 @@
 
 
 <% @tags = Publify.all.map(&:name) %> 
-  <%= select_tag("user[role]", options_for_select(@tags ,params[:role]),
+  <%= select_tag("tags[]", options_for_select(@tags ,params[:role]),
                       :helpText =>"Select relevant Tags",
                       :id => "tag",
                       :multiple => true,
