@@ -1,0 +1,174 @@
+<style>
+
+.table-results  {
+  display: table;
+  width: 98%;
+  padding: 0px 1px 0px 1px;
+}
+
+.table-results-row  {
+  display: table-row;
+}
+
+.table-results-cell {
+  display: table-cell;
+  padding: 0px 0px 5px 15px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.color_stripes {
+  background-color: #fdfefe;
+}
+
+.color_nostripes {
+  background-color: #fbfcfc;
+}
+
+.table-data th, .table-data td{
+  text-align: left;
+  width: 155px;
+}
+
+.table-data tr td:first-child, .table-data tr th:first-child {
+  text-align: left;
+  width: 155px;
+  padding: 2px;
+}
+
+.table-data tr td:nth-child(2), .table-data tr th:nth-child(2) {
+  text-align: left;
+  width: 400px;
+}
+
+/*.table-data td {
+  text-align: justify;
+}*/
+
+.table-data {
+  width: 99%;
+}
+
+.all-table-rows {
+  display: none;
+}
+
+.selected_row {
+  background-color: lightblue;
+}
+
+</style>
+
+
+<div class="table-results">
+
+<%
+row_counter = 0
+row_page = 1
+number_of_records = 0
+(@material || []).each_with_index do |article, i|
+  color = 'nostripes'
+  color = 'stripes' if i.odd?
+  
+%>
+  
+  <div class="table-results-row color_<%=color%> all-table-rows row_number_<%=row_page%>" id="person_<%=article.id%>" onclick="selectRow(this);">
+    <div class="table-results-cell">
+      <table class="table-data">
+        <tr>
+          <th>Tile:</th>
+          <td><%=article.title%></td>
+        </tr>
+        <tr>
+          <th>Author:</th>
+          <td><%=article.author%></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  </br>
+
+  <!-- div class="table-results-row">
+    <div class="table-results-cell" style="height: 2px; border-width: 0px;"></div>
+  </div-->
+<%
+if row_counter == 6
+  row_page += 1 if i < @material.length
+  row_counter = 0
+else
+  row_counter+= 1
+end
+end%>
+
+</div>
+
+
+
+<script>                                                                        
+var number_of_pages = <%=row_page%>;
+var set_page = 1;
+
+function goNext() {
+  if(number_of_pages == 1)
+    return;
+
+  if (set_page == number_of_pages){
+    set_page = 1;
+    showPage(set_page); 
+  }else if (set_page < number_of_pages){
+    showPage((set_page+=1)); 
+  }
+  console.log(set_page) 
+}
+
+function goPrevious() {
+  if(number_of_pages == 1)
+    return;
+
+  if ((set_page == number_of_pages) || (set_page > 1)){
+    set_page = (set_page - 1);
+    showPage(set_page); 
+  }else if (set_page == 1){
+    set_page = number_of_pages;
+    showPage(set_page); 
+  }
+  console.log(set_page) 
+}
+
+
+function showPage(page) {
+  rows = document.getElementsByClassName("all-table-rows");
+  for(var i = 0; i < rows.length; i++){
+    rows[i].style.display ='none';
+  }
+
+  rows = document.getElementsByClassName("row_number_"+page)
+  for(var i = 0; i < rows.length; i++){
+    rows[i].style.display ='table-row';
+  }
+  
+  document.getElementById('page_number').innerHTML = page;
+  document.getElementById('total_page_number').innerHTML = number_of_pages;
+}
+
+function selectRow(e) {
+  rows = document.getElementsByClassName("all-table-rows");
+  for(var i = 0; i < rows.length; i++){
+    if (rows[i].id == e.id){
+      new_attribute = rows[i].getAttribute('class').replace('selected','');
+      new_attribute += ' selected_row';
+      rows[i].setAttribute('class',new_attribute);
+      selectedPersonID = e.id.replace('person_','');
+    }else{
+      new_attribute = rows[i].getAttribute('class').replace('selected','')
+      rows[i].setAttribute('class',new_attribute);
+    }
+  }
+
+}
+
+var selectedPersonID = null;
+
+showPage(set_page);
+
+</script>

@@ -149,16 +149,20 @@ img {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
+.button-label{
+    /*font: italic small-caps bolder 16px/3 cursive;*/
+    font: italic small-caps bolder condensed 17px/3 cursive;
+  }
 /* ------------------------------------------------------------------- */
 
 </style>
 
 <div class="table-container" style="height: 15%;">
   <div class="table-row">
-    <div class="table-cell" style="width: 45%;">
-      <h3>Searched:&nbsp;<small><%=@given_name%>&nbsp;<%=@family_name%>&nbsp;(<%=@gender%>)</small></h3>
-      <h3>Page:&nbsp;<span id='page_number'>1</span>&nbsp;of&nbsp;<span id='total_page_number'>1</span>&nbsp;
-      (Total number of record(s) found:&nbsp;<%=@people.length%>)</small></h3>
+    <div class="table-cell" style="width: 80%;">
+      <h3><%=@article.title%></h3>
+      <p>Author:&nbsp;<%=@article.author%></p>
     </div>
     <div class="table-cell" style="width: 10%; vertical-align: middle; text-align: right;">
       <span class="icons">
@@ -173,7 +177,7 @@ img {
 <div class="table-container" style="height: 75%; border-width: 0px;">
   <div class="table-row">
     <div class="table-cell" style="width: 78%; vertical-align: top;">
-      <p><%= render :partial => 'search_results_table'%></p>
+      <p><%= render :partial => 'patient/reference/article'%></p>
     </div>
     <div class="table-cell" style="width: 20%; text-align: center;">
       <!-- ... -->
@@ -181,72 +185,16 @@ img {
         <!-- btn starts .. -->
         <div class="table-row">
           <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <div class="divbtn" onclick="patientDashboard();" >
+            <div class="divbtn" onclick="document.location='/patient/reference_material/<%=params[:patient_id]%>'" >
               <span>
-                <%=image_tag("icons/button_ok.png", class: 'search-icons')%>
-                <p>Select <%= params[:action_type] == 'guardian' ? 'guardian' : 'client'%></p>
+                <%=image_tag("icons/back.png", class: 'search-icons')%>
+                <p>Back</p>
               </span>
             </div>
           </div>
         </div>
         <!-- btn ends .. -->
         <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <div class="divbtn" onclick="javascript:addNew();" >
-              <span>
-                <%=image_tag("icons/add-person.png", class: 'search-icons')%>
-                <p>Add new <%= params[:action_type] == 'guardian' ? 'guardian' : 'client'%></p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <!-- btn ends .. -->
-        <!-- btn starts .. -->
-        <% if params[:action_type] != 'guardian' %>
-            <div class="table-row">
-              <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-                <div class="divbtn" onclick="document.location='/start_call'" >
-                  <span>
-                    <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>
-                    <p>New search</p>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-        <% else %>
-            <div class="table-row">
-              <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-                <div class="divbtn" onclick="document.location='/patient/dashboard/<%= params[:patient_id]%>/tasks'" >
-                  <span>
-                    <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>
-                    <p>Cancel</p>
-                  </span>
-                </div>
-              </div>
-            </div>
-        <% end %>
-        <!-- btn ends .. -->
-        <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <!-- ................................ -->
-            <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: left;" onclick="goPrevious();" >
-              <span>
-                <%=image_tag("icons/previous-track.png", class: 'search-icons')%>
-                <p>Previous</p>
-              </span>
-            </div>
-            <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: right;" onclick="goNext();" >
-              <span>
-                <%=image_tag("icons/next-track.png", class: 'search-icons')%>
-                <p>Next</p>
-              </span>
-            </div>
-            <!-- ................................ -->
-          </div>
-        </div>
         <!-- btn ends .. -->
       </div>
       <!-- ... -->
@@ -289,10 +237,6 @@ img {
   <input type="hidden" name="given_name" value="<%=@given_name%>" />
   <input type="hidden" name="family_name" value="<%=@family_name%>" />
   <input type="hidden" name="gender" value="<%=@gender%>" />
-  <input type="hidden" name="action_type" value="<%= params[:action_type]%>" />
-  <%if params[:action_type] == "guardian" %>
-        <input type="hidden" name="patient_id" value="<%=params[:patient_id]%>" />
-  <% end %>
 <%end%>
 
 <script>
@@ -307,14 +251,9 @@ function addNew() {
     }
 }
 
-function patientDashboard() {
-  if(selectedPersonID) {
-      <% unless params[:action_type] == 'guardian'%>
-        document.location = '/patient/dashboard/' + selectedPersonID + '/tasks';
-      <% else %>
-        document.location = '/encounters/new/reminders?patient_id=<%= params[:patient_id]%>&guardian_id=' + selectedPersonID;
-      <% end %>
-  }
+function Article() {
+  if(selectedPersonID)
+    document.location='/patient/reference_article/'+ selectedPersonID + "/<%=params[:patient_id]%>";
 }
 
 function hidePopup(){

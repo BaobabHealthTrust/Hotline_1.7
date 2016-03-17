@@ -11,6 +11,20 @@ Rails.application.routes.draw do
   get 'patient_demographic_report' => 'home#patient_demographic_report'
   get '/quick_summary' => 'home#quick_summary'
   get '/list' => 'home#list'
+  get 'configurations' => 'home#configuration'
+  get '/tags_concept_relationship' => 'home#tags_concept_relationship'
+  get 'home/concept_sets'
+  get 'view_tags' => 'home#view_tags'
+  get 'view_tips' => 'home#view_tips'
+  post 'home/create_tag_concept_relationships'
+
+  get 'home/reference_article/:article_id' => 'home#reference_article'
+  get 'home/reference_material'
+  get 'home/retrieve_articles'
+  post 'home/retrieve_articles'
+  post 'home/next_article'
+  post 'home/previous_article'
+  get 'tag_concepts/:tag_id' => 'home#tag_concepts'
   ######################### home end ############################################
   
   ######################### user start ############################################
@@ -64,11 +78,12 @@ Rails.application.routes.draw do
   get 'patient/village'
   get 'patient/district'
 
-
-
   get 'patient_obs/:encounter_id' => 'patient#observations'
   get 'patient/number_of_booked_patients'
   get 'void_encounter/:encounter_id/:tab_name' => 'patient#void_encounter' 
+
+  get 'patient/reference_article/:article_id/:patient_id' => 'patient#reference_article'
+  get 'patient/reference_material/:patient_id' => 'patient#reference_material'
   ######################### patient end ############################################
   
 

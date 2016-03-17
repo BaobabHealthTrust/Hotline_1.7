@@ -10,3 +10,7 @@ require "patient_service"
 require "bantu_soundex"
 require "bean"
 require "csv"
+
+
+publify = YAML.load(File.open(File.join(Rails.root, "config/database.yml"), "r"))['publify']
+Publify.establish_connection(publify)

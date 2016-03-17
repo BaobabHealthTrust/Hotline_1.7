@@ -116,24 +116,22 @@
       <!-- endloop -->
 
       <!-- loop -->
-    <!--
       <div class="cells btncells">
-        <div class="divbtn" onclick="document.location='/'" >
+        <!--div class="divbtn" onclick="document.location='/'" >
           <span class="icons">
-            <%#=image_tag("icons/follow-up.png", class: 'icons')%>
+            <%=image_tag("icons/follow-up.png", class: 'icons')%>
               <p class="button-label">Follow-up</p>
             </span>
-          </div>
+          </div-->
         </div>
-        -->
         <!-- endloop -->
 
         <!-- loop -->
         <div class="cells btncells">
-          <div class="divbtn" onclick="document.location='/patient/find_by_phone?redirect=house_keeping'" >
+          <div class="divbtn" onclick="document.location='/view_tags'" >
             <span class="icons">
-              <%=image_tag("icons/Directory.png", class: 'icons')%>
-                <p class="button-label">Find by phone number</p>
+              <%=image_tag("icons/tags.png", class: 'icons')%>
+                <p class="button-label">View #Tags</p>
               </span>
             </div>
           </div>
@@ -141,10 +139,10 @@
 
           <!-- loop -->
           <div class="cells btncells">
-            <div class="divbtn" onclick="document.location='/patient/find_by_identifier?redirect=house_keeping'" >
+            <div class="divbtn" onclick="document.location='/home/reference_material'" >
               <span class="icons">
-                <%=image_tag("icons/user-id.png", class: 'icons')%>
-                  <p class="button-label">Find by ID</p>
+                <%=image_tag("icons/reference.png", class: 'icons')%>
+                  <p class="button-label">Reference material</p>
                 </span>
               </div>
             </div>
@@ -152,10 +150,10 @@
 
             <!-- loop -->
             <div class="cells btncells">
-              <div class="divbtn" onclick="document.location='/patient/search_by_name?redirect=house_keeping'" >
+              <div class="divbtn" onclick="document.location='/tags_concept_relationship'" >
                 <span class="icons">
-                  <%=image_tag("icons/kuser.png", class: 'icons')%>
-                    <p class="button-label">Find by name</p>
+                  <%=image_tag("icons/tag_concept.png", class: 'icons')%>
+                    <p class="button-label">#Tags/Concept relationships</p>
                   </span>
                 </div>
               </div>

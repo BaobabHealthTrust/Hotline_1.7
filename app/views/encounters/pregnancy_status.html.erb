@@ -1,6 +1,108 @@
+ <script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
+ <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
 
-<!-- ===================== Temporal CSS for date layout ========================= -->
-<style>
+<script type="text/javascript">
+  var currentKey = ""
+  var currentConcept = "Potential chest indrawing";
+  
+  function loadArticles(){
+    
+    jQuery.ajax({
+      type: "POST",
+      url: "/home/retrieve_articles",
+      data: "concept=" + currentConcept,
+      success: function(results){
+        results = eval("(" + results  + ")");
+        currentKey = results["key"];
+        title = results["data"]["title"];
+        body = results["data"]["body"];
+        author = results["data"]["author"];
+        
+        popupHeader = document.getElementsByClassName("popup-header")[0];
+        popupHeader.innerHTML = title;
+        popupContent = document.getElementsByClassName("popup-data")[0];
+        popupContent.innerHTML = body;
+        console.log(results);
+     }
+
+    });
+  }
+
+function loadNextArticle(){
+    jQuery.ajax({
+      type: "POST",
+      url: "/home/next_article",
+      data: "key=" + currentKey,
+      success: function(results){
+        results = eval("(" + results  + ")");
+        currentKey = results["key"];
+        title = results["data"]["title"];
+        body = results["data"]["body"];
+        author = results["data"]["author"];
+        disabled = (results["disabled"]);
+        console.log(disabled == true);
+        nextButton = document.getElementsByClassName("nextButton")[0];
+        prevButton = document.getElementsByClassName("prevButton")[0];
+        if (disabled == true){
+          nextButton.style.backgroundColor = 'gray';
+          prevButton.style.backgroundColor = '#6495ED';
+        }else{
+          nextButton.style.backgroundColor = '#6495ED';
+          prevButton.style.backgroundColor = '#6495ED';
+        }
+        popupHeader = document.getElementsByClassName("popup-header")[0];
+        popupHeader.innerHTML = title;
+        popupContent = document.getElementsByClassName("popup-data")[0];
+        popupContent.innerHTML = body;
+      }
+
+    });
+}
+
+function loadPrevArticle(){
+
+  jQuery.ajax({
+      type: "POST",
+      url: "/home/previous_article",
+      data: "key=" + currentKey,
+      success: function(results){
+        results = eval("(" + results  + ")");
+        currentKey = results["key"];
+        title = results["data"]["title"];
+        body = results["data"]["body"];
+        author = results["data"]["author"];
+        disabled = (results["disabled"]);
+        prevButton = document.getElementsByClassName("prevButton")[0];
+        nextButton = document.getElementsByClassName("nextButton")[0];
+        if (disabled == true){
+          prevButton.style.backgroundColor = 'gray';
+          nextButton.style.backgroundColor = '#6495ED';
+        }else{
+          prevButton.style.backgroundColor = '#6495ED';
+          nextButton.style.backgroundColor = '#6495ED';
+        }
+
+        popupHeader = document.getElementsByClassName("popup-header")[0];
+        popupHeader.innerHTML = title;
+        popupContent = document.getElementsByClassName("popup-data")[0];
+        popupContent.innerHTML = body;
+      }
+
+    });
+}
+
+function setListAttributes(){
+    liElements = document.getElementsByTagName("li");
+    for (i=0; i <= liElements.length - 1; i++){
+      liElements[i].onmouseup = function(){
+        currentConcept = this.getAttribute("tstvalue");
+      }
+    }
+}
+
+</script>
+
+<style type="text/css">
 
     .btn-year {
         display: inline;
@@ -181,7 +283,7 @@
 
 
 
-    .options li {
+    .month-options li {
         color: black;
         font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
         list-style: outside none none;
@@ -327,6 +429,8 @@
         <%= hidden_field_tag("observations[][concept_name]", "Pregnancy status") %>
         <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , nil),
                :helpText =>"Pregnancy Status",
+               :tt_onLoad => "showHelpButton();setListAttributes();",
+               :tt_onUnLoad => "hideHelpButton();",
                :id => "pregnancy_status",
                :allowFreeText => false
         %>
@@ -450,7 +554,7 @@
 
                     var year_table_cell = document.createElement('div');
                     year_table_cell.className = 'table-cell';
-                    year_table_cell.style.width = '36%';
+                    year_table_cell.style.width = '35%';
                     year_table_cell.style.verticalAlign = 'top';
                     year_table_cell.style.textAlign = 'center';
                     table_row.appendChild(year_table_cell);
@@ -509,7 +613,7 @@
 
                     var table_cell = document.createElement('div');
                     table_cell.className = 'table-cell';
-                    table_cell.style.width = '35%';
+                    table_cell.style.width = '30%';
                     table_cell.style.verticalAlign = 'top';
                     table_cell.style.textAlign = 'center';
                     table_cell.style.borderStyle = 'solid';
@@ -538,7 +642,7 @@
                                 month_rows.appendChild(month_cells);
 
                                     var ul_options = document.createElement('ul');
-                                    ul_options.className = 'options';
+                                    ul_options.className = 'month-options';
                                     ul_options.style.height = '99%';
                                     month_cells.appendChild(ul_options);
                                     <% months = []
@@ -557,7 +661,7 @@
                                 month_rows.appendChild(month_cells);
 
                                     var ul_options = document.createElement('ul');
-                                    ul_options.className = 'options';
+                                    ul_options.className = 'month-options';
                                     ul_options.style.height = '99%';
                                     month_cells.appendChild(ul_options);
                                     <% months = []
@@ -573,7 +677,7 @@
                     //===========================================
                     var table_cell = document.createElement('div');
                     table_cell.className = 'table-cell';
-                    table_cell.style.width = '36%';
+                    table_cell.style.width = '35%';
                     table_cell.style.verticalAlign = 'top';
                     table_cell.style.textAlign = 'center';
                     table_row.appendChild(table_cell);
