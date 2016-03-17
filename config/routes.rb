@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   get 'home/reference_article/:article_id' => 'home#reference_article'
   get 'home/reference_material'
+  get 'tag_concepts/:tag_id' => 'home#tag_concepts'
   ######################### home end ############################################
   
   ######################### user start ############################################
