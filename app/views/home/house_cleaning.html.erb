@@ -116,19 +116,21 @@
       <!-- endloop -->
 
       <!-- loop -->
+    <!--
       <div class="cells btncells">
         <div class="divbtn" onclick="document.location='/'" >
           <span class="icons">
-            <%=image_tag("icons/follow-up.png", class: 'icons')%>
+            <%#=image_tag("icons/follow-up.png", class: 'icons')%>
               <p class="button-label">Follow-up</p>
             </span>
           </div>
         </div>
+        -->
         <!-- endloop -->
 
         <!-- loop -->
         <div class="cells btncells">
-          <div class="divbtn" onclick="document.location='/'" >
+          <div class="divbtn" onclick="document.location='/patient/find_by_phone?redirect=house_keeping'" >
             <span class="icons">
               <%=image_tag("icons/Directory.png", class: 'icons')%>
                 <p class="button-label">Find by phone number</p>
@@ -139,7 +141,7 @@
 
           <!-- loop -->
           <div class="cells btncells">
-            <div class="divbtn" onclick="document.location='/'" >
+            <div class="divbtn" onclick="document.location='/patient/find_by_identifier?redirect=house_keeping'" >
               <span class="icons">
                 <%=image_tag("icons/user-id.png", class: 'icons')%>
                   <p class="button-label">Find by ID</p>
@@ -150,7 +152,7 @@
 
             <!-- loop -->
             <div class="cells btncells">
-              <div class="divbtn" onclick="document.location='/patient/search_by_name'" >
+              <div class="divbtn" onclick="document.location='/patient/search_by_name?redirect=house_keeping'" >
                 <span class="icons">
                   <%=image_tag("icons/kuser.png", class: 'icons')%>
                     <p class="button-label">Find by name</p>
