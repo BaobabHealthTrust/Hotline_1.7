@@ -59,4 +59,20 @@ class HomeController < ApplicationController
     render :layout => false
   end
 
+  def view_tags
+    render :layout => false
+  end
+
+  def view_tips
+    render :layout => false
+  end
+
+  def create_tag_concept_relationships
+    raise params.inspect
+    concept_name = params[:concept]
+    params[:tags].each do |tag|
+
+    end
+  end
+  
 end

@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   get 'configurations' => 'home#configuration'
   get '/tags_concept_relationship' => 'home#tags_concept_relationship'
   get 'home/concept_sets'
+  get 'view_tags' => 'home#view_tags'
+  get 'view_tips' => 'home#view_tips'
+  post 'home/create_tag_concept_relationships'
   ######################### home end ############################################
   
   ######################### user start ############################################
