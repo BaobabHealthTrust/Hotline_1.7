@@ -13,6 +13,10 @@
     listSuggestions(tstCurrentPage);
   }
 
+  function changeNextButtonText() {
+      //$('touchscreenInput'+tstCurrentPage)
+      document.getElementById('nextButton').innerHTML = '<span>Search</span>';
+  }
 </script>
 
 
@@ -48,6 +52,7 @@
           <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
               :helpText =>"Gender",
               :id => "gender",
+              :tt_onLoad => "changeNextButtonText();",
               :allowFreeText => false)
           %>
     <% end %>
