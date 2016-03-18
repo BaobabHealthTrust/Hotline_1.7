@@ -1,3 +1,6 @@
+<script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
+ <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
+
 <script>
     var tt_cancel_destination = "/patient/dashboard/<%= @patient.id %>/tasks"
     var symptoms_values = [];
@@ -30,6 +33,108 @@
         __$('touchscreenInput' + tstCurrentPage).value = danger_signs;
         return danger_signs;
     }
+<<<<<<< HEAD
+
+
+var currentKey = ""
+  //var currentConcept = "Potential chest indrawing";
+  var currentConcept = "";
+  function loadArticles(){
+
+    jQuery.ajax({
+      type: "POST",
+      url: "/home/retrieve_articles",
+      data: "concept=" + currentConcept,
+      success: function(results){
+        results = eval("(" + results  + ")");
+        currentKey = results["key"];
+        title = results["data"]["title"];
+        body = results["data"]["body"];
+        author = results["data"]["author"];
+
+        popupHeader = document.getElementsByClassName("popup-header")[0];
+        popupHeader.innerHTML = title;
+        popupContent = document.getElementsByClassName("popup-data")[0];
+        popupContent.innerHTML = body;
+        console.log(results);
+     }
+
+    });
+  }
+
+function loadNextArticle(){
+    jQuery.ajax({
+      type: "POST",
+      url: "/home/next_article",
+      data: "key=" + currentKey,
+      success: function(results){
+        results = eval("(" + results  + ")");
+        currentKey = results["key"];
+        title = results["data"]["title"];
+        body = results["data"]["body"];
+        author = results["data"]["author"];
+        disabled = (results["disabled"]);
+        console.log(disabled == true);
+        nextButton = document.getElementsByClassName("nextButton")[0];
+        prevButton = document.getElementsByClassName("prevButton")[0];
+        if (disabled == true){
+          nextButton.style.backgroundColor = 'gray';
+          prevButton.style.backgroundColor = '#6495ED';
+        }else{
+          nextButton.style.backgroundColor = '#6495ED';
+          prevButton.style.backgroundColor = '#6495ED';
+        }
+        popupHeader = document.getElementsByClassName("popup-header")[0];
+        popupHeader.innerHTML = title;
+        popupContent = document.getElementsByClassName("popup-data")[0];
+        popupContent.innerHTML = body;
+      }
+
+    });
+}
+
+function loadPrevArticle(){
+
+  jQuery.ajax({
+      type: "POST",
+      url: "/home/previous_article",
+      data: "key=" + currentKey,
+      success: function(results){
+        results = eval("(" + results  + ")");
+        currentKey = results["key"];
+        title = results["data"]["title"];
+        body = results["data"]["body"];
+        author = results["data"]["author"];
+        disabled = (results["disabled"]);
+        prevButton = document.getElementsByClassName("prevButton")[0];
+        nextButton = document.getElementsByClassName("nextButton")[0];
+        if (disabled == true){
+          prevButton.style.backgroundColor = 'gray';
+          nextButton.style.backgroundColor = '#6495ED';
+        }else{
+          prevButton.style.backgroundColor = '#6495ED';
+          nextButton.style.backgroundColor = '#6495ED';
+        }
+
+        popupHeader = document.getElementsByClassName("popup-header")[0];
+        popupHeader.innerHTML = title;
+        popupContent = document.getElementsByClassName("popup-data")[0];
+        popupContent.innerHTML = body;
+      }
+
+    });
+}
+
+function setListAttributes(){
+    liElements = document.getElementsByTagName("li");
+    for (i=0; i <= liElements.length - 1; i++){
+      liElements[i].onmouseup = function(){
+        currentConcept = this.getAttribute("tstvalue");
+      }
+    }
+}
+
+
         var age = '<%= @age %>';
 </script>
 
@@ -51,6 +156,8 @@
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_symptoms , nil),
                    :helpText =>"Experiencing any of the following symptoms?",
                    :multiple => true,
+                   :tt_onLoad => "showHelpButton();setListAttributes();",
+                   :tt_onUnLoad => "hideHelpButton();",
                    :condition => 'parseInt(age) >= 5;',
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "maternal_health_symptoms",
