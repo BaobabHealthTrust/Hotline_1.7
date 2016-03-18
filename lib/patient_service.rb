@@ -65,7 +65,8 @@ module PatientService
     PersonName.where("c.given_name_code LIKE(?) AND c.family_name_code LIKE(?) AND p.gender = ?", 
       "%#{given_name_code}%","%#{family_name_code}%",gender).joins("INNER JOIN person_name_code c 
       ON c.person_name_id = person_name.person_name_id 
-      INNER JOIN person p ON p.person_id = person_name.person_id").select('p.person_id pat_id').group("p.person_id").limit(30).collect do |rec|
+      INNER JOIN person p ON p.person_id = person_name.person_id
+      INNER JOIN patient pat ON pat.patient_id = p.person_id").select('p.person_id pat_id').group("p.person_id").limit(30).collect do |rec|
         @people << self.get_patient(rec.pat_id)
     end
 
