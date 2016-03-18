@@ -33,6 +33,7 @@
         __$('touchscreenInput' + tstCurrentPage).value = danger_signs;
         return danger_signs;
     }
+<<<<<<< HEAD
 
 
 var currentKey = ""
@@ -133,6 +134,8 @@ function setListAttributes(){
     }
 }
 
+
+        var age = '<%= @age %>';
 </script>
 
 <style>
@@ -155,6 +158,7 @@ function setListAttributes(){
                    :multiple => true,
                    :tt_onLoad => "showHelpButton();setListAttributes();",
                    :tt_onUnLoad => "hideHelpButton();",
+                   :condition => 'parseInt(age) >= 5;',
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "maternal_health_symptoms",
                    :allowFreeText => false
@@ -172,7 +176,7 @@ function setListAttributes(){
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Maternal health info") %>
-    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_info , nil),
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_info , nil),
                    :helpText =>"Does the caller want more information from below?",
                    :multiple => true,
                    :optional => false,
