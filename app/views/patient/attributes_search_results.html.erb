@@ -78,10 +78,21 @@ img {
 }
 
 .divbtn {
-  height: 135px;
-  display: table;
-  margin-top: 10px;
-  cursor:pointer;
+    height: 135px;
+    display: table;
+    margin-top: 10px;
+    cursor:pointer;
+    box-shadow: inset 2px -4px 2px 0px;
+    background-color: white;
+    border-radius: 7px;
+    width: 99%;
+    border: solid black 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-box-shadow:    inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow:         inset 0 0 10px #000000;
 }
 
 </style>
@@ -118,18 +129,18 @@ img {
     
     <div class="table-cell" style="width: 20%; vertical-align: top; text-align: center; padding-top: 0.5%;">
       <!-- btn starts .. -->
-      <div class="divbtn" style="background-color: #008000;border: 1px solid #2e6da4; width: 99%;" onclick="document.location='/start_call'" >
+      <div class="divbtn" onclick="patientDashboard();" >
         <span>
-          <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>
-          <p>New search</p>
+          <%=image_tag("icons/button_ok.png", class: 'search-icons')%>
+          <p>Select client</p>
         </span>
       </div>
       <!-- btn ends .. -->
       <!-- btn starts .. -->
-      <div class="divbtn" style="background-color: #d2ff4d;border: 1px solid #2e6da4; width: 99%;" onclick="patientDashboard();" >
+      <div class="divbtn" onclick="document.location='/start_call'" >
         <span>
-          <%=image_tag("icons/button_ok.png", class: 'search-icons')%>
-          <p>Select client</p>
+          <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>
+          <p>New search</p>
         </span>
       </div>
       <!-- btn ends .. -->
