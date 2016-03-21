@@ -73,7 +73,7 @@ number_of_records = 0
         </tr>
         <tr>
           <th>Name:</th>
-          <td><%=person.given_name%></td>
+          <td><%=person.given_name%> <%=person.family_name%></td>
           <th>Gender:</th>
           <td>(<%=person.gender%>)</td>
           <th>Village:</th>
@@ -93,7 +93,7 @@ number_of_records = 0
     <div class="table-results-cell" style="height: 2px; border-width: 0px;"></div>
   </div-->
 <%
-if row_counter == 6
+if row_counter == 5
   row_page += 1 if i < @people.length
   row_counter = 0
 else
