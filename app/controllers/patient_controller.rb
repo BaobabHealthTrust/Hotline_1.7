@@ -116,13 +116,15 @@ class PatientController < ApplicationController
         people = Person.where(['person_id > 1 AND person_id IN (?)', patient_ids.flatten])
       when 'Identifier'
         types = ['IVR access code', 'National id'].collect{|type| PatientIdentifierType.find_by_name(type).id rescue -1}
-        patient_ids = PatientIdentifier.where(["identifier_type IN (?) AND value LIKE '%#{@attribute}%'", types])
+        patient_ids = PatientIdentifier.where(["identifier_type IN (?) AND identifier LIKE '%#{@attribute}%'", types]).select('patient_id').collect{|o| o.patient_id}
+        people = Person.where(['person_id > 1 AND person_id IN (?)', patient_ids.flatten])
     end
 
     @people = []
     people.each do |person|
       @people << PatientService.get_patient(person.id)
     end
+
     render :layout => false
   end
 
