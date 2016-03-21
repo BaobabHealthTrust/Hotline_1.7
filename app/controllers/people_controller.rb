@@ -11,11 +11,17 @@ class PeopleController < ApplicationController
 
   def get_patient_addresses(patient_id)
     patient_addresses = PersonAddress.where(person_id: patient_id).first
+    if patient_addresses.nil?
+      patient_addresses = PersonAddress.create(person_id: patient_id)
+    end
     return patient_addresses
   end
 
   def get_patient_attributes(patient_id)
     patient_attributes = PersonAttribute.where(person_id: patient_id).first
+    if patient_attributes.nil?
+      patient_attributes = PersonAttribute.create(person_id: patient_id)
+    end
     return patient_attributes
   end
 
@@ -72,10 +78,10 @@ class PeopleController < ApplicationController
       end
 
       #------ save modified records --------
-      update_patient(patient)
-      update_patient_names(patient_names)
-      update_addresses(patient_addresses)
-      update_attributes(patient_attributes)
+      update_patient(patient) if params[:field] == 'sex' || params[:field] == 'age'
+      update_patient_names(patient_names) if params[:field] == 'name'
+      update_addresses(patient_addresses) if params[:field] == 'location'
+      update_attributes(patient_attributes) if params[:field] == 'phone_numbers'
 
       redirect_to "/demographics/#{patient.person_id}"
     else
