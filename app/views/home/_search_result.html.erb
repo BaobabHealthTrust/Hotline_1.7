@@ -69,26 +69,25 @@ number_of_records = 0
           <th>AVR access ID:</th>
           <td><%#= person.avr_access_number %></td>
           <th>TA:</th>
-          <td><%#= person.township_division %></td>
+          <td><%= person.township_division %></td>
         </tr>
         <tr>
           <th>Name:</th>
-          <td><%#=person.name%></td>
+          <td><%=person.given_name%></td>
           <th>Gender:</th>
           <td>(<%=person.gender%>)</td>
           <th>Village:</th>
-          <td><%#= person.city_village %></td>
+          <td><%= person.city_village %></td>
         </tr>
         <tr>
           <th>Birthdate:</th>
           <td><%= person.birthdate%></td>
           <th>Age:</th>
-          <td>(<%=person.age%>)</td>
+          <td>(<%#=person.age%>)</td>
         </tr>
       </table>
     </div>
   </div>
-  </br>
 
   <!-- div class="table-results-row">
     <div class="table-results-cell" style="height: 2px; border-width: 0px;"></div>

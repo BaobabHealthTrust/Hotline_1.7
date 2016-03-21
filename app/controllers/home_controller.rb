@@ -56,12 +56,8 @@ class HomeController < ApplicationController
   end
 
   def list
-    @people = Person.joins(" INNER JOIN patient ON person.person_id = patient.patient_id ").select("person.*").where(voided: 0)
-
-      #raise @people.inspect
-
-    #@people = Person.where("a.person_attribute_type_id = ?",
-     # person_attribute_type.id).joins("INNER JOIN person_attribute a USING(person_id)")
+    @people = Patient.joins(:person => [:person_names, :person_addresses]).select('patient.*, person.*, person_name.*, person_address.*')
+    #raise @people.inspect
     render :layout => false
   end 
 
