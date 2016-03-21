@@ -56,6 +56,7 @@ class HomeController < ApplicationController
   end
 
   def list
+    #----- Consider putting this in an array to get patients using the get_patient method from Patient Service library. ------------------
     @people = Patient.joins(:person => [:person_names, :person_addresses]).select('patient.*, person.*, person_name.*, person_address.*')
     #raise @people.inspect
     render :layout => false
