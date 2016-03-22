@@ -30,12 +30,22 @@
   width: 155px;
 }
 
-.table-data td {
-  text-align: justify;
+.table-data tr td:first-child, .table-data tr th:first-child {
+  text-align: left;
+  width: 155px;
+  padding: 2px;
 }
 
-.table-data {
-  width: 99%;
+.table-data tr td:nth-child(2), .table-data tr th:nth-child(2) {
+  text-align: left;
+  width: 400px;
+  padding-left: 4px;
+}
+
+.table-data tr td:nth-child(3), .table-data tr th:nth-child(3) {
+  text-align: left;
+  width: 220px;
+  padding-left: 4px;
 }
 
 .all-table-rows {
@@ -45,6 +55,7 @@
 .selected_row {
   background-color: lightblue;
 }
+
 
 </style>
 
@@ -68,26 +79,28 @@ number_of_records = 0
           <td><%= %></td>
           <th>AVR access ID:</th>
           <td><%#= person.avr_access_number %></td>
-          <th>TA:</th>
-          <td><%= person.township_division %></td>
         </tr>
         <tr>
           <th>Name:</th>
           <td><%=person.given_name%> <%=person.family_name%></td>
           <th>Gender:</th>
           <td>(<%=person.gender%>)</td>
-          <th>Village:</th>
-          <td><%= person.city_village %></td>
         </tr>
         <tr>
           <th>Birthdate:</th>
           <td><%= person.birthdate%></td>
+          <th>Village:</th>
+          <td><%= person.city_village %></td>
+        </tr>
+        <tr>
           <th>Age:</th>
           <td>(<%#=person.age%>)</td>
-        </tr>
+          <th>TA:</th>
+          <td><%= person.township_division %></td>
       </table>
     </div>
   </div>
+  </br>
 
   <!-- div class="table-results-row">
     <div class="table-results-cell" style="height: 2px; border-width: 0px;"></div>
