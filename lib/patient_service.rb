@@ -20,10 +20,10 @@ module PatientService
     patient_obj.sex = person.gender
 
     unless addresses.blank?
-      patient_obj.city_village = addresses.city_village
-      patient_obj.township_division = addresses.township_division
-      patient_obj.state_province = addresses.state_province
       patient_obj.region = addresses.region
+      patient_obj.address2 = addresses.address2
+      patient_obj.county_district = addresses.county_district
+      patient_obj.neighborhood_cell = addresses.neighborhood_cell
     end
 
     patient_obj.cell_phone_number = attributes.value unless attributes.blank?

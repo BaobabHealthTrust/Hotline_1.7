@@ -8,14 +8,15 @@ class PatientBean
    :last_name, :cell_phone_number, :office_phone_number, :home_phone_number, :old_identification_number, :birthdate, :current_ta
 
  attr_accessor :patient_id,:arv_number, :national_id ,:name ,:age ,:sex, :init_wt, :init_ht ,
-   :init_bmi ,:transfer_in ,:address, :landmark, :occupation, :guardian, :agrees_to_followup,:avr_access_number,
+   :init_bmi ,:transfer_in ,:address, :address2, :landmark, :occupation, :guardian, :agrees_to_followup,:avr_access_number,
    :hiv_test_location, :hiv_test_date, :reason_for_art_eligibility, :date_of_first_line_regimen ,
    :tb_within_last_two_yrs, :eptb ,:ks,:pulmonary_tb, :first_line_drugs, :alt_first_line_drugs,
    :second_line_drugs, :date_of_first_alt_line_regimen, :date_of_second_line_regimen, :transfer_in_date,
    :cd4_count_date, :cd4_count, :pregnant, :who_clinical_conditions, :tlc, :tlc_date, :tb_status_at_initiation,
    :ever_received_art, :last_art_drugs_taken, :last_art_drugs_date_taken,
    :first_positive_hiv_test_site, :first_positive_hiv_test_date, :first_positive_hiv_test_arv_number,
-   :first_positive_hiv_test_type, :months_on_art, :current_app_national_id, :city_village, :township_division,:state_province, :home_village, :current_district, :region, :splitted_arv_number
+   :first_positive_hiv_test_type, :months_on_art, :current_app_national_id, :city_village, :township_division,
+   :county_district, :neighborhood_cell, :state_province, :home_village, :current_district, :region, :splitted_arv_number
 
 	def initialize(name)
 		@name = name

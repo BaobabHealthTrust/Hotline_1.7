@@ -67,10 +67,10 @@ class PeopleController < ApplicationController
         #------- set addresses ---------------------
         when 'location'
           params[:addresses] = params[:person][:addresses]
-          patient_addresses.region = params[:addresses][:current_region]
-          patient_addresses.state_province = params[:addresses][:state_province]
-          patient_addresses.township_division = params[:addresses][:township_division]
-          patient_addresses.city_village = params[:addresses][:city_village]
+          patient_addresses.region = params[:addresses][:region_of_origin]
+          patient_addresses.address2 = params[:addresses][:home_district]
+          patient_addresses.county_district = params[:addresses][:home_ta]
+          patient_addresses.neighborhood_cell = params[:addresses][:home_village]
 
         #------- set attributes --------------------
         when 'phone_numbers'

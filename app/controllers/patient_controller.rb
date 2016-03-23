@@ -73,16 +73,16 @@ class PatientController < ApplicationController
 
   def add_patient_attributes
     patient_obj = PatientService.get_patient(params[:patient_id])
-    patient_attributes = PatientService.add_patient_attributes(patient_obj, params)
+    PatientService.add_patient_attributes(patient_obj, params)
 
     #location = LocationTag.find_by_name(params[:person][:current_region]).location_tag_id
 
     PersonAddress.create(
         person_id: patient_obj.patient_id,
-        state_province: params[:person][:addresses][:state_province],
-        township_division: params[:person][:addresses][:township_division],
-        city_village: params[:person][:addresses][:city_village],
-        region: params[:person][:addresses][:current_region]
+        address2: params[:person][:addresses][:home_district],
+        county_district: params[:person][:addresses][:home_ta],
+        neighborhood_cell: params[:person][:addresses][:home_village],
+        region: params[:person][:addresses][:region_of_origin]
     )
     redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
   end

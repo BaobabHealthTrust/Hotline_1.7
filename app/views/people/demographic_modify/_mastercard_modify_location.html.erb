@@ -1,27 +1,27 @@
-<%= select_tag "person[addresses][current_region]", options_for_select([["", ""], ["Northern Region", "Northern"],
+<%= select_tag "person[addresses][region_of_origin]", options_for_select([["", ""], ["Northern Region", "Northern"],
                                                                         ["Central Region", "Central"], ["Southern Region", "Southern"]]),
-               {:id => "current_region",
+               {:id => "region_of_origin",
                 :tt_requireNextClick => false,
                 :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none';",
                 :helptext => "Current region"}  %>
 
-<%= text_field_tag "person[addresses][state_province]", nil,
-                   {:id => "current_district",
+<%= text_field_tag "person[addresses][home_district]", nil,
+                   {:id => "home_district",
                     :tt_requireNextClick => false,
                     :ajaxURL => "",
-                    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');set_ajaxURL_for_suggestions('/patient/district?filter_value=', __$('current_region').value); ",
+                    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');set_ajaxURL_for_suggestions('/patient/district?filter_value=', __$('region_of_origin').value); ",
                     :helptext => "Current district"}  %>
 
-<%= text_field_tag "person[addresses][township_division]", nil,
-                   {:id => "current_area_of_residence",
+<%= text_field_tag "person[addresses][home_ta]", nil,
+                   {:id => "home_ta",
                     :tt_requireNextClick => false,
                     :ajaxURL => "",
-                    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none'; set_ajaxURL_for_suggestions('/patient/ta?filter_value=', __$('current_district').value);",
+                    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none'; set_ajaxURL_for_suggestions('/patient/ta?filter_value=', __$('home_district').value);",
                     :helptext => "Current TA"}  %>
 
-<%= text_field_tag "person[addresses][city_village]", nil,
-                   {:id => "current_location_or_village",
+<%= text_field_tag "person[addresses][home_village]", nil,
+                   {:id => "home_village",
                     :tt_requireNextClick => true,
                     :ajaxURL => "",
-                    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block'; set_ajaxURL_for_suggestions('/patient/village?district=' + __$('current_district').value + '&filter_value=' , __$('current_area_of_residence').value);",
+                    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block'; set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);",
                     :helptext => "Current village"}  %>
