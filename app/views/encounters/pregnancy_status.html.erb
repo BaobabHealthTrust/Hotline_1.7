@@ -428,7 +428,7 @@ function setListAttributes(){
 
         <%= hidden_field_tag("observations[][concept_name]", "Pregnancy status") %>
         <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , nil),
-               :helpText =>"Pregnancy Status",
+               :helpText =>"Pregnancy status",
                :tt_onLoad => "showHelpButton();setListAttributes();",
                :tt_onUnLoad => "hideHelpButton();",
                :id => "pregnancy_status",
@@ -759,7 +759,7 @@ function setListAttributes(){
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
-        var display = "<div><span class='title'>Pregnancy Status:</span><span class='data'> " + pregnancy_status + "</span></div>";
+        var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
             var edd_month;
@@ -889,8 +889,8 @@ function setListAttributes(){
             }
             var lmp_day = last_menstrual_period.getDate();
             //document.getElementById('last_menstrual_period').value = last_menstrual_period;
-            display += "<div><span class='title'>Last Menstrual Period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
-            display += "<div><span class='title'>Expected Date of Delivery (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
+            display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
+            display += "<div><span class='title'>Expected due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
 
             document.getElementById('last_menstrual_period').value = last_menstrual_period;
             document.getElementById('expected_due_date').value = expected_date_of_delivery;
