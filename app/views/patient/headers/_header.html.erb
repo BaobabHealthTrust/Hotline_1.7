@@ -96,7 +96,7 @@
       </table> 
     </div>
 
-    <div class="cells" style="width: 55%;">
+    <div class="cells" style="width: 25%;">
       <table class="attributes-table">
         <tr>
           <th style="width:55px;">AVR access ID:</th>
@@ -116,6 +116,29 @@
         </tr>
       </table> 
     </div>
+
+    <% if gender == 'Female' %>
+        <div class="cells" style="width: 30%;">
+          <table class="attributes-table">
+            <tr>
+              <th style="width:55px;">Symptoms:</th>
+              <td><%= %></td>
+            </tr>
+            <tr>
+              <th style="width:100px;">Danger signs:</th>
+              <td style="text-align: left;"><%=  %></td>
+            </tr>
+            <tr>
+              <th style="width:55px;">Pregnancy status:</th>
+              <td style="text-align: left;"><%=  %></td>
+            </tr>
+            <tr>
+              <th style="width:100px;">EDD:</th>
+              <td style="text-align: left;"><%=  %></td>
+            </tr>
+          </table>
+        </div>
+    <% end %>
 
     <div class="cells" style="width: 10%; vertical-align: middle; text-align: right;">
       <span class="icons">

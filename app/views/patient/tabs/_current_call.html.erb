@@ -169,12 +169,21 @@ function addRows(data) {
 
   observations = JSON.parse(data);
   
-  for(var i = 0; i < observations.length; i++) {        
+  for(var i = 0; i < observations.length; i++) {
+      // For the meantime until Pregnancy due date changed to Estimated due date
+      // in seed and concepts, and anywhere else needed to.
+      if (observations[i][0] == 'Pregnancy due date') {
+          observations[i][0] = 'Estimated due date (EDD)';
+      }
+      if (observations[i][0] == 'Last menstrual period') {
+          observations[i][0] = 'Last menstrual period (LMP)';
+      }
+      //----------------------------------------------------------------------
     tr = document.createElement('tr');       
     td = document.createElement('td');
     td.setAttribute('class','obs_title')
     tr.appendChild(td);
-    td.innerHTML = observations[i][0];       
+    td.innerHTML = observations[i][0];
     td = document.createElement('td');
     td.setAttribute('class','obs_value')
     tr.appendChild(td);
