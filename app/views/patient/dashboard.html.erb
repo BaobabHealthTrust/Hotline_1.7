@@ -166,10 +166,6 @@ img {
      /*background-image:url(background-trans.png);*/
 }
 
-
-
-
-
 </style>
 
 
@@ -179,14 +175,14 @@ var selectedEncounter = null;
 var tabName = null;
 
 function voidEncounter(e, tab_name) {
-  el = document.getElementById("overlay");
+  var el = document.getElementById("overlay");
   selectedEncounter = e.id;
   tabName = tab_name;
   el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 }
 
 function cancelDelete() {
-  el = document.getElementById("overlay");
+  var el = document.getElementById("overlay");
   el.style.visibility = 'hidden';
 }
 
