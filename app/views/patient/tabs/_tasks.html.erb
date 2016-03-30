@@ -137,10 +137,10 @@
                   </div>
                   <!-- endloop -->
                   <!-- loop -->
-                  <div class="cell">
-                    <div class="btn" style="display: none;">
-                      <p class="button-label">&nbsp;</p>
-                    </div>
+                  <div class="btn" onclick="document.location='/encounters/new/purpose_of_call?patient_id=<%=@patient_obj.patient_id%>'">
+                    <%=image_tag("icons/call_purpose.png", class: 'task-icons')%>
+                    <p class="button-label">Purpose of Call</p>
+                    </span>
                   </div>
                   <!-- endloop -->
                   <!-- loop -->
@@ -156,7 +156,8 @@
                     <div class="cell">
                       <div class="btn" onclick="document.location='/'">
                         <%=image_tag("icons/end-call.png", class: 'task-icons')%>
-                          <p class="button-label">End Call</p>
+                          <span>
+                            <p class="button-label">End Call</p>
                           </span>
                         </div>
                       </div>

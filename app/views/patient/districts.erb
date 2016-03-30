@@ -9,22 +9,21 @@
 
 
     function changeNextBtn() {
-        document.getElementById('keyboard').style.display = 'none';
       document.getElementById('nextButton').innerHTML = '<span>Continue</span>';
     }
 </script>
+
+
   <%=form_tag '/start_call' do%>
   <%= select_tag 'district',
                  options_for_select(@location_names.sort, []), {
-                                   :helpText => 'Select the district where the caller is',
+                                   :helpText => 'Select the district where the caller is?',
                                    :id => 'district',
                                    :tt_requireNextClick => false,
                                    :tt_onLoad => '$(nextButton).style.display = "none";'} %>
   <%# if @task == 'new'%>
       <%= select_tag 'call_mode', options_for_select(@call_modes), {
-                                        :helpText => 'Select the type of caller',
+                                        :helpText => 'Select the type of caller?',
                                         :id => 'call_mode',
                                         :tt_onLoad => 'changeNextBtn();__$(nextButton).style.display = "inline";'}%>
-
-
-  <% end %>
+<% end %>

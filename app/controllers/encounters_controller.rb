@@ -125,6 +125,10 @@ class EncountersController < ApplicationController
         @language_types = concept_set('Language Type')
         @content_types = concept_set('Type of message content')
         @guardian = current_guardian(params[:guardian_id], @patient_obj.patient_id)
+      when 'Purpose of call'
+        @purpose_of_call_options = purpose_of_call_options
+      when 'Confirm purpose of call'
+        @confirm_call_options = call_options
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
@@ -152,6 +156,25 @@ class EncountersController < ApplicationController
       next if name.blank?
       [name]
     end
+  end
+
+  def purpose_of_call_options
+    options = ['Maternal and child health - general advice',
+               'Maternal and child health - symptoms',
+               'Reproductive health (not pregnant) - general advice',
+               'Reproductive health (not pregnant) - symptoms',
+               'HIV - general advice',
+               'HIV - symptoms',
+               'TB - general advice',
+               'TB - symptoms',
+               'Registration',
+               'Other']
+  end
+
+  def call_options
+    options = ['Record purpose of call',
+               'Irrelevant',
+               'Dropped']
   end
 
 end

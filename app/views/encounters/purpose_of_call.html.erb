@@ -1,0 +1,19 @@
+<script>
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks"
+</script>
+
+<%= form_tag("/encounters/create", id: "purpose_of_call", method: 'post', enctype: 'multipart/form-data') do %>
+    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("PURPOSE OF CALL").id %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Purpose of call") %>
+    <%= select_tag 'observations[][value_coded_or_text]', options_for_select(@purpose_of_call_options), {
+                                        :helpText => 'Select purpose of call',
+                                        :id => 'purpose_of_call',
+                                        :optional => true,
+                                        :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';$('keyboard').style.display = 'none';",
+                                        :tt_pageStyleClass => 'longSelectList'} %>
+
+<% end %>
