@@ -54,9 +54,9 @@
 
   <%= text_field_tag "person[addresses][home_village]", nil,
     {:id => "home_village",
-    :tt_requireNextClick => false,
+    :tt_requireNextClick => true,
     :ajaxURL => "",
-    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none'; set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);",
+    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}'); set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);",
     :helptext => "Home village"}  %>
 
 <% end %>

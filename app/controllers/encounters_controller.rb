@@ -1,6 +1,7 @@
 class EncountersController < ApplicationController
 
   def create
+
     @patient = Patient.find(params[:encounter][:patient_id])
 
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]

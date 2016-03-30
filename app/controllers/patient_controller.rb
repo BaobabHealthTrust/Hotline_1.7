@@ -84,7 +84,7 @@ class PatientController < ApplicationController
         neighborhood_cell: params[:person][:addresses][:home_village],
         region: params[:person][:addresses][:region_of_origin]
     )
-    redirect_to "/patient/dashboard/#{patient_obj.patient_id}/tasks"
+    redirect_to "/encounters/new/purpose_of_call?patient_id=#{patient_obj.patient_id}"
   end
 
   def given_names

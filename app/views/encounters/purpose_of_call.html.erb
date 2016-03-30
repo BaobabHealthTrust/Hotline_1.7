@@ -9,9 +9,10 @@
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Purpose of call") %>
-    <%= select_tag 'purpose_of_call', options_for_select(@purpose_of_call_options), {
+    <%= select_tag 'observations[][value_coded_or_text]', options_for_select(@purpose_of_call_options), {
                                         :helpText => 'Select purpose of call',
                                         :id => 'purpose_of_call',
+                                        :optional => true,
                                         :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';$('keyboard').style.display = 'none';",
                                         :tt_pageStyleClass => 'longSelectList'} %>
 
