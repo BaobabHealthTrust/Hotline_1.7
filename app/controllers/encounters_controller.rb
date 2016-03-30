@@ -100,21 +100,15 @@ class EncountersController < ApplicationController
   end
 
   def new
-    @patient = Patient.find(params[:patient_id] || session[:patient_id])
+    @patient_obj = PatientService.get_patient(params[:patient_id] || session[:patient_id])
     encounter_type = params[:encounter_type].humanize
-    person = Person.find(@patient.patient_id)
-    birthdate = person.birthdate.to_s.split('-')
-    child_age = Time.new(birthdate[0], birthdate[1], birthdate[2], 00, 00, 00)#+59.months
-    child_age = child_age.to_s
-    today = Time.now.to_s
-    @age = today.to_i-child_age.to_i
     case encounter_type
       when 'Pregnancy status'
         @pregnancy_options = concept_set('Pregnancy status')
       when 'Female symptoms'
         @maternal_health_symptoms = concept_set('Maternal health symptoms')
           #if child
-        if @age <= 5
+        if @patient_obj.age <= 5
           @health_info = concept_set('Child health info')
           @danger_signs = concept_set('Child danger signs greater zero outcome')
           #if adult

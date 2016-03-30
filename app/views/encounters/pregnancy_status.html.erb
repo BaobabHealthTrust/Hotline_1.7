@@ -401,7 +401,7 @@ function setListAttributes(){
 </style>
 <!-- ======================================================================================== -->
 <script>
-    var tt_cancel_destination = "/patient/dashboard/<%= @patient.id %>/tasks"
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks"
 </script>
 
 <style>
@@ -422,7 +422,7 @@ function setListAttributes(){
 
     <%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
         <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("PREGNANCY STATUS").id %>
-        <%= hidden_field_tag "encounter[patient_id]", @patient.id %>
+        <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
         <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
