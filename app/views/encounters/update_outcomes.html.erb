@@ -101,6 +101,27 @@ function setListAttributes(){
       }
     }
 }
+var selected_primary_outcomes;
+function selectedOutcomes() {
+        selected_primary_outcomes = __$('touchscreenInput' + tstCurrentPage).value;
+
+    }
+
+function hideselectedOutcomes(){
+      primaryOutcomes = selected_primary_outcomes.split(";"); 
+      liElements = document.getElementsByTagName("li");
+      for (var i = 0; i<= primaryOutcomes.length - 1; i++){
+        primary_outcome = primaryOutcomes[i];
+        for (var j=0; j<=liElements.length -1; j++){
+          li_tst_value = liElements[j].getAttribute('tstvalue');
+          if (primary_outcome.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
+            liElements[j].style.display = 'none';
+            break;
+          }
+        }
+      }
+    }
+
 </script>
 
 <style>
@@ -120,7 +141,7 @@ function setListAttributes(){
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes),
                    :helpText =>"Select Primary Outcome",
                    :tt_onLoad => "showHelpButton();setListAttributes();__$('keyboard').style.display='none';",
-                   :tt_onUnLoad => "hideHelpButton(); __$('keyboard').style.display='';",
+                   :tt_onUnLoad => "hideHelpButton(); __$('keyboard').style.display='';selectedOutcomes();",
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "general_outcome"
     %>
@@ -135,19 +156,14 @@ function setListAttributes(){
                         :ajaxURL => '/home/health_facilities?search_string=',
                         :allowFreeText => true }%>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Secondary Outcome") %>
-    <%= text_field_tag "observations[][value_text]",nil,
+    <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , nil),
                    :helpText =>"Secondary outcome if any",
-                   :condition => "__$('general_outcome').value.trim() == 'Given advice'",
                    :id => "secondary_outcome",
-                   :optional =>true,
-                   :allowFreeText => true
+                   :multiple => true,
+                   :tt_onLoad => "hideselectedOutcomes();",
+                   :tt_pageStyleClass => 'longSelectList',
+                   :allowFreeText => false
     %>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Reason for Referral") %>
-    <%= text_field_tag "observations[][value_text]",nil,
-                       :helpText =>"Reason for referral",
-                       :id => "referral_reason",
-                       :allowFreeText => true
-    %>
 <% end %>
