@@ -102,6 +102,7 @@ class EncountersController < ApplicationController
   def new
     @patient_obj = PatientService.get_patient(params[:patient_id] || session[:patient_id])
     encounter_type = params[:encounter_type].humanize
+    @age = @patient_obj.age
     case encounter_type
       when 'Pregnancy status'
         @pregnancy_options = concept_set('Pregnancy status')
