@@ -124,7 +124,7 @@ class EncountersController < ApplicationController
         @message_types = concept_set('Message Type')
         @language_types = concept_set('Language Type')
         @content_types = concept_set('Type of message content')
-        @guardian = current_guardian(params[:guardian_id], @patient.id)
+        @guardian = current_guardian(params[:guardian_id], @patient_obj.patient_id)
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
