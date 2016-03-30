@@ -127,6 +127,8 @@ class EncountersController < ApplicationController
         @guardian = current_guardian(params[:guardian_id], @patient_obj.patient_id)
       when 'Purpose of call'
         @purpose_of_call_options = purpose_of_call_options
+      when 'Confirm purpose of call'
+        @confirm_call_options = call_options
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
@@ -156,7 +158,6 @@ class EncountersController < ApplicationController
     end
   end
 
-
   def purpose_of_call_options
     options = ['Maternal and child health - general advice',
                'Maternal and child health - symptoms',
@@ -168,7 +169,12 @@ class EncountersController < ApplicationController
                'TB - symptoms',
                'Registration',
                'Other']
+  end
 
+  def call_options
+    options = ['Record purpose of call',
+               'Irrelevant',
+               'Dropped']
   end
 
 end
