@@ -60,6 +60,7 @@ class PatientController < ApplicationController
 
   def new_with_demo
     @patient_obj = PatientService.get_patient(params[:patient_id])
+    @purpose_of_call_options = purpose_of_call_options
   end
 
   def create
@@ -204,10 +205,22 @@ class PatientController < ApplicationController
 
     @location_names = @districts.collect { |location_id, location_name| location_name}
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+
+
   end
 
-  def pregnancy_status
-        
+  def purpose_of_call_options
+      options = ['Maternal and child health - general advice',
+                                  'Maternal and child health - symptoms',
+                                  'Reproductive health (not pregnant) - general advice',
+                                  'Reproductive health (not pregnant) - symptoms',
+                                  'HIV - general advice',
+                                  'HIV - symptoms',
+                                  'TB - general advice',
+                                  'TB - symptoms',
+                                  'Registration',
+                                  'Other']
+
   end
 
   def observations
