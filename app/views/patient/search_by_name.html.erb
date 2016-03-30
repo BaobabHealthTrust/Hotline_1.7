@@ -19,13 +19,12 @@
   }
 </script>
 
-
-
 <%= form_tag("/patient/search_result", id: "create-form", method: 'post', enctype: 'multipart/form-data') do %>
     <% unless params[:action_type] == 'new_client'%>
+
           <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
-              :helpText =>"Gender",
-              :id => "gender",
+              :helpText =>'Gender',
+              :id => 'gender',
               :allowFreeText => false)
           %>
 
