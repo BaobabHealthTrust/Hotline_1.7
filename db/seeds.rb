@@ -464,8 +464,12 @@ select_options = {
       ['Referred to a health centre', 'REFERRED TO A HEALTH CENTRE'],
       ['Hospital', 'HOSPITAL'],
       ['Nurse consultation', 'NURSE CONSULTATION'],
-      ['Registered for Tips and reminders','REGISTERED FOR TIPS AND REMINDERS' ], #'REGISTERED FOR TIPS AND REMINDERS'],
-      ['Referral to emergency transport','REFERRAL TO EMERGENCY TRANSPORT' ],
+      ['Registration','REGISTRRATION' ], #'REGISTERED FOR TIPS AND REMINDERS'],
+      ['Referral to emergency transport','REFERRAL TO EMERGENCY TRANSPORT'],
+      ['Referral to nurse consultant', 'REFERRAL TO NURSE CONSULTANT'],
+      ['Referral to CCPF doctor -  answered', 'REFERRAL TO CCPF DOCTOR - ANSWERED'],
+      ['Referral to CCPF doctor - unanswered', 'REFERRAL TO CCPF DOCTOR - UNANSWERED'],
+      ['Referral to HSA for nutritional assessment', 'REFERRAL TO HSA FOR NUTRITIONAL ASSESSMENT'],
       ['Other','OTHER' ]
   ],
   'referral_reasons' => [
