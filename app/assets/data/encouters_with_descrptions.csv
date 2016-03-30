@@ -8,3 +8,4 @@ CHILD HEALTH SYMPTOMS,Child health symptoms
 BABY DELIVERY,This encounter occurs when a mother delivers a baby
 PREGNANCY STATUS,MNCH pregnancy status encounter
 BIRTH PLAN,This encounter specificities where and when the baby
+PURPOSE OF CALL,This specifies the reason the client is calling

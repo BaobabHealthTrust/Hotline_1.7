@@ -30,14 +30,10 @@ class HomeController < ApplicationController
     if request.post?
       district = params[:district]
       call_mode = params[:call_mode]
-      #purpose_of_call = params[:purpose_of_call]
-
       if call_mode == "New"
         # record patient details
         redirect_to :controller => :patient,
-                    :action => :search_by_name,
-                    :action_type => 'new_client' and return #,
-                    #:purpose_of_call => purpose_of_call and return
+                    :action => :search_by_name,:action_type => 'new_client' and return
       else
         # lookup caller (filtered by district)
         redirect_to "/start_call" and return

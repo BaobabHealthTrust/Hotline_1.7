@@ -59,12 +59,6 @@
     :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none'; set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);",
     :helptext => "Home village"}  %>
 
-  <%= select_tag 'purpose_of_call', options_for_select(@purpose_of_call_options), {
-              :helpText => 'Select purpose of call',
-              :id => 'purpose_of_call',
-              :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';$('keyboard').style.display = 'none';",
-              :tt_pageStyleClass => 'longSelectList'} %>
-
 <% end %>
 
 
