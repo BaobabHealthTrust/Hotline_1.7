@@ -9,7 +9,7 @@
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Purpose of call") %>
-    <%= select_tag 'observations[][value_coded_or_text]', options_for_select(@purpose_of_call_options), {
+    <%= select_tag 'observations[][value_coded_or_text]', options_for_select(@purpose_of_call_options, nil), {
                                         :helpText => 'Select purpose of call',
                                         :id => 'purpose_of_call',
                                         :optional => true,

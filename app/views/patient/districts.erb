@@ -2,11 +2,12 @@
 
     tt_cancel_show = "/";
     <% if @task == 'new' %>
-    var tt_cancel_destination = "/"
+        var tt_cancel_destination = "/"
+    <% elsif params[:param] == 'verify_purpose' %>
+        var tt_cancel_destination = "/patient/dashboard/<%= params[:patient_id] %>/tasks"
     <% else %>
-    var tt_cancel_destination = "/"
+        var tt_cancel_destination = "/"
     <% end %>
-
 
     function changeNextBtn() {
       document.getElementById('nextButton').innerHTML = '<span>Continue</span>';

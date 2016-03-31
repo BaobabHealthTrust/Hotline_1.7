@@ -15,7 +15,6 @@ class PatientController < ApplicationController
     @symptom_encounters = Encounter.where("patient_id = ? AND encounter_type = ?",
       params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
 
-
     render :layout => false
   end
 
@@ -197,10 +196,20 @@ class PatientController < ApplicationController
   end
 
   def districts
+    if params[:param] == 'verify_purpose'
+      encounter_id = EncounterType.find_by_name('Purpose of call').encounter_type_id
+      concept_id = ConceptName.where(:name => 'Purpose of call').last.concept_id
+      verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => encounter_id,
+                                            encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
+                                                (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
+      if verify_purpose_encounter.observations.last.nil?
+        redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}", next: true
+      end
+    end
+
     location_tag = LocationTag.find_by_name("District")
     @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
      ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
-
 
     @location_names = @districts.collect { |location_id, location_name| location_name}
     @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
