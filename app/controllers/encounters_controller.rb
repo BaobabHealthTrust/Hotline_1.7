@@ -1,7 +1,7 @@
 class EncountersController < ApplicationController
 
   def create
-
+    
     @patient = Patient.find(params[:encounter][:patient_id])
 
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]
@@ -18,12 +18,17 @@ class EncountersController < ApplicationController
 
       next if observation[:concept_name].blank?
 
+      if observation[:value_coded_or_text] == 'Record purpose of call'
+        redirect_to "/encounters/new/purpose_of_call?patient_id=#{@patient.patient_id}" and return
+      end
+
       # Check to see if any values are part of this observation
       # This keeps us from saving empty observations
       values = ['coded_or_text', 'coded_or_text_multiple', 'group_id', 'boolean', 'coded', 'drug', 'datetime', 'numeric', 'modifier', 'text'].map{|value_name|
         observation["value_#{value_name}"] unless observation["value_#{value_name}"].blank? rescue nil
       }.compact
       next if values.length == 0
+
 
       concept_id = ConceptName.find_by_name(observation[:concept_name]).concept_id
 
