@@ -202,7 +202,7 @@ class PatientController < ApplicationController
       verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => encounter_id,
                                             encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                 (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
-      if verify_purpose_encounter.observations.last.nil?
+      if verify_purpose_encounter.nil? || verify_purpose_encounter.observations.last.nil?
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}", next: true
       end
     end
