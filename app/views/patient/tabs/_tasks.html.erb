@@ -57,7 +57,8 @@
     <!-- loop -->
     <%if @patient_obj.sex == 'F' && @patient_obj.age > 5 %>
       <div class="cell">
-        <div class="btn" onclick="document.location='/encounters/new/pregnancy_status?patient_id=<%=@patient_obj.patient_id%>'">
+        <div class="btn" onclick="document.location='/encounters/new/pregnancy_status?patient_id=
+                <%=@patient_obj.patient_id%>'">
           <%=image_tag("icons/pregnacy.png", class: 'task-icons')%>
             <p class="button-label">Pregnancy status</p>
             </span>
@@ -74,7 +75,8 @@
       <!-- loop -->
       <div class="cell">
         <%if @patient_obj.sex == 'F' || @patient_obj.age <= 5 %>
-        <div class="btn" onclick="document.location='/encounters/new/female_symptoms?patient_id=<%=@patient_obj.patient_id%>'">
+        <div class="btn" onclick="document.location='/encounters/new/female_symptoms?patient_id=
+                <%=@patient_obj.patient_id%>'">
           <%=image_tag("icons/symptoms-2.png", class: 'task-icons')%>
             <p class="button-label">Symptoms</p>
             </span>
@@ -85,7 +87,8 @@
         <!-- endloop -->
         <!-- loop -->
         <div class="cell">
-          <div class="btn" onclick="document.location='/encounters/new/update_outcomes?patient_id=<%=@patient_obj.patient_id%>'">
+          <div class="btn" onclick="document.location='/encounters/new/update_outcomes?patient_id=
+                  <%=@patient_obj.patient_id%>'">
             <%=image_tag("icons/symptoms.png", class: 'task-icons')%>
               <p class="button-label">Outcomes</p>
               </span>
@@ -95,7 +98,8 @@
           <!-- loop -->
           <div class="cell">
             <%if @patient_obj.sex == 'Female' || @patient_obj.sex == 'F'%>
-            <div class="btn"   onclick="document.location='/encounters/new/schedule?patient_id=<%=@patient_obj.patient_id%>'">
+            <div class="btn"   onclick="document.location='/encounters/new/schedule?patient_id=
+                    <%=@patient_obj.patient_id%>'">
               <%=image_tag("icons/calendar-and-tasks.png", class: 'task-icons')%>
                 <p class="button-label">Clinic schedule</p>
                 </span>
@@ -106,7 +110,8 @@
             <!-- loop -->
             <div class="cell">
               <%if @patient_obj.sex == 'Female' || @patient_obj.sex == 'F'%>
-              <div class="btn" onclick="document.location='/encounters/new/reminders?patient_id=<%=@patient_obj.patient_id%>'">
+              <div class="btn" onclick="document.location='/encounters/new/reminders?patient_id=
+                      <%=@patient_obj.patient_id%>'">
                 <%=image_tag("icons/notification.png", class: 'task-icons')%>
                   <p class="button-label">Edit reminders</p>
                   </span>
@@ -129,7 +134,8 @@
                 <!-- endloop -->
                 <!-- loop -->
                 <div class="cell">
-                  <div class="btn" onclick="document.location='/patient/reference_material/<%=@patient_obj.patient_id%>'">
+                  <div class="btn" onclick="document.location='/patient/reference_material/
+                          <%=@patient_obj.patient_id%>'">
                     <%=image_tag("icons/reference.png", class: 'task-icons')%>
                       <p class="button-label">Reference material</p>
                       </span>
@@ -137,7 +143,8 @@
                   </div>
                   <!-- endloop -->
                   <!-- loop -->
-                  <div class="btn" onclick="document.location='/encounters/new/purpose_of_call?patient_id=<%=@patient_obj.patient_id%>'">
+                  <div class="btn" onclick="document.location='/encounters/new/purpose_of_call?' +
+                          'patient_id=<%=@patient_obj.patient_id%>'">
                     <%=image_tag("icons/call_purpose.png", class: 'task-icons')%>
                     <p class="button-label">Purpose of Call</p>
                     </span>
@@ -145,7 +152,8 @@
                   <!-- endloop -->
                   <!-- loop -->
                   <div class="cell">
-                    <div class="btn" onclick="document.location='/patient/districts'">
+                    <div class="btn" onclick="document.location='/patient/districts?param=verify_purpose' +
+                            '&patient_id=<%=@patient_obj.patient_id%>'">
                       <%=image_tag("icons/next.png", class: 'task-icons')%>
                         <p class="button-label">Next Client</p>
                         </span>
