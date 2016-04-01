@@ -203,7 +203,9 @@ class PatientController < ApplicationController
                                             encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                 (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
       if verify_purpose_encounter.nil? || verify_purpose_encounter.observations.last.nil?
-        redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}", next: true
+        redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
+      elsif params[:end_call] == 'true'
+        redirect_to "/" and return
       end
     end
 
