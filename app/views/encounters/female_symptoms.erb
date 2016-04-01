@@ -151,6 +151,11 @@
 
 
     var age = '<%= @age %>';
+    function notify_reason() {
+        <% if params[:end_call] == 'true' %>
+            showMessage('This call is missing symptoms. Please record symptoms.', false, false);
+        <% end %>
+    }
 </script>
 
 <style>
@@ -158,56 +163,57 @@
         display: none;
     }
 </style>
+<body onLoad="notify_reason()">
+    <%= render :partial => 'patient/birthdate/button_footer' %>
 
-<%= render :partial => 'patient/birthdate/button_footer' %>
+    <%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
+        <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("MATERNAL HEALTH SYMPTOMS").id %>
+        <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+        <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+        <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
-<%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
-    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("MATERNAL HEALTH SYMPTOMS").id %>
-    <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
-    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
-    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
-
-    <%= hidden_field_tag("observations[][concept_name]", "Maternal Health Symptoms") %>
-    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_symptoms , nil),
-                   :helpText =>"Experiencing any of the following symptoms?",
-                   :multiple => true,
-                   :tt_onLoad => "showHelpButton();setListAttributes();",
-                   :tt_onUnLoad => "hideHelpButton();",
-                   :condition => 'parseInt(age) >= 5;',
-                   :tt_pageStyleClass => 'longSelectList',
-                   :id => "maternal_health_symptoms",
-                   :allowFreeText => false
-    %>
+        <%= hidden_field_tag("observations[][concept_name]", "Maternal Health Symptoms") %>
+        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_symptoms , nil),
+                       :helpText =>"Experiencing any of the following symptoms?",
+                       :multiple => true,
+                       :tt_onLoad => "showHelpButton();setListAttributes();",
+                       :tt_onUnLoad => "hideHelpButton();",
+                       :condition => 'parseInt(age) >= 5;',
+                       :tt_pageStyleClass => 'longSelectList',
+                       :id => "maternal_health_symptoms",
+                       :allowFreeText => false
+        %>
 
 
-    <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
-    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
-                   :helpText =>"Select danger signs",
-                   :multiple => true,
-                   :optional => false,
-                   :tt_onUnLoad => "selectedInitialDangerSigns();",
-                   :tt_pageStyleClass => 'longSelectList',
-                   :id => "danger_status",
-                   :allowFreeText => false
-    %>
+        <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
+        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
+                       :helpText =>"Select danger signs",
+                       :multiple => true,
+                       :optional => false,
+                       :tt_onUnLoad => "selectedInitialDangerSigns();",
+                       :tt_pageStyleClass => 'longSelectList',
+                       :id => "danger_status",
+                       :allowFreeText => false
+        %>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Maternal health info") %>
-    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_info , nil),
-                   :helpText =>"Does the caller want more information from below?",
-                   :multiple => true,
-                   :optional => false,
-                   :tt_pageStyleClass => 'longSelectList',
-                   :id => "more_info_topics",
-                   :allowFreeText => false
-    %>
+        <%= hidden_field_tag("observations[][concept_name]", "Maternal health info") %>
+        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_info , nil),
+                       :helpText =>"Does the caller want more information from below?",
+                       :multiple => true,
+                       :optional => false,
+                       :tt_pageStyleClass => 'longSelectList',
+                       :id => "more_info_topics",
+                       :allowFreeText => false
+        %>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
-    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
-                   :helpText =>"Select additional danger signs",
-                   :multiple => true,
-                   :tt_pageStyleClass => 'longSelectList',
-                   :tt_onLoad => "hideSelectedValues();",
-                   :id => "additional_danger_signs",
-                   :allowFreeText => false
-    %>
-<% end %>
+        <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
+        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
+                       :helpText =>"Select additional danger signs",
+                       :multiple => true,
+                       :tt_pageStyleClass => 'longSelectList',
+                       :tt_onLoad => "hideSelectedValues();",
+                       :id => "additional_danger_signs",
+                       :allowFreeText => false
+        %>
+    <% end %>
+</body>

@@ -193,9 +193,20 @@ class PatientController < ApplicationController
 
   def districts
     if params[:param] == 'verify_purpose'
+      ###
+      #
+      # Below code to be modified into an array to avoid repeating code.
+      ##############################################################################
+      checks = ['encounter_id' => ['purpose_encounter_id',
+                                  'outcome_encounter_id'],
+                'encounter_type_name' => ['Purpose of call',
+                                  'Update outcome']]
+
       purpose_encounter_id = EncounterType.find_by_name('Purpose of call').encounter_type_id
 
       outcome_encounter_id = EncounterType.find_by_name('Update outcome').encounter_type_id
+
+      symptoms_encounter_id = EncounterType.find_by_name('Maternal health symptoms').encounter_type_id
 
       verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => purpose_encounter_id,
                                             encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
@@ -205,11 +216,17 @@ class PatientController < ApplicationController
                                                  encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                      (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
 
+      symptoms_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => symptoms_encounter_id,
+                                                 encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
+                                                     (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
+
       if verify_purpose_encounter.nil? || verify_purpose_encounter.observations.last.nil?
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
       elsif params[:end_call] == 'true'
         if update_outcome_encounter.nil?
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
+        elsif symptoms_encounter.nil?
+          redirect_to "/encounters/new/female_symptoms?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
         end
           redirect_to '/' and return
       end
