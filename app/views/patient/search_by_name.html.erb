@@ -29,15 +29,16 @@
               :allowFreeText => false)
           %>
 
-          <%= text_field_tag "person[names][given_name]", params[:firstname],
+          <%#= text_field_tag "person[names][given_name]", params[:firstname],
                              {:id => 'given_name', :field_type => 'alpha',
                               :helpText => 'Name',
                               :ajaxURL => "",
                               :tt_onLoad => "set_ajaxURL_for_suggestions('/patient/given_name_plus_family_name?gender=',document.getElementById('gender').value);",
                               :allowFreeText => true }%>
-    <% else %>
+
           <%= text_field_tag "person[names][given_name]", params[:firstname],
-                             {:id => 'given_name', :field_type => 'alpha',
+                             {:id => 'given_name', 
+                              :field_type => 'alpha',
                               :helpText => 'First name',
                               :ajaxURL => '/patient/given_names?search_string=',
                               :allowFreeText => true }%>
@@ -48,13 +49,6 @@
                               :helpText => 'Last name',
                               :ajaxURL => '/patient/family_names?search_string=',
                               :allowFreeText => true }%>
-
-          <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
-              :helpText =>"Gender",
-              :id => "gender",
-              :tt_onLoad => "changeNextButtonText();",
-              :allowFreeText => false)
-          %>
     <% end %>
 
     <input type="hidden" name="action_type" value="<%= params[:action_type]%>" />

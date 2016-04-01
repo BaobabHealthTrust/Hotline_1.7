@@ -101,7 +101,6 @@ class PeopleController < ApplicationController
       given_name = params[:person]['names']['given_name']
       gender = params[:person][:gender]
       @person = PersonName.where(family_name: family_name, given_name: given_name).first
-      #raise @person.inspect
       redirect_to "/people/edit_hsa/#{@person.id}"
     end
   end
@@ -112,7 +111,6 @@ class PeopleController < ApplicationController
    end
 
   def edit_hsa
-    #raise params.inspect
     @person = Person.find(params[:person_id])
   end
 
@@ -139,24 +137,6 @@ class PeopleController < ApplicationController
         person_attribute.first.update_attributes(value: params[:person]['cell_phone_number'])
       end
     end
-    # params[:person_name] = params[:person][:names]
-    # @person = Person.where(person_id: params[:person_id]).first
-    # raise params[:person]['names']['given_name'].inspect
-    # PersonName.update_attributes(person: params[:person]['names']['family_name'])
-
-    # unless params[:person]['names']['family_name'].blank?
-    # @person.update_attributes(person: params[:person]['names']['family_name'])
-    # end unless params[:person].blank?
-
-    # PersonName.where(person_id: @person.person_id).each do | person_name |
-    #   person_name.update_attributes(void_reason: 'Edited name', voided: true)
-    # end 
-
-    # new_name = PersonName.create(given_name: params[:person]['names']['given_name'],
-    #   family_name: params[:person]['names']['family_name'])
-    
-    # PersonNameCode.create(given_name_code: new_name.given_name.soundex,
-    #   family_name_code: new_name.family_name.soundex, person_name_id: new_name.id)
     
     redirect_to '/manage_user'
   end
