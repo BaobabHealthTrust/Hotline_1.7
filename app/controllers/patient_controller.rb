@@ -29,16 +29,12 @@ class PatientController < ApplicationController
   end
 
   def search_result
+    @given_name = params[:person]['names']['given_name']
+    @family_name = params[:person]['names']['family_name']
+    @gender = params[:person]['gender']
     unless params[:action_type] == 'new_client'
-      @given_name = params[:person]['names']['given_name'].squish.split(' ')[0]
-      @family_name = params[:person]['names']['given_name'].squish.split(' ')[1] || ''
-
       params[:person]['names']['given_name'] = @given_name
       params[:person]['names']['family_name'] = @family_name
-      @gender = params[:person]['gender']
-    else
-      @given_name = params[:person]['names']['given_name']
-      @family_name = params[:person]['names']['family_name']
       @gender = params[:person]['gender']
     end
 
@@ -197,24 +193,34 @@ class PatientController < ApplicationController
 
   def districts
     if params[:param] == 'verify_purpose'
-      encounter_id = EncounterType.find_by_name('Purpose of call').encounter_type_id
-      concept_id = ConceptName.where(:name => 'Purpose of call').last.concept_id
-      verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => encounter_id,
+      purpose_encounter_id = EncounterType.find_by_name('Purpose of call').encounter_type_id
+
+      outcome_encounter_id = EncounterType.find_by_name('Update outcome').encounter_type_id
+
+      verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => purpose_encounter_id,
                                             encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                 (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
+
+      update_outcome_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => outcome_encounter_id,
+                                                 encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
+                                                     (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
+
       if verify_purpose_encounter.nil? || verify_purpose_encounter.observations.last.nil?
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
       elsif params[:end_call] == 'true'
-        redirect_to "/" and return
+        if update_outcome_encounter.nil?
+          redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
+        end
+          redirect_to '/' and return
       end
     end
 
     location_tag = LocationTag.find_by_name("District")
-    @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
-     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
+    @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins('INNER JOIN location_tag_map m
+     ON m.location_id = location.location_id').collect{|l | [l.id, l.name]}
 
     @location_names = @districts.collect { |location_id, location_name| location_name}
-    @call_modes = [""] + GlobalProperty.find_by(:description => "call.modes").property_value.split(",")
+    @call_modes = [''] + GlobalProperty.find_by(:description => 'call.modes').property_value.split(',')
   end
 
   def observations
