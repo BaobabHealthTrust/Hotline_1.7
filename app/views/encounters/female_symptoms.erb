@@ -37,14 +37,14 @@
     }
 
     function hideSelectedValues(){
-      dangerSigns = selected_danger_signs.split(";"); 
-      liElements = document.getElementsByTagName("li");
+      var dangerSigns = selected_danger_signs.split(";"); 
+      var liElements = document.getElementsByTagName("li");
       for (var i = 0; i<= dangerSigns.length - 1; i++){
         danger_sign = dangerSigns[i];
         for (var j=0; j<=liElements.length -1; j++){
-          li_tst_value = liElements[j].getAttribute('tstvalue');
+          var li_tst_value = liElements[j].getAttribute('tstvalue');
           if (danger_sign.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
-            liElements[j].style.display = 'none';
+            updateTouchscreenInputForSelect(__$('optionValue' + j), this); 
             break;
           }
         }
