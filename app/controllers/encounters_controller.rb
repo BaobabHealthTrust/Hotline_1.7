@@ -134,24 +134,38 @@ class EncountersController < ApplicationController
       when 'Confirm purpose of call'
         @confirm_call_options = call_options
       when 'Clinical assessment'
-        @clinical_questions = clinical_questions('Group 1')
+        @clinical_questions = clinical_questions#('Group 2')
+        #raise @clinical_questions['Group 1'].inspect
         #code to come here....
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
   end
 
-  def clinical_questions(group)
-      clinical_questions = ['Group 1'=>[
+  def clinical_questions#(group)
+      clinical_questions = ['Group 1' => [
            'Do you have a fever?',
-           'Do you have diarrhea?'
+           'Do you have diarrhea?',
+           'Have you been vomiting?',
+           'Are you HIV-positive?',
+           'Do you have TB/Tuberculosis?',
+           'Do you have high blood pressure/hypertension?',
+           'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
+           'Are you currently experiencing any of the following symptoms?'
           ],
-       'Group 2'=>[
+       'Group 2' => [
            'Do you have a fever?',
-           'Are you anaemic?'
+           'Do you have diarrhea?',
+           'Have you been vomiting?',
+           'Are you HIV-positive?',
+           'Do you have TB/Tuberculosis?',
+           'Do you have high blood pressure/hypertension?',
+           'Are you anemic?',
+           'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
+           'Are you currently experiencing any of the following symptoms?'
           ]
       ]
-      return clinical_questions[0][group]
+      return clinical_questions[0]
   end
 
   def current_guardian(guardian_id=nil, patient_id=nil)
