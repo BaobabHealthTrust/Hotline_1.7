@@ -9,3 +9,5 @@ BABY DELIVERY,This encounter occurs when a mother delivers a baby
 PREGNANCY STATUS,MNCH pregnancy status encounter
 BIRTH PLAN,This encounter specificities where and when the baby
 PURPOSE OF CALL,This specifies the reason the client is calling
+DIETARY ASSESSMENT,This assessment is for the diet of the client
+CLINICAL ASSESSMENT,This assessment is for the medical histroy of the client in groups
