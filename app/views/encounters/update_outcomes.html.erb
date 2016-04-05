@@ -165,7 +165,7 @@ function hideselectedOutcomes(){
                             :helpText => 'Select health centre name',
                             :ajaxURL => '/home/health_facilities?search_string=',
                             :allowFreeText => true }%>
-        <% @current_data['GENERAL OUTCOME'] = @current_data['GENERAL OUTCOME'] - [@current_data['GENERAL OUTCOME'].first]
+        <% @current_data['GENERAL OUTCOME'] = @current_data['GENERAL OUTCOME'] - [@current_data['GENERAL OUTCOME'].first] rescue nil
         %>
         <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
         <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , (@current_data['GENERAL OUTCOME'] rescue nil)),
