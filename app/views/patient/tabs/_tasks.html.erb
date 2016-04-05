@@ -47,123 +47,50 @@
     width: 90px;
     margin-top: 10%;
   }
+  .done{
+      position: absolute;
+      height: 60px;
+      width: 60px;
+      margin-top: 10px; !important;
+      margin-left: 230px !important;
+  }
 </style>
 
 
 
 <div class="table-div">
-
-  <div class="row">
     <!-- loop -->
-    <%if @patient_obj.sex == 'F' && @patient_obj.age > 5 %>
-      <div class="cell">
-        <div class="btn" onclick="document.location='/encounters/new/pregnancy_status?patient_id=<%=@patient_obj.patient_id%>'">
-          <%=image_tag("icons/pregnacy.png", class: 'task-icons')%>
-            <p class="button-label">Pregnancy status</p>
-            </span>
-          </div>
-        </div>
-      <%else%>
-        <div class="cell">
-          <div class="btn" style="display: none;">
-            <p class="button-label">&nbsp;</p>
-          </div>
-        </div>
-      <%end%>
-      <!-- endloop -->
-      <!-- loop -->
-      <div class="cell">
-        <%if @patient_obj.sex == 'F' || @patient_obj.age <= 5 %>
-        <div class="btn" onclick="document.location='/encounters/new/female_symptoms?patient_id=<%=@patient_obj.patient_id%>'">
-          <%=image_tag("icons/symptoms-2.png", class: 'task-icons')%>
-            <p class="button-label">Symptoms</p>
-            </span>
-          </div>
-        <%end%>
-        </div>
+    <% buttons_per_row = 5%>
+    <% @tasks.each_with_index do |task, i|
+            new_role = (i % buttons_per_row == 0)
+            end_role = (i > 0 && i % buttons_per_row == 0 && i < @tasks.length )
+            halt = (i == @tasks.length - 1)
+         %>
 
-        <!-- endloop -->
-        <!-- loop -->
-        <div class="cell">
-          <div class="btn" onclick="document.location='/encounters/new/update_outcomes?patient_id=<%=@patient_obj.patient_id%>'">
-            <%=image_tag("icons/symptoms.png", class: 'task-icons')%>
-              <p class="button-label">Outcomes</p>
-              </span>
-            </div>
+      <% if end_role %>
           </div>
-          <!-- endloop -->
-          <!-- loop -->
+      <% end %>
+
+      <%if new_role %>
+              <div class="row">
+      <% end %>
+
           <div class="cell">
-            <%if @patient_obj.sex == 'Female' || @patient_obj.sex == 'F'%>
-            <div class="btn"   onclick="document.location='/encounters/new/schedule?patient_id=<%=@patient_obj.patient_id%>'">
-              <%=image_tag("icons/calendar-and-tasks.png", class: 'task-icons')%>
-                <p class="button-label">Clinic schedule</p>
+            <% if task['done'] == true %>
+                <%=image_tag('data:image/png;base64,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',
+                             class: "done")%>
+            <% end %>
+            <div class="btn" onclick="document.location.href='<%= task['link']%>'">
+
+              <%=image_tag("icons/#{task['icon']}", class: "task-icons")%>
+
+                <p class="button-label"><%= task['name']%></p>
                 </span>
-              </div>
-              <%end%>
             </div>
-            <!-- endloop -->
-            <!-- loop -->
-            <div class="cell">
-              <%if @patient_obj.sex == 'Female' || @patient_obj.sex == 'F'%>
-              <div class="btn" onclick="document.location='/encounters/new/reminders?patient_id=<%=@patient_obj.patient_id%>'">
-                <%=image_tag("icons/notification.png", class: 'task-icons')%>
-                  <p class="button-label">Edit reminders</p>
-                  </span>
-                </div>
-              <%end%>
-              </div>
-              <!-- endloop -->
-            </div>
+          </div>
 
-
-            <div class="row">
-              <!-- loop -->
-              <div class="cell">
-                <div class="btn" onclick='document.location="/demographics/<%=@patient_obj.patient_id%>"'>
-                  <%=image_tag("icons/demographic.png", class: 'task-icons')%>
-                    <p class="button-label">Edit demographics</p>
-                    </span>
-                  </div>
-                </div>
-                <!-- endloop -->
-                <!-- loop -->
-                <div class="cell">
-                  <div class="btn" onclick="document.location='/patient/reference_material/<%=@patient_obj.patient_id%>'">
-                    <%=image_tag("icons/reference.png", class: 'task-icons')%>
-                      <p class="button-label">Reference material</p>
-                      </span>
-                    </div>
-                  </div>
-                  <!-- endloop -->
-                  <!-- loop -->
-                  <div class="btn" onclick="document.location='/encounters/new/purpose_of_call?patient_id=<%=@patient_obj.patient_id%>'">
-                    <%=image_tag("icons/call_purpose.png", class: 'task-icons')%>
-                    <p class="button-label">Purpose of Call</p>
-                    </span>
-                  </div>
-                  <!-- endloop -->
-                  <!-- loop -->
-                  <div class="cell">
-                    <div class="btn" onclick="document.location='/patient/districts?param=verify_purpose&patient_id=<%=@patient_obj.patient_id%>'">
-                      <%=image_tag("icons/next.png", class: 'task-icons')%>
-                        <p class="button-label">Next Client</p>
-                        </span>
-                      </div>
-                    </div>
-                    <!-- endloop -->
-                    <!-- loop -->
-                    <div class="cell">
-                      <div class="btn" onclick="document.location='/patient/districts?param=verify_purpose&patient_id=<%=@patient_obj.patient_id%>&end_call=true'">
-                        <%=image_tag("icons/end-call.png", class: 'task-icons')%>
-                          <span>
-                            <p class="button-label">End Call</p>
-                          </span>
-                        </div>
-                      </div>
-                      <!-- endloop -->
-                    </div>
-
-
-                  </div>
-
+      <% if halt %>
+          </div>
+      <% end %>
+    <% end %>
+</div>

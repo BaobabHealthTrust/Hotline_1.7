@@ -7,14 +7,48 @@ class PatientController < ApplicationController
 
     @current_encounters = Encounter.where(patient_id: params[:patient_id], 
       encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) .. (Date.today.strftime('%Y-%m-%d 23:59:59')))
-    
+    @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
     @previous_encounters = Encounter.where("patient_id = ? AND encounter_datetime < ?",
       params[:patient_id], Date.today.strftime('%Y-%m-%d 00:00:00'))
+
+    #Adding tasks in proper order
+    @tasks = []
+    if @patient_obj.sex.match('F') && @patient_obj.age > 5
+      @tasks << {"name" => "Pregnancy Status", "link" => "/encounters/new/pregnancy_status?patient_id=#{@patient_obj.patient_id}", 'icon' => "pregnacy.png",
+                 'done' => @current_encounter_names.include?('PREGNANCY STATUS')}
+    end
+
+    if @patient_obj.sex.match('F') || @patient_obj.age <= 5
+      @tasks << {"name" => "Symptoms", "link" =>"/encounters/new/female_symptoms?patient_id=#{@patient_obj.patient_id}", 'icon' => "symptoms-2.png",
+                 'done' => @current_encounter_names.include?('MATERNAL HEALTH SYMPTOMS')}
+    end
+
+    @tasks << {"name" => "Outcomes", "link" => "/encounters/new/update_outcomes?patient_id=#{@patient_obj.patient_id}", 'icon' => "symptoms.png",
+               'done' => @current_encounter_names.include?('UPDATE OUTCOME')}
+    if @patient_obj.sex.match('F')
+      @tasks << {"name" => "Clinic schedule", "link" => "/encounters/new/schedule?patient_id=#{@patient_obj.patient_id}", "icon" => "calendar-and-tasks.png",
+                 'done' => @current_encounter_names.include?('APPOINTMENT')}
+    end
+
+    if @patient_obj.sex.match('F')
+      @tasks << {"name" => "Edit reminders", "link" => "/encounters/new/reminders?patient_id=#{@patient_obj.patient_id}", "icon" => "notification.png",
+                 'done' => @current_encounter_names.include?('TIPS AND REMINDERS')}
+    end
+
+    @tasks << {"name" => "Purpose of Call", "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
+               'done' => @current_encounter_names.include?('PURPOSE OF CALL')}
+
+    @tasks << {"name" => "Edit demographics", "link" => "/demographics/#{@patient_obj.patient_id}", "icon" => "demographic.png"}
+
+    @tasks << {"name" => "Reference material", "link" => "/patient/reference_material/#{@patient_obj.patient_id}", "icon" => "reference.png"}
+
+    @tasks << {"name" => "Next Client", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}", "icon" => "next.png"}
+
+    @tasks << {"name" => "End Call", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true", "icon" => "end-call.png"}
 
     symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
     @symptom_encounters = Encounter.where("patient_id = ? AND encounter_type = ?",
       params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
-
     render :layout => false
   end
 
@@ -270,7 +304,7 @@ class PatientController < ApplicationController
     start_date = date.strftime('%Y-%m-%d 00:00:00')
     end_date = date.strftime('%Y-%m-%d 23:59:59')
 
-    appointments = Observation.find_by_sql("SELECT count(*) AS count FROM obs
+    appointments = Observation.find_by_sql("SELECT count(DISTINCT(obs.person_id)) AS count FROM obs
       INNER JOIN encounter e USING(encounter_id) WHERE concept_id = #{concept_id}
       AND encounter_type = #{encounter_type.id} AND value_datetime >= '#{start_date}'
       AND value_datetime <= '#{end_date}' AND obs.voided = 0 GROUP BY value_datetime")

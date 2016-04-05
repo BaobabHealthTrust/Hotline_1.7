@@ -426,8 +426,10 @@ function setListAttributes(){
         <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
+        <% @current_data = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)%>
+
         <%= hidden_field_tag("observations[][concept_name]", "Pregnancy status") %>
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , nil),
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , @current_data['PREGNANCY STATUS']),
                :helpText =>"Pregnancy status",
                :tt_onLoad => "showHelpButton();setListAttributes();",
                :tt_onUnLoad => "hideHelpButton();",

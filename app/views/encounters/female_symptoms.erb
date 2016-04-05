@@ -24,31 +24,35 @@
             }
         }
     }
-    var selected_danger_signs;
+    var selected_danger_signs = [];
     function selectedInitialDangerSigns() {
-        selected_danger_signs = __$('touchscreenInput' + tstCurrentPage).value;
-
-    }
-    function hideSelectedInitialDangerSigns() {
-      alert(selected_danger_signs);
-        __$('touchscreenInput' + tstCurrentPage).value = danger_signs;
-        console.log(selected_danger_signs);
-        return selected_danger_signs;
+        selected_danger_signs = [];
+        list =  __$('page' + tstCurrentPage).getElementsByTagName('img');
+        for(var i = 0; i < list.length; i ++){
+            if(!list[i].src.match("unticked")) {
+                selected_danger_signs.push(list[i].parentNode.parentNode.childNodes[1].innerHTML);
+            }
+        }
     }
 
     function hideSelectedValues(){
-      dangerSigns = selected_danger_signs.split(";"); 
-      liElements = document.getElementsByTagName("li");
-      for (var i = 0; i<= dangerSigns.length - 1; i++){
-        danger_sign = dangerSigns[i];
+        //Rather preselect and not hide
+      var dangerSigns = selected_danger_signs;
+      var liElements = __$('page' + tstCurrentPage).getElementsByTagName("li");
+
+        for (var i = 0; i<= dangerSigns.length - 1; i++){
+        var danger_sign = dangerSigns[i];
         for (var j=0; j<=liElements.length -1; j++){
-          li_tst_value = liElements[j].getAttribute('tstvalue');
+          var li_tst_value = liElements[j].getAttribute('tstvalue');
           if (danger_sign.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
-            liElements[j].style.display = 'none';
-            break;
+            var img = liElements[j].getElementsByTagName('img')[0];
+            if(img.src.match('unticked')){
+                liElements[j].click();
+                break;
+            }
           }
         }
-      }
+        }
     }
 
     var currentKey = ""
@@ -172,8 +176,9 @@
         <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
+        <% @current_data = Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id)%>
         <%= hidden_field_tag("observations[][concept_name]", "Maternal Health Symptoms") %>
-        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_symptoms , nil),
+        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@maternal_health_symptoms , @current_data["Maternal Health Symptoms".upcase]),
                        :helpText =>"Experiencing any of the following symptoms?",
                        :multiple => true,
                        :tt_onLoad => "showHelpButton();setListAttributes();",
@@ -186,18 +191,18 @@
 
 
         <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
-        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
+        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , @current_data['DANGER SIGNS']),
                        :helpText =>"Select danger signs",
                        :multiple => true,
                        :optional => false,
-                       :tt_onUnLoad => "selectedInitialDangerSigns();",
+                       :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
                        :tt_pageStyleClass => 'longSelectList',
                        :id => "danger_status",
                        :allowFreeText => false
         %>
 
         <%= hidden_field_tag("observations[][concept_name]", "Maternal health info") %>
-        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_info , nil),
+        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_info , @current_data['MATERNAL HEALTH INFO']),
                        :helpText =>"Does the caller want more information from below?",
                        :multiple => true,
                        :optional => false,
@@ -210,8 +215,9 @@
         <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
                        :helpText =>"Select additional danger signs",
                        :multiple => true,
+                       :optional => true,
                        :tt_pageStyleClass => 'longSelectList',
-                       :tt_onLoad => "hideSelectedValues();",
+                       :tt_onLoad => "setTimeout('hideSelectedValues()', 100);",
                        :id => "additional_danger_signs",
                        :allowFreeText => false
         %>

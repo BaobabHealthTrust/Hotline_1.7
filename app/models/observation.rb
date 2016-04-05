@@ -31,24 +31,19 @@ class Observation < ActiveRecord::Base
 
   def answer_string(tags=[])
 
-    coded_answer_name = self.answer_concept.concept_names.typed(tags, self.value_coded).first.name rescue nil
-    coded_answer_name ||= self.answer_concept.concept_names.first.name #rescue nil
-    coded_name = "#{coded_answer_name} #{self.value_modifier}#{self.value_text} #{self.value_numeric}#{self.value_datetime.strftime("%d/%b/%Y") rescue nil}#{self.value_boolean && (self.value_boolean == true ? 'Yes' : 'No' rescue nil)}#{' ['+order.to_s+']' if order_id && tags.include?('order')}"
-    #the following code is a hack
-    #we need to find a better way because value_coded can also be a location - not only a concept
-
-    answer = Concept.find_by_concept_id(self.value_coded).shortname rescue nil
-
-    if answer.nil?
-      answer = Concept.find_by_concept_id(self.value_coded).fullname rescue nil
+    value = ConceptName.where(concept_id: self.value_coded).first.name rescue nil
+    if value.blank?
+      value = self.value_datetime.to_time.strftime('%d/%b/%Y %H:%M:%S') rescue nil
     end
 
-    if answer.nil?
-      #answer = Concept.find_with_voided(self.value_coded).fullname + ' - retired'
-      answer = ' - retired'
+    if value.blank?
+      value = self.value_numeric rescue nil
     end
 
-    return answer.sub(/\.0$/, "")
+    if value.blank?
+      value = self.value_text rescue nil
+    end
+    value
   end
 
 

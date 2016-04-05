@@ -22,6 +22,8 @@
     <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
+    <% @current_data = Encounter.current_data("Tips and reminders", @patient_obj.patient_id)%>
+
     <% if !@guardian %>
         <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
                        :helpText =>"Is guardian present?",
@@ -48,20 +50,20 @@
     <% end %>
 
     <%= hidden_field_tag("observations[][concept_name]", "On tips and reminders program") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select([['', ''], ['No', 'No'], ['Yes', 'Yes']]),
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['', 'No', 'Yes'], @current_data['On tips and reminders program'.upcase]),
                    :helpText =>"Enroll for tips and reminders program?",
                    :id => "enroll"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Phone type") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @phone_types),
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(([''] + @phone_types), @current_data['PHONE TYPE']),
                    :helpText =>"Select phone type",
                    :condition => "__$('enroll').value == 'Yes' ",
                    :id => "phone_type"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Telephone number") %>
-    <%= text_field_tag "observations[][value_numeric]",nil,
+    <%= text_field_tag "observations[][value_numeric]",(("0" + @current_data['TELEPHONE NUMBER'].last.to_i.to_s) rescue nil),
                        :field_type => "number",
                        :validationRule => "^0\\d{7,9}$|Unknown|Not Available|N\/A",
                        :validationMessage => "Not a valid phone number",
@@ -73,21 +75,21 @@
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Language preference") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @language_types),
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @language_types, @current_data['LANGUAGE PREFERENCE']),
                    :helpText =>"Language preference",
                    :condition => "__$('enroll').value == 'Yes' ",
                    :id => "language_preference"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Message type") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @message_types),
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @message_types, @current_data['MESSAGE TYPE']),
                    :helpText =>"Message type",
                    :condition => "__$('enroll').value == 'Yes' ",
                    :id => "message_type"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Type of message content") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @content_types),
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @content_types, @current_data['TYPE OF MESSAGE CONTENT']),
                    :helpText =>"Type of message content",
                    :condition => "__$('enroll').value == 'Yes' ",
                    :id => "message_content"

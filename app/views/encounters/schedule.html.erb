@@ -192,12 +192,16 @@
   <%= hidden_field_tag "encounter[encounter_datetime]",  (session_date || DateTime.now()).to_s(:db)  %>
   <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
+  <% @current_data = Encounter.current_data("APPOINTMENT", @patient_obj.patient_id)
+  date =  @current_data['NEXT ANC VISIT DATE'].last.to_date rescue ((session_date || Date.today) + 2.month)
+  %>
+
   <%= hidden_field_tag("observations[][concept_name]", "Next ANC visit date") %>
-  <%= text_field_tag("observations[][value_datetime]", ((session_date || Date.today) + 1.month).strftime("%Y-%m-%d"),
+  <%= text_field_tag("observations[][value_datetime]", date.strftime("%Y-%m-%d"),
                      {
                              :field_type => 'calendar',
                              :tt_onLoad => "setAttributes();showSelectedDates();showCategory('Next Appointment'); ",
-                             :minDate => "#{ ((session[:datetime] ? session[:datetime].to_date : Date.today) + 6.month).strftime("%Y-%m-%d") }",
+                             :minDate => "#{ ((session[:datetime] ? session[:datetime].to_date : Date.today) + 1.month).strftime("%Y-%m-%d") }",
                              :ajaxCalendarUrl => "/patient/number_of_booked_patients?date=",
                              :tt_BeforeUnLoad => "__$('observations__value_datetime').value = hideInfo();"
                      }) %>

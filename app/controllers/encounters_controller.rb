@@ -98,9 +98,8 @@ class EncountersController < ApplicationController
     end
 
     ['value_coded_or_text_multiple', 'value_coded_or_text', 'concept_name'].each do |key|
-     paramz.delete(key) if !paramz[key].blank?
+          paramz.delete(key) if paramz.has_key?(key)
     end
-
     Observation.create(paramz)
   end
 

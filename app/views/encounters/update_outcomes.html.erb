@@ -24,7 +24,6 @@
         popupHeader.innerHTML = title;
         popupContent = document.getElementsByClassName("popup-data")[0];
         popupContent.innerHTML = body;
-        console.log(results);
      }
 
     });
@@ -108,14 +107,17 @@ function selectedOutcomes() {
     }
 
 function hideselectedOutcomes(){
-      primaryOutcomes = selected_primary_outcomes.split(";"); 
-      liElements = document.getElementsByTagName("li");
+      var primaryOutcomes = selected_primary_outcomes.split(";");
+      var liElements = document.getElementsByTagName("li");
       for (var i = 0; i<= primaryOutcomes.length - 1; i++){
         primary_outcome = primaryOutcomes[i];
         for (var j=0; j<=liElements.length -1; j++){
           li_tst_value = liElements[j].getAttribute('tstvalue');
           if (primary_outcome.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
-            liElements[j].style.display = 'none';
+              var img = liElements[j].getElementsByTagName('img')[0];
+              if(img.src.match('unticked')){
+                  liElements[j].click();
+              }
             break;
           }
         }
@@ -143,8 +145,10 @@ function hideselectedOutcomes(){
         <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
+        <% @current_data = Encounter.current_data("UPDATE OUTCOME", @patient_obj.patient_id)%>
+
         <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes),
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes, (@current_data['GENERAL OUTCOME'].first rescue nil)),
                        :helpText =>"Select Primary Outcome",
                        :tt_onLoad => "showHelpButton();setListAttributes();__$('keyboard').style.display='none';",
                        :tt_onUnLoad => "hideHelpButton();__$('keyboard').style.display='none';selectedOutcomes();",
@@ -161,9 +165,10 @@ function hideselectedOutcomes(){
                             :helpText => 'Select health centre name',
                             :ajaxURL => '/home/health_facilities?search_string=',
                             :allowFreeText => true }%>
-
+        <% @current_data['GENERAL OUTCOME'] = @current_data['GENERAL OUTCOME'] - [@current_data['GENERAL OUTCOME'].first]
+        %>
         <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , nil),
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , (@current_data['GENERAL OUTCOME'] rescue nil)),
                        :helpText =>"Secondary outcome if any",
                        :id => "secondary_outcome",
                        :multiple => true,
