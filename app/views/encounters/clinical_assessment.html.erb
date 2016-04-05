@@ -1,0 +1,38 @@
+<script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
+<script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
+
+<script>
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+</script>
+
+<%= form_tag("/encounters/create", id: "clinical_assessment", method: 'post', enctype: 'multipart/form-data') do %>
+    <%#= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("CLINICAL ASSESSMENT").id %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+    <%# @current_data = Encounter.current_data("CLINICAL ASSESSMENT", @patient_obj.patient_id)%>
+
+
+    <% @clinical_questions.each do |clinical_question| %>
+        <%= hidden_field_tag("observations[][concept_name]", "concept_name_1") %>
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(['','Yes','No']),# , @current_data['CLINICAL ASSESSMENT']),
+                       :helpText =>"#{clinical_question}",
+                       :tt_onLoad => 'showHelpButton();',
+                       :tt_onUnLoad => 'hideHelpButton();',
+                       :id => 'clinical_question',
+                       :allowFreeText => false
+        %>
+
+        <%= hidden_field_tag("observations[][concept_name]", "concept_name_2") %>
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(['','Yes','No']),# , @current_data['CLINICAL ASSESSMENT']),
+                       :helpText =>'Another Question comes here.',
+                       :condition => "$('clinical_question').value == 'Yes';",
+                       :tt_onLoad => 'showHelpButton();',
+                       :tt_onUnLoad => 'hideHelpButton();',
+                       :id => 'clinical_assessment',
+                       :allowFreeText => false
+        %>
+    <% end %>
+
+<% end %>

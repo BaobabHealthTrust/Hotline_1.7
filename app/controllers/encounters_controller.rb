@@ -133,9 +133,25 @@ class EncountersController < ApplicationController
         @purpose_of_call_options = purpose_of_call_options
       when 'Confirm purpose of call'
         @confirm_call_options = call_options
+      when 'Clinical assessment'
+        @clinical_questions = clinical_questions('Group 1')
+        #code to come here....
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
+  end
+
+  def clinical_questions(group)
+      clinical_questions = ['Group 1'=>[
+           'Do you have a fever?',
+           'Do you have diarrhea?'
+          ],
+       'Group 2'=>[
+           'Do you have a fever?',
+           'Are you anaemic?'
+          ]
+      ]
+      return clinical_questions[0][group]
   end
 
   def current_guardian(guardian_id=nil, patient_id=nil)
