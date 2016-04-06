@@ -102,14 +102,12 @@
                            :allowFreeText => false
             %>
 
-            <%#= hidden_field_tag("observations[][concept_name]", "concept_name_2") %>
-            <%#= select_tag "observations[][value_coded_or_text]", options_for_select(['','Yes','No'] , @current_data['CLINICAL ASSESSMENT']),
-                           :helpText =>'Another Question comes here.',
-                           :condition => "$('clinical_question').value == 'Yes';",
-                           :tt_onLoad => 'showHelpButton();',
-                           :tt_onUnLoad => 'hideHelpButton();',
-                           :id => 'clinical_assessment',
-                           :allowFreeText => false
+            <%= hidden_field_tag("observations[][concept_name]", 'How many days have you had a fever?') %>
+            <%= text_field_tag 'observations[][numeric]', nil,
+                               :helpText => 'How many days have you had fever?',
+                               :condition => "'#{clinical_question}' == 'Do you have a fever?' && $('#{clinical_question}').value == 'Yes';",
+                               :tt_onLoad => 'showHelpButton();',
+                               :tt_onUnLoad => 'hideHelpButton();'
             %>
         <% end %>
     <% end %>
