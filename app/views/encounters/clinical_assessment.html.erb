@@ -109,6 +109,14 @@
                                :tt_onLoad => 'showHelpButton();',
                                :tt_onUnLoad => 'hideHelpButton();'
             %>
+
+            <%= hidden_field_tag("observations[][concept_name]", 'How many days have you had diarrhea?') %>
+            <%= text_field_tag 'observations[][numeric]', nil,
+                               :helpText => 'How many days have you had diarrhea?',
+                               :condition => "'#{clinical_question}' == 'Do you have diarrhea?' && $('#{clinical_question}').value == 'Yes';",
+                               :tt_onLoad => 'showHelpButton();',
+                               :tt_onUnLoad => 'hideHelpButton();'
+            %>
         <% end %>
     <% end %>
     <%= text_field_tag 'summary', nil,
