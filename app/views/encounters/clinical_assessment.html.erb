@@ -2,12 +2,19 @@
 <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
 
 <script>
+
     var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+
     var group;
+    var clinical_questions = <%= raw (@clinical_questions).to_json%>;
+    var initial_questions = clinical_questions['<%= @group %>'];
+
+    console.log(clinical_questions);
 
     function setGroup() {
         group = $('touchscreenInput'+tstCurrentPage).value;
     }
+
     function getGroup() {
         var selected_group = group;
     }
@@ -21,7 +28,7 @@
 
     <% @current_data = Encounter.current_data("CLINICAL ASSESSMENT", @patient_obj.patient_id)%>
 
-    <%= select_tag "observations[][value_coded_or_text]",
+    <%= select_tag 'observations[][value_coded_or_text]',
                    options_for_select(['',
                                        'Group 1',
                                        'Group 2',
@@ -31,7 +38,7 @@
                                        'Group 6',
                                        'Group 7'],
                                       @group),
-                   :helpText =>"Target group",
+                   :helpText =>'Target group',
                    :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none' ",
                    :tt_onUnLoad => 'hideHelpButton();setGroup();',
                    :tt_pageStyleClass => 'longSelectList',
@@ -39,8 +46,9 @@
                    :allowFreeText => false
     %>
 
-    <% @clinical_questions[@group].each do |clinical_question| %>
-        <%= hidden_field_tag("observations[][concept_name]", "#{clinical_question}") %>
+    <% @clinical_questions.each do |group, clinical_questions| %>
+        <% clinical_questions.each do | clinical_question| %>
+        <%= hidden_field_tag('observations[][concept_name]', "#{clinical_question}") %>
         <%= select_tag 'observations[][value_coded_or_text]',
                        options_for_select(['',
                                            'Yes',
@@ -49,7 +57,8 @@
                        :helpText =>"#{clinical_question}",
                        :tt_onLoad => 'showHelpButton();getGroup();',
                        :tt_onUnLoad => 'hideHelpButton();',
-                       :id => 'clinical_question',
+                       :condition => "'#{group}'.match(group)",
+                       :id => "#{clinical_question}",
                        :allowFreeText => false
         %>
 
@@ -63,5 +72,5 @@
                        :allowFreeText => false
         %>
     <% end %>
-
+    <% end %>
 <% end %>
