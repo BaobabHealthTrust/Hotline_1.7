@@ -12,6 +12,11 @@ class EncountersController < ApplicationController
     encounter.save
 
     # Observation handling
+
+    if (encounter.type.name.downcase rescue false) == "dietary assessment"
+        raise encounter.inspect
+    end
+
     attrs = PersonAttributeType.all.inject({}){|result, k| result[k.name.upcase] = k.name; result }
 
     (params[:observations] || []).each do |observation|
@@ -179,6 +184,10 @@ class EncountersController < ApplicationController
     options = ['Record purpose of call',
                'Irrelevant',
                'Dropped']
+  end
+
+  def pre_process
+
   end
 
 end

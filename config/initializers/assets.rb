@@ -9,3 +9,5 @@ Rails.application.config.assets.version = '1.0'
 
 Rails.application.config.assets.precompile += %w( user/* )
 Rails.application.config.assets.precompile += %w( touch-fancy.css )
+Rails.application.config.assets.precompile += %w( jquery.js )
+
