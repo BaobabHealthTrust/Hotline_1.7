@@ -35,6 +35,12 @@ class PatientController < ApplicationController
                  'done' => @current_encounter_names.include?('TIPS AND REMINDERS')}
     end
 
+    @tasks << {"name" => "Clinical Assessment", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "clinic_assessment.png",
+               'done' => @current_encounter_names.include?('CLINICAL ASSESSMENT')}
+
+    @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
+               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
+
     @tasks << {"name" => "Purpose of Call", "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
                'done' => @current_encounter_names.include?('PURPOSE OF CALL')}
 
@@ -324,6 +330,13 @@ class PatientController < ApplicationController
     redirect_to "/patient/dashboard/#{patient_id}/#{params[:tab_name]}"
   end
 
+  def test
+    @patient_obj = Patient.find(params['patient_id'])
+  end
+
+  def dietary_assessment
+    @patient_obj = Patient.find(params['patient_id'])
+  end
   private
 
   def search(field_name, search_string, gender = nil)

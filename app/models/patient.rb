@@ -8,7 +8,7 @@ class Patient < ActiveRecord::Base
 
   def nutrition_module
   	patient_age = self.person.age
-  	temp_date =  DateTime.new(0000, 6, 0)
+  	temp_date =  DateTime.new(0000, 6, 1)
   	six_months = temp_date.month.to_i
 
   	category  = "Group 6"

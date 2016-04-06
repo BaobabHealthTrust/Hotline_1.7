@@ -1,7 +1,8 @@
 class EncountersController < ApplicationController
+  skip_before_filter :verify_authenticity_token
 
   def create
-    
+
     @patient = Patient.find(params[:encounter][:patient_id])
 
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]
@@ -12,6 +13,12 @@ class EncountersController < ApplicationController
     encounter.save
 
     # Observation handling
+
+    if (encounter.type.name.downcase rescue false) == "dietary assessment"
+      create_dietary_assess_obs(encounter, params)
+      redirect_to "/patient/dashboard/#{@patient.id}/tasks" and return
+    end
+
     attrs = PersonAttributeType.all.inject({}){|result, k| result[k.name.upcase] = k.name; result }
 
     (params[:observations] || []).each do |observation|
@@ -86,6 +93,7 @@ class EncountersController < ApplicationController
   end
 
   def create_obs(paramz)
+
     if !paramz['value_coded_or_text'].blank?
       value = ConceptName.find_by_name(paramz['value_coded_or_text']) rescue nil
       if value.blank?
@@ -100,6 +108,7 @@ class EncountersController < ApplicationController
     ['value_coded_or_text_multiple', 'value_coded_or_text', 'concept_name'].each do |key|
           paramz.delete(key) if paramz.has_key?(key)
     end
+
     Observation.create(paramz)
   end
 
@@ -137,6 +146,9 @@ class EncountersController < ApplicationController
       when 'Clinical assessment'
         @clinical_questions = clinical_questions#('Group 2')
         @group = @client.nutrition_module
+      when 'Summary'
+        @group = @client.nutrition_module
+        render 'encounters/summary', :layout => false and return
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
@@ -254,6 +266,54 @@ class EncountersController < ApplicationController
     options = ['Record purpose of call',
                'Irrelevant',
                'Dropped']
+  end
+
+  def  create_dietary_assess_obs(enc, paramz)
+    food_type_concept = ConceptName.find_by_name('Food Type').concept_id
+    meal_type_concept = ConceptName.find_by_name('Meal Type').concept_id
+    consumption_method_concept = ConceptName.find_by_name('Consumption Method').concept_id
+
+    ((0 .. paramz['meal_type'].length - 1)).each do |index|
+      meal_type = paramz['meal_type'][index.to_s]
+      food_types = paramz['food_type'][index.to_s]
+      consumption_method = paramz['consumption_method'][index.to_s]
+
+      next if (meal_type.blank? || food_types.blank? || consumption_method.blank?)
+
+      obs = [{
+        'encounter_id' => enc.id,
+        'person_id' => enc.patient_id,
+        'value_coded_or_text' => meal_type,
+        'concept_id' => meal_type_concept,
+        'comments' => index.to_s,
+        'obs_datetime' => enc.encounter_datetime
+      }]
+
+      food_types.each do |type|
+        obs << {
+            'encounter_id' => enc.id,
+            'person_id' => enc.patient_id,
+            'value_coded_or_text' => type,
+            'concept_id' => food_type_concept,
+            'comments' => index.to_s,
+            'obs_datetime' => enc.encounter_datetime
+        }
+      end
+
+      obs << {
+          'encounter_id' => enc.id,
+          'person_id' => enc.patient_id,
+          'value_coded_or_text' => consumption_method,
+          'concept_id' => consumption_method_concept,
+          'comments' => index.to_s,
+          'obs_datetime' => enc.encounter_datetime
+      }
+
+      obs.each do |ob|
+        create_obs(ob)
+      end
+
+    end
   end
 
 end
