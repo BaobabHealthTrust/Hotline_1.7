@@ -1,7 +1,7 @@
 class EncountersController < ApplicationController
+  skip_before_filter :verify_authenticity_token
 
   def create
-    
     @patient = Patient.find(params[:encounter][:patient_id])
 
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]
@@ -14,7 +14,7 @@ class EncountersController < ApplicationController
     # Observation handling
 
     if (encounter.type.name.downcase rescue false) == "dietary assessment"
-        raise encounter.inspect
+      create_dietary_assess_obs(encounter, params)
     end
 
     attrs = PersonAttributeType.all.inject({}){|result, k| result[k.name.upcase] = k.name; result }
@@ -261,8 +261,46 @@ class EncountersController < ApplicationController
                'Dropped']
   end
 
-  def pre_process
+  def  create_dietary_assess_obs(enc, paramz)
+    food_type_concept = ConceptName.find_by_name('Food Type').concept_id
+    meal_type_concept = ConceptName.find_by_name('Meal Type').concept_id
+    consumption_method_concept = ConceptName.find_by_name('Consumption Method').concept_id
 
+    ((0 .. paramz['meal_type'].length - 1)).each do |index|
+      meal_type = paramz['meal_type'][index.to_s]
+      food_types = paramz['food_type'][index.to_s]
+      consumption_method = paramz['consumption_method'][index.to_s]
+
+      next if (meal_type.blank? || food_types.blank? || consumption_method.blank?)
+
+      obs = [{
+        :encounter_id => enc.id,
+        :value_coded_or_text => meal_type,
+        :concept_id => meal_type_concept,
+        :comments => index.to_s,
+        :obs_datetime => enc.encounter_datetime
+      }]
+
+      food_types.each do |type|
+        obs << {
+            :encounter_id => enc.id,
+            :value_coded_or_text => meal_type,
+            :concept_id => food_type_concept,
+            :comments => index.to_s,
+            :obs_datetime => enc.encounter_datetime
+        }
+      end
+
+      obs << {
+          :encounter_id => enc.id,
+          :value_coded_or_text => consumption_method,
+          :concept_id => consumption_method_concept,
+          :comments => index.to_s,
+          :obs_datetime => enc.encounter_datetime
+      }
+
+      obs.each{|ob| create_obs(create_obs(ob))}
+    end
   end
 
 end

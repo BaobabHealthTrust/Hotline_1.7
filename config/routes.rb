@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   post 'patient/new'
 
   get 'patient/test'
+  get 'patient/dietary_assessment'
 
   post 'patient/search_result'
 
