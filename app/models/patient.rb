@@ -14,7 +14,7 @@ class Patient < ActiveRecord::Base
   	recent_preg_obs =  Encounter.find_by_sql(
   		"SELECT  * FROM encounter e 
   		INNER JOIN obs o ON e.patient_id = o.person_id
-  		WHERE e.voided = 0 AND DATEDIFF(DAY, DATE(e.encounter_datetime), CURDATE()) <= 270
+  		WHERE e.voided = 0 AND TIMESTAMPDIFF(DAY, DATE(e.encounter_datetime), CURDATE()) <= 270
   		AND e.encounter_type IN (SELECT encounter_type_id FROM encounter_type 
   			WHERE name IN ('PREGNANCY STATUS', 'MATERNAL HEALTH SYMPTOMS'))
 		AND ((o.value_coded IN (SELECT concept_id FROM concept_name WHERE name IN ('PREGNANT',
@@ -22,7 +22,7 @@ class Patient < ActiveRecord::Base
   				OR (o.value_text IN ('PREGNANT',
 			'VAGINAL BLEEDING DURING PREGNANCY', 'FEVER DURING PREGNANCY', 'No Fetal Movements'))) "
   			)
-  		
+  	
   	pregnant_obs =  ""
 	if !recent_preg_obs.blank? 
 		category = "Group 1"
