@@ -41,6 +41,7 @@
     }
 
     function loadSummary() {
+        $('touchscreenInput'+tstCurrentPage).style.display = 'none';
         var input_frame = document.getElementById('inputFrame'+tstCurrentPage);
 
         var table = document.createElement('table');
@@ -50,11 +51,11 @@
         table.appendChild(row);
 
         var col = document.createElement('td');
-        col.innerHTML = group+'<br>';
+        col.innerHTML = '<h2><u>'+group+'</u><h2>';
 
-        for(var i = 0; i <= answered_questions.length; i++) {
-            col.innerHTML += answered_questions[i]+'';
-                col.innerHTML += answers[i]+'<br>';
+        for(var i = 0; i <= answered_questions.length - 1; i++) {
+            col.innerHTML += answered_questions[i]+'&nbsp;';
+                col.innerHTML += '<b>'+answers[i]+'</b><br><hr>';
         }
 
         row.appendChild(col);
