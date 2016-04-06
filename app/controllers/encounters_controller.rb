@@ -110,6 +110,7 @@ class EncountersController < ApplicationController
 
   def new
     @patient_obj = PatientService.get_patient(params[:patient_id] || session[:patient_id])
+    @client = Patient.find(@patient_obj.patient_id)
     encounter_type = params[:encounter_type].humanize
     @age = @patient_obj.age
     case encounter_type
@@ -138,9 +139,83 @@ class EncountersController < ApplicationController
         @purpose_of_call_options = purpose_of_call_options
       when 'Confirm purpose of call'
         @confirm_call_options = call_options
+      when 'Clinical assessment'
+        @clinical_questions = clinical_questions#('Group 2')
+        @group = @client.nutrition_module
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]
+  end
+
+  def clinical_questions#(group)
+      clinical_questions = [
+         'Group 1' => [
+             'Do you have a fever?',
+             'Do you have diarrhea?',
+             'Have you been vomiting?',
+             'Are you HIV-positive?',
+             'Do you have TB/Tuberculosis?',
+             'Do you have high blood pressure/hypertension?',
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
+             'Are you currently experiencing any of the following symptoms?'
+         ],
+         'Group 2' => [
+             'Do you have a fever?',
+             'Do you have diarrhea?',
+             'Have you been vomiting?',
+             'Are you HIV-positive?',
+             'Do you have TB/Tuberculosis?',
+             'Do you have high blood pressure/hypertension?',
+             'Are you anemic?',
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
+             'Are you currently experiencing any of the following symptoms?'
+         ],
+         'Group 3' => [
+             'Do you have a fever?',
+             'Do you have diarrhea?',
+             'Have you been vomiting?',
+             'Are you HIV-positive?',
+             'Do you have TB/Tuberculosis?',
+             'Do you have high blood pressure/hypertension?',
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
+             'Are you currently experiencing any of the following symptoms?'
+         ],
+         'Group 4' => [
+             'Is the child HIV-positive?',
+             'Is the child anemic?',
+             'Does the child have TB/Tuberculosis?',
+             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
+             'Are you currently experiencing any of the following danger signs?',
+             'Is the child currently experiencing any conditions that interfere with breastfeeding?'
+         ],
+         'Group 5' => [
+             'Is the child HIV-positive?',
+             'Is the child anemic?',
+             'Does the child have TB/Tuberculosis?',
+             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
+             'Are you currently experiencing any of the following danger signs?',
+             'Are you currently experiencing any of the following danger signs?',
+             'Is the child currently experiencing any conditions that interfere with breastfeeding?'
+         ],
+         'Group 6' => [
+             'Is the child HIV-positive?',
+             'Is the child anemic?',
+             'Does the child have TB/Tuberculosis?',
+             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
+             'Are you currently experiencing any of the following danger signs?'
+         ],
+         'Group 7' => [
+             'Does the child have a fever?',
+             'Does the child have diarrhea?',
+             'Has the child been vomiting?',
+             'Is the child HIV-positive?',
+             'Does the child have TB/Tuberculosis?',
+             'Does the child have high blood pressure/hypertension?',
+             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
+             'Is the child currently experiencing any of the following symptoms?'
+         ]
+      ]
+      return clinical_questions[0]
   end
 
   def current_guardian(guardian_id=nil, patient_id=nil)
