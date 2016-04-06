@@ -55,7 +55,7 @@
                                            'No'] ,
                                           @current_data['CLINICAL ASSESSMENT']),
                        :helpText =>"#{clinical_question}",
-                       :tt_onLoad => 'showHelpButton();getGroup();',
+                       :tt_onLoad => "showHelpButton();getGroup();$('keyboard').style.display = 'none'",
                        :tt_onUnLoad => 'hideHelpButton();',
                        :condition => "'#{group}'.match(group)",
                        :id => "#{clinical_question}",
