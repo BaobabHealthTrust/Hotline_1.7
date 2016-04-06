@@ -18,6 +18,20 @@
     function getGroup() {
         var selected_group = group;
     }
+
+    function loadSummary() {
+        var input_frame = document.getElementById('inputFrame'+tstCurrentPage);
+
+            var table = document.createElement('table');
+            input_frame.appendChild(table);
+
+                var row = document.createElement('tr');
+                table.appendChild(row);
+
+                    var col = document.createElement('td');
+                    col.innerHTML = 'Do You have a fever?';
+                    row.appendChild(col);
+    }
 </script>
 
 <%= form_tag("/encounters/create", id: "clinical_assessment", method: 'post', enctype: 'multipart/form-data') do %>
@@ -73,5 +87,9 @@
             %>
         <% end %>
     <% end %>
-    <%= text_field_tag 'summary', nil, :helpText => 'Clinic Assessment Summary' %>
+    <%= text_field_tag 'summary', nil,
+                       :helpText => 'Clinic Assessment Summary',
+                       :tt_onLoad => "$('keyboard').style.display = 'none';loadSummary();",
+                       :optional => true
+    %>
 <% end %>
