@@ -7,31 +7,59 @@
 
     var group;
     var clinical_questions = <%= raw (@clinical_questions).to_json%>;
-    var initial_questions = clinical_questions['<%= @group %>'];
 
-    console.log(clinical_questions);
+    var answers = new Array();
+    var answer;
+
+    var answered_questions = new Array();
+    var answered_question;
 
     function setGroup() {
         group = $('touchscreenInput'+tstCurrentPage).value;
     }
 
     function getGroup() {
-        var selected_group = group;
+        return group;
+    }
+
+    function getAnswers() {
+        group;
+        answered_questions;
+        answers;
+        console.log(group, answered_questions, answers);
+    }
+
+    function setAnswers(group, question) {
+
+        answered_question = question;
+        answered_questions.push(answered_question);
+
+        answer = $('touchscreenInput'+tstCurrentPage).value;
+        answers.push(answer);
+
+        //console.log(group, answered_questions, answers);
     }
 
     function loadSummary() {
         var input_frame = document.getElementById('inputFrame'+tstCurrentPage);
 
-            var table = document.createElement('table');
-            input_frame.appendChild(table);
+        var table = document.createElement('table');
+        input_frame.appendChild(table);
 
-                var row = document.createElement('tr');
-                table.appendChild(row);
+        var row = document.createElement('tr');
+        table.appendChild(row);
 
-                    var col = document.createElement('td');
-                    col.innerHTML = 'Do You have a fever?';
-                    row.appendChild(col);
+        var col = document.createElement('td');
+        col.innerHTML = group+'<br>';
+
+        for(var i = 0; i <= answered_questions.length; i++) {
+            col.innerHTML += answered_questions[i]+'';
+                col.innerHTML += answers[i]+'<br>';
+        }
+
+        row.appendChild(col);
     }
+
 </script>
 
 <%= form_tag("/encounters/create", id: "clinical_assessment", method: 'post', enctype: 'multipart/form-data') do %>
@@ -69,8 +97,8 @@
                                                'No'] ,
                                               @current_data['CLINICAL ASSESSMENT']),
                            :helpText =>"#{clinical_question}",
-                           :tt_onLoad => "showHelpButton();getGroup();$('keyboard').style.display = 'none'",
-                           :tt_onUnLoad => 'hideHelpButton();',
+                           :tt_onLoad => "showHelpButton();getGroup();$('keyboard').style.display = 'none';getAnswers();",
+                           :tt_onUnLoad => "hideHelpButton();setAnswers(group,'#{clinical_question}');",
                            :condition => "'#{group}'.match(group)",
                            :id => "#{clinical_question}",
                            :allowFreeText => false
@@ -89,7 +117,7 @@
     <% end %>
     <%= text_field_tag 'summary', nil,
                        :helpText => 'Clinic Assessment Summary',
-                       :tt_onLoad => "$('keyboard').style.display = 'none';loadSummary();",
+                       :tt_onLoad => "$('keyboard').style.display = 'none';getAnswers();loadSummary();",
                        :optional => true
     %>
 <% end %>
