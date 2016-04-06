@@ -30,7 +30,7 @@
                                        'Group 5',
                                        'Group 6',
                                        'Group 7'],
-                                      @current_data['CLINICAL ASSESSMENT']),
+                                      @group),
                    :helpText =>"Target group",
                    :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none' ",
                    :tt_onUnLoad => 'hideHelpButton();setGroup();',
@@ -39,7 +39,7 @@
                    :allowFreeText => false
     %>
 
-    <% @clinical_questions['Group 2'].each do |clinical_question| %>
+    <% @clinical_questions[@group].each do |clinical_question| %>
         <%= hidden_field_tag("observations[][concept_name]", "#{clinical_question}") %>
         <%= select_tag 'observations[][value_coded_or_text]',
                        options_for_select(['',
