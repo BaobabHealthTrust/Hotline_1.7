@@ -330,6 +330,13 @@ class PatientController < ApplicationController
     redirect_to "/patient/dashboard/#{patient_id}/#{params[:tab_name]}"
   end
 
+  def test
+    @patient_obj = Patient.find(params['patient_id'])
+  end
+
+  def dietary_assessment
+    @patient_obj = Patient.find(params['patient_id'])
+  end
   private
 
   def search(field_name, search_string, gender = nil)

@@ -57,6 +57,10 @@ Rails.application.routes.draw do
   get 'patient/dashboard/:patient_id/:tab_name' => 'patient#dashboard'
   get 'patient/edit/:patient_id' => 'patient#edit'
   post 'patient/new'
+
+  get 'patient/test'
+  get 'patient/dietary_assessment'
+
   post 'patient/search_result'
 
   get 'patient/new_with_demo/:patient_id' => 'patient#new_with_demo'
@@ -77,7 +81,7 @@ Rails.application.routes.draw do
   get 'patient/ta'
   get 'patient/village'
   get 'patient/district'
-
+  post 'encounters/pre_process'
   get 'patient_obs/:encounter_id' => 'patient#observations'
   get 'patient/number_of_booked_patients'
   get 'void_encounter/:encounter_id/:tab_name' => 'patient#void_encounter' 
