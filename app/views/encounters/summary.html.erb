@@ -1,0 +1,22 @@
+<script>
+    var tt_cancel_destination = "/patient/dashboard/<%#= @patient_obj.patient_id %>/tasks";
+</script>
+
+    <!-- Variables from controller declaration -->
+        <% @group %>
+    <!------------------------------------------------------------------------>
+
+<div class="main-container">
+    <!-- Partial for header -->
+        <%= render :partial => 'patient/headers/header' %>
+    <!------------------------------------------------------------------------>
+
+    <!-- Partial for summary -->
+        <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
+    <!------------------------------------------------------------------------>
+
+    <!-- Partial for footer -->
+        <%= render :partial => 'home/footer'%>
+    <!------------------------------------------------------------------------>
+</div>
+

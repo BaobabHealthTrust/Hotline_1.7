@@ -2,6 +2,7 @@ class EncountersController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def create
+
     @patient = Patient.find(params[:encounter][:patient_id])
 
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]
@@ -142,6 +143,9 @@ class EncountersController < ApplicationController
       when 'Clinical assessment'
         @clinical_questions = clinical_questions#('Group 2')
         @group = @client.nutrition_module
+      when 'Summary'
+        @group = @client.nutrition_module
+        render 'encounters/summary', :layout => false and return
     end
 
     render :action => params[:encounter_type] if params[:encounter_type]

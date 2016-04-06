@@ -28,7 +28,7 @@
 
     <% @current_data = Encounter.current_data("CLINICAL ASSESSMENT", @patient_obj.patient_id)%>
 
-    <%= select_tag 'observations[][value_coded_or_text]',
+    <%= select_tag 'nutrition_group',
                    options_for_select(['',
                                        'Group 1',
                                        'Group 2',
@@ -48,29 +48,30 @@
 
     <% @clinical_questions.each do |group, clinical_questions| %>
         <% clinical_questions.each do | clinical_question| %>
-        <%= hidden_field_tag('observations[][concept_name]', "#{clinical_question}") %>
-        <%= select_tag 'observations[][value_coded_or_text]',
-                       options_for_select(['',
-                                           'Yes',
-                                           'No'] ,
-                                          @current_data['CLINICAL ASSESSMENT']),
-                       :helpText =>"#{clinical_question}",
-                       :tt_onLoad => "showHelpButton();getGroup();$('keyboard').style.display = 'none'",
-                       :tt_onUnLoad => 'hideHelpButton();',
-                       :condition => "'#{group}'.match(group)",
-                       :id => "#{clinical_question}",
-                       :allowFreeText => false
-        %>
+            <%= hidden_field_tag('observations[][concept_name]', "#{clinical_question}") %>
+            <%= select_tag 'observations[][value_coded_or_text]',
+                           options_for_select(['',
+                                               'Yes',
+                                               'No'] ,
+                                              @current_data['CLINICAL ASSESSMENT']),
+                           :helpText =>"#{clinical_question}",
+                           :tt_onLoad => "showHelpButton();getGroup();$('keyboard').style.display = 'none'",
+                           :tt_onUnLoad => 'hideHelpButton();',
+                           :condition => "'#{group}'.match(group)",
+                           :id => "#{clinical_question}",
+                           :allowFreeText => false
+            %>
 
-        <%#= hidden_field_tag("observations[][concept_name]", "concept_name_2") %>
-        <%#= select_tag "observations[][value_coded_or_text]", options_for_select(['','Yes','No'] , @current_data['CLINICAL ASSESSMENT']),
-                       :helpText =>'Another Question comes here.',
-                       :condition => "$('clinical_question').value == 'Yes';",
-                       :tt_onLoad => 'showHelpButton();',
-                       :tt_onUnLoad => 'hideHelpButton();',
-                       :id => 'clinical_assessment',
-                       :allowFreeText => false
-        %>
+            <%#= hidden_field_tag("observations[][concept_name]", "concept_name_2") %>
+            <%#= select_tag "observations[][value_coded_or_text]", options_for_select(['','Yes','No'] , @current_data['CLINICAL ASSESSMENT']),
+                           :helpText =>'Another Question comes here.',
+                           :condition => "$('clinical_question').value == 'Yes';",
+                           :tt_onLoad => 'showHelpButton();',
+                           :tt_onUnLoad => 'hideHelpButton();',
+                           :id => 'clinical_assessment',
+                           :allowFreeText => false
+            %>
+        <% end %>
     <% end %>
-    <% end %>
+    <%= text_field_tag 'summary', nil, :helpText => 'Clinic Assessment Summary' %>
 <% end %>

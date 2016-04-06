@@ -8,6 +8,9 @@ class Patient < ActiveRecord::Base
 
   def nutrition_module
   	patient_age = self.person.age
+  	temp_date =  DateTime.new(0000, 6, 1)
+  	six_months = temp_date.month.to_i
+
   	category  = "Group 6"
   	female = self.person.gender.scan(/F/i).length > 0 rescue false
 
@@ -18,19 +21,27 @@ class Patient < ActiveRecord::Base
   		AND e.encounter_type IN (SELECT encounter_type_id FROM encounter_type 
   			WHERE name IN ('PREGNANCY STATUS', 'MATERNAL HEALTH SYMPTOMS'))
 		AND ((o.value_coded IN (SELECT concept_id FROM concept_name WHERE name IN ('PREGNANT',
-			'VAGINAL BLEEDING DURING PREGNANCY', 'FEVER DURING PREGNANCY', 'No Fetal Movements'))) 
+			'VAGINAL BLEEDING DURING PREGNANCY', 'FEVER DURING PREGNANCY', 'Water breaks', 'No Fetal Movements'))) 
   				OR (o.value_text IN ('PREGNANT',
-			'VAGINAL BLEEDING DURING PREGNANCY', 'FEVER DURING PREGNANCY', 'No Fetal Movements'))) "
+			'VAGINAL BLEEDING DURING PREGNANCY', 'FEVER DURING PREGNANCY', 'Water breaks', 'No Fetal Movements'))) "
   			)
   	
   	pregnant_obs =  ""
+  	
 	if !recent_preg_obs.blank? 
-		category = "Group 1"
-	elsif female && patient_age >= 14 && patient_age < 50 
 		category = "Group 2"
+	elsif female && patient_age >= 14 && patient_age < 50 
+		category = "Group 1"
+	elsif patient_age >= 14
+		category = "Group 3"
+	elsif patient_age < six_months
+		category = "Group 4"
+	elsif patient_age > six_months && patient_age <= 2
+		category = "Group 5"
+	elsif patient_age > 2 && patient_age < 5
+		category = "Group 6"
+	elsif patient_age > 5 && patient_age < 14
+		category = "Group 7"
 	end
   end
-
-
-
 end
