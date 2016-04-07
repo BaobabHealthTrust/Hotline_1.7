@@ -13,7 +13,7 @@ class PatientController < ApplicationController
 
     #Adding tasks in proper order
     @tasks = []
-    if @patient_obj.sex.match('F') && @patient_obj.age > 5
+    if @patient_obj.sex.match('F') && @patient_obj.age > 13
       @tasks << {"name" => "Pregnancy Status", "link" => "/encounters/new/pregnancy_status?patient_id=#{@patient_obj.patient_id}", 'icon' => "pregnacy.png",
                  'done' => @current_encounter_names.include?('PREGNANCY STATUS')}
     end
@@ -267,12 +267,11 @@ class PatientController < ApplicationController
       elsif params[:end_call] == 'true'
         if update_outcome_encounter.nil?
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
-        elsif symptoms_encounter.nil?
-          redirect_to "/encounters/new/female_symptoms?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
-        end
+        else
           redirect_to '/' and return
       end
     end
+  end
 
     location_tag = LocationTag.find_by_name("District")
     @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins('INNER JOIN location_tag_map m
