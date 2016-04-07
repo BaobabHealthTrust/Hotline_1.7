@@ -100,7 +100,8 @@
        tab_name = params[:tab_name]
       (@current_encounters || []).each do|e|%>
         <div class="min-container-table-row">
-          <div class="min-container-table-cell" style="width: 10%;" onclick="javascript:voidEncounter(this,'<%=tab_name%>')" id="<%=e.id%>">
+          <div class="min-container-table-cell" style="width: 10%;"
+               onclick="javascript:voidEncounter(this,'<%=tab_name%>')" id="<%=e.id%>">
             <%=image_tag("icons/Remove.png", class: 'remove-icon')%>
           </div>
           <div class="min-container-table-cell encounters" id="<%=e.id%>"
