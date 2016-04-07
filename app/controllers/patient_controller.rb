@@ -40,13 +40,13 @@ class PatientController < ApplicationController
     @tasks << {"name" => "Clinical Assessment", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "clinical_assessment.png",
                'done' => @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
-    @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "dietary_assessment.png",
-               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
-
     @tasks << {"name" => "Purpose of Call", "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
                'done' => @current_encounter_names.include?('PURPOSE OF CALL')}
 
     @tasks << {"name" => "Edit demographics", "link" => "/demographics/#{@patient_obj.patient_id}", "icon" => "demographic.png"}
+
+    @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "dietary_assessment.png",
+               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
 
     @tasks << {"name" => "Reference material", "link" => "/patient/reference_material/#{@patient_obj.patient_id}", "icon" => "reference.png"}
 
