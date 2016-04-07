@@ -66,7 +66,7 @@
             document.getElementById('normal_task'+i).style.display = 'none';
         }
         for(var i = tasks.length - 3 ; i <= tasks.length - 1; i++) {
-            document.getElementById('for_nutrition'+i).style.display = 'inline';
+            document.getElementById('for_nutrition'+i).style.display = 'table-cell';
         }
     }
     function hideNutrition() {
@@ -80,9 +80,9 @@
     <!-- loop -->
     <% buttons_per_row = 5%>
     <% @tasks.each_with_index do |task, i|
-            new_role = (i % buttons_per_row == 0)
-            end_role = (i > 0 && i % buttons_per_row == 0 && i < @tasks.length )
-            halt = (i == @tasks.length - 1)
+                new_role = (i % buttons_per_row == 0)
+                end_role = (i > 0 && i % buttons_per_row == 0 && i < @tasks.length )
+                halt = (i == @tasks.length - 1)
     %>
         <% if end_role %>
               </div>
