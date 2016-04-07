@@ -17,6 +17,14 @@
 
     <%= hidden_field_tag "patient_id", params[:patient_id] %>
 
+    <%= text_field_tag "person[names][family_name2]", params[:family_name2], 
+                        {:id => 'family_name2', 
+                          :field_type => 'alpha', 
+                          :helpText => 'Mother\'s Surname', 
+                          :ajaxURL => "/person_names/family_name2?search_string=", 
+                          :allowFreeText => true,  
+                          :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';" 
+                          } %>
 
     <%= text_field_tag "person[cell_phone_number]",  params[:cell_phone_number],
                        {
@@ -58,6 +66,15 @@
     :ajaxURL => "",
     :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block'; set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);",
     :helptext => "Home village"}  %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Health facility name") %>
+    <%= select_tag "observations[][value_text]", nil,
+                           {:id => 'health_centre_name',
+                            :field_type => 'alpha',
+                            :helpText => 'Select Nearest health centre',
+                            :ajaxURL => '/home/health_facilities?search_string=',
+                            :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
+                            :allowFreeText => true }%>
 
 <% end %>
 
