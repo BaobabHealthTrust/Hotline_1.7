@@ -26,7 +26,7 @@ class PatientController < ApplicationController
     @tasks << {"name" => "Outcomes", "link" => "/encounters/new/update_outcomes?patient_id=#{@patient_obj.patient_id}", 'icon' => "symptoms.png",
                'done' => @current_encounter_names.include?('UPDATE OUTCOME')}
     if @patient_obj.sex.match('F')
-      @tasks << {"name" => "Clinic schedule", "link" => "/encounters/new/schedule?patient_id=#{@patient_obj.patient_id}", "icon" => "calendar-and-tasks.png",
+      @tasks << {"name" => "Clinic Schedule", "link" => "/encounters/new/schedule?patient_id=#{@patient_obj.patient_id}", "icon" => "calendar-and-tasks.png",
                  'done' => @current_encounter_names.include?('APPOINTMENT')}
     end
 
@@ -35,10 +35,12 @@ class PatientController < ApplicationController
                  'done' => @current_encounter_names.include?('TIPS AND REMINDERS')}
     end
 
-    @tasks << {"name" => "Clinical Assessment", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "clinic_assessment.png",
+    @tasks << {"name" => "Nutrition", "icon" => "nutrition_module.png"}
+
+    @tasks << {"name" => "Clinical Assessment", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "clinical_assessment.png",
                'done' => @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
-    @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
+    @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "dietary_assessment.png",
                'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
 
     @tasks << {"name" => "Purpose of Call", "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
