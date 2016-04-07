@@ -35,24 +35,24 @@ class PatientController < ApplicationController
                  'done' => @current_encounter_names.include?('TIPS AND REMINDERS')}
     end
 
-    @tasks << {"name" => "Nutrition", "icon" => "nutrition_module.png"}
-
-    @tasks << {"name" => "Clinical Assessment", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "clinical_assessment.png",
-               'done' => @current_encounter_names.include?('CLINICAL ASSESSMENT')}
-
     @tasks << {"name" => "Purpose of Call", "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
                'done' => @current_encounter_names.include?('PURPOSE OF CALL')}
 
-    @tasks << {"name" => "Edit demographics", "link" => "/demographics/#{@patient_obj.patient_id}", "icon" => "demographic.png"}
+    @tasks << {"name" => "Nutrition", "icon" => "nutrition_module.png"}
 
-    @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "dietary_assessment.png",
-               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
+    @tasks << {"name" => "Edit demographics", "link" => "/demographics/#{@patient_obj.patient_id}", "icon" => "demographic.png"}
 
     @tasks << {"name" => "Reference material", "link" => "/patient/reference_material/#{@patient_obj.patient_id}", "icon" => "reference.png"}
 
     @tasks << {"name" => "Next Client", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}", "icon" => "next.png"}
 
     @tasks << {"name" => "End Call", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true", "icon" => "end-call.png"}
+
+    @tasks << {"name" => "Clinical Assessment", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "clinical_assessment.png",
+               'done' => @current_encounter_names.include?('CLINICAL ASSESSMENT')}
+
+    @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "dietary_assessment.png",
+               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
 
     symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
     @symptom_encounters = Encounter.where("patient_id = ? AND encounter_type = ?",
