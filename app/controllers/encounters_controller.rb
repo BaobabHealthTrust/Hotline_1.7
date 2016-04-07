@@ -147,6 +147,10 @@ class EncountersController < ApplicationController
         @clinical_questions = clinical_questions#('Group 2')
         @group = @client.nutrition_module
       when 'Summary'
+        encounter_id = EncounterType.find_by_name('Clinical Assessment').encounter_type_id
+        @observations = Observation.where(person_id: @patient_obj.patient_id, encounter_id: encounter_id)
+        #@current_encounter_names = @clinical_answers.collect{|e| e.type.name.upcase}
+        #raise @clinical_answers.inspect
         @group = @client.nutrition_module
         render 'encounters/summary', :layout => false and return
     end
