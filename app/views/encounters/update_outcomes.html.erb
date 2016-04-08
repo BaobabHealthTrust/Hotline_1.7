@@ -145,6 +145,11 @@ function hideselectedOutcomes(){
         <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
+
+        <% if params[:show_summary]%>
+            <%= hidden_field_tag 'show_summary', 'true' %>
+        <% end %>
+
         <% @current_data = Encounter.current_data("UPDATE OUTCOME", @patient_obj.patient_id)%>
 
         <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>

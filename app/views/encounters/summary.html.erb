@@ -1,22 +1,65 @@
 <script>
     var tt_cancel_destination = "/patient/dashboard/<%#= @patient_obj.patient_id %>/tasks";
 </script>
+<style>
 
-    <!-- Variables from controller declaration -->
-        <% @group %>
-    <!------------------------------------------------------------------------>
+  .main-contain{
+      height: 84%;
+      width: 100%;
+  }
+  .btn {
+      padding-bottom: 5px;
+      text-align: center;
+      width: 180px;
+      height: 75px;
+      cursor: pointer;
+      float: right;
+      box-shadow: inset 2px -4px 2px 0px;
+      background-color: white;
+      border-radius: 7px;
+      border: solid black 3px;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -moz-box-shadow:    inset 0 0 10px #000000;
+      -webkit-box-shadow: inset 0 0 10px #000000;
+      box-shadow:         inset 0 0 10px #000000;
+  }
 
-<div class="main-container">
-    <!-- Partial for header -->
+  .task-icons {
+      height: 70px;
+      width: 130px;
+  }
+</style>
+
+<body>
+    <div class="main-contain">
+        <!-- Partial for header -->
         <%= render :partial => 'patient/headers/header' %>
-    <!------------------------------------------------------------------------>
+        <!------------------------------------------------------------------------>
 
-    <!-- Partial for summary -->
-        <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
-    <!------------------------------------------------------------------------>
+      <!-- Partial for dietary assessment -->
+        <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
+      <!------------------------------------------------------------------------>
 
-    <!-- Partial for footer -->
-        <%= render :partial => 'home/footer'%>
-    <!------------------------------------------------------------------------>
-</div>
+
+      <!-- Partial summary for clinical assessment -->
+      <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
+      <!------------------------------------------------------------------------>
+
+      <div style="width: 100%; height: 8%">
+
+        <div class="btn" onclick="document.location='/patient/dashboard/<%= @patient_obj.patient_id %>/tasks'">
+
+          <%=image_tag("icons/back_white.svg", class: 'task-icons')%>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <%= render :partial => 'home/footer' %>
+</body>
+
 

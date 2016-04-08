@@ -54,7 +54,7 @@ class PatientController < ApplicationController
     @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "dietary_assessment.png",
                'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
 
-    @tasks << {"name" => "Summary", "link" => "/encounters/new/summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png"}
+    @tasks << {"name" => "Summary", "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png"}
 
     @tasks << {"name" => "Back", "icon" => "back_white.svg"}
 

@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   get 'patient/village'
   get 'patient/district'
   post 'encounters/pre_process'
+  get 'encounters/nutrition_summary'
   get 'patient_obs/:encounter_id' => 'patient#observations'
   get 'patient/number_of_booked_patients'
   get 'void_encounter/:encounter_id/:tab_name' => 'patient#void_encounter' 

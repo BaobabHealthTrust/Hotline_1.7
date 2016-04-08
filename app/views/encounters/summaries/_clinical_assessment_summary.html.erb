@@ -1,3 +1,52 @@
-Clinical Assessment: <%= @group %>
+<style>
+  .clinic{
+      width: 100%;
+      height: 34%;
+  }
+.answer_name, .answer_value{
+    padding: 8px;
+    font-size: 1.0em;
+}
+  .answer_value{
+      font-weight: bold;
+  }
+  caption{
+      font-size: 1.4em;
+      font-weight: bold;
+      margin: auto;
+  }
 
+   .inner-table{
+       border: 1px solid #d3d3d3;
+       width: 100%;
+   }
 
+</style>
+<div class="clinic">
+
+    <table style="width: 95%; margin: auto; height: 100%;">
+      <caption style="color: gray;padding-top: 15px;"> Clinical Assessment </caption>
+      <tr>
+        <td valign="top" style="padding: 5px;width:50%;">
+          <table class="inner-table">
+            <% (@clinical_encounter_1 || []).each do |name| %>
+                <tr>
+                  <td class ="<%cycle('even', 'odd')%> answer_name"><%= name.humanize %></td>
+                  <td class="answer_value"><%= @clinical_encounter[name].join(' , ').strip %></td>
+                </tr>
+            <% end %>
+          </table>
+        </td>
+        <td valign="top">
+          <table class="inner-table">
+            <% (@clinical_encounter_2 || []).each do |name, value| %>
+                <tr>
+                    <td class = 'answer_name'><%= name.humanize %></td>
+                    <td class="answer_value"><%= @clinical_encounter[name].join(' , ').strip  %></td>
+                </tr>
+            <% end %>
+           </table>
+        </td>
+      </tr>
+    </table>
+</div>

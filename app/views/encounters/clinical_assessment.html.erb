@@ -5,7 +5,7 @@
 
     var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
 
-    var group;
+    var group = '<%= @group%>';
     var clinical_questions = <%= raw (@clinical_questions).to_json%>;
 
     var answers = new Array();
@@ -83,6 +83,7 @@
                    :tt_onUnLoad => 'hideHelpButton();setGroup();',
                    :tt_pageStyleClass => 'longSelectList',
                    :id => 'clinical_question',
+                   :condition => 'false',
                    :allowFreeText => false
     %>
 
@@ -95,9 +96,10 @@
                                                'No'] ,
                                               @current_data['CLINICAL ASSESSMENT']),
                            :helpText =>"#{clinical_question}",
-                           :tt_onLoad => "showHelpButton();getGroup();$('keyboard').style.display = 'none';getAnswers();",
+                           :tt_onLoad => "showHelpButton();getGroup();$('keyboard').style.display = 'none';getAnswers(); $('nextButton').style.display = 'none' ",
                            :tt_onUnLoad => "hideHelpButton();setAnswers(group,'#{clinical_question}');",
                            :condition => "'#{group}'.match(group)",
+                           :tt_requireNextClick => false,
                            :id => "#{clinical_question}",
                            :allowFreeText => false
             %>
@@ -106,22 +108,26 @@
             <%= text_field_tag 'observations[][numeric]', nil,
                                :helpText => 'How many days have you had fever?',
                                :condition => "'#{clinical_question}' == 'Do you have a fever?' && $('#{clinical_question}').value == 'Yes';",
-                               :tt_onLoad => 'showHelpButton();',
+                               :tt_onLoad => "showHelpButton(); $('nextButton').style.display = 'inline' ",
+                               :field_type => 'number',
+                               :tt_pageStyleClass => 'NumbersOnly',
                                :tt_onUnLoad => 'hideHelpButton();'
             %>
 
             <%= hidden_field_tag("observations[][concept_name]", 'How many days have you had diarrhea?') %>
             <%= text_field_tag 'observations[][numeric]', nil,
                                :helpText => 'How many days have you had diarrhea?',
-                               :condition => "'#{clinical_question}' == 'Do you have diarrhea?' && $('#{clinical_question}').value == 'Yes';",
-                               :tt_onLoad => 'showHelpButton();',
+                               :condition => "'#{clinical_question}' == 'Do you have diarrhea?' && $('#{clinical_question}').value == 'Yes'; ",
+                               :tt_onLoad => "showHelpButton(); $('nextButton').style.display = 'inline' ;",
+                               :field_type => 'number',
+                               :tt_pageStyleClass => 'NumbersOnly',
                                :tt_onUnLoad => 'hideHelpButton();'
             %>
         <% end %>
     <% end %>
     <%= text_field_tag 'summary', nil,
                        :helpText => 'Clinic Assessment Summary',
-                       :tt_onLoad => "$('keyboard').style.display = 'none';getAnswers();loadSummary();",
+                       :tt_onLoad => "$('nextButton').style.display = 'inline'; $('keyboard').style.display = 'none';getAnswers();loadSummary();",
                        :optional => true
     %>
 <% end %>
