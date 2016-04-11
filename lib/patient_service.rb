@@ -18,6 +18,7 @@ module PatientService
     patient_obj.avr_access_number = self.get_identifier(patient, 'IVR access code')
     patient_obj.age = self.age(person)
     patient_obj.sex = person.gender
+    #patient_obj.facility_name = person.facility_name
 
     unless addresses.blank?
       patient_obj.region = addresses.region
@@ -26,16 +27,19 @@ module PatientService
       patient_obj.neighborhood_cell = addresses.neighborhood_cell
     end
 
-    patient_obj.cell_phone_number = attributes.value unless attributes.blank?
+    if attributes.present?
+      patient_obj.cell_phone_number = attributes.value
+      #patient_obj.phone_type = person.phone_type
+    end
 
     return patient_obj
   end
 
   def self.add_patient_attributes(patient_obj, para)
 
-    uuid_names = ["Occupation", "Cell Phone Number", "Office Phone Number", "Home Phone Number"]
+    uuid_names = ["Occupation", "Cell Phone Number", "Office Phone Number", "Home Phone Number", "Phone Type"]
     i = 0
-    ["occupation", "cell_phone_number", "office_phone_number", "home_phone_number"].each do |name|
+    ["occupation", "cell_phone_number", "office_phone_number", "home_phone_number", "phone_type"].each do |name|
 
       next if para[:person]["#{name}"].blank?
 
