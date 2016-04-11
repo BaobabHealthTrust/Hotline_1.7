@@ -89,12 +89,21 @@
   padding-top: 5%;
 }
 
+.scroll{
+    height: 63vh !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.tab-content{
+    height: 64%;
+}
 </style>
 
 
 <div class="main-container-table">
   <div class="main-container-table-row">
     <div class="main-container-table-cell" style="width: 38%;">
+      <div class="scroll">
       <div class="min-container-table">
       <%
        tab_name = params[:tab_name]
@@ -112,13 +121,16 @@
         <br />
       <%end%>
       </div>
+      </div>
     </div>
-    <div class="main-container-table-cell selected_encounter"> 
+    <div class="main-container-table-cell selected_encounter">
+      <div class="scroll">
         <%if @current_encounters.blank?%>
           <span>No current call</span>
         <%end%>
       <table style="width: 99%;" id="selected_encounter_table">
       </table>
+    </div>
     </div>
   </div>
 </div>
