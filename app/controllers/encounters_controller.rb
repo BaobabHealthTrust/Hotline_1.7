@@ -358,13 +358,13 @@ class EncountersController < ApplicationController
       'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
     }
 
-    @example_foods =  {'Staples' => ['Vegetab'],
-                       'Legumes & Nuts' => ['?'],
-                       'Animal Foods' => ['?'],
-                       'Fruits' => ['?'],
-                       'Vegetables' => ['?'],
-                       'Fats' => ['?'],
-                       'Breastmilk' => ['?'],
+    @example_foods =  {'Staples' => ['Cereals, Starchy foods '],
+                       'Legumes & Nuts' => ['Peas, Peanuts, Beans and Nuts, etc'],
+                       'Animal Foods' => ['Meat, fish, eggs, liver, heart, yoghurt, cheese, etc'],
+                       'Fruits' => ['Mango, guava, orange, pineapple, West Indian cherry, pawpaw'],
+                       'Vegetables' => ['Callaloo, spinach, watercress, pak choy, string beans'],
+                       'Fats' => ['butter, margarine, bacon, salt pork, coconut oil, fat on meat'],
+                       'Breastmilk' => ['Milk'],
                        'Other Liquids' => ['?'],
                        'Groups Cons.' => ["<span style='font-weight: bold'>#{@consumed_groups.uniq.count}</span>"]
     }
