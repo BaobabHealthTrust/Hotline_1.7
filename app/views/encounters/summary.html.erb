@@ -18,6 +18,9 @@
             __$("diet_assess").style.display = 'none';
             __$("clinic_assess").style.display = 'block';
         }
+        else {
+            document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
+        }
     }
 </script>
 <style>
