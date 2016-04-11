@@ -1,3 +1,60 @@
-Clinical Assessment: <%= @group %>
+<style>
+  .clinic{
+      width: 100%;
+      height: 34%;
+  }
+.answer_name, .answer_value{
+    padding: 10px;
+    font-size: 1.2em;
+}
 
+.answer_name{
+    padding-left: 3% !important;
+}
+  .answer_value{
+      font-weight: bold;
+      width: 20%;
+      text-align: center;
+  }
+  caption{
+      font-size: 1.4em;
+      font-weight: bold;
+      margin: auto;
+  }
 
+.inner-table{
+   border: 1px solid #d3d3d3;
+   border-radius: 5px;
+   width: 100%;
+}
+
+  #table tr .even, tr .even{
+      background: #cfcfcf !important;
+  }
+  #table tr .odd, tr .odd{
+      background: #F1F0F1 !important;
+  }
+
+</style>
+<div class="clinic">
+
+    <table style="width: 95%; margin: auto; height: 100%;">
+      <caption style="padding-top: 15px;"> Clinical Assessment </caption>
+      <tr>
+        <td valign="top" style="padding: 5px;width:50%;">
+          <table class="inner-table">
+            <% (@clinical_encounter || []).each do |name, values| %>
+                <tr class ="<%= cycle('even', 'odd')%> ">
+                  <%
+                    nm = (name.scan(/Fever|Diarrhoe|Vomiting|Malnourished|HIV-Positive|Tuberculosis|Anemia|Hypertension/i)[0] rescue name) || name
+                  %>
+                  <td class="answer_name"><%= nm.humanize %></td>
+                  <td class="answer_value"><%= values.join(' , ').strip %></td>
+                </tr>
+            <% end %>
+          </table>
+        </td>
+
+      </tr>
+    </table>
+</div>

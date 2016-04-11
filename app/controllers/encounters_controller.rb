@@ -16,7 +16,8 @@ class EncountersController < ApplicationController
 
     if (encounter.type.name.downcase rescue false) == "dietary assessment"
       create_dietary_assess_obs(encounter, params)
-      redirect_to "/patient/dashboard/#{@patient.id}/tasks" and return
+      redirect_to  "/encounters/nutrition_summary?patient_id=#{@patient.id}" and return if !Encounter.current_data('UPDATE OUTCOME', @patient.id).blank?
+      redirect_to  "/encounters/new/update_outcomes?patient_id=#{@patient.id}&show_summary=true" and return
     end
 
     attrs = PersonAttributeType.all.inject({}){|result, k| result[k.name.upcase] = k.name; result }
@@ -88,6 +89,16 @@ class EncountersController < ApplicationController
       rel.creator = session[:user_id]
       rel.save
     end
+
+    if (encounter.type.name.downcase rescue false) == "clinical assessment"
+      redirect_to  "/encounters/new/dietary_assessment?patient_id=#{@patient.id}" and return if Encounter.current_data('DIETARY ASSESSMENT', @patient.id).blank?
+      redirect_to  "/encounters/new/update_outcomes?patient_id=#{@patient.id}&show_summary=true" and return if Encounter.current_data('UPDATE OUTCOME', @patient.id).blank?
+    end
+
+    if params[:show_summary]
+      redirect_to "/encounters/nutrition_summary?patient_id=#{@patient.id}" and return
+    end
+
     # Go to the next task in the workflow (or dashboard)
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"
   end
@@ -167,8 +178,7 @@ class EncountersController < ApplicationController
              'Are you HIV-positive?',
              'Do you have TB/Tuberculosis?',
              'Do you have high blood pressure/hypertension?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following symptoms?'
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ],
          'Group 2' => [
              'Do you have a fever?',
@@ -178,8 +188,7 @@ class EncountersController < ApplicationController
              'Do you have TB/Tuberculosis?',
              'Do you have high blood pressure/hypertension?',
              'Are you anemic?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following symptoms?'
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ],
          'Group 3' => [
              'Do you have a fever?',
@@ -188,8 +197,7 @@ class EncountersController < ApplicationController
              'Are you HIV-positive?',
              'Do you have TB/Tuberculosis?',
              'Do you have high blood pressure/hypertension?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following symptoms?'
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ],
          'Group 4' => [
              'Is the child HIV-positive?',
@@ -212,8 +220,7 @@ class EncountersController < ApplicationController
              'Is the child HIV-positive?',
              'Is the child anemic?',
              'Does the child have TB/Tuberculosis?',
-             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following danger signs?'
+             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ],
          'Group 7' => [
              'Does the child have a fever?',
@@ -222,8 +229,7 @@ class EncountersController < ApplicationController
              'Is the child HIV-positive?',
              'Does the child have TB/Tuberculosis?',
              'Does the child have high blood pressure/hypertension?',
-             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Is the child currently experiencing any of the following symptoms?'
+             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ]
       ]
       return clinical_questions[0]
@@ -278,9 +284,9 @@ class EncountersController < ApplicationController
     consumption_method_concept = ConceptName.find_by_name('Consumption Method').concept_id
 
     ((0 .. paramz['meal_type'].length - 1)).each do |index|
-      meal_type = paramz['meal_type'][index.to_s]
-      food_types = paramz['food_type'][index.to_s]
-      consumption_method = paramz['consumption_method'][index.to_s]
+      meal_type = paramz['meal_type'][index.to_s] rescue next
+      food_types = paramz['food_type'][index.to_s] rescue next
+      consumption_method = paramz['consumption_method'][index.to_s] rescue next
 
       next if (meal_type.blank? || food_types.blank? || consumption_method.blank?)
 
@@ -318,6 +324,51 @@ class EncountersController < ApplicationController
       end
 
     end
+  end
+
+  def nutrition_summary
+    @patient_obj = PatientService.get_patient(params[:patient_id])
+    @client = Patient.find(params[:patient_id])
+    @clinical_encounter = Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
+    @clinical_encounter_1 = []
+    @clinical_encounter_2 = []
+
+=begin
+    #segmenting clinical encounter for two tables
+    if (@clinical_encounter.keys.length > 0)
+      mid = (@clinical_encounter.keys.length/2).to_i
+      @clinical_encounter_1 = @clinical_encounter.keys[0 .. mid]
+      @clinical_encounter_2 = @clinical_encounter.keys[(mid + 1) .. (@clinical_encounter.keys.length)]
+    elsif (@clinical_encounter.keys.length == 1)
+      @clinical_encounter_1 = @clinical_encounter.keys
+    end
+=end
+
+    @dietary_encounter = Encounter.current_data('DIETARY ASSESSMENT', @patient_obj.patient_id)
+    @group = @client.nutrition_module
+    @consumed_groups = Encounter.current_food_groups('DIETARY ASSESSMENT', @patient_obj.patient_id)
+
+    @groups = {
+      'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids'],
+      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+      'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
+    }
+
+    @example_foods =  {'Staples' => ['Vegetab'],
+                       'Legumes & Nuts' => ['?'],
+                       'Animal Foods' => ['?'],
+                       'Fruits' => ['?'],
+                       'Vegetables' => ['?'],
+                       'Fats' => ['?'],
+                       'Breastmilk' => ['?'],
+                       'Other Liquids' => ['?'],
+                       'Groups Cons.' => ["<span style='font-weight: bold'>#{@consumed_groups.uniq.count}</span>"]
+    }
+    render :layout => false, :template => 'encounters/summary'
   end
 
 end

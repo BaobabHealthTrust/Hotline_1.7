@@ -1,22 +1,96 @@
 <script>
     var tt_cancel_destination = "/patient/dashboard/<%#= @patient_obj.patient_id %>/tasks";
+
+    function __$(id){
+        return document.getElementById(id);
+    }
+    function nextDestination(){
+        if(__$("diet_assess").style.display != 'none') {
+            document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
+        }else{
+            __$("diet_assess").style.display = 'block';
+            __$("clinic_assess").style.display = 'none';
+        }
+    }
+
+    function backDestination(){
+        if(__$("diet_assess").style.display != 'none') {
+            __$("diet_assess").style.display = 'none';
+            __$("clinic_assess").style.display = 'block';
+        }
+    }
 </script>
+<style>
 
-    <!-- Variables from controller declaration -->
-        <% @group %>
-    <!------------------------------------------------------------------------>
+  .main-contain{
+      height: 84%;
+      width: 100%;
+  }
+  .btn {
+      padding-bottom: 5px;
+      text-align: center;
+      width: 180px;
+      height: 75px;
+      cursor: pointer;
+      float: right;
+      box-shadow: inset 2px -4px 2px 0px;
+      background-color: white;
+      border-radius: 7px;
+      border: solid black 3px;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -moz-box-shadow:    inset 0 0 10px #000000;
+      -webkit-box-shadow: inset 0 0 10px #000000;
+      box-shadow:         inset 0 0 10px #000000;
+  }
 
-<div class="main-container">
-    <!-- Partial for header -->
+  .task-icons {
+      height: 70px;
+      width: 130px;
+  }
+  .full-height{
+      height: 84%;
+  }
+</style>
+
+<body>
+    <div class="main-contain">
+        <!-- Partial for header -->
         <%= render :partial => 'patient/headers/header' %>
-    <!------------------------------------------------------------------------>
+        <!------------------------------------------------------------------------>
 
-    <!-- Partial for summary -->
-        <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
-    <!------------------------------------------------------------------------>
+        <div id="clinic_assess" class="full-height">
+          <!-- Partial summary for clinical assessment -->
+          <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
+          <!------------------------------------------------------------------------>
+        </div>
 
-    <!-- Partial for footer -->
-        <%= render :partial => 'home/footer'%>
-    <!------------------------------------------------------------------------>
-</div>
+        <div id="diet_assess" style="display: none" class="full-height">
+          <!-- Partial for dietary assessment -->
+          <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
+          <!------------------------------------------------------------------------>
+        </div>
+      <div style="width: 100%; height: 8%">
+
+        <div class="btn btn-back" onclick="nextDestination();">
+
+          <%=image_tag("icons/forward.png", class: 'task-icons')%>
+
+        </div>
+
+        <div class="btn" onclick="backDestination();">
+
+          <%=image_tag("icons/previous.png", class: 'task-icons')%>
+
+        </div>
+
+
+      </div>
+    </div>
+
+
+    <%= render :partial => 'home/footer' %>
+</body>
+
 

@@ -1,0 +1,62 @@
+<style>
+    .diet{
+        border: 1px solid #d3d3d3 !important;
+        width: 100%;
+        height: 50%;
+    }
+    #table{
+        width: 100%;
+        margin:auto;
+        font-size: 1.2em;
+    }
+    #table caption{
+        font-size: 1.3em;
+        font-weight: bold;
+        width: 90%
+    }
+
+    #table th{
+        background-color: #3366CC;
+        color: white;
+        border: 0px solid white;
+        padding: 9px;
+    }
+
+    #table tr .even, tr .even{
+        background: #cfcfcf !important;
+        padding: 25px;
+    }
+    #table tr .odd, tr .odd{
+        background: #F1F0F1 !important;
+        padding: 40px;
+    }
+
+
+</style>
+<% @food_groups = @groups[@group.downcase] %>
+
+<div class="diet">
+  <table class="table" id="table">
+    <caption style="color: gray;padding-top: 15px;"> Food Groups </caption>
+    <thead class="header">
+    <tr class="row">
+      <% @food_groups.each do |group|%>
+        <th><%= group%></th>
+      <% end %>
+    </tr>
+    </thead>
+    <tbody>
+        <tr class="row">
+          <% @food_groups.each do |group|%>
+              <td class="odd"><%= raw(@example_foods[group].join(', '))%></td>
+          <% end %>
+        </tr>
+
+        <tr class="row">
+          <% @food_groups.each do |group|%>
+              <td class="even"><%= (@consumed_groups.include?(group) ? 'Yes' : '')%></td>
+          <% end %>
+        </tr>
+    </tbody>
+  </table>
+</div>

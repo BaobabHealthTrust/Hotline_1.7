@@ -18,7 +18,7 @@
   <%=form_tag '/start_call' do%>
   <%= select_tag 'district',
                  options_for_select(@location_names.sort, []), {
-                                   :helpText => 'Select the district where the caller is?',
+                                   :helpText => 'Caller\'s District of residence',
                                    :id => 'district',
                                    :tt_requireNextClick => false,
                                    :tt_onLoad => '$(nextButton).style.display = "none";'} %>

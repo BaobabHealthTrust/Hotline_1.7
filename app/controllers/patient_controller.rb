@@ -38,7 +38,7 @@ class PatientController < ApplicationController
     @tasks << {"name" => "Purpose of Call", "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
                'done' => @current_encounter_names.include?('PURPOSE OF CALL')}
 
-    @tasks << {"name" => "Nutrition", "icon" => "nutrition_module.png"}
+    @tasks << {"name" => "Nutrition", "icon" => "nutrition_module.png", 'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
     @tasks << {"name" => "Edit demographics", "link" => "/demographics/#{@patient_obj.patient_id}", "icon" => "demographic.png"}
 
@@ -54,7 +54,7 @@ class PatientController < ApplicationController
     @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "dietary_assessment.png",
                'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
 
-    @tasks << {"name" => "Summary", "link" => "/encounters/new/summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png"}
+    @tasks << {"name" => "Summary", "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png"}
 
     @tasks << {"name" => "Back", "icon" => "back_white.svg"}
 
