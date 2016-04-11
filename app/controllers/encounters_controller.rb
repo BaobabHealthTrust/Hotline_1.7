@@ -364,6 +364,7 @@ class EncountersController < ApplicationController
                        'Fruits' => ['Mango, guava, orange, pineapple, West Indian cherry, pawpaw'],
                        'Vegetables' => ['Callaloo, spinach, watercress, pak choy, string beans'],
                        'Fats' => ['butter, margarine, bacon, salt pork, coconut oil, fat on meat'],
+                       'Foods' => ['Phala', 'Nsima'],
                        'Breastmilk' => ['Milk'],
                        'Other Liquids' => ['?'],
                        'Groups Cons.' => ["<span style='font-weight: bold'>#{@consumed_groups.uniq.count}</span>"]
