@@ -178,8 +178,7 @@ class EncountersController < ApplicationController
              'Are you HIV-positive?',
              'Do you have TB/Tuberculosis?',
              'Do you have high blood pressure/hypertension?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following symptoms?'
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ],
          'Group 2' => [
              'Do you have a fever?',
@@ -189,8 +188,7 @@ class EncountersController < ApplicationController
              'Do you have TB/Tuberculosis?',
              'Do you have high blood pressure/hypertension?',
              'Are you anemic?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following symptoms?'
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ],
          'Group 3' => [
              'Do you have a fever?',
@@ -199,8 +197,7 @@ class EncountersController < ApplicationController
              'Are you HIV-positive?',
              'Do you have TB/Tuberculosis?',
              'Do you have high blood pressure/hypertension?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following symptoms?'
+             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ],
          'Group 4' => [
              'Is the child HIV-positive?',
@@ -223,8 +220,7 @@ class EncountersController < ApplicationController
              'Is the child HIV-positive?',
              'Is the child anemic?',
              'Does the child have TB/Tuberculosis?',
-             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following danger signs?'
+             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ],
          'Group 7' => [
              'Does the child have a fever?',
@@ -233,8 +229,7 @@ class EncountersController < ApplicationController
              'Is the child HIV-positive?',
              'Does the child have TB/Tuberculosis?',
              'Does the child have high blood pressure/hypertension?',
-             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Is the child currently experiencing any of the following symptoms?'
+             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?'
          ]
       ]
       return clinical_questions[0]
@@ -338,6 +333,7 @@ class EncountersController < ApplicationController
     @clinical_encounter_1 = []
     @clinical_encounter_2 = []
 
+=begin
     #segmenting clinical encounter for two tables
     if (@clinical_encounter.keys.length > 0)
       mid = (@clinical_encounter.keys.length/2).to_i
@@ -346,6 +342,7 @@ class EncountersController < ApplicationController
     elsif (@clinical_encounter.keys.length == 1)
       @clinical_encounter_1 = @clinical_encounter.keys
     end
+=end
 
     @dietary_encounter = Encounter.current_data('DIETARY ASSESSMENT', @patient_obj.patient_id)
     @group = @client.nutrition_module
@@ -361,14 +358,14 @@ class EncountersController < ApplicationController
       'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
     }
 
-    @example_foods =  {'Staples' => ['Food 1, Food 2'],
-                       'Legumes & Nuts' => ['Beans', 'Soya pieces'],
-                       'Animal Foods' => ['Mbewa'],
-                       'Fruits' => ['Lemon'],
-                       'Vegetables' => ['Pumpkins leaves'],
-                       'Fats' => ['Pork'],
-                       'Breastmilk' => ['br mi'],
-                       'Other Liquids' => ['Water'],
+    @example_foods =  {'Staples' => ['Vegetab'],
+                       'Legumes & Nuts' => ['?'],
+                       'Animal Foods' => ['?'],
+                       'Fruits' => ['?'],
+                       'Vegetables' => ['?'],
+                       'Fats' => ['?'],
+                       'Breastmilk' => ['?'],
+                       'Other Liquids' => ['?'],
                        'Groups Cons.' => ["<span style='font-weight: bold'>#{@consumed_groups.uniq.count}</span>"]
     }
     render :layout => false, :template => 'encounters/summary'
