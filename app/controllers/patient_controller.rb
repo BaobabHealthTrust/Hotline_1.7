@@ -44,7 +44,7 @@ class PatientController < ApplicationController
 
     @tasks << {"name" => "Reference material", "link" => "/patient/reference_material/#{@patient_obj.patient_id}", "icon" => "reference.png"}
 
-    @tasks << {"name" => "Next Client", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}", "icon" => "next.png"}
+    @tasks << {"name" => "Next Client", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true", "icon" => "next.png"}
 
     @tasks << {"name" => "End Call", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true", "icon" => "end-call.png"}
 
@@ -268,14 +268,16 @@ class PatientController < ApplicationController
 
       if verify_purpose_encounter.nil? || verify_purpose_encounter.observations.last.nil?
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
-      elsif params[:end_call] == 'true'
-        if update_outcome_encounter.nil?
+      elsif update_outcome_encounter.nil? || update_outcome_encounter.observations.last.nil?
+        if params[:end_call] == 'true'
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
-        else
+        elsif params[:next_client] == 'true'
+          redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}" and return
+        end
+      elsif params[:end_call] == 'true'
           redirect_to '/' and return
       end
     end
-  end
 
     location_tag = LocationTag.find_by_name("District")
     @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins('INNER JOIN location_tag_map m
