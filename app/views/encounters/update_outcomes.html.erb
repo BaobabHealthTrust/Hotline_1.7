@@ -172,8 +172,8 @@ function hideselectedOutcomes(){
                             :allowFreeText => true }%>
         <% @current_data['GENERAL OUTCOME'] = @current_data['GENERAL OUTCOME'] - [@current_data['GENERAL OUTCOME'].first] rescue nil
         %>
-        <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , (@current_data['GENERAL OUTCOME'] rescue nil)),
+        <%= hidden_field_tag("observations[][concept_name]", "Secondary Outcome") %>
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , (@current_data['SECONDARY OUTCOME'] rescue nil)),
                        :helpText =>"Secondary outcome if any",
                        :id => "secondary_outcome",
                        :multiple => true,
