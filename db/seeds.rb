@@ -397,7 +397,10 @@ select_options = {
       ['Paleness of the skin and tiredness','PALENESS OF THE SKIN AND TIREDNESS SIGN'],
       ['No fetal movements','NO FETAL MOVEMENTS SIGN'],
       ['Water breaks','WATER BREAKS SIGN'],
-      ['Severe abdominal pain','ACUTE ABDOMINAL PAIN']
+      ['Severe abdominal pain','ACUTE ABDOMINAL PAIN'],
+      ['Malaria','MALARIA SIGN'],
+      ['Anemia','ANEMIA SIGN'],
+      ['Antenatal care','ANTENATAL CARE SIGN']
   ],
   'child_health_info' => [
       ['Sleeping','SLEEPING'],
