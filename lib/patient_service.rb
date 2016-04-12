@@ -37,9 +37,9 @@ module PatientService
 
   def self.add_patient_attributes(patient_obj, para)
 
-    uuid_names = ["Occupation", "Cell Phone Number", "Office Phone Number", "Home Phone Number", "Phone Type"]
+    uuid_names = ["Cell Phone Number", "Office Phone Number", "Home Phone Number", "Phone Type"]
     i = 0
-    ["occupation", "cell_phone_number", "office_phone_number", "home_phone_number", "phone_type"].each do |name|
+    ["cell_phone_number", "office_phone_number", "home_phone_number", "phone_type"].each do |name|
 
       next if para[:person]["#{name}"].blank?
 
