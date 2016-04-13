@@ -164,6 +164,7 @@
             </div>
             <!-- endloop -->
 
+            <% if User.current.system_id == 'admin' %>
               <!-- loop -->
               <div class="cells btncells">
                 <div class="divbtn" onclick="document.location='/configurations'" >
@@ -174,6 +175,18 @@
                   </div>
                 </div>
                 <!-- endloop -->
+            <% else %>
+                <!-- loop -->
+                <div class="cells btncells">
+                  <div class="divbtn" onclick="document.location='/home/reference_material'" >
+                  <span class="icons">
+                    <%=image_tag("icons/reference.png", class: 'icons')%>
+                    <p class="button-label">Reference material</p>
+                    </span>
+                  </div>
+                </div>
+                <!-- endloop -->
+            <% end %>
 
                 <!-- loop -->
                 <div class="cells btncells">
