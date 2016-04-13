@@ -390,7 +390,7 @@ select_options = {
       ['Heavy vaginal bleeding during pregnancy','HEAVY VAGINAL BLEEDING DURING PREGNANCY'],
       ['Excessive postnatal bleeding','EXCESSIVE POSTNATAL BLEEDING'],
       ['Fever during pregnancy','FEVER DURING PREGNANCY SIGN'],
-      ['Postanatal fever','POSTNATAL FEVER SIGN'],
+      ['Postnatal fever','POSTNATAL FEVER SIGN'],
       ['Severe headache','SEVERE HEADACHE'],
       ['Fits or convulsions','FITS OR CONVULSIONS SIGN'],
       ['Swollen hands, feet, and face','SWOLLEN HANDS OR FEET SIGN'],

@@ -26,13 +26,18 @@
     }
     var selected_danger_signs = [];
     function selectedInitialDangerSigns() {
-        selected_danger_signs = [];
+
+        if (tstCurrentPage == 0){
+            selected_danger_signs = [];
+        }
+
         list =  __$('page' + tstCurrentPage).getElementsByTagName('img');
         for(var i = 0; i < list.length; i ++){
             if(!list[i].src.match("unticked")) {
                 selected_danger_signs.push(list[i].parentNode.parentNode.childNodes[1].innerHTML);
             }
         }
+
     }
 
     function hideSelectedValues(){
@@ -83,6 +88,7 @@
                        :helpText =>"Experiencing any of the following symptoms?",
                        :multiple => true,
                        :tt_onLoad => "showHelpButton();setListAttributes();",
+                       :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
                        :tt_onUnLoad => "hideHelpButton();",
                        :condition => 'parseInt(age) >= 5;',
                        :tt_pageStyleClass => 'longSelectList',
@@ -96,6 +102,7 @@
                        :helpText =>"Select danger signs",
                        :multiple => true,
                        :optional => false,
+                       :tt_onLoad => "setTimeout('hideSelectedValues()', 100);",
                        :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
                        :tt_pageStyleClass => 'longSelectList',
                        :id => "danger_status",

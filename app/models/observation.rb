@@ -46,5 +46,16 @@ class Observation < ActiveRecord::Base
     value
   end
 
+  def self.by_concept_today(person_id, concept_name, date = Date.today)
+
+    concept_id = ConceptName.find_by_name(concept_name).concept_id
+    return "Concept Not Found!!" if concept_id.blank?
+    return 'Patient Not Found!!' if Patient.find(person_id).blank?
+
+    Observation.find_by_sql(
+        ["SELECT * FROM obs WHERE person_id = #{person_id} AND concept_id = #{concept_id} AND DATE(obs_datetime) = ?",
+         date.to_date]).collect{|o| o.answer_string}.delete_if{|a| a.blank?}.uniq
+  end
+
 
 end

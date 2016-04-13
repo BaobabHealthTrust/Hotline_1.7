@@ -16,7 +16,9 @@
 }
 
 .cells {
-  display: table-cell;
+    display: table-cell;
+    border: 1px dotted #d3d3d3;
+    border-radius: 2px;
 }
 
 .demographics .cells {
@@ -38,7 +40,7 @@
 }
 
 .main-container th {
-  font-size: 12px;
+  font-size: 13px;
   text-align: left;
 }
 
@@ -48,7 +50,10 @@
   border-style: solid;
   border-width: 1px;
 }
-
+.value{
+  font-style: italic;
+    font-size: 14px;
+}
 /* ........................................................... */
 </style>
 
@@ -65,23 +70,23 @@
       </span>
     </div>
 
-    <div class="cells" style="width: 30%;">
+    <div class="cells" style="width: 28%;">
       <table class="demographics-table">
         <tr>
           <th style="width:55px;">Name:</th>
-          <td><%=@patient_obj.name%></td>
+          <td class="value" ><%=@patient_obj.name%></td>
         </tr>
         <tr>
           <th style="width:100px;">Birthdate:</th>
-          <td style="text-align: left;"><%=@patient_obj.birthdate%></td>
+          <td class="value" style="text-align: left;"><%=@patient_obj.birthdate%></td>
         </tr>
         <tr>
           <th style="width:100px;">Age:</th>
-          <td style="text-align: left;">(<%=@patient_obj.age%>)</td>
+          <td class="value" style="text-align: left;">(<%=@patient_obj.age%>)</td>
         </tr>
         <tr>
           <th style="width:100px;">National ID:</th>
-          <td style="text-align: left;"><%= %></td>
+          <td class="value"  style="text-align: left;"><%= %></td>
         </tr>
       </table> 
     </div>
@@ -90,41 +95,56 @@
       <table class="attributes-table">
         <tr>
           <th style="width:55px;">AVR access ID:</th>
-          <td><%=@patient_obj.avr_access_number%></td>
+          <td class="value" ><%=@patient_obj.avr_access_number%></td>
         </tr>
         <tr>
           <th style="width:100px;">TA:</th>
-          <td style="text-align: left;"><%= @patient_obj.county_district %></td>
+          <td class="value"  style="text-align: left;"><%= @patient_obj.county_district %></td>
         </tr>
         <tr>
           <th style="width:100px;">Village:</th>
-          <td style="text-align: left;"><%= @patient_obj.neighborhood_cell %></td>
+          <td class="value"  style="text-align: left;"><%= @patient_obj.neighborhood_cell %></td>
         </tr>
         <tr>
           <th style="width:100px;">Phone&nbsp;#:</th>
-          <td style="text-align: left;"><%= @patient_obj.cell_phone_number %></td>
+          <td class="value"  style="text-align: left;"><%= @patient_obj.cell_phone_number %></td>
         </tr>
-      </table> 
+      </table>
     </div>
 
-    <% if gender == 'Female' %>
-        <div class="cells" style="width: 30%;">
+    <% if gender == 'Female'
+
+         symp = Observation.by_concept_today(@patient_obj.patient_id,
+                                      'Maternal Health Symptoms',
+                                      Date.today).join(' , ')
+         symp = (symp.length < 50) ? symp : (symp[0..50] + '...')
+
+       dang = Observation.by_concept_today(@patient_obj.patient_id,
+                                           'Danger signs',
+                                           Date.today).join(' , ')
+       dang = (dang.length < 50) ? dang : (dang[0..50] + '...')
+    %>
+        <div class="cells" style="width: 45%;">
           <table class="attributes-table">
             <tr>
               <th style="width:55px;">Symptoms:</th>
-              <td><%= %></td>
+              <td class="value"  ><%= symp %></td>
             </tr>
             <tr>
               <th style="width:100px;">Danger signs:</th>
-              <td style="text-align: left;"><%=  %></td>
+              <td class="value" style="text-align: left;"><%= dang%></td>
             </tr>
             <tr>
-              <th style="width:55px;">Pregnancy status:</th>
-              <td style="text-align: left;"><%=  %></td>
+              <th style="width:100px;">Pregnancy status:</th>
+              <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
+                                                                              'Pregnancy status',
+                                                                              Date.today).join(' , ')%></td>
             </tr>
             <tr>
               <th style="width:100px;">EDD:</th>
-              <td style="text-align: left;"><%=  %></td>
+              <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
+                                                                              'Pregnancy due date',
+                                                                              Date.today).first.to_date.strftime("%d-%b-%Y") rescue nil%></td>
             </tr>
           </table>
         </div>
