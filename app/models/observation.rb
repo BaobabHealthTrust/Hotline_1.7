@@ -5,7 +5,7 @@ class Observation < ActiveRecord::Base
 
   default_scope { where(voided: 0) }
 
-  belongs_to :encounter, -> {where voided: 0}
+  belongs_to :encounter, -> {where voided: 0}, class_name: "Encounter", foreign_key: "encounter_id"
   belongs_to :order, -> {where voided: 0}
   belongs_to :concept, -> {where retired: 0}
   belongs_to :concept_name, -> {where voided: 0}, class_name: "ConceptName", foreign_key: "concept_id"
@@ -53,7 +53,8 @@ class Observation < ActiveRecord::Base
     return 'Patient Not Found!!' if Patient.find(person_id).blank?
 
     Observation.find_by_sql(
-        ["SELECT * FROM obs WHERE person_id = #{person_id} AND concept_id = #{concept_id} AND DATE(obs_datetime) = ?",
+        ["SELECT * FROM obs WHERE person_id = #{person_id} AND concept_id = #{concept_id} AND DATE(obs_datetime) = ?
+          ORDER BY obs_datetime DESC",
          date.to_date]).collect{|o| o.answer_string}.delete_if{|a| a.blank?}.uniq
   end
 
