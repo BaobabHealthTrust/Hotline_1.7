@@ -46,7 +46,7 @@ class PatientController < ApplicationController
 
     @tasks << {"name" => "Next Client", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true", "icon" => "next.png"}
 
-    @tasks << {"name" => "Nutrition Summary", "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png"}
+    @tasks << {"name" => "Nutrition Summary", "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png", 'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
     @tasks << {"name" => "End Call", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true", "icon" => "end-call.png"}
 
