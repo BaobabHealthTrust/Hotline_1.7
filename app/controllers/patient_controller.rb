@@ -14,41 +14,66 @@ class PatientController < ApplicationController
     #Adding tasks in proper order
     @tasks = []
     if @patient_obj.sex.match('F') && @patient_obj.age > 13
-      @tasks << {"name" => "Pregnancy Status", "link" => "/encounters/new/pregnancy_status?patient_id=#{@patient_obj.patient_id}", 'icon' => "pregnacy.png",
+      @tasks << {"name" => "Pregnancy Status",
+                 "link" => "/encounters/new/pregnancy_status?patient_id=#{@patient_obj.patient_id}",
+                 'icon' => "pregnacy.png",
                  'done' => @current_encounter_names.include?('PREGNANCY STATUS')}
     end
 
     if @patient_obj.sex.match('F') || @patient_obj.age <= 5
-      @tasks << {"name" => "Symptoms", "link" =>"/encounters/new/female_symptoms?patient_id=#{@patient_obj.patient_id}", 'icon' => "symptoms-2.png",
+      @tasks << {"name" => "Symptoms",
+                 "link" =>"/encounters/new/female_symptoms?patient_id=#{@patient_obj.patient_id}",
+                 'icon' => "symptoms-2.png",
                  'done' => @current_encounter_names.include?('MATERNAL HEALTH SYMPTOMS')}
     end
 
-    @tasks << {"name" => "Outcomes", "link" => "/encounters/new/update_outcomes?patient_id=#{@patient_obj.patient_id}", 'icon' => "symptoms.png",
+    @tasks << {"name" => "Outcomes", "link" => "/encounters/new/update_outcomes?patient_id=#{@patient_obj.patient_id}",
+               'icon' => "symptoms.png",
                'done' => @current_encounter_names.include?('UPDATE OUTCOME')}
     if @patient_obj.sex.match('F')
-      @tasks << {"name" => "Clinic Schedule", "link" => "/encounters/new/schedule?patient_id=#{@patient_obj.patient_id}", "icon" => "calendar-and-tasks.png",
+      @tasks << {"name" => "Clinic Schedule",
+                 "link" => "/encounters/new/schedule?patient_id=#{@patient_obj.patient_id}",
+                 "icon" => "calendar-and-tasks.png",
                  'done' => @current_encounter_names.include?('APPOINTMENT')}
     end
 
     if @patient_obj.sex.match('F')
-      @tasks << {"name" => "Edit reminders", "link" => "/encounters/new/reminders?patient_id=#{@patient_obj.patient_id}", "icon" => "notification.png",
+      @tasks << {"name" => "Edit reminders",
+                 "link" => "/encounters/new/reminders?patient_id=#{@patient_obj.patient_id}",
+                 "icon" => "notification.png",
                  'done' => @current_encounter_names.include?('TIPS AND REMINDERS')}
     end
 
-    @tasks << {"name" => "Purpose of Call", "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
+    @tasks << {"name" => "Purpose of Call",
+               "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}",
+               "icon" => "call_purpose.png",
                'done' => @current_encounter_names.include?('PURPOSE OF CALL')}
 
-    @tasks << {"name" => "Nutrition", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_module.png", 'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
+    @tasks << {"name" => "Nutrition",
+               "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}",
+               "icon" => "nutrition_module.png",
+               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
-    @tasks << {"name" => "Edit demographics", "link" => "/demographics/#{@patient_obj.patient_id}", "icon" => "demographic.png"}
+    @tasks << {"name" => "Edit demographics",
+               "link" => "/demographics/#{@patient_obj.patient_id}",
+               "icon" => "demographic.png"}
 
-    @tasks << {"name" => "Reference material", "link" => "/patient/reference_material/#{@patient_obj.patient_id}", "icon" => "reference.png"}
+    @tasks << {"name" => "Reference material",
+               "link" => "/patient/reference_material/#{@patient_obj.patient_id}",
+               "icon" => "reference.png"}
 
-    @tasks << {"name" => "Next Client", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true", "icon" => "next.png"}
+    @tasks << {"name" => "Next Client",
+               "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true",
+               "icon" => "next.png"}
 
-    @tasks << {"name" => "Nutrition Summary", "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png", 'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
+    @tasks << {"name" => "Nutrition Summary",
+               "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}",
+               "icon" => "nutrition_summary.png",
+               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
-    @tasks << {"name" => "End Call", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true", "icon" => "end-call.png"}
+    @tasks << {"name" => "End Call",
+               'link' => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true",
+               'icon' => 'end-call.png'}
 
     symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
     @symptom_encounters = Encounter.where('patient_id = ? AND encounter_type = ?',
