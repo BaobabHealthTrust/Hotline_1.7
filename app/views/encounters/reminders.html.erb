@@ -27,29 +27,31 @@
 
     <% @current_data = Encounter.current_data("Tips and reminders", @patient_obj.patient_id)%>
 
-    <% if !@guardian %>
-        <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
-                       :helpText =>"Is guardian present?",
-                       :tt_onUnLoad =>"checkGuardian(); ",
-                       :id => "guardian_present"
-        %>
-    <% end %>
+    <% if @patient_obj.age < 6 %>
+        <% if !@guardian %>
+            <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
+                           :helpText =>"Is guardian present?",
+                           :tt_onUnLoad =>"checkGuardian(); ",
+                           :id => "guardian_present"
+            %>
+        <% end %>
 
-    <% if params[:guardian_id] %>
+        <% if params[:guardian_id] %>
 
-        <%= hidden_field_tag "guardian_id", params[:guardian_id] %>
+            <%= hidden_field_tag "guardian_id", params[:guardian_id] %>
 
-        <%= hidden_field_tag("observations[][concept_name]", "Who is present as guardian?") %>
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select(
-                        ['', 'Spouse/Partner','Mother', 'Father',
-                         'Brother', 'Sister', 'Uncle', 'Aunt',
-                         'Grandfather', 'Grandmother', 'Other']
-                    ),
-                       :helpText =>"Specify guardian relationship type",
-                       :tt_pageStyleClass => "longSelectList NoKeyboard",
-                       :id => "guardian_relationship"
-        %>
+            <%= hidden_field_tag("observations[][concept_name]", "Who is present as guardian?") %>
+            <%= select_tag "observations[][value_coded_or_text]", options_for_select(
+                            ['', 'Spouse/Partner','Mother', 'Father',
+                             'Brother', 'Sister', 'Uncle', 'Aunt',
+                             'Grandfather', 'Grandmother', 'Other']
+                        ),
+                           :helpText =>"Specify guardian relationship type",
+                           :tt_pageStyleClass => "longSelectList NoKeyboard",
+                           :id => "guardian_relationship"
+            %>
 
+        <% end %>
     <% end %>
 
     <%= hidden_field_tag("observations[][concept_name]", "On tips and reminders program") %>

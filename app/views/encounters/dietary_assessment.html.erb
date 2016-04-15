@@ -55,9 +55,7 @@
 <script>
 
 </script>
-<%@meal_types = ['', 'Breakfast', 'Lunch', 'Supper', 'Snack'] %>
-<%@food_types = ['', 'Vegetables', 'Fruits', 'Legumes & Nuts', 'Animal Foods', 'Staples', 'Fats', 'Water', 'Other Drink'] %>
-<%@consumption_method = ['', 'Eaten', 'Drunk'] %>
+
 <body>
     <div id="dietary_analysis">
 
@@ -65,27 +63,48 @@
           <caption> Dietary Assessment </caption>
           <thead class="header">
             <tr class="row">
-              <th>Time of Day</th>
+              <% if @group.downcase != 'group 4'%>
+                <th>Time of Day</th>
+              <%end %>
               <th>Type of Food/Drink</th>
+              <% if @group.downcase == 'group 4'%>
+                   <th> Number of Times Per Day</th>
+              <% end %>
               <th>Consumption Method</th>
             </tr>
           </thead>
-              <% 10.times do |i|%>
+              <% 8.times do |i|%>
                   <tr class="row input-row">
-                    <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
-                        <select name="meal_type[<%=i%>]" class="<%= i%> select meal-type input">
-                          <% @meal_types.each  do |type|%>
-                            <option><%= type %></option>
-                          <% end %>
-                        </select>
-                    </td>
+
+                    <% if @group.downcase != 'group 4'%>
+                        <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
+                            <select name="meal_type[<%=i%>]" class="<%= i%> select meal-type input">
+                              <% @meal_types[@group.downcase].each  do |type|%>
+                                <option><%= type %></option>
+                              <% end %>
+                            </select>
+                        </td>
+                    <% end %>
+
                     <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
                       <select name="food_type[<%=i%>][]" class="<%= i%> select food-type input" multiple="multiple">
-                        <% @food_types.each  do |type|%>
+                        <% @food_types[@group.downcase].each  do |type|%>
                             <option><%= type %></option>
                         <% end %>
                       </select>
                     </td>
+
+                    <% if @group.downcase == 'group 4'%>
+                        <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
+                          <select name="times_per_day[<%= i%>]" class="<%= i%> select times-per-day input">
+                            <option></option>
+                            <% (1 .. 12).each do |type|%>
+                                <option><%= type %></option>
+                            <% end %>
+                          </select>
+                        </td>
+                    <% end %>
+
                     <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
                       <select name="consumption_method[<%= i%>]" class="<%= i%> select consumption-type input">
                         <% @consumption_method.each  do |type|%>
@@ -102,6 +121,7 @@
         <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
         <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+        <%= hidden_field_tag "patient_id", @patient_obj.patient_id %>
 
         <input name="test" tt_onLoad="pageSetup();" tt_pageStyleClass = "NoKeyboard"/>
       </form>

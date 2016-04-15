@@ -28,7 +28,7 @@ class Patient < ActiveRecord::Base
   	
   	pregnant_obs =  ""
   	
-	if !recent_preg_obs.blank? 
+	if !recent_preg_obs.blank? && female
 		category = "Group 2"
 	elsif female && patient_age >= 14 && patient_age < 50 
 		category = "Group 1"

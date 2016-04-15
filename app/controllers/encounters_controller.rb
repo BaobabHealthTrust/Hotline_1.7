@@ -4,6 +4,7 @@ class EncountersController < ApplicationController
   def create
 
     @patient = Patient.find(params[:encounter][:patient_id])
+    @patient_obj = PatientService.get_patient(@patient.patient_id)
 
     redirect_to "/patient/dashboard/#{@patient.id}/tasks"  unless params[:encounter]
 
@@ -100,7 +101,7 @@ class EncountersController < ApplicationController
     end
 
     # Go to the next task in the workflow (or dashboard)
-    redirect_to "/patient/dashboard/#{@patient.id}/tasks"
+    redirect_to next_task(@patient_obj)
   end
 
   def create_obs(paramz)
@@ -156,7 +157,28 @@ class EncountersController < ApplicationController
         @confirm_call_options = call_options
       when 'Clinical assessment'
         @clinical_questions = clinical_questions#('Group 2')
-        @group = @client.nutrition_module
+      when 'Dietary assessment'
+        @meal_types = ['', 'Breakfast', 'Lunch', 'Supper', 'Snack']
+        @meal_types = {
+            'group 1' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack'],
+            'group 2' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack'],
+            'group 3' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack'],
+            'group 4' => [''],
+            'group 5' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack'],
+            'group 6' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack'],
+            'group 7' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack']
+        }
+        @food_types = {
+            'group 1' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 2' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 3' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 4' => ['', 'Breastmilk', 'Foods', 'Other Liquids'],
+            'group 5' => ['', 'Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 6' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 7' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats']
+        }
+
+        @consumption_method = ['', 'Eaten', 'Drunk']
       when 'Summary'
         encounter_id = EncounterType.find_by_name('Clinical Assessment').encounter_type_id
         @observations = Observation.where(person_id: @patient_obj.patient_id, encounter_id: encounter_id)
@@ -279,12 +301,15 @@ class EncountersController < ApplicationController
   end
 
   def  create_dietary_assess_obs(enc, paramz)
+    meal_type_concept = (@group.downcase == 'group 4') ? 'Number of Times Per Day' : 'Meal Type'
+    meal_type_values = (@group.downcase == 'group 4') ? paramz['times_per_day'] : paramz['meal_type']
+
     food_type_concept = ConceptName.find_by_name('Food Type').concept_id
-    meal_type_concept = ConceptName.find_by_name('Meal Type').concept_id
+    meal_type_concept = ConceptName.find_by_name(meal_type_concept).concept_id
     consumption_method_concept = ConceptName.find_by_name('Consumption Method').concept_id
 
-    ((0 .. paramz['meal_type'].length - 1)).each do |index|
-      meal_type = paramz['meal_type'][index.to_s] rescue next
+    ((0 .. paramz['consumption_method'].length - 1)).each do |index|
+      meal_type = meal_type_values[index.to_s] rescue next
       food_types = paramz['food_type'][index.to_s] rescue next
       consumption_method = paramz['consumption_method'][index.to_s] rescue next
 
