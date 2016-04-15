@@ -660,11 +660,22 @@
     }
 
     function summary() {
+
         var pregnancy_status = document.getElementById('pregnancy_status').value;
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
         var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
+        // Catch false year ------------
+        var current_year = new Date().getFullYear()
+        if (parseInt(current_year) - parseInt(year)  > 1 || parseInt(current_year) - parseInt(year) < 0) {
+
+            alert('The year selected is out of range')
+
+                history.go(-1);
+
+                return false; 
+        }
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
             var edd_month;
