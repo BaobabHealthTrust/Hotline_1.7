@@ -38,7 +38,7 @@ class PatientController < ApplicationController
     @tasks << {"name" => "Purpose of Call", "link" => "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}", "icon" => "call_purpose.png",
                'done' => @current_encounter_names.include?('PURPOSE OF CALL')}
 
-    @tasks << {"name" => "Nutrition", "icon" => "nutrition_module.png", 'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
+    @tasks << {"name" => "Nutrition", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_module.png", 'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
     @tasks << {"name" => "Edit demographics", "link" => "/demographics/#{@patient_obj.patient_id}", "icon" => "demographic.png"}
 
@@ -46,20 +46,12 @@ class PatientController < ApplicationController
 
     @tasks << {"name" => "Next Client", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true", "icon" => "next.png"}
 
+    @tasks << {"name" => "Nutrition Summary", "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png"}
+
     @tasks << {"name" => "End Call", "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true", "icon" => "end-call.png"}
 
-    @tasks << {"name" => "Clinical Assessment", "link" => "/encounters/new/clinical_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "clinical_assessment.png",
-               'done' => @current_encounter_names.include?('CLINICAL ASSESSMENT')}
-
-    @tasks << {"name" => "Dietary Assessment", "link" => "/encounters/new/dietary_assessment?patient_id=#{@patient_obj.patient_id}", "icon" => "dietary_assessment.png",
-               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT')}
-
-    @tasks << {"name" => "Summary", "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}", "icon" => "nutrition_summary.png"}
-
-    @tasks << {"name" => "Back", "icon" => "back_white.svg"}
-
     symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
-    @symptom_encounters = Encounter.where("patient_id = ? AND encounter_type = ?",
+    @symptom_encounters = Encounter.where('patient_id = ? AND encounter_type = ?',
       params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
     render :layout => false
   end

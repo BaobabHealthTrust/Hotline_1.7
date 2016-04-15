@@ -92,7 +92,7 @@ class EncountersController < ApplicationController
     end
 
     if (encounter.type.name.downcase rescue false) == "clinical assessment"
-      redirect_to  "/encounters/new/dietary_assessment?patient_id=#{@patient.id}" and return if Encounter.current_data('DIETARY ASSESSMENT', @patient.id).blank?
+      redirect_to  "/encounters/new/dietary_assessment?patient_id=#{@patient.id}" and return #if Encounter.current_data('DIETARY ASSESSMENT', @patient.id).blank?
       redirect_to  "/encounters/new/update_outcomes?patient_id=#{@patient.id}&show_summary=true" and return if Encounter.current_data('UPDATE OUTCOME', @patient.id).blank?
     end
 
