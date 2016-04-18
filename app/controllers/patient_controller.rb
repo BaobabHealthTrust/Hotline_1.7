@@ -70,11 +70,11 @@ class PatientController < ApplicationController
     @tasks << {"name" => "Reference material",
                "link" => "/patient/reference_material/#{@patient_obj.patient_id}",
                "icon" => "reference.png"}
-
+=begin
     @tasks << {"name" => "Next Client",
                "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true",
                "icon" => "next.png"}
-
+=end
     @tasks << {"name" => "Nutrition Summary",
                "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}",
                "icon" => "nutrition_summary.png",

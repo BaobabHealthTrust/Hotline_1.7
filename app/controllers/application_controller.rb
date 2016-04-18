@@ -31,10 +31,14 @@ class ApplicationController < ActionController::Base
     patient = Patient.where(:patient_id => patient_obj.patient_id).first
     return '/' if patient.blank?
 
-    current_encounters = Encounter.where(patient_id: patient_obj.patient_id,
-                                          encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) .. (Date.today.strftime('%Y-%m-%d 23:59:59')))
-    current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}.uniq
+    current_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
+      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+      WHERE encounter.patient_id = #{patient_obj.patient_id}
+        AND encounter.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
+        AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') = ''
+      ORDER BY encounter.encounter_datetime DESC")
 
+    current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}
 
     tasks = [
         {'PURPOSE OF CALL' => {
