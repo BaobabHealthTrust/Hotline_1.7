@@ -27,7 +27,7 @@
 
     <% @current_data = Encounter.current_data("Tips and reminders", @patient_obj.patient_id)%>
 
-    <% if @patient_obj.age < 6 %>
+    <% if @patient_obj.age < 6 && false #FALSE TO DISABLE FEATURE IN THIS ENCOUNTER; TO BE MOVED TO ANOTHER ENCOUNTER%>
         <% if !@guardian %>
             <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
                            :helpText =>"Is guardian present?",
@@ -99,12 +99,5 @@
                    :condition => "__$('enroll').value == 'Yes' ",
                    :id => "message_content"
     %>
-    <%= hidden_field_tag("observations[][concept_name]", "Health facility name") %>
-    <%= select_tag "observations[][value_text]", nil,
-                           {:id => 'health_centre_name',
-                            :field_type => 'alpha',
-                            :helpText => 'Select Nearest health centre',
-                            :ajaxURL => '/home/health_facilities?search_string=',
-                            :allowFreeText => true }%>
 
 <% end %>
