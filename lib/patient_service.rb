@@ -50,7 +50,13 @@ module PatientService
 
       calculated_age = (current_month_index - birth_month_index).abs.to_i
 
-      #raise @age.inspect
+      new_age = 12 - calculated_age
+      if current_month_index > birth_month_index
+        infant_age = 12 - new_age
+      else
+        infant_age = new_age
+      end
+      #raise infant_age.inspect
     end
   end
 
