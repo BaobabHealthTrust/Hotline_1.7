@@ -3,11 +3,11 @@ class PatientController < ApplicationController
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
+    @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
 
     @current_encounters = Encounter.find_by_sql("
       SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
-
       INNER JOIN (
           SELECT e.encounter_id, e.encounter_type, MAX(e.encounter_id) AS max_enc FROM encounter e
               INNER JOIN obs o ON o.encounter_id = e.encounter_id
@@ -126,6 +126,7 @@ class PatientController < ApplicationController
 
     render :layout => false
   end
+
 
   def reference_material
     @material = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article'")
@@ -315,10 +316,12 @@ class PatientController < ApplicationController
   end
 
   def districts
-    @patient = Patient.find(params[:patient_id])
-    @patient_obj = PatientService.get_patient(@patient.patient_id)
 
     if params[:param] == 'verify_purpose'
+
+      @patient = Patient.find(params[:patient_id])
+      @patient_obj = PatientService.get_patient(@patient.patient_id)
+
       session[:tag_encounters] = true
       session[:tagged_encounters_patient_id] = params[:patient_id]
       ###
