@@ -38,7 +38,6 @@ class EncountersController < ApplicationController
       }.compact
       next if values.length == 0
 
-
       concept_id = ConceptName.find_by_name(observation[:concept_name]).concept_id
 
       next if concept_id.blank?

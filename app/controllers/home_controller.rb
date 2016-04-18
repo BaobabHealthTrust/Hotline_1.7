@@ -3,6 +3,12 @@ class HomeController < ApplicationController
   
   def index
     render :layout => false
+
+    if !session[:tag_encounters].blank?
+      Encounter.feed_tags(session[:tagged_encounters_patient_id])
+      session.delete(:tag_encounters)
+      session.delete(:tagged_encounters_patient_id)
+    end
   end
 
   def configuration

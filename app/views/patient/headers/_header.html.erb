@@ -134,7 +134,7 @@
               <th style="width:100px;">Danger signs:</th>
               <td class="value" style="text-align: left;"><%= dang%></td>
             </tr>
-            <% if @patient_obj.age >= 15 && @patient_obj.age <= 49%>
+            <% if @patient_obj.age >= 13 && @patient_obj.age <= 50%>
                 <tr>
                   <th style="width:100px;">Pregnancy status:</th>
                   <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
