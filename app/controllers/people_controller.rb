@@ -1,4 +1,16 @@
 class PeopleController < ApplicationController
+
+  def guardian_check
+    @patient_obj = PatientService.get_patient(params[:patient_id])
+    if request.post?
+      if params[:guardian_available] == 'Yes'
+       redirect_to "/patient/search_by_name?action_type=guardian&patient_id=#{@patient_obj.patient_id}" and return
+      end
+
+      redirect_to "/"
+    end
+  end
+
   def demographics
     @patient_obj = PatientService.get_patient(params[:patient_id])
     render :layout => false

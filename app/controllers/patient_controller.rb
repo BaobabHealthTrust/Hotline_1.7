@@ -135,7 +135,20 @@ class PatientController < ApplicationController
 
     patient_obj = PatientService.create(params)
     if params[:action_type] && params[:action_type] == 'guardian'
-      redirect_to "/encounters/new/reminders?patient_id=#{params[:patient_id]}&guardian_id=#{patient_obj.patient_id}" and return
+
+      rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
+      rel = Relationship.new()
+      rel.relationship = rel_type.id
+      rel.person_a = params[:patient_id]
+      rel.person_b = patient_obj.patient_id
+      rel.date_created = DateTime.now.to_s(:db)
+      rel.creator = session[:user_id]
+      rel.save
+
+      session[:tag_encounters] = true
+      session[:tagged_encounters_patient_id] = params[:patient_id]
+
+      redirect_to "/" and return
     end
     redirect_to "/patient/new_with_demo/#{patient_obj.patient_id}"
   end
@@ -267,6 +280,9 @@ class PatientController < ApplicationController
   end
 
   def districts
+    @patient = Patient.find(params[:patient_id])
+    @patient_obj = PatientService.get_patient(@patient.patient_id)
+
     if params[:param] == 'verify_purpose'
       session[:tag_encounters] = true
       session[:tagged_encounters_patient_id] = params[:patient_id]
@@ -306,7 +322,14 @@ class PatientController < ApplicationController
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}" and return
         end
       elsif params[:end_call] == 'true'
-          redirect_to '/' and return
+        if @patient_obj.age < 6
+          @guardian = @patient.current_guardian
+          if @guardian.blank?
+            redirect_to "/people/guardian_check?patient_id=#{@patient.patient_id}" and return
+          end
+        end
+
+        redirect_to '/' and return
       end
     end
 

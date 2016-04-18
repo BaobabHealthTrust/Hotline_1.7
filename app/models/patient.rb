@@ -28,20 +28,35 @@ class Patient < ActiveRecord::Base
   	
   	pregnant_obs =  ""
   	
-	if !recent_preg_obs.blank? && female
-		category = "Group 2"
-	elsif female && patient_age >= 14 && patient_age < 50 
-		category = "Group 1"
-	elsif patient_age >= 14
-		category = "Group 3"
-	elsif patient_age < six_months
-		category = "Group 4"
-	elsif patient_age > six_months && patient_age <= 2
-		category = "Group 5"
-	elsif patient_age > 2 && patient_age < 5
-		category = "Group 6"
-	elsif patient_age > 5 && patient_age < 14
-		category = "Group 7"
-	end
+    if !recent_preg_obs.blank? && female
+      category = "Group 2"
+    elsif female && patient_age >= 14 && patient_age < 50
+      category = "Group 1"
+    elsif patient_age >= 14
+      category = "Group 3"
+    elsif patient_age < six_months
+      category = "Group 4"
+    elsif patient_age > six_months && patient_age <= 2
+      category = "Group 5"
+    elsif patient_age > 2 && patient_age < 5
+      category = "Group 6"
+    elsif patient_age > 5 && patient_age < 14
+      category = "Group 7"
+    end
+  end
+
+  def current_guardian(guardian_id=nil)
+    if guardian_id
+      return Person.find(guardian_id) rescue nil
+    end
+
+    #search for guardian created same day
+    rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
+    rel = Relationship.where(:relationship => rel_type.id, :person_a => self.patient_id).order("date_created DESC").first
+
+    if rel
+      return Person.find(rel.person_b) if rel.date_created.to_date == Date.today
+    end
+    return nil
   end
 end
