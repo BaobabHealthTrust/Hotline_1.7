@@ -129,6 +129,8 @@ class EncountersController < ApplicationController
   end
 
   def new
+    params[:encounter_type] = 'female_symptoms' if params[:encounter_type] == 'maternal_health_symptoms'
+    params[:encounter_type] = 'update_outcomes' if params[:encounter_type] == 'update_outcome'
     @patient_obj = PatientService.get_patient(params[:patient_id] || session[:patient_id])
     @client = Patient.find(@patient_obj.patient_id)
     encounter_type = params[:encounter_type].humanize
