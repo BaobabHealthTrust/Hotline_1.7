@@ -1,6 +1,6 @@
 class PatientController < ApplicationController
   def dashboard
-    
+
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
@@ -146,6 +146,7 @@ class PatientController < ApplicationController
 
     PersonAddress.create(
         person_id: patient_obj.patient_id,
+        township_division: session[:district],
         address2: params[:person][:addresses][:home_district],
         county_district: params[:person][:addresses][:home_ta],
         neighborhood_cell: params[:person][:addresses][:home_village],
