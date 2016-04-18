@@ -39,4 +39,16 @@ class Encounter < ActiveRecord::Base
     data
   end
 
+  def self.feed_tags(patient_id)
+    max_tag = Observation.find_by_sql("SELECT MAX(comments) AS max_tag FROM obs WHERE person_id = #{patient_id} LIMIT 1")[0]['max_tag'].to_i rescue 0
+    tag = max_tag + 1
+
+    ActiveRecord::Base.connection.execute(<<-EOQ)
+  UPDATE obs
+  SET obs.comments = #{tag}
+  WHERE obs.person_id = #{patient_id} AND (obs.comments IS NULL OR obs.comments = '')
+  AND DATE(obs.obs_datetime) ='#{Date.today.to_s(:db)}'
+    EOQ
+  end
+
 end

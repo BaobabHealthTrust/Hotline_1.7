@@ -1,15 +1,24 @@
 class PatientController < ApplicationController
   def dashboard
-    
+
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
 
-    @current_encounters = Encounter.where(patient_id: params[:patient_id], 
-      encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) .. (Date.today.strftime('%Y-%m-%d 23:59:59')))
+    @current_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
+      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+      WHERE encounter.patient_id = #{params[:patient_id]}
+        AND encounter.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
+        AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') = ''
+      ORDER BY encounter.encounter_datetime DESC")
+
     @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
-    @previous_encounters = Encounter.where("patient_id = ? AND encounter_datetime < ?",
-      params[:patient_id], Date.today.strftime('%Y-%m-%d 00:00:00'))
+
+    @previous_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
+      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+      WHERE patient_id = #{params[:patient_id]}
+        AND encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') != ''
+      ORDER BY encounter_datetime DESC")
 
     #Adding tasks in proper order
     @tasks = []
@@ -137,6 +146,7 @@ class PatientController < ApplicationController
 
     PersonAddress.create(
         person_id: patient_obj.patient_id,
+        township_division: session[:district],
         address2: params[:person][:addresses][:home_district],
         county_district: params[:person][:addresses][:home_ta],
         neighborhood_cell: params[:person][:addresses][:home_village],
@@ -256,6 +266,8 @@ class PatientController < ApplicationController
 
   def districts
     if params[:param] == 'verify_purpose'
+      session[:tag_encounters] = true
+      session[:tagged_encounters_patient_id] = params[:patient_id]
       ###
       #
       # Below code to be modified into an array to avoid repeating code.
