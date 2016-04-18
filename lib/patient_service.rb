@@ -25,6 +25,7 @@ module PatientService
       patient_obj.address2 = addresses.address2
       patient_obj.county_district = addresses.county_district
       patient_obj.neighborhood_cell = addresses.neighborhood_cell
+      patient_obj.township_division = addresses.township_division
     end
 
     if attributes.present?
