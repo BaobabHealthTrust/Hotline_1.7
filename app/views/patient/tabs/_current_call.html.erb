@@ -114,7 +114,7 @@
       (@current_encounters || []).each do|e|%>
         <div class="min-container-table-row">
           <div class="min-container-table-cell icon-cursor" style="width: 10%;"
-               onclick="window.location='/encounters/new/purpose_of_call?patient_id=<%=@patient_obj.patient_id%>'" id="<%=e.id%>">
+               onclick="window.location='/encounters/new/<%=e.type.name.split.join('_').downcase%>?patient_id=<%=@patient_obj.patient_id%>'" id="<%=e.id%>">
             <%=image_tag("icons/edit-demographic.png", class: 'edit_icon')%>
           </div>
           <div class="min-container-table-cell encounters" id="<%=e.id%>"

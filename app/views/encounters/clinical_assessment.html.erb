@@ -104,7 +104,7 @@
                            :allowFreeText => false
             %>
 
-            <%= hidden_field_tag("observations[][concept_name]", 'How many days have you had a fever?') %>
+            <%= hidden_field_tag('observations[][concept_name]', 'How many days have you had a fever?') %>
             <%= text_field_tag 'observations[][numeric]', nil,
                                :helpText => 'How many days have you had fever?',
                                :condition => "'#{clinical_question}' == 'Do you have a fever?' && $('#{clinical_question}').value == 'Yes';",
