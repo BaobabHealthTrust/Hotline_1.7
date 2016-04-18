@@ -101,7 +101,12 @@ class EncountersController < ApplicationController
     end
 
     # Go to the next task in the workflow (or dashboard)
-    redirect_to next_task(@patient_obj)
+    age = @patient_obj.age
+    if age >= 13 && age <= 50 && @patient_obj.sex == 'F'
+      redirect_to next_task(@patient_obj)
+    else
+      redirect_to "/patient/dashboard/#{@patient.id}/tasks"
+    end
   end
 
   def create_obs(paramz)
