@@ -326,7 +326,7 @@ class EncountersController < ApplicationController
         'person_id' => enc.patient_id,
         'value_coded_or_text' => meal_type,
         'concept_id' => meal_type_concept,
-        'comments' => index.to_s,
+        'value_complex' => index.to_s,
         'obs_datetime' => enc.encounter_datetime
       }]
 
@@ -336,7 +336,7 @@ class EncountersController < ApplicationController
             'person_id' => enc.patient_id,
             'value_coded_or_text' => type,
             'concept_id' => food_type_concept,
-            'comments' => index.to_s,
+            'value_complex' => index.to_s,
             'obs_datetime' => enc.encounter_datetime
         }
       end
@@ -346,7 +346,7 @@ class EncountersController < ApplicationController
           'person_id' => enc.patient_id,
           'value_coded_or_text' => consumption_method,
           'concept_id' => consumption_method_concept,
-          'comments' => index.to_s,
+          'value_complex' => index.to_s,
           'obs_datetime' => enc.encounter_datetime
       }
 

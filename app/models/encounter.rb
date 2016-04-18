@@ -51,4 +51,68 @@ class Encounter < ActiveRecord::Base
     EOQ
   end
 
+  def self.current_encounters(patient_id)
+    self.find_by_sql("
+      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
+      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+      INNER JOIN (
+          SELECT e.encounter_id, e.encounter_type, MAX(e.encounter_id) AS max_enc FROM encounter e
+              INNER JOIN obs o ON o.encounter_id = e.encounter_id
+              WHERE e.patient_id = #{patient_id}
+                AND e.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
+                AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(o.comments, '') = ''
+              GROUP BY e.encounter_type
+        ) AS der_e ON encounter.encounter_id = der_e.max_enc AND encounter.encounter_type = der_e.encounter_type
+
+      WHERE encounter.voided = 0 AND encounter.patient_id = #{patient_id}
+        AND encounter.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
+        AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') = ''
+      GROUP BY encounter.encounter_type
+      ORDER BY encounter.encounter_datetime DESC
+    ")
+  end
+
+  def self.previous_encounters(patient_id)
+    Encounter.find_by_sql("
+      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
+      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+
+      INNER JOIN (
+          SELECT e.encounter_id, e.encounter_type, MAX(e.encounter_id) AS max_enc FROM encounter e
+              INNER JOIN obs o ON o.encounter_id = e.encounter_id
+              WHERE e.patient_id = #{patient_id}
+                AND e.encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(o.comments, '') != ''
+              GROUP BY o.comments, e.encounter_type
+        ) AS der_e ON encounter.encounter_id = der_e.max_enc AND encounter.encounter_type = der_e.encounter_type
+
+      WHERE encounter.voided = 0 AND encounter.patient_id = #{patient_id}
+        AND encounter.encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') != ''
+      GROUP BY obs.comments, encounter.encounter_type
+      ORDER BY encounter.encounter_datetime DESC
+    ")
+  end
+
+  def self.all_encounters_by_type(patient_id, types=[])
+    types_join1 = types.blank? ? "" : " e.encounter_type IN (#{types.join(', ')})"
+    types_join2 = types.blank? ? "" : " encounter.encounter_type IN (#{types.join(', ')})"
+
+    Encounter.find_by_sql("
+      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
+      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+
+      INNER JOIN (
+          SELECT e.encounter_id, e.encounter_type, MAX(e.encounter_id) AS max_enc FROM encounter e
+              INNER JOIN obs o ON o.encounter_id = e.encounter_id
+              WHERE e.patient_id = #{patient_id} AND #{types_join1}
+                AND e.encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}'
+              GROUP BY o.comments, e.encounter_type
+        ) AS der_e ON encounter.encounter_id = der_e.max_enc AND encounter.encounter_type = der_e.encounter_type
+
+      WHERE encounter.patient_id = #{patient_id} AND #{types_join2}
+        AND encounter.encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}'
+      GROUP BY obs.comments, encounter.encounter_type
+      ORDER BY encounter.encounter_datetime DESC
+    ")
+  end
+
 end
