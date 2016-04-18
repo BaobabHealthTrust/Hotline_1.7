@@ -22,7 +22,7 @@ class PatientController < ApplicationController
 
     #Adding tasks in proper order
     @tasks = []
-    if @patient_obj.sex.match('F') && @patient_obj.age > 13
+    if @patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50  
       @tasks << {"name" => "Pregnancy Status",
                  "link" => "/encounters/new/pregnancy_status?patient_id=#{@patient_obj.patient_id}",
                  'icon' => "pregnacy.png",
