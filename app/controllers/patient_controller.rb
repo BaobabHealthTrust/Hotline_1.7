@@ -63,6 +63,12 @@ class PatientController < ApplicationController
                "icon" => "nutrition_module.png",
                'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
+    @tasks << {"name" => "Nutrition Summary",
+               "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}",
+               "icon" => "nutrition_summary.png",
+               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
+
+
     @tasks << {"name" => "Edit demographics",
                "link" => "/demographics/#{@patient_obj.patient_id}",
                "icon" => "demographic.png"}
@@ -75,10 +81,6 @@ class PatientController < ApplicationController
                "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true",
                "icon" => "next.png"}
 =end
-    @tasks << {"name" => "Nutrition Summary",
-               "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}",
-               "icon" => "nutrition_summary.png",
-               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
     @tasks << {"name" => "End Call",
                'link' => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true",
