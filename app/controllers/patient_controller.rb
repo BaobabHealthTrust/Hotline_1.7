@@ -5,6 +5,8 @@ class PatientController < ApplicationController
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
 
+    @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
+
     @current_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
       WHERE encounter.patient_id = #{params[:patient_id]}
@@ -91,6 +93,7 @@ class PatientController < ApplicationController
       params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
     render :layout => false
   end
+
 
   def reference_material
     @material = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article'")

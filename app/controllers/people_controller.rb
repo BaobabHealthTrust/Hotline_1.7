@@ -1,6 +1,7 @@
 class PeopleController < ApplicationController
   def demographics
     @patient_obj = PatientService.get_patient(params[:patient_id])
+    @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
     render :layout => false
   end
 

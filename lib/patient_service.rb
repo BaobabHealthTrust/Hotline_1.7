@@ -36,6 +36,24 @@ module PatientService
     return patient_obj
   end
 
+
+  def self.get_infant_age(patient_obj)
+    if patient_obj.age < 1
+
+      # getting the month client was born
+      birth_month = patient_obj.birthdate.to_datetime.strftime('%B')
+      birth_month_index = Date::MONTHNAMES.index(birth_month).to_i
+
+      current_month = Date.today.strftime('%B')
+      current_month_index = Date::MONTHNAMES.index(current_month).to_i
+
+
+      calculated_age = (current_month_index - birth_month_index).abs.to_i
+
+      #raise @age.inspect
+    end
+  end
+
   def self.add_patient_attributes(patient_obj, para)
 
     uuid_names = ["Cell Phone Number", "Office Phone Number", "Home Phone Number", "Phone Type"]
