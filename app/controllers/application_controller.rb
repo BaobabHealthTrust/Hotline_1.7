@@ -50,14 +50,6 @@ class ApplicationController < ActionController::Base
           'condition' => "(patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('MATERNAL HEALTH SYMPTOMS')",
           'link' => "/encounters/new/female_symptoms?patient_id=#{patient_obj.patient_id}"
         }},
-        {'CLINICAL ASSESSMENT' => {
-          'condition' => "!current_encounter_names.include?('CLINICAL ASSESSMENT')",
-          'link' => "/encounters/new/clinical_assessment?patient_id=#{patient_obj.patient_id}"
-        }},
-        {'DIETARY ASSESSMENT' => {
-           'condition' => "!current_encounter_names.include?('DIETARY ASSESSMENT')",
-           'link' => "/encounters/new/dietary_assessment?patient_id=#{patient_obj.patient_id}"
-        }},
         {'UPDATE OUTCOME' => {
            'condition' => "!current_encounter_names.include?('UPDATE OUTCOME')",
            'link' => "/encounters/new/update_outcomes?patient_id=#{patient_obj.patient_id}"
