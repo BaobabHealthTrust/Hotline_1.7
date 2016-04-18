@@ -283,10 +283,12 @@ class PatientController < ApplicationController
   end
 
   def districts
-    @patient = Patient.find(params[:patient_id])
-    @patient_obj = PatientService.get_patient(@patient.patient_id)
 
     if params[:param] == 'verify_purpose'
+
+      @patient = Patient.find(params[:patient_id])
+      @patient_obj = PatientService.get_patient(@patient.patient_id)
+
       session[:tag_encounters] = true
       session[:tagged_encounters_patient_id] = params[:patient_id]
       ###
