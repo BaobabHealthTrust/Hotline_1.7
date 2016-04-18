@@ -1,0 +1,24 @@
+
+<script>
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+
+</script>
+
+<style>
+    #num{
+        display: none;
+    }
+</style>
+
+
+<%= form_tag("/people/guardian_check", enctype: 'multipart/form-data') do %>
+
+
+            <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
+                           :helpText =>"Is guardian present?",
+                           :id => "guardian_present"
+            %>
+
+            <%= hidden_field_tag "patient_id", @patient_obj.patient_id %>
+
+<% end %>
