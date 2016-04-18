@@ -1,24 +1,67 @@
 class PatientController < ApplicationController
   def dashboard
-
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
 
-    @current_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
+    @current_encounters = Encounter.find_by_sql("
+      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+
+      INNER JOIN (
+          SELECT e.encounter_id, e.encounter_type, MAX(e.encounter_id) AS max_enc FROM encounter e
+              INNER JOIN obs o ON o.encounter_id = e.encounter_id
+              WHERE e.patient_id = #{params[:patient_id]}
+                AND e.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
+                AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(o.comments, '') = ''
+              GROUP BY e.encounter_type
+        ) AS der_e ON encounter.encounter_id = der_e.max_enc AND encounter.encounter_type = der_e.encounter_type
+
       WHERE encounter.patient_id = #{params[:patient_id]}
         AND encounter.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
         AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') = ''
-      ORDER BY encounter.encounter_datetime DESC")
+      GROUP BY encounter.encounter_type
+      ORDER BY encounter.encounter_datetime DESC
+    ")
 
     @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
 
-    @previous_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
+    @previous_encounters = Encounter.find_by_sql("
+      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
-      WHERE patient_id = #{params[:patient_id]}
-        AND encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') != ''
-      ORDER BY encounter_datetime DESC")
+
+      INNER JOIN (
+          SELECT e.encounter_id, e.encounter_type, MAX(e.encounter_id) AS max_enc FROM encounter e
+              INNER JOIN obs o ON o.encounter_id = e.encounter_id
+              WHERE e.patient_id = #{params[:patient_id]}
+                AND e.encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(o.comments, '') != ''
+              GROUP BY o.comments, e.encounter_type
+        ) AS der_e ON encounter.encounter_id = der_e.max_enc AND encounter.encounter_type = der_e.encounter_type
+
+      WHERE encounter.patient_id = #{params[:patient_id]}
+        AND encounter.encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') != ''
+      GROUP BY obs.comments, encounter.encounter_type
+      ORDER BY encounter.encounter_datetime DESC
+    ")
+
+    symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
+    @symptom_encounters = Encounter.find_by_sql("
+      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
+      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+
+      INNER JOIN (
+          SELECT e.encounter_id, e.encounter_type, MAX(e.encounter_id) AS max_enc FROM encounter e
+              INNER JOIN obs o ON o.encounter_id = e.encounter_id
+              WHERE e.patient_id = #{params[:patient_id]} AND e.encounter_type = #{symptom_encounter_type.id}
+                AND e.encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}'
+              GROUP BY o.comments, e.encounter_type
+        ) AS der_e ON encounter.encounter_id = der_e.max_enc AND encounter.encounter_type = der_e.encounter_type
+
+      WHERE encounter.patient_id = #{params[:patient_id]} AND encounter.encounter_type = #{symptom_encounter_type.id}
+        AND encounter.encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}'
+      GROUP BY obs.comments, encounter.encounter_type
+      ORDER BY encounter.encounter_datetime DESC
+    ")
 
     #Adding tasks in proper order
     @tasks = []
@@ -76,19 +119,11 @@ class PatientController < ApplicationController
     @tasks << {"name" => "Reference material",
                "link" => "/patient/reference_material/#{@patient_obj.patient_id}",
                "icon" => "reference.png"}
-=begin
-    @tasks << {"name" => "Next Client",
-               "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true",
-               "icon" => "next.png"}
-=end
 
     @tasks << {"name" => "End Call",
                'link' => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true",
                'icon' => 'end-call.png'}
 
-    symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
-    @symptom_encounters = Encounter.where('patient_id = ? AND encounter_type = ?',
-      params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
     render :layout => false
   end
 
