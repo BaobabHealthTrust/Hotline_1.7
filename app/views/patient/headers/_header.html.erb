@@ -84,10 +84,12 @@
           <th style="width:100px;">Age:</th>
           <td class="value" style="text-align: left;">
             (<%= @infant_age?@infant_age:@patient_obj.age %>
-            <%= if @infant_age <= 1
-                  " Month"
-                else
-                  " Months"
+            <%= if @infant_age
+                  if @infant_age <= 1
+                      " Month"
+                  else
+                      " Months"
+                  end
                 end
             %>)</td>
         </tr>
