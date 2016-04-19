@@ -131,22 +131,22 @@
         <div class="cells" style="width: 44%;">
           <table class="attributes-table">
             <tr>
-              <th style="width:55px;">Symptoms:</th>
+              <th style="width:150px;">Symptoms:</th>
               <td class="value"  ><%= symp %></td>
             </tr>
             <tr>
-              <th style="width:100px;">Danger signs:</th>
+              <th style="width:150px;">Danger signs:</th>
               <td class="value" style="text-align: left;"><%= dang%></td>
             </tr>
             <% if @patient_obj.age >= 13 && @patient_obj.age <= 50%>
                 <tr>
-                  <th style="width:100px;">Pregnancy status:</th>
+                  <th style="width:150px;">Pregnancy status:</th>
                   <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
                                                                                   'Pregnancy status',
                                                                                   Date.today).join(' , ')%></td>
                 </tr>
                 <tr>
-                  <th style="width:100px;">EDD:</th>
+                  <th style="width:150px;">EDD:</th>
                   <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
                                                                                   'Pregnancy due date',
                                                                                   Date.today).first.to_date.strftime("%d-%b-%Y") rescue nil%></td>

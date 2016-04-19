@@ -330,6 +330,7 @@ class PatientController < ApplicationController
 
   def observations
     observations = []
+    pre_processor = {}
     (Encounter.find(params[:encounter_id]).observations || []).each do |ob|
       value = ConceptName.where(concept_id: ob.value_coded).first.name rescue nil
       if value.blank?
@@ -343,10 +344,14 @@ class PatientController < ApplicationController
       if value.blank?
         value = ob.value_text rescue nil
       end
-
-      observations << [ob.concept.concept_names.first.name, value]
+      name = ob.concept.concept_names.first.name
+      pre_processor[name] = [] if pre_processor[name].blank?
+      pre_processor[name] << value
     end
 
+      pre_processor.keys.each do |concept_name|
+        observations << [concept_name, pre_processor[concept_name].uniq.join(' , ')]
+      end
     render text: observations.to_json and return
   end
 
