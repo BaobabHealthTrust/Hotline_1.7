@@ -771,10 +771,34 @@
             var lmp_year = last_menstrual_period.getFullYear();
             var lmp_month = last_menstrual_period.getMonth();
             var trimester_lmp_month = lmp_month;
-            // validate LMP year and month --------
-            alert(current_month);
 
-            // ------------------------------------
+            // validate LMP in a period of 9 months or less ----
+            if(lmp_year > current_year) {
+                alert('failed');
+            }
+            else if(lmp_year == current_year) {
+                if(lmp_month > current_month) {
+                    alert('year okay but month invalid');
+                }
+                else if(lmp_month < current_month) {
+                    alert(lmp_month);
+                }
+            }
+            else if(lmp_year < current_year) {
+                var valid_year = current_year - lmp_year;
+                if(valid_year <= 1) {
+                    if(lmp_month > current_month) {
+                        alert(valid_year+' is Yes, less than or = 1');
+                    }
+                    else {
+                        alert('valid year but month wrong.')
+                    }
+                }
+                else {
+                    alert(valid_year+' is No, more than 1')
+                }
+            }
+            // ----------------------------------------------------
             switch(lmp_month) {
                 case 0:
                     lmp_month = 'January';
