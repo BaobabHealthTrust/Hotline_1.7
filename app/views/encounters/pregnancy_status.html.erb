@@ -667,14 +667,16 @@
         var day = document.getElementById('selected_day').value;
         var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
         // Catch false year ------------
-        var current_year = new Date().getFullYear()
+        var current_year = new Date().getFullYear();
+        var current_month = new Date().getMonth();
+
         if (parseInt(current_year) - parseInt(year)  > 1 || parseInt(current_year) - parseInt(year) < 0) {
 
             alert('The year selected is out of range')
 
                 history.go(-1);
 
-                return false; 
+                return false;
         }
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
@@ -765,6 +767,8 @@
             var last_menstrual_period = new Date(year, edd_month, day);
             var lmp_year = last_menstrual_period.getFullYear();
             var lmp_month = last_menstrual_period.getMonth();
+            var trimester_lmp_month = lmp_month;
+
             switch(lmp_month) {
                 case 0:
                     lmp_month = 'January';
@@ -804,10 +808,21 @@
                     break;
             }
             var lmp_day = last_menstrual_period.getDate();
+
+            var trimester = parseInt(current_month) - parseInt(trimester_lmp_month);
+            if(trimester >= 0 && trimester <=3) {
+                trimester = 1+'st';
+            }
+            else if(trimester >= 4 && trimester <= 6) {
+                trimester = 2+'nd';
+            }
+            else {
+                trimester = 3+'rd';
+            }
             //document.getElementById('last_menstrual_period').value = last_menstrual_period;
             display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
             display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
-
+            display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
             document.getElementById('last_menstrual_period').value = last_menstrual_period;
             document.getElementById('expected_due_date').value = expected_date_of_delivery;
         }
