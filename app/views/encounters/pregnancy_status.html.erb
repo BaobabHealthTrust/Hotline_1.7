@@ -666,10 +666,11 @@
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
         var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
-        // Catch false year ------------
+        // get current year and month ------------
         var current_year = new Date().getFullYear();
         var current_month = new Date().getMonth();
 
+        /*
         if (parseInt(current_year) - parseInt(year)  > 1 || parseInt(current_year) - parseInt(year) < 0) {
 
             alert('The year selected is out of range')
@@ -678,6 +679,8 @@
 
                 return false;
         }
+        */
+
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
             var edd_month;
@@ -768,7 +771,10 @@
             var lmp_year = last_menstrual_period.getFullYear();
             var lmp_month = last_menstrual_period.getMonth();
             var trimester_lmp_month = lmp_month;
+            // validate LMP year and month --------
+            alert(current_month);
 
+            // ------------------------------------
             switch(lmp_month) {
                 case 0:
                     lmp_month = 'January';
