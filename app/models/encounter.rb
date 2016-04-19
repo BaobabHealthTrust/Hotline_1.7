@@ -53,7 +53,7 @@ class Encounter < ActiveRecord::Base
 
   def self.current_encounters(patient_id)
     self.find_by_sql("
-      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
+      SELECT encounter.* FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
       INNER JOIN (
           SELECT e.encounter_id, e.encounter_type, MAX(e.encounter_id) AS max_enc FROM encounter e
@@ -74,7 +74,7 @@ class Encounter < ActiveRecord::Base
 
   def self.previous_encounters(patient_id)
     Encounter.find_by_sql("
-      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
+      SELECT encounter.* FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
 
       INNER JOIN (
@@ -97,7 +97,7 @@ class Encounter < ActiveRecord::Base
     types_join2 = types.blank? ? "" : " encounter.encounter_type IN (#{types.join(', ')})"
 
     Encounter.find_by_sql("
-      SELECT encounter.*, MAX(encounter.encounter_id) AS max_enc FROM encounter
+      SELECT encounter.* FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
 
       INNER JOIN (
