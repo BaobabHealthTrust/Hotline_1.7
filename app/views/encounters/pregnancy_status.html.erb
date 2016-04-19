@@ -369,7 +369,7 @@
                                               :tt_pageStyleClass => "NoControls" } %>
 
         <!-- ======= Give summary of input if Pregnancy Status is Pregnant or Delivered ========= -->
-        <%= text_field_tag '', nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; summary(); setFinish();",
+        <%= text_field_tag '', nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; validate_lmp_edd(); setFinish();",
                                             :id => 'summary',
                                             :helpText => 'Summary',
                                             :condition => "$('pregnancy_status').value == 'Pregnant' || $('pregnancy_status').value == 'Delivered';",
@@ -659,6 +659,10 @@
         finish.setAttribute('onmousedown','validateBirthdate();');
     }
 
+    function validate_lmp_edd(){
+
+    }
+
     function summary() {
 
         var pregnancy_status = document.getElementById('pregnancy_status').value;
@@ -669,17 +673,6 @@
         // get current year and month ------------
         var current_year = new Date().getFullYear();
         var current_month = new Date().getMonth();
-
-        /*
-        if (parseInt(current_year) - parseInt(year)  > 1 || parseInt(current_year) - parseInt(year) < 0) {
-
-            alert('The year selected is out of range')
-
-                history.go(-1);
-
-                return false;
-        }
-        */
 
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
@@ -787,11 +780,73 @@
             else if(lmp_year < current_year) {
                 var valid_year = current_year - lmp_year;
                 if(valid_year <= 1) {
-                    if(lmp_month > current_month) {
-                        alert(valid_year+' is Yes, less than or = 1');
+                    var lmp_range = current_month + 3;
+                    if(lmp_month > lmp_range) {
+                        lmp_month += 2;
+                        //alert(valid_year+' is Yes, less than or = 1');
+                        //alert('lmp_month is '+lmp_month);
+                        switch(lmp_month) {
+                            case 0:
+                                lmp_month = 'January';
+                                break;
+                            case 1:
+                                lmp_month = 'February';
+                                break;
+                            case 2:
+                                lmp_month = 'March';
+                                break;
+                            case 3:
+                                lmp_month = 'April';
+                                break;
+                            case 4:
+                                lmp_month = 'May';
+                                break;
+                            case 5:
+                                lmp_month = 'June';
+                                break;
+                            case 6:
+                                lmp_month = 'July';
+                                break;
+                            case 7:
+                                lmp_month = 'August';
+                                break;
+                            case 8:
+                                lmp_month = 'September';
+                                break;
+                            case 9:
+                                lmp_month = 'October';
+                                break;
+                            case 10:
+                                lmp_month = 'November';
+                                break;
+                            case 11:
+                                lmp_month = 'December';
+                                break;
+                        }
+                        var lmp_day = last_menstrual_period.getDate();
+
+                        var trimester = parseInt(current_month) - parseInt(trimester_lmp_month);
+                        if(trimester >= 0 && trimester <=3) {
+                            trimester = 1+'st';
+                        }
+                        else if(trimester >= 4 && trimester <= 6) {
+                            trimester = 2+'nd';
+                        }
+                        else {
+                            trimester = 3+'rd';
+                        }
+                        //document.getElementById('last_menstrual_period').value = last_menstrual_period;
+                        display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
+                        display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
+                        display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
+                        document.getElementById('last_menstrual_period').value = last_menstrual_period;
+                        document.getElementById('expected_due_date').value = expected_date_of_delivery;
+                        $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
+                        $("clearButton").style.display = "none";
                     }
                     else {
-                        alert('valid year but month wrong.')
+                        showMessage('valid year but month wrong.', false, false);
+                        return;
                     }
                 }
                 else {
@@ -799,62 +854,6 @@
                 }
             }
             // ----------------------------------------------------
-            switch(lmp_month) {
-                case 0:
-                    lmp_month = 'January';
-                    break;
-                case 1:
-                    lmp_month = 'February';
-                    break;
-                case 2:
-                    lmp_month = 'March';
-                    break;
-                case 3:
-                    lmp_month = 'April';
-                    break;
-                case 4:
-                    lmp_month = 'May';
-                    break;
-                case 5:
-                    lmp_month = 'June';
-                    break;
-                case 6:
-                    lmp_month = 'July';
-                    break;
-                case 7:
-                    lmp_month = 'August';
-                    break;
-                case 8:
-                    lmp_month = 'September';
-                    break;
-                case 9:
-                    lmp_month = 'October';
-                    break;
-                case 10:
-                    lmp_month = 'November';
-                    break;
-                case 11:
-                    lmp_month = 'December';
-                    break;
-            }
-            var lmp_day = last_menstrual_period.getDate();
-
-            var trimester = parseInt(current_month) - parseInt(trimester_lmp_month);
-            if(trimester >= 0 && trimester <=3) {
-                trimester = 1+'st';
-            }
-            else if(trimester >= 4 && trimester <= 6) {
-                trimester = 2+'nd';
-            }
-            else {
-                trimester = 3+'rd';
-            }
-            //document.getElementById('last_menstrual_period').value = last_menstrual_period;
-            display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
-            display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
-            display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
-            document.getElementById('last_menstrual_period').value = last_menstrual_period;
-            document.getElementById('expected_due_date').value = expected_date_of_delivery;
         }
         // Client Delivered ------------
         else if (pregnancy_status == 'Delivered') {
@@ -901,12 +900,11 @@
             document.getElementById('delivery_date').value = delivery_date;
         }
         // Client Not Pregnant or Miscarried ------
-        else {
+        else if (pregnancy_status == 'Miscarried' || pregnancy_status == 'Not pregnant') {
             display += "<div><span class='title'>Date:</span><span class='data'> " + day + " " + month + " "+ year +"</span></div>";
+            $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
+            $("clearButton").style.display = "none";
         }
-
-        $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
-        $("clearButton").style.display = "none";
     }
 
     function validateBirthdate() {
