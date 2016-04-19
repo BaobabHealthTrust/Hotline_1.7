@@ -152,7 +152,7 @@
 
     <%#= javascript_include_tag "custom" %>
 
-   <% if params[:patient_id]%>
+   <% if params[:patient_id] %>
         <style>
             #content {
               margin-top:-41vh !important;
@@ -169,7 +169,7 @@
 
     <div id="container">
 
-      <% if params[:patient_id]%>
+      <% if params[:patient_id] %>
             <%= render :partial => 'patient/headers/common_header' %>
       <% end %>
 

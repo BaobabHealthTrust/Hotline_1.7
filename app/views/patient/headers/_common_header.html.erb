@@ -54,10 +54,11 @@
     font-size: 0.9em;
     padding: 5px;
 }
-th{
-    font-size: 0.9em;
+.title{
+    font-size: 0.9em !important;
     width: 30%;
     text-align: left;
+    background: white !important;
 }
 /* ........................................................... */
 </style>
@@ -76,12 +77,12 @@ th{
     <div class="cells" style="width: 29%;">
       <table class="demographics-table" valign="top">
         <tr>
-          <th>Name:</th>
+          <th class="title">Name:</th>
           <td class="value" ><%=@patient_obj.name%></td>
         </tr>
 
         <tr>
-          <th>Birthdate:</th>
+          <th class="title">Birthdate:</th>
           <td class="value" style="text-align: left;">
             <%=@patient_obj.birthdate%>  (<%= @infant_age?@infant_age:@patient_obj.age %>
             <%= if @infant_age
@@ -100,11 +101,11 @@ th{
     <div class="cells" style="width: 27%;" valign="top">
       <table class="attributes-table">
         <tr>
-          <th>AVR access ID:</th>
+          <th class="title">AVR access ID:</th>
           <td class="value" ><%=@patient_obj.avr_access_number%></td>
         </tr>
         <tr>
-          <th>District:</th>
+          <th class="title">District:</th>
           <td class="value"  style="text-align: left;"><%= @patient_obj.township_division %></td>
         </tr>
 
@@ -126,11 +127,11 @@ th{
         <div class="cells" style="width: 44%;">
           <table class="attributes-table" valign="top">
             <tr>
-              <th style="width:100px;">Symptoms:</th>
+              <th style="width:150px;" class="title">Symptoms:</th>
               <td class="value"  ><%= symp %></td>
             </tr>
             <tr>
-              <th style="width:100px;">Danger signs:</th>
+              <th style="width:150px;" class="title">Danger signs:</th>
               <td class="value" style="text-align: left;"><%= dang%></td>
             </tr>
           </table>
