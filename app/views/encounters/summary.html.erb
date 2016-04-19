@@ -26,7 +26,7 @@
 <style>
 
   .main-contain{
-      height: 84%;
+      height: 82%;
       width: 100%;
   }
   .btn {
@@ -53,7 +53,7 @@
       width: 130px;
   }
   .full-height{
-      height: 84%;
+      height: 42%;
   }
 </style>
 
@@ -63,37 +63,31 @@
         <%= render :partial => 'patient/headers/header' %>
         <!------------------------------------------------------------------------>
 
-        <div id="clinic_assess" class="full-height">
+        <div id="clinic_assess" class="half-height">
           <!-- Partial summary for clinical assessment -->
           <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
           <!------------------------------------------------------------------------>
         </div>
 
-        <div id="diet_assess" style="display: none" class="full-height">
+        <div id="diet_assess" class="half-height" style="margin-top: 0px;">
           <!-- Partial for dietary assessment -->
           <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
           <!------------------------------------------------------------------------>
         </div>
       <div style="width: 100%; height: 8%">
 
-        <div class="btn btn-back" onclick="nextDestination();">
+        <div class="btn btn-back" onclick="document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks'">
 
-          <%=image_tag("icons/forward.png", class: 'task-icons')%>
-
-        </div>
-
-        <div class="btn" onclick="backDestination();">
-
-          <%=image_tag("icons/previous.png", class: 'task-icons')%>
+          <%=image_tag("icons/back_white.svg", class: 'task-icons')%>
 
         </div>
+
+
 
 
       </div>
     </div>
 
-
-    <%= render :partial => 'home/footer' %>
 </body>
 
 

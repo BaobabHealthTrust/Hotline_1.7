@@ -102,6 +102,9 @@ Rails.application.routes.draw do
   get '/patient/:family_names' => 'people#family_names'
   get '/patient/:given_name_plus_family_name' => 'people#given_name_plus_family_name'
 
+  get '/people/guardian_check'
+  post '/people/guardian_check'
+
   get 'people/villages'
   post 'people/villages'
 

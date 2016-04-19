@@ -53,7 +53,8 @@
   width: 55%;
   vertical-align: top;
   border-style: solid;
-  border-width: 0px;
+  border: 1px solid lightgray;
+  background-color: white;
 }
 
 .encounters p {
@@ -78,6 +79,7 @@
 
 .obs_title {
   font-weight: bold;
+  width: 30%;
 }
 
 .obs_value {
@@ -121,8 +123,7 @@
           style="width: 88%; padding-left: 10px;" onclick = "javascript:selectEncounter(this)">
             <p><%= e.type.name %>&nbsp;<small><%=e.encounter_datetime.strftime('%H:%M:%S')%></small></p>
           </div>
-          <div class="min-container-table-cell icon-cursor" style="width: 10%;"
-               onclick="javascript:voidEncounter(this,'<%=tab_name%>')" id="<%=e.id%>">
+          <div class="min-container-table-cell icon-cursor" style="width: 10%;" onclick="javascript:voidEncounter(this,'<%=tab_name%>')" id="<%=e.id%>">
             <%=image_tag("icons/Remove.png", class: 'edit_icon')%>
           </div>
         </div>

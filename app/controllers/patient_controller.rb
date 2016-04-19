@@ -1,24 +1,16 @@
 class PatientController < ApplicationController
   def dashboard
-
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
+    @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
 
-    @current_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
-      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
-      WHERE encounter.patient_id = #{params[:patient_id]}
-        AND encounter.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
-        AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') = ''
-      ORDER BY encounter.encounter_datetime DESC")
-
+    @current_encounters = Encounter.current_encounters(@patient_obj.patient_id)
     @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
+    @previous_encounters = Encounter.previous_encounters(@patient_obj.patient_id)
 
-    @previous_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
-      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
-      WHERE patient_id = #{params[:patient_id]}
-        AND encounter_datetime <= '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') != ''
-      ORDER BY encounter_datetime DESC")
+    symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
+    @symptom_encounters = Encounter.all_encounters_by_type(@patient_obj.patient_id, [symptom_encounter_type.id])
 
     #Adding tasks in proper order
     @tasks = []
@@ -63,6 +55,12 @@ class PatientController < ApplicationController
                "icon" => "nutrition_module.png",
                'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
+    @tasks << {"name" => "Nutrition Summary",
+               "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}",
+               "icon" => "nutrition_summary.png",
+               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
+
+
     @tasks << {"name" => "Edit demographics",
                "link" => "/demographics/#{@patient_obj.patient_id}",
                "icon" => "demographic.png"}
@@ -71,24 +69,13 @@ class PatientController < ApplicationController
                "link" => "/patient/reference_material/#{@patient_obj.patient_id}",
                "icon" => "reference.png"}
 
-    @tasks << {"name" => "Next Client",
-               "link" => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&next_client=true",
-               "icon" => "next.png"}
-
-    @tasks << {"name" => "Nutrition Summary",
-               "link" => "/encounters/nutrition_summary?patient_id=#{@patient_obj.patient_id}",
-               "icon" => "nutrition_summary.png",
-               'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
-
     @tasks << {"name" => "End Call",
                'link' => "/patient/districts?param=verify_purpose&patient_id=#{@patient_obj.patient_id}&end_call=true",
                'icon' => 'end-call.png'}
 
-    symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
-    @symptom_encounters = Encounter.where('patient_id = ? AND encounter_type = ?',
-      params[:patient_id], symptom_encounter_type.id).group(:encounter_datetime)
     render :layout => false
   end
+
 
   def reference_material
     @material = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article'")
@@ -133,7 +120,20 @@ class PatientController < ApplicationController
 
     patient_obj = PatientService.create(params)
     if params[:action_type] && params[:action_type] == 'guardian'
-      redirect_to "/encounters/new/reminders?patient_id=#{params[:patient_id]}&guardian_id=#{patient_obj.patient_id}" and return
+
+      rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
+      rel = Relationship.new()
+      rel.relationship = rel_type.id
+      rel.person_a = params[:patient_id]
+      rel.person_b = patient_obj.patient_id
+      rel.date_created = DateTime.now.to_s(:db)
+      rel.creator = session[:user_id]
+      rel.save
+
+      session[:tag_encounters] = true
+      session[:tagged_encounters_patient_id] = params[:patient_id]
+
+      redirect_to "/" and return
     end
     redirect_to "/patient/new_with_demo/#{patient_obj.patient_id}"
   end
@@ -265,7 +265,12 @@ class PatientController < ApplicationController
   end
 
   def districts
+
     if params[:param] == 'verify_purpose'
+
+      @patient = Patient.find(params[:patient_id])
+      @patient_obj = PatientService.get_patient(@patient.patient_id)
+
       session[:tag_encounters] = true
       session[:tagged_encounters_patient_id] = params[:patient_id]
       ###
@@ -304,7 +309,14 @@ class PatientController < ApplicationController
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}" and return
         end
       elsif params[:end_call] == 'true'
-          redirect_to '/' and return
+        if @patient_obj.age < 6
+          @guardian = @patient.current_guardian
+          if @guardian.blank?
+            redirect_to "/people/guardian_check?patient_id=#{@patient.patient_id}" and return
+          end
+        end
+
+        redirect_to '/' and return
       end
     end
 
@@ -318,6 +330,7 @@ class PatientController < ApplicationController
 
   def observations
     observations = []
+    pre_processor = {}
     (Encounter.find(params[:encounter_id]).observations || []).each do |ob|
       value = ConceptName.where(concept_id: ob.value_coded).first.name rescue nil
       if value.blank?
@@ -331,10 +344,14 @@ class PatientController < ApplicationController
       if value.blank?
         value = ob.value_text rescue nil
       end
-
-      observations << [ob.concept.concept_names.first.name, value]
+      name = ob.concept.concept_names.first.name
+      pre_processor[name] = [] if pre_processor[name].blank?
+      pre_processor[name] << value
     end
 
+      pre_processor.keys.each do |concept_name|
+        observations << [concept_name, pre_processor[concept_name].uniq.join(' , ')]
+      end
     render text: observations.to_json and return
   end
 

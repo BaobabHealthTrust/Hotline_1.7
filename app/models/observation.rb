@@ -54,7 +54,7 @@ class Observation < ActiveRecord::Base
 
     Observation.find_by_sql(
         ["SELECT * FROM obs WHERE person_id = #{person_id} AND concept_id = #{concept_id} AND DATE(obs_datetime) = ?
-          ORDER BY obs_datetime DESC",
+          ORDER BY obs_datetime DESC LIMIT 5",
          date.to_date]).collect{|o| o.answer_string}.delete_if{|a| a.blank?}.uniq
   end
 

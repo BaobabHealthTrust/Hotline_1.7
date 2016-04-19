@@ -1,14 +1,17 @@
 
 <style>
-
 /* .......................... demographics css starts ................................. */
 .demographics {
+  position: absolute;
   width: 99%;
-  display: table;
+  top: 5px;
+  left: 5px;
+  margin: auto;
   padding: 0px 1px 0px 1px;
   border-style: solid;
   border-width: 0px 0px 1px 0px;
-  height: 15%;
+  color: black;
+  background: white;
 }
 
 .main-page-container-rows  {
@@ -17,18 +20,14 @@
 
 .cells {
     display: table-cell;
-    border: 1px dotted #d3d3d3;
-    border-radius: 2px;
-}
-
-.demographics .cells {
-  
+    vertical-align: top;
+    border: 1px dotted black;
+    padding: 0px !important;
 }
 
 .gender-icon {
-  width: 75px;
-  height: 75px;
-  padding-bottom: 35px;
+    width: 60px !important;
+    height: 60px !important;
 }
 
 .demographics-table {
@@ -45,22 +44,28 @@
 }
 
 .village-reach-icon {
-  width: 100px;
-  height: 100px;
+  width: 60px !important;
+  height: 60px !important;
   border-style: solid;
   border-width: 1px;
+  padding: 0px;
 }
 .value{
-    font-size: 14px;
+    font-size: 0.9em;
+    padding: 5px;
+}
+.title{
+    font-size: 0.9em !important;
+    width: 30%;
+    text-align: left;
+    background: white !important;
 }
 /* ........................................................... */
 </style>
 
-
-<div class="main-container">
   <div class="demographics">
     
-    <div class="cells" style="width: 5%; vertical-align: middle; text-align: left;">
+    <div class="cells" style="width: 5%; text-align: left;">
       <span class="icons">
         <%gender = @patient_obj.sex
           gender = gender == 'F' ? 'Female' : 'Male'
@@ -70,19 +75,16 @@
     </div>
 
     <div class="cells" style="width: 29%;">
-      <table class="demographics-table">
+      <table class="demographics-table" valign="top">
         <tr>
-          <th style="width:55px;">Name:</th>
+          <th class="title">Name:</th>
           <td class="value" ><%=@patient_obj.name%></td>
         </tr>
+
         <tr>
-          <th style="width:100px;">Birthdate:</th>
-          <td class="value" style="text-align: left;"><%=@patient_obj.birthdate%></td>
-        </tr>
-        <tr>
-          <th style="width:100px;">Age:</th>
+          <th class="title">Birthdate:</th>
           <td class="value" style="text-align: left;">
-            (<%= @infant_age?@infant_age:@patient_obj.age %>
+            <%=@patient_obj.birthdate%>  (<%= @infant_age?@infant_age:@patient_obj.age %>
             <%= if @infant_age
                   if @infant_age <= 1
                       " Month"
@@ -92,27 +94,21 @@
                 end
             %>)</td>
         </tr>
-        <tr>
-          <th style="width:100px;">National ID:</th>
-          <td class="value"  style="text-align: left;"><%= %></td>
-        </tr>
+
       </table> 
     </div>
 
-    <div class="cells" style="width: 27%;">
+    <div class="cells" style="width: 27%;" valign="top">
       <table class="attributes-table">
         <tr>
-          <th style="width:55px;">AVR access ID:</th>
+          <th class="title">AVR access ID:</th>
           <td class="value" ><%=@patient_obj.avr_access_number%></td>
         </tr>
         <tr>
-          <th style="width:100px;">District:</th>
+          <th class="title">District:</th>
           <td class="value"  style="text-align: left;"><%= @patient_obj.township_division %></td>
         </tr>
-        <tr>
-          <th style="width:100px;">Phone&nbsp;#:</th>
-          <td class="value"  style="text-align: left;"><%= @patient_obj.cell_phone_number %></td>
-        </tr>
+
       </table>
     </div>
 
@@ -129,29 +125,15 @@
        dang = (dang.length < 50) ? dang : (dang[0..50] + '...')
     %>
         <div class="cells" style="width: 44%;">
-          <table class="attributes-table">
+          <table class="attributes-table" valign="top">
             <tr>
-              <th style="width:150px;">Symptoms:</th>
+              <th style="width:150px;" class="title">Symptoms:</th>
               <td class="value"  ><%= symp %></td>
             </tr>
             <tr>
-              <th style="width:150px;">Danger signs:</th>
+              <th style="width:150px;" class="title">Danger signs:</th>
               <td class="value" style="text-align: left;"><%= dang%></td>
             </tr>
-            <% if @patient_obj.age >= 13 && @patient_obj.age <= 50%>
-                <tr>
-                  <th style="width:150px;">Pregnancy status:</th>
-                  <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
-                                                                                  'Pregnancy status',
-                                                                                  Date.today).join(' , ')%></td>
-                </tr>
-                <tr>
-                  <th style="width:150px;">EDD:</th>
-                  <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
-                                                                                  'Pregnancy due date',
-                                                                                  Date.today).first.to_date.strftime("%d-%b-%Y") rescue nil%></td>
-                </tr>
-            <% end %>
           </table>
         </div>
     <% end %>
@@ -163,6 +145,5 @@
     </div>
 
   </div>
-</div>
 
 <!-- .......................... header ends ................................. -->

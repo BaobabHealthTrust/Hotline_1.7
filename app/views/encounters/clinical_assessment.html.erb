@@ -118,16 +118,20 @@
             <%= text_field_tag 'observations[][numeric]', nil,
                                :helpText => 'How many days have you had diarrhea?',
                                :condition => "'#{clinical_question}' == 'Do you have diarrhea?' && $('#{clinical_question}').value == 'Yes'; ",
-                               :tt_onLoad => "showHelpButton(); $('nextButton').style.display = 'inline' ;",
+                               :tt_onLoad => "showHelpButton(); $('nextButton').style.display = 'inline' ;$('nextButton').innerHTML = '<span>Next</span>'",
                                :field_type => 'number',
                                :tt_pageStyleClass => 'NumbersOnly',
                                :tt_onUnLoad => 'hideHelpButton();'
             %>
         <% end %>
     <% end %>
-    <%= text_field_tag 'summary', nil,
-                       :helpText => 'Clinic Assessment Summary',
-                       :tt_onLoad => "$('nextButton').style.display = 'inline'; $('keyboard').style.display = 'none';getAnswers();loadSummary();",
-                       :optional => true
-    %>
+
+    <% if false %>
+        <%= text_field_tag 'summary', nil,
+                           :helpText => 'Clinic Assessment Summary',
+                           :tt_onLoad => "$('nextButton').style.display = 'inline'; $('keyboard').style.display = 'none';getAnswers();loadSummary();",
+                           :optional => true
+        %>
+    <% end %>
+
 <% end %>

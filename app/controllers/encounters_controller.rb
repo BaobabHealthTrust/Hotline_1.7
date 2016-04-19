@@ -129,6 +129,8 @@ class EncountersController < ApplicationController
   end
 
   def new
+    params[:encounter_type] = 'female_symptoms' if params[:encounter_type] == 'maternal_health_symptoms'
+    params[:encounter_type] = 'update_outcomes' if params[:encounter_type] == 'update_outcome'
     @patient_obj = PatientService.get_patient(params[:patient_id] || session[:patient_id])
     @client = Patient.find(@patient_obj.patient_id)
     encounter_type = params[:encounter_type].humanize
@@ -153,7 +155,7 @@ class EncountersController < ApplicationController
         @phone_types = concept_set('Phone Type')
         @message_types = concept_set('Message Type')
         @language_types = concept_set('Language Type')
-        @content_types = concept_set('Type of message content')
+        @content_types = concept_set('Type of message content') - [['Postnatal'], ['Observer']]
         @guardian = current_guardian(params[:guardian_id], @patient_obj.patient_id)
       when 'Purpose of call'
         @purpose_of_call_options = purpose_of_call_options
@@ -324,7 +326,7 @@ class EncountersController < ApplicationController
         'person_id' => enc.patient_id,
         'value_coded_or_text' => meal_type,
         'concept_id' => meal_type_concept,
-        'comments' => index.to_s,
+        'value_complex' => index.to_s,
         'obs_datetime' => enc.encounter_datetime
       }]
 
@@ -334,7 +336,7 @@ class EncountersController < ApplicationController
             'person_id' => enc.patient_id,
             'value_coded_or_text' => type,
             'concept_id' => food_type_concept,
-            'comments' => index.to_s,
+            'value_complex' => index.to_s,
             'obs_datetime' => enc.encounter_datetime
         }
       end
@@ -344,7 +346,7 @@ class EncountersController < ApplicationController
           'person_id' => enc.patient_id,
           'value_coded_or_text' => consumption_method,
           'concept_id' => consumption_method_concept,
-          'comments' => index.to_s,
+          'value_complex' => index.to_s,
           'obs_datetime' => enc.encounter_datetime
       }
 
