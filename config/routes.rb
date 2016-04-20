@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'report/patient_analysis'
+
   ######################### home start ############################################
   get 'home/index'
   get 'start_call' => 'home#start_call'
