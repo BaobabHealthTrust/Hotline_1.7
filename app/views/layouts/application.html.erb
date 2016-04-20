@@ -155,12 +155,19 @@
    <% if params[:patient_id] %>
         <style>
             #content {
-                margin-top:-41vh !important;
+                margin-top:-39vh !important;
                 height: 700px !important;
+                background: black !important;
             }
             #buttons{
-                top: 640px !important;
+                top: 610px !important;
                 z-index: 1000 !important;
+            }
+            div[id^='page']{
+                height: 620px !important;
+            }
+            div[id^='inputFrame'], #viewport{
+                height: 520px !important;
             }
         </style>
    <% end %>
