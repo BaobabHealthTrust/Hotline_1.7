@@ -321,8 +321,8 @@
                                                                 :condition => "$('pregnancy_status').value == 'Pregnant'",
                                                                 :tt_pageStyleClass => "NoControls" } %>
 
-    <%#= hidden_field_tag("observations[][concept_name]", "Pregnancy due date") %>
-    <%#= hidden_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
+    <%= hidden_field_tag("observations[][concept_name]", "Pregnancy due date") %>
+    <%= hidden_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
                                                                   :id => "expected_due_date",
                                                                   :condition => "$('pregnancy_status').value == 'Pregnant'",
                                                                   :tt_pageStyleClass => "NoControls" } %>
@@ -334,13 +334,6 @@
                                                                 :id => 'delivery_date',
                                                                 :condition => "$('pregnancy_status').value == 'Delivered'",
                                                                 :tt_pageStyleClass => "NoControls" } %>
-
-    <!-- ======= Give summary of input if Pregnancy Status is Pregnant or Delivered ========= -->
-    <%= text_field_tag '', nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; setFinish(); summary();",
-                                  :id => 'summary',
-                                  :helpText => 'Summary',
-                                  :condition => "$('pregnancy_status').value == 'Pregnant' || $('pregnancy_status').value == 'Delivered';",
-                                  :tt_pageStyleClass => "NoControls"} %>
 
     <%unless @encounter_id.nil?%>
         <%= hidden_field_tag("encounter_id",  @encounter_id) %>
@@ -590,10 +583,6 @@
         e.setAttribute('style',"background-color:lightblue;");
         document.getElementById('tbInputMonth').value = e.innerHTML;
     }
-    function setFinish() {
-        var finish = document.getElementById('nextButton');
-        finish.setAttribute('onmousedown','validateBirthdate();');
-    }
     function validate_lmp() {
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
@@ -603,6 +592,8 @@
         var current_month = new Date().getMonth();
         var year_diff = parseInt(current_year) - parseInt(year);
         if(year < current_year && year_diff >= 0 && year_diff <= 1){
+            alert(current_month+'and'+month);
+            return;
             summary(year,month,day,current_year,current_month);
         }
         else if(year == current_year){
@@ -762,7 +753,7 @@
             display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
             display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
             document.getElementById('last_menstrual_period').value = last_menstrual_period;
-            //document.getElementById('expected_due_date').value = expected_date_of_delivery;
+            document.getElementById('expected_due_date').value = expected_date_of_delivery;
         }
         // Client Delivered ------------
         else if (pregnancy_status == 'Delivered') {
