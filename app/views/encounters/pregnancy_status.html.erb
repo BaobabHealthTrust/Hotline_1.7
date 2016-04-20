@@ -615,7 +615,7 @@
             }
         }
         else if(year == current_year){
-            summary(year,month,day,current_year,current_month);
+            summary(year,month,day,current_month);
         }
         else if(year > current_year) {
             showMessage('Invalid input. Year can not be ahead of '+current_year,false,false);
@@ -828,69 +828,6 @@
         finish.setAttribute('onmousedown','validateBirthdate();');
     }
     function validateBirthdate() {
-        // Set current Date variables ----
-        date = new Date();
-        current_year = date.getFullYear();
-        current_day = date.getDate();
-        // Get entered date variables -----
-        year = document.getElementById('selected_year').value;
-        month = document.getElementById('selected_month').value;
-        day = document.getElementById('selected_day').value;
-        // get valid year and day range variables ---
-        year_range = current_year - 150;
-        valid_month_day = day > 0 && day <= 31;
-        // Check if month is Leap year and validate ----
-        if ( month == 'February' ) {
-            if (year%4 == 0) { // Leap Year
-                valid_month_day = day > 0 && day <= 29;
-            }
-            else {
-                valid_month_day = day > 0 && day <= 28;
-            }
-        }
-        // Check if year is blank ------
-        if (year.length == 0 ) {
-            clearInputAge();
-            input(btnUnknow);
-            //year = 'Unknown';
-            popUp();
-            return;
-        }
-        // Check if year is not known ------------
-        else if (year != 'Unknown') {
-            if ( year.length != 4 ) {
-                alert('Year can only have 4 digits.');
-                return; // with a flash message.
-            }
-            else if ( year.length == 4) {
-                if ( year < year_range || year > current_year) { // chech if year is out of range ---------
-                    alert('Year Out of Range. Should be between '+year_range+' and '+current_year);
-                    return; // with a flash message.
-                }
-            }
-            if ( day.length > 2) {
-                alert('more than 2');
-                return; // with a flash message.
-            }
-            else if ( day.length > 0 && day.length <= 2 ) {
-                if ( valid_month_day ) {
-                    // continue  processing ---------
-                }
-                else {
-                    alert('Invalid day of the month.');
-                    return;
-                }
-            }
-            // set values to the form year, month, and day ---------------
-            document.getElementById('selected_year').value = year;
-            document.getElementById('selected_month').value = month;
-            document.getElementById('selected_day').value = day;
-        }
-        // check if year is known -------------
-        else if (year == 'Unknown') {
-            document.getElementById('selected_year').value = year;
-            document.getElementById('age_estimate').value = estimated_age;
-        }
         // submit form -------------------------
         document.getElementById('pregnancy-status').submit();
     }
