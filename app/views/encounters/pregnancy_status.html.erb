@@ -1,12 +1,10 @@
- <script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
- <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
+<script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
+<script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
 
 <script type="text/javascript">
-
 </script>
 
 <style type="text/css">
-
     .btn-year {
         display: inline;
         margin: 5px 2px 2px;
@@ -19,7 +17,6 @@
         font-weight: bold;
         min-height: 100px;
     }
-
     .btn-red {
         display: inline;
         margin: 5px 2px 2px;
@@ -32,7 +29,6 @@
         font-weight: bold;
         min-height: 100px;
     }
-
     .btn-green {
         display: inline;
         margin: 5px 2px 2px;
@@ -45,7 +41,6 @@
         font-weight: bold;
         min-height: 100px;
     }
-
     #tbInputYear {
         margin-top: 10px;
         background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -58,7 +53,6 @@
         width: 99%;
         text-align: center;
     }
-
     /* --------------------- popUp For Alert -----------------------*/
     .my_button {
         -moz-user-select: none;
@@ -81,7 +75,6 @@
         float: right;
         margin-top: -5px;
     }
-
     .exit_button {
         -moz-user-select: none;
         background-image: none;
@@ -104,8 +97,6 @@
         margin-top: -5px;
         top: 0%;
     }
-
-
     #popup-div {
         display: none;
         background-color: #F4F4F4;
@@ -121,7 +112,6 @@
         margin-left: 430px;
         z-index: 991;
     }
-
     #popup-header{
         border-bottom: 2px solid #7D9EC0;
         margin-left: -5px;
@@ -133,7 +123,6 @@
         font-size: 14pt;
         font-weight: bolder;
     }
-
     #cover{
         display: none;
         position: absolute;
@@ -145,14 +134,12 @@
         z-index: 990;
         opacity: 0.65;
     }
-
     #no {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
     }
     /* ------------------------------------------------------------------- */
-
     #flash {
         background-color: #ff2244;
         border-radius: 12px;
@@ -160,32 +147,26 @@
         height: 80px;
         text-align: center;
     }
-        /**** Month ***/
+    /**** Month ***/
     .month-table  {
         display: table;
         width: 100%;
         padding: 0px 1px 0px 1px;
     }
-
     .month-rows  {
         display: table-row;
     }
-
     .month-cells {
         display: table-cell;
         text-align: left;
         padding-left: 10px;
     }
-
-        /**** Year ***/
+    /**** Year ***/
     .year_id  {
         /* display: table; */
         width: 100%;
         padding: 0px 1px 0px 1px;
     }
-
-
-
     .month-options li {
         color: black;
         font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
@@ -197,7 +178,6 @@
         font-size: 1.9em;
         line-height: 50px;
     }
-
     #tbInputMonth {
         margin-top: 10px;
         background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -210,18 +190,16 @@
         width: 99%;
         text-align: center;
     }
-        /*============ */
+    /*============ */
     .main-container {
         width:100%
     }
-
     body {
         -webkit-user-select: none;  /* Chrome all / Safari all */
         -moz-user-select: none;     /* Firefox all */
         -ms-user-select: none;      /* IE 10+ */
         user-select: none;          /* Likely future */
     }
-
     img {
         user-drag: none;
         user-select: none;
@@ -231,7 +209,6 @@
         -ms-user-select: none;
         pointer-events: none;
     }
-
     /* .................................. header starts ........................................................ */
     .table-container {
         width: 99%;
@@ -240,23 +217,19 @@
         border-style: solid;
         border-width: 0px 0px 1px 0px;
     }
-
     .table-row  {
         display: table-row;
         width: 100%;
     }
-
     .table-cell {
         display: table-cell;
     }
-
     .village-reach-icon {
         width: 80px;
         height: 80px;
         border-style: solid;
         border-width: 1px;
     }
-
     .confirm .village-reach-icon {
         border-width: 0px;
     }
@@ -266,15 +239,11 @@
       bottom: 7%;
     }*/
     /* .................................. header ends........................................................ */
-
-
     .btn-title {
         bottom: 30px;
         position: relative;
         padding-right: 15px;
-
     }
-
     /*============ */
     .btn-day {
         display: inline;
@@ -288,7 +257,6 @@
         font-weight: bold;
         min-height: 100px;
     }
-
     #tbInputDay {
         margin-top: 10px;
         background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -308,83 +276,82 @@
 </script>
 
 <style>
-  #num{
-    display: none;
-  }
-  .title {
-      font-size: 50px;
-  }
-
-  .data {
-      font-size: 40px;
-      color: orangered;
-  }
+    #num{
+        display: none;
+    }
+    .title {
+        font-size: 50px;
+    }
+    .data {
+        font-size: 40px;
+        color: orangered;
+    }
 </style>
 
-    <%#= render :partial => 'patient/birthdate/button_footer' %>
+<%#= render :partial => 'patient/birthdate/button_footer' %>
 
-    <%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
-        <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("PREGNANCY STATUS").id %>
-        <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
-        <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
-        <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+<%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
+    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("PREGNANCY STATUS").id %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
-        <% @current_data = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)%>
+    <% @current_data = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)%>
 
-        <%= hidden_field_tag("observations[][concept_name]", "Pregnancy status") %>
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , @current_data['PREGNANCY STATUS']),
-               :helpText =>"Pregnancy status",
-               :tt_onLoad => "showHelpButton();setListAttributes();",
-               :tt_onUnLoad => "hideHelpButton();",
-               :id => "pregnancy_status",
-               :allowFreeText => false
-        %>
+    <%= hidden_field_tag("observations[][concept_name]", "Pregnancy status") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(@pregnancy_options , @current_data['PREGNANCY STATUS']),
+                   :helpText =>"Pregnancy status",
+                   :tt_onLoad => "showHelpButton();setListAttributes();",
+                   :tt_onUnLoad => "hideHelpButton();",
+                   :id => "pregnancy_status",
+                   :allowFreeText => false
+    %>
 
 
-        <input type = "hidden" id = "selected_year" />
-        <input type = "hidden" id = "selected_month" />
-        <input type = "hidden" id = "selected_day" />
+    <input type = "hidden" id = "selected_year" />
+    <input type = "hidden" id = "selected_month" />
+    <input type = "hidden" id = "selected_day" />
 
-        <!-- <input type = "hidden" id = "age_estimate" /> -->
-        <!-- ======= for Pregnant, enter expected date of delivery ========= -->
-        <%= hidden_field_tag("observations[][concept_name]", "Last menstrual period") %>
-        <%= text_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
-                                            :id => "last_menstrual_period",
-                                            :helpText => 'Last menstrual period (LMP)',
-                                            :condition => "$('pregnancy_status').value == 'Pregnant'",
-                                            :tt_pageStyleClass => "NoControls" } %>
-
-        <%= hidden_field_tag("observations[][concept_name]", "Pregnancy due date") %>
-        <%= hidden_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
-                                                                :id => "expected_due_date",
+    <!-- <input type = "hidden" id = "age_estimate" /> -->
+    <!-- ======= for Pregnant, enter expected date of delivery ========= -->
+    <%= hidden_field_tag("observations[][concept_name]", "Last menstrual period") %>
+    <%= text_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
+                                                                :id => "last_menstrual_period",
+                                                                :helpText => 'Last menstrual period (LMP)',
                                                                 :condition => "$('pregnancy_status').value == 'Pregnant'",
                                                                 :tt_pageStyleClass => "NoControls" } %>
 
-        <!-- ======= for Delivered, enter delivery date ========= -->
-        <%= hidden_field_tag("observations[][concept_name]", "Delivery date") %>
-        <%= text_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
-                                              :helpText => 'Enter Delivery Date',
-                                              :id => 'delivery_date',
-                                              :condition => "$('pregnancy_status').value == 'Delivered'",
-                                              :tt_pageStyleClass => "NoControls" } %>
+    <%#= hidden_field_tag("observations[][concept_name]", "Pregnancy due date") %>
+    <%#= hidden_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
+                                                                  :id => "expected_due_date",
+                                                                  :condition => "$('pregnancy_status').value == 'Pregnant'",
+                                                                  :tt_pageStyleClass => "NoControls" } %>
 
-        <!-- ======= Give summary of input if Pregnancy Status is Pregnant or Delivered ========= -->
-        <%= text_field_tag '', nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; summary(); setFinish();",
-                                            :id => 'summary',
-                                            :helpText => 'Summary',
-                                            :condition => "$('pregnancy_status').value == 'Pregnant' || $('pregnancy_status').value == 'Delivered';",
-                                            :tt_pageStyleClass => "NoControls"} %>
+    <!-- ======= for Delivered, enter delivery date ========= -->
+    <%= hidden_field_tag("observations[][concept_name]", "Delivery date") %>
+    <%= text_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
+                                                                :helpText => 'Enter Delivery Date',
+                                                                :id => 'delivery_date',
+                                                                :condition => "$('pregnancy_status').value == 'Delivered'",
+                                                                :tt_pageStyleClass => "NoControls" } %>
 
-        <%unless @encounter_id.nil?%>
-            <%= hidden_field_tag("encounter_id",  @encounter_id) %>
-            <%= hidden_field_tag("editing",       true) %>
-        <%end%>
-    <% end %>
+    <!-- ======= Give summary of input if Pregnancy Status is Pregnant or Delivered ========= -->
+    <%= text_field_tag '', nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; setFinish(); summary();",
+                                  :id => 'summary',
+                                  :helpText => 'Summary',
+                                  :condition => "$('pregnancy_status').value == 'Pregnant' || $('pregnancy_status').value == 'Delivered';",
+                                  :tt_pageStyleClass => "NoControls"} %>
+
+    <%unless @encounter_id.nil?%>
+        <%= hidden_field_tag("encounter_id",  @encounter_id) %>
+        <%= hidden_field_tag("editing",       true) %>
+    <%end%>
+<% end %>
 
 <script>
     function nextDate() {
         var next_button = document.getElementById('nextButton');
-        next_button.setAttribute('onmousedown','passDateValues(); gotoNextPage();');
+        next_button.setAttribute('onmousedown','passDateValues(); validate_lmp();');
     }
     function passDateValues() {
         document.getElementById('selected_year').value = document.getElementById('tbInputYear').value;
@@ -402,16 +369,13 @@
             tbInput.value = tbInput.value + e.value;
         }
     }
-
     function clearInputDay() {
         document.getElementById("tbInputDay").value = '';
     }
-
     function input(e) {
         var tbInput = document.getElementById('tbInputYear');
         if(tbInput.value == 'Unknown' && e.value != 'Unknown')
             return;
-
         if(e.value == 'Unknown') {
             tbInput.value = e.value;
         }else{
@@ -436,248 +400,224 @@
             }
         }
         catch(e) {
-
         }
     }
     function dateLayout() {
         var input_frame = $('inputFrame'+tstCurrentPage);
-
         $("clearButton").style.display = "none";
-
         var date_layout = document.createElement('div');
-
-            //### ====== Create Table Layout for date add-on  ====== #############
-            var table_container = document.createElement('div');
-            table_container.className = 'table-container';
-            table_container.style.height = '65%';
-            table_container.style.borderWidth = '0px 0px 1px 0px';
-            date_layout.appendChild(table_container);
-
-                var table_row = document.createElement('div');
-                table_row.className = 'table-row';
-                table_container.appendChild(table_row);
-
-                    var year_table_cell = document.createElement('div');
-                    year_table_cell.className = 'table-cell';
-                    year_table_cell.style.width = '35%';
-                    year_table_cell.style.verticalAlign = 'top';
-                    year_table_cell.style.textAlign = 'center';
-                    table_row.appendChild(year_table_cell);
-                    // append year
-                        var label = document.createElement('label');
-                        label.innerHTML = 'Enter Year';
-                        year_table_cell.appendChild(label);
-
-                        var year_input_field = document.createElement('input');
-                        year_input_field.setAttribute('id','tbInputYear');
-                        year_input_field.setAttribute('type','text');
-                        year_input_field.setAttribute('maxlength','4');
-                        year_table_cell.appendChild(year_input_field);
-
-                        var year_div = document.createElement('div');
-                        year_div.setAttribute('id','year_id');
-                        year_div.className = 'virtual-keypad';
-                        year_table_cell.appendChild(year_div);
-                        for(var j = 1; j <= 9; j++){
-                            var btn_id = 'btn'+j;
-                            btn = document.createElement('input');
-                            btn.setAttribute('id',btn_id);
-                            btn.setAttribute('type','button');
-                            btn.setAttribute('onclick','input(this);');
-                            btn.setAttribute('value',j);
-                            btn.className = 'btn-year';
-                            year_div.appendChild(btn);
-                            if ( j%3 == 0 ) {
-                                var line_break = document.createElement('br');
-                                year_div.appendChild(line_break);
-                            }
-                        }
-                        var btnUnknown = document.createElement('input');
-                        btnUnknown.setAttribute('id','btnUnknow');
-                        btnUnknown.setAttribute('type','button');
-                        btnUnknown.setAttribute('value','Unknown');
-                        btnUnknown.setAttribute('onclick','input(this); popUp();');
-                        btnUnknown.className = 'btn-year';
-                        year_div.appendChild(btnUnknown);
-
-                        var btn0 = document.createElement('input');
-                        btn0.setAttribute('id','btn0');
-                        btn0.setAttribute('type','button');
-                        btn0.setAttribute('onclick','input(this);');
-                        btn0.setAttribute('value','0');
-                        btn0.className = 'btn-year';
-                        year_div.appendChild(btn0);
-
-                        var clear_btn = document.createElement('input');
-                        clear_btn.setAttribute('id','btnCl');
-                        clear_btn.setAttribute('type','button');
-                        clear_btn.setAttribute('value','Clear');
-                        clear_btn.setAttribute('onclick','clearInputYear();');
-                        clear_btn.className = 'btn-year';
-                        year_div.appendChild(clear_btn);
-
-                    var table_cell = document.createElement('div');
-                    table_cell.className = 'table-cell';
-                    table_cell.style.width = '30%';
-                    table_cell.style.verticalAlign = 'top';
-                    table_cell.style.textAlign = 'center';
-                    table_cell.style.borderStyle = 'solid';
-                    table_cell.style.borderWidth = '0px 1px 0px 1px';
-                    table_row.appendChild(table_cell);
-                    // append month
-                        var label = document.createElement('label');
-                        label.innerHTML = 'Select Month';
-                        table_cell.appendChild(label);
-
-                        var month_input_field = document.createElement('input');
-                        month_input_field.setAttribute('id','tbInputMonth');
-                        month_input_field.setAttribute('type','text');
-                        table_cell.appendChild(month_input_field);
-
-                        var month_table = document.createElement('div');
-                        month_table.className = 'month-table';
-                        table_cell.appendChild(month_table);
-
-                            var month_rows = document.createElement('div');
-                            month_rows.className = 'month-rows';
-                            month_table.appendChild(month_rows);
-
-                                var month_cells = document.createElement('div');
-                                month_cells.className = 'month-cells';
-                                month_rows.appendChild(month_cells);
-
-                                    var ul_options = document.createElement('ul');
-                                    ul_options.className = 'month-options';
-                                    ul_options.style.height = '99%';
-                                    month_cells.appendChild(ul_options);
-                                    <% months = []
-                                        (1..6).each {|m| months << [Date::MONTHNAMES[m], m]} %>
-                                    <% (months).each do |string,num| %>
-                                        var li_options = document.createElement('li');
-                                        li_options.className = 'cell-table';
-                                        li_options.setAttribute('onclick','assignMonth(this)');
-                                        li_options.setAttribute('id','<%= num %>');
-                                        li_options.innerHTML = '<%= string %>';
-                                        ul_options.appendChild(li_options);
-                                    <% end %>
-
-                                var month_cells = document.createElement('div');
-                                month_cells.className = 'month-cells';
-                                month_rows.appendChild(month_cells);
-
-                                    var ul_options = document.createElement('ul');
-                                    ul_options.className = 'month-options';
-                                    ul_options.style.height = '99%';
-                                    month_cells.appendChild(ul_options);
-                                    <% months = []
-                                        (7..12).each {|m| months << [Date::MONTHNAMES[m], m]} %>
-                                    <% (months).each do |string,num| %>
-                                    var li_options = document.createElement('li');
-                                    li_options.className = 'cell-table';
-                                    li_options.setAttribute('onclick','assignMonth(this)');
-                                    li_options.setAttribute('id','<%= num %>');
-                                    li_options.innerHTML = '<%= string %>';
-                                    ul_options.appendChild(li_options);
-                                    <% end %>
-                    //===========================================
-                    var table_cell = document.createElement('div');
-                    table_cell.className = 'table-cell';
-                    table_cell.style.width = '35%';
-                    table_cell.style.verticalAlign = 'top';
-                    table_cell.style.textAlign = 'center';
-                    table_row.appendChild(table_cell);
-                    // append day
-                        var label = document.createElement('label');
-                        label.innerHTML = 'Enter Day';
-                        table_cell.appendChild(label);
-
-                        var day_input_field = document.createElement('input');
-                        day_input_field.setAttribute('id','tbInputDay');
-                        day_input_field.setAttribute('type','text');
-                        day_input_field.setAttribute('maxlength','2');
-                        table_cell.appendChild(day_input_field);
-
-                        var day_div = document.createElement('div');
-                        day_div.setAttribute('id','day');
-                        day_div.className = 'virtual-keypad';
-                        table_cell.appendChild(day_div);
-                        for(var j = 1; j <= 9; j++){
-                            var btn_id = 'btn'+j;
-                            btn = document.createElement('input');
-                            btn.setAttribute('id',btn);
-                            btn.setAttribute('type','button');
-                            btn.setAttribute('onclick','inputDay(this);');
-                            btn.setAttribute('value',j);
-                            btn.className = 'btn-day';
-                            day_div.appendChild(btn);
-                            if ( j%3 == 0 ) {
-                                var line_break = document.createElement('br');
-                                day_div.appendChild(line_break);
-                            }
-                        }
-                        var btnUnknown = document.createElement('input');
-                        btnUnknown.setAttribute('id','btnUnknow');
-                        btnUnknown.setAttribute('type','button');
-                        btnUnknown.setAttribute('value','Unknown');
-                        btnUnknown.setAttribute('onclick','inputDay(this);');
-                        btnUnknown.className = 'btn-day';
-                        day_div.appendChild(btnUnknown);
-
-                        var btn0 = document.createElement('input');
-                        btn0.setAttribute('id','btn0');
-                        btn0.setAttribute('type','button');
-                        btn0.setAttribute('onclick','inputDay(this);');
-                        btn0.setAttribute('value','0');
-                        btn0.className = 'btn-day';
-                        day_div.appendChild(btn0);
-
-                        var clear_btn = document.createElement('input');
-                        clear_btn.setAttribute('id','btnCl');
-                        clear_btn.setAttribute('type','button');
-                        clear_btn.setAttribute('value','Clear');
-                        clear_btn.setAttribute('onclick','clearInputDay();');
-                        clear_btn.className = 'btn-day';
-                        day_div.appendChild(clear_btn);
-
+        //### ====== Create Table Layout for date add-on  ====== #############
+        var table_container = document.createElement('div');
+        table_container.className = 'table-container';
+        table_container.style.height = '65%';
+        table_container.style.borderWidth = '0px 0px 1px 0px';
+        date_layout.appendChild(table_container);
+        var table_row = document.createElement('div');
+        table_row.className = 'table-row';
+        table_container.appendChild(table_row);
+        var year_table_cell = document.createElement('div');
+        year_table_cell.className = 'table-cell';
+        year_table_cell.style.width = '35%';
+        year_table_cell.style.verticalAlign = 'top';
+        year_table_cell.style.textAlign = 'center';
+        table_row.appendChild(year_table_cell);
+        // append year
+        var label = document.createElement('label');
+        label.innerHTML = 'Enter Year';
+        year_table_cell.appendChild(label);
+        var year_input_field = document.createElement('input');
+        year_input_field.setAttribute('id','tbInputYear');
+        year_input_field.setAttribute('type','text');
+        year_input_field.setAttribute('maxlength','4');
+        year_table_cell.appendChild(year_input_field);
+        var year_div = document.createElement('div');
+        year_div.setAttribute('id','year_id');
+        year_div.className = 'virtual-keypad';
+        year_table_cell.appendChild(year_div);
+        for(var j = 1; j <= 9; j++){
+            var btn_id = 'btn'+j;
+            btn = document.createElement('input');
+            btn.setAttribute('id',btn_id);
+            btn.setAttribute('type','button');
+            btn.setAttribute('onclick','input(this);');
+            btn.setAttribute('value',j);
+            btn.className = 'btn-year';
+            year_div.appendChild(btn);
+            if ( j%3 == 0 ) {
+                var line_break = document.createElement('br');
+                year_div.appendChild(line_break);
+            }
+        }
+        var btnUnknown = document.createElement('input');
+        btnUnknown.setAttribute('id','btnUnknow');
+        btnUnknown.setAttribute('type','button');
+        btnUnknown.setAttribute('value','Unknown');
+        btnUnknown.setAttribute('onclick','input(this); popUp();');
+        btnUnknown.className = 'btn-year';
+        year_div.appendChild(btnUnknown);
+        var btn0 = document.createElement('input');
+        btn0.setAttribute('id','btn0');
+        btn0.setAttribute('type','button');
+        btn0.setAttribute('onclick','input(this);');
+        btn0.setAttribute('value','0');
+        btn0.className = 'btn-year';
+        year_div.appendChild(btn0);
+        var clear_btn = document.createElement('input');
+        clear_btn.setAttribute('id','btnCl');
+        clear_btn.setAttribute('type','button');
+        clear_btn.setAttribute('value','Clear');
+        clear_btn.setAttribute('onclick','clearInputYear();');
+        clear_btn.className = 'btn-year';
+        year_div.appendChild(clear_btn);
+        var table_cell = document.createElement('div');
+        table_cell.className = 'table-cell';
+        table_cell.style.width = '30%';
+        table_cell.style.verticalAlign = 'top';
+        table_cell.style.textAlign = 'center';
+        table_cell.style.borderStyle = 'solid';
+        table_cell.style.borderWidth = '0px 1px 0px 1px';
+        table_row.appendChild(table_cell);
+        // append month
+        var label = document.createElement('label');
+        label.innerHTML = 'Select Month';
+        table_cell.appendChild(label);
+        var month_input_field = document.createElement('input');
+        month_input_field.setAttribute('id','tbInputMonth');
+        month_input_field.setAttribute('type','text');
+        table_cell.appendChild(month_input_field);
+        var month_table = document.createElement('div');
+        month_table.className = 'month-table';
+        table_cell.appendChild(month_table);
+        var month_rows = document.createElement('div');
+        month_rows.className = 'month-rows';
+        month_table.appendChild(month_rows);
+        var month_cells = document.createElement('div');
+        month_cells.className = 'month-cells';
+        month_rows.appendChild(month_cells);
+        var ul_options = document.createElement('ul');
+        ul_options.className = 'month-options';
+        ul_options.style.height = '99%';
+        month_cells.appendChild(ul_options);
+        <% months = []
+            (1..6).each {|m| months << [Date::MONTHNAMES[m], m]} %>
+        <% (months).each do |string,num| %>
+        var li_options = document.createElement('li');
+        li_options.className = 'cell-table';
+        li_options.setAttribute('onclick','assignMonth(this)');
+        li_options.setAttribute('id','<%= num %>');
+        li_options.innerHTML = '<%= string %>';
+        ul_options.appendChild(li_options);
+        <% end %>
+        var month_cells = document.createElement('div');
+        month_cells.className = 'month-cells';
+        month_rows.appendChild(month_cells);
+        var ul_options = document.createElement('ul');
+        ul_options.className = 'month-options';
+        ul_options.style.height = '99%';
+        month_cells.appendChild(ul_options);
+        <% months = []
+            (7..12).each {|m| months << [Date::MONTHNAMES[m], m]} %>
+        <% (months).each do |string,num| %>
+        var li_options = document.createElement('li');
+        li_options.className = 'cell-table';
+        li_options.setAttribute('onclick','assignMonth(this)');
+        li_options.setAttribute('id','<%= num %>');
+        li_options.innerHTML = '<%= string %>';
+        ul_options.appendChild(li_options);
+        <% end %>
+        //===========================================
+        var table_cell = document.createElement('div');
+        table_cell.className = 'table-cell';
+        table_cell.style.width = '35%';
+        table_cell.style.verticalAlign = 'top';
+        table_cell.style.textAlign = 'center';
+        table_row.appendChild(table_cell);
+        // append day
+        var label = document.createElement('label');
+        label.innerHTML = 'Enter Day';
+        table_cell.appendChild(label);
+        var day_input_field = document.createElement('input');
+        day_input_field.setAttribute('id','tbInputDay');
+        day_input_field.setAttribute('type','text');
+        day_input_field.setAttribute('maxlength','2');
+        table_cell.appendChild(day_input_field);
+        var day_div = document.createElement('div');
+        day_div.setAttribute('id','day');
+        day_div.className = 'virtual-keypad';
+        table_cell.appendChild(day_div);
+        for(var j = 1; j <= 9; j++){
+            var btn_id = 'btn'+j;
+            btn = document.createElement('input');
+            btn.setAttribute('id',btn);
+            btn.setAttribute('type','button');
+            btn.setAttribute('onclick','inputDay(this);');
+            btn.setAttribute('value',j);
+            btn.className = 'btn-day';
+            day_div.appendChild(btn);
+            if ( j%3 == 0 ) {
+                var line_break = document.createElement('br');
+                day_div.appendChild(line_break);
+            }
+        }
+        var btnUnknown = document.createElement('input');
+        btnUnknown.setAttribute('id','btnUnknow');
+        btnUnknown.setAttribute('type','button');
+        btnUnknown.setAttribute('value','Unknown');
+        btnUnknown.setAttribute('onclick','inputDay(this);');
+        btnUnknown.className = 'btn-day';
+        day_div.appendChild(btnUnknown);
+        var btn0 = document.createElement('input');
+        btn0.setAttribute('id','btn0');
+        btn0.setAttribute('type','button');
+        btn0.setAttribute('onclick','inputDay(this);');
+        btn0.setAttribute('value','0');
+        btn0.className = 'btn-day';
+        day_div.appendChild(btn0);
+        var clear_btn = document.createElement('input');
+        clear_btn.setAttribute('id','btnCl');
+        clear_btn.setAttribute('type','button');
+        clear_btn.setAttribute('value','Clear');
+        clear_btn.setAttribute('onclick','clearInputDay();');
+        clear_btn.className = 'btn-day';
+        day_div.appendChild(clear_btn);
         input_frame.innerHTML = '<div id="date_layout">' + date_layout.innerHTML + '</div>' ;
-
     }
-
     function assignMonth(e) {
         allCells = document.getElementsByClassName('cell-table');
-
         for(var i = 0; i < allCells.length; i++){
             allCells[i].setAttribute('style',"background-color:''");
         }
-
         e.setAttribute('style',"background-color:lightblue;");
         document.getElementById('tbInputMonth').value = e.innerHTML;
     }
-
     function setFinish() {
         var finish = document.getElementById('nextButton');
         finish.setAttribute('onmousedown','validateBirthdate();');
     }
-
-    function summary() {
-
-        var pregnancy_status = document.getElementById('pregnancy_status').value;
+    function validate_lmp() {
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
-        var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
-        // Catch false year ------------
+
         var current_year = new Date().getFullYear();
         var current_month = new Date().getMonth();
-
-        if (parseInt(current_year) - parseInt(year)  > 1 || parseInt(current_year) - parseInt(year) < 0) {
-
-            alert('The year selected is out of range')
-
-                history.go(-1);
-
-                return false;
+        var year_diff = parseInt(current_year) - parseInt(year);
+        if(year < current_year && year_diff >= 0 && year_diff <= 1){
+            summary(year,month,day,current_year,current_month);
         }
+        else if(year == current_year){
+            summary(year,month,day,current_year,current_month);
+        }
+        else if(year > current_year) {
+            showMessage('Invalid input. Year can not be ahead of '+current_year,false,false);
+        }
+        else {
+            showMessage('Invalid input. LMP should be within 9 months.',false,false);
+        }
+    }
+    function summary(year,month,day,current_month) {
+        var pregnancy_status = document.getElementById('pregnancy_status').value;
+        var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
             var edd_month;
@@ -768,7 +708,7 @@
             var lmp_year = last_menstrual_period.getFullYear();
             var lmp_month = last_menstrual_period.getMonth();
             var trimester_lmp_month = lmp_month;
-
+            // ------------------------------------
             switch(lmp_month) {
                 case 0:
                     lmp_month = 'January';
@@ -808,7 +748,6 @@
                     break;
             }
             var lmp_day = last_menstrual_period.getDate();
-
             var trimester = parseInt(current_month) - parseInt(trimester_lmp_month);
             if(trimester >= 0 && trimester <=3) {
                 trimester = 1+'st';
@@ -819,12 +758,11 @@
             else {
                 trimester = 3+'rd';
             }
-            //document.getElementById('last_menstrual_period').value = last_menstrual_period;
             display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
             display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
             display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
             document.getElementById('last_menstrual_period').value = last_menstrual_period;
-            document.getElementById('expected_due_date').value = expected_date_of_delivery;
+            //document.getElementById('expected_due_date').value = expected_date_of_delivery;
         }
         // Client Delivered ------------
         else if (pregnancy_status == 'Delivered') {
@@ -874,26 +812,24 @@
         else {
             display += "<div><span class='title'>Date:</span><span class='data'> " + day + " " + month + " "+ year +"</span></div>";
         }
-
         $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
         $("clearButton").style.display = "none";
+        $('helpText'+tstCurrentPage).innerHTML = 'Summary';
+        var finish = document.getElementById('nextButton');
+        finish.setAttribute('onmousedown','validateBirthdate();');
     }
-
     function validateBirthdate() {
         // Set current Date variables ----
         date = new Date();
         current_year = date.getFullYear();
         current_day = date.getDate();
-
         // Get entered date variables -----
         year = document.getElementById('selected_year').value;
         month = document.getElementById('selected_month').value;
         day = document.getElementById('selected_day').value;
-
         // get valid year and day range variables ---
         year_range = current_year - 150;
         valid_month_day = day > 0 && day <= 31;
-
         // Check if month is Leap year and validate ----
         if ( month == 'February' ) {
             if (year%4 == 0) { // Leap Year
@@ -903,7 +839,6 @@
                 valid_month_day = day > 0 && day <= 28;
             }
         }
-
         // Check if year is blank ------
         if (year.length == 0 ) {
             clearInputAge();
@@ -912,7 +847,6 @@
             popUp();
             return;
         }
-
         // Check if year is not known ------------
         else if (year != 'Unknown') {
             if ( year.length != 4 ) {
@@ -938,7 +872,6 @@
                     return;
                 }
             }
-
             // set values to the form year, month, and day ---------------
             document.getElementById('selected_year').value = year;
             document.getElementById('selected_month').value = month;
@@ -949,8 +882,7 @@
             document.getElementById('selected_year').value = year;
             document.getElementById('age_estimate').value = estimated_age;
         }
-
         // submit form -------------------------
         document.getElementById('pregnancy-status').submit();
     }
-</script>
+</script
