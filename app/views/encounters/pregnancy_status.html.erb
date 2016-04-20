@@ -321,8 +321,8 @@
                                                                 :condition => "$('pregnancy_status').value == 'Pregnant'",
                                                                 :tt_pageStyleClass => "NoControls" } %>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Pregnancy due date") %>
-    <%= hidden_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
+    <%#= hidden_field_tag("observations[][concept_name]", "Pregnancy due date") %>
+    <%#= hidden_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
                                                                   :id => "expected_due_date",
                                                                   :condition => "$('pregnancy_status').value == 'Pregnant'",
                                                                   :tt_pageStyleClass => "NoControls" } %>
@@ -336,7 +336,7 @@
                                                                 :tt_pageStyleClass => "NoControls" } %>
 
     <!-- ======= Give summary of input if Pregnancy Status is Pregnant or Delivered ========= -->
-    <%= text_field_tag '', nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; summary(); setFinish();",
+    <%= text_field_tag '', nil, { :tt_onLoad => "__$('keyboard').style.display = 'none'; setFinish(); summary();",
                                   :id => 'summary',
                                   :helpText => 'Summary',
                                   :condition => "$('pregnancy_status').value == 'Pregnant' || $('pregnancy_status').value == 'Delivered';",
@@ -351,7 +351,7 @@
 <script>
     function nextDate() {
         var next_button = document.getElementById('nextButton');
-        next_button.setAttribute('onmousedown','passDateValues(); gotoNextPage();');
+        next_button.setAttribute('onmousedown','passDateValues(); validate_lmp();');
     }
     function passDateValues() {
         document.getElementById('selected_year').value = document.getElementById('tbInputYear').value;
@@ -594,22 +594,30 @@
         var finish = document.getElementById('nextButton');
         finish.setAttribute('onmousedown','validateBirthdate();');
     }
-    function summary() {
-        var pregnancy_status = document.getElementById('pregnancy_status').value;
+    function validate_lmp() {
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
-        var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
-        // get current year and month ------------
+
         var current_year = new Date().getFullYear();
         var current_month = new Date().getMonth();
-        /*
-         if (parseInt(current_year) - parseInt(year)  > 1 || parseInt(current_year) - parseInt(year) < 0) {
-         alert('The year selected is out of range')
-         history.go(-1);
-         return false;
-         }
-         */
+        var year_diff = parseInt(current_year) - parseInt(year);
+        if(year < current_year && year_diff >= 0 && year_diff <= 1){
+            summary(year,month,day,current_year,current_month);
+        }
+        else if(year == current_year){
+            summary(year,month,day,current_year,current_month);
+        }
+        else if(year > current_year) {
+            showMessage('Invalid input. Year can not be ahead of '+current_year,false,false);
+        }
+        else {
+            showMessage('Invalid input. LMP should be within 9 months.',false,false);
+        }
+    }
+    function summary(year,month,day,current_month) {
+        var pregnancy_status = document.getElementById('pregnancy_status').value;
+        var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
             var edd_month;
@@ -750,12 +758,11 @@
             else {
                 trimester = 3+'rd';
             }
-            //document.getElementById('last_menstrual_period').value = last_menstrual_period;
             display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
             display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
             display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
             document.getElementById('last_menstrual_period').value = last_menstrual_period;
-            document.getElementById('expected_due_date').value = expected_date_of_delivery;
+            //document.getElementById('expected_due_date').value = expected_date_of_delivery;
         }
         // Client Delivered ------------
         else if (pregnancy_status == 'Delivered') {
@@ -807,6 +814,9 @@
         }
         $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary">' + display + '</div>' ;
         $("clearButton").style.display = "none";
+        $('helpText'+tstCurrentPage).innerHTML = 'Summary';
+        var finish = document.getElementById('nextButton');
+        finish.setAttribute('onmousedown','validateBirthdate();');
     }
     function validateBirthdate() {
         // Set current Date variables ----
