@@ -26,7 +26,6 @@
 <style>
 
   .main-contain{
-      height: 82%;
       width: 100%;
   }
   .btn {
@@ -52,40 +51,37 @@
       height: 70px;
       width: 130px;
   }
-  .full-height{
-      height: 42%;
-  }
+
 </style>
 
 <body>
-    <div class="main-contain">
+    <div class="main-contain" style="height: 100%; width: 100%;display: table;">
         <!-- Partial for header -->
-        <%= render :partial => 'patient/headers/header' %>
-        <!------------------------------------------------------------------------>
-
-        <div id="clinic_assess" class="half-height">
-          <!-- Partial summary for clinical assessment -->
-          <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
-          <!------------------------------------------------------------------------>
+        <div style="display: table-row">
+            <div style="display: table-cell; width: 100%;">
+                <%= render :partial => 'patient/headers/common_header' %>
+                <!------------------------------------------------------------------------>
+            </div>
         </div>
 
-        <div id="diet_assess" class="half-height" style="margin-top: 0px;">
+        <div id="clinic_assess" style="display: table-row">
+            <!-- Partial summary for clinical assessment -->
+            <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
+            <!------------------------------------------------------------------------>
+        </div>
+
+        <div id="diet_assess" class="half-height" style="height: 60%; width: 100%;display: table-row">
           <!-- Partial for dietary assessment -->
           <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
           <!------------------------------------------------------------------------>
         </div>
-      <div style="width: 100%; height: 8%">
 
-        <div class="btn btn-back" onclick="document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks'">
-
-          <%=image_tag("icons/back_white.svg", class: 'task-icons')%>
-
-        </div>
-
-
-
-
+        <div style="width: 100%; height: 7%; display: table-row">
+            <div class="btn btn-back" onclick="document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks'">
+                <%=image_tag("icons/back_white.svg", class: 'task-icons')%>
+            </div>
       </div>
+
     </div>
 
 </body>

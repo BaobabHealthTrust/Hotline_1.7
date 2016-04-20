@@ -18,6 +18,7 @@ class Patient < ActiveRecord::Base
   		"SELECT  * FROM encounter e 
   		INNER JOIN obs o ON e.patient_id = o.person_id
   		WHERE e.voided = 0 AND TIMESTAMPDIFF(DAY, DATE(e.encounter_datetime), CURDATE()) <= 270
+      AND e.patient_id = #{self.patient_id}
   		AND e.encounter_type IN (SELECT encounter_type_id FROM encounter_type 
   			WHERE name IN ('PREGNANCY STATUS', 'MATERNAL HEALTH SYMPTOMS'))
 		AND ((o.value_coded IN (SELECT concept_id FROM concept_name WHERE name IN ('PREGNANT',
@@ -25,15 +26,13 @@ class Patient < ActiveRecord::Base
   				OR (o.value_text IN ('PREGNANT',
 			'VAGINAL BLEEDING DURING PREGNANCY', 'FEVER DURING PREGNANCY', 'Water breaks', 'No Fetal Movements'))) "
   			)
-  	
+
   	pregnant_obs =  ""
-  	
+
     if !recent_preg_obs.blank? && female
       category = "Group 2"
     elsif female && patient_age >= 14 && patient_age < 50
       category = "Group 1"
-    elsif patient_age >= 14
-      category = "Group 3"
     elsif patient_age < six_months
       category = "Group 4"
     elsif patient_age > six_months && patient_age <= 2
@@ -42,6 +41,8 @@ class Patient < ActiveRecord::Base
       category = "Group 6"
     elsif patient_age > 5 && patient_age < 14
       category = "Group 7"
+    elsif patient_age >= 14
+      category = "Group 3"
     end
   end
 

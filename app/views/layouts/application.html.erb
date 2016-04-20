@@ -156,6 +156,7 @@
         <style>
             #content {
               margin-top:-41vh !important;
+              height: 700px !important;
             }
         </style>
    <% end %>
@@ -167,11 +168,11 @@
 
   <body id="mateme">
 
-    <div id="container">
+  <% if params[:patient_id] %>
+      <%= render :partial => 'patient/headers/common_header' %>
+  <% end %>
 
-      <% if params[:patient_id] %>
-            <%= render :partial => 'patient/headers/common_header' %>
-      <% end %>
+    <div id="container">
 
       <div id="content">
         <div id="description" style="color:#777;position:absolute;margin-top:-70px;">
