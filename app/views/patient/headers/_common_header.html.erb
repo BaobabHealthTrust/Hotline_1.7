@@ -56,7 +56,7 @@
 }
 .titl{
     font-size: 0.9em !important;
-    width: 30%;
+    width: 40%;
     text-align: left;
     background: white !important;
 }
@@ -117,12 +117,12 @@
          symp = Observation.by_concept_today(@patient_obj.patient_id,
                                       'Maternal Health Symptoms',
                                       Date.today).join(' , ')
-         symp = (symp.length < 50) ? symp : (symp[0..50] + '...')
+         symp = (symp.length < 33) ? symp : (symp[0..33] + '...')
 
        dang = Observation.by_concept_today(@patient_obj.patient_id,
                                            'Danger signs',
                                            Date.today).join(' , ')
-       dang = (dang.length < 50) ? dang : (dang[0..50] + '...')
+       dang = (dang.length < 33) ? dang : (dang[0..33] + '...')
     %>
         <div class="cells" style="width: 44%;">
           <table class="attributes-table" valign="top">
