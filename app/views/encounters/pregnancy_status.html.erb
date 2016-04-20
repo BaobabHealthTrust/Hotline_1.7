@@ -588,13 +588,31 @@
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
 
+        var months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
         var current_year = new Date().getFullYear();
         var current_month = new Date().getMonth();
         var year_diff = parseInt(current_year) - parseInt(year);
         if(year < current_year && year_diff >= 0 && year_diff <= 1){
-            alert(current_month+'and'+month);
-            return;
-            summary(year,month,day,current_year,current_month);
+            // We expect month to be greater than current and plus 4 ---
+            if(parseInt(months.indexOf(month)) > (parseInt(current_month)+3)) {
+                summary(year,month,day,current_year,current_month);
+            }
+            else{
+                showMessage('Invalid input. LMP should be within 9 months.',false,false);
+            }
         }
         else if(year == current_year){
             summary(year,month,day,current_year,current_month);
