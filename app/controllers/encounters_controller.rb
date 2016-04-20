@@ -368,8 +368,8 @@ class EncountersController < ApplicationController
     #segmenting clinical encounter for two tables
     if (@clinical_encounter.keys.length > 0)
       mid = (@clinical_encounter.keys.length/2).to_i
-      @clinical_encounter_1 = @clinical_encounter.keys[0 .. mid]
-      @clinical_encounter_2 = @clinical_encounter.keys[(mid + 1) .. (@clinical_encounter.keys.length)]
+      @clinical_encounter_1 = @clinical_encounter.keys[0 .. (mid - 1)]
+      @clinical_encounter_2 = @clinical_encounter.keys[(mid) .. (@clinical_encounter.keys.length)]
     elsif (@clinical_encounter.keys.length == 1)
       @clinical_encounter_1 = @clinical_encounter.keys
     end

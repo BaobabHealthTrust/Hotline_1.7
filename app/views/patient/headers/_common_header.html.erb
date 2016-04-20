@@ -21,7 +21,8 @@
 .cells {
     display: table-cell;
     vertical-align: top;
-    border: 1px dotted black;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
     padding: 0px !important;
 }
 
@@ -51,14 +52,15 @@
   padding: 0px;
 }
 .value{
-    font-size: 0.9em;
-    padding: 5px;
+    font-size: 1em;
+    padding: 3px;
 }
 .titl{
-    font-size: 0.9em !important;
+    font-size: 1em !important;
     width: 40%;
     text-align: left;
     background: white !important;
+    padding: 3px;
 }
 /* ........................................................... */
 </style>
@@ -117,12 +119,12 @@
          symp = Observation.by_concept_today(@patient_obj.patient_id,
                                       'Maternal Health Symptoms',
                                       Date.today).join(' , ')
-         symp = (symp.length < 33) ? symp : (symp[0..33] + '...')
+         symp = (symp.length < 36) ? symp : (symp[0..36] + '...')
 
        dang = Observation.by_concept_today(@patient_obj.patient_id,
                                            'Danger signs',
                                            Date.today).join(' , ')
-       dang = (dang.length < 33) ? dang : (dang[0..33] + '...')
+       dang = (dang.length < 36) ? dang : (dang[0..36] + '...')
     %>
         <div class="cells" style="width: 44%;">
           <table class="attributes-table" valign="top">
