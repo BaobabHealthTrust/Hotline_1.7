@@ -102,6 +102,7 @@
                            :condition => "$('health_symptoms').value != 'Other'",
                            :tt_onLoad => "$('nextButton').style.display = 'inline' ",
                            :field_type => 'number',
+                           :condition => "parseInt(age) <= 5",
                            :tt_pageStyleClass => 'NumbersOnly',
                            :tt_onUnLoad => 'hideHelpButton();'
         %>
@@ -111,6 +112,7 @@
                        :helpText =>"Select danger signs",
                        :multiple => true,
                        :optional => false,
+                       :condition => "parseInt(age) > 5",
                        :tt_onLoad => "setTimeout('hideSelectedValues()', 100);",
                        :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
                        :tt_pageStyleClass => 'longSelectList',
@@ -133,6 +135,7 @@
                        :helpText =>"Select additional danger signs",
                        :multiple => true,
                        :optional => true,
+                       :condition => "parseInt(age) > 5",
                        :tt_pageStyleClass => 'longSelectList',
                        :tt_onLoad => "setTimeout('hideSelectedValues()', 100);",
                        :id => "additional_danger_signs",
