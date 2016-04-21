@@ -139,15 +139,21 @@ class EncountersController < ApplicationController
       when 'Pregnancy status'
         @pregnancy_options = concept_set('Pregnancy status')
       when 'Female symptoms'
-        @maternal_health_symptoms = concept_set('Maternal health symptoms')
           #if child
         if @patient_obj.age <= 5
           @health_info = concept_set('Child health info')
           @danger_signs = concept_set('Child danger signs greater zero outcome')
+          @health_symptoms = concept_set('Child health symptoms')
+          @symptom_concept = "Child Health Symptoms"
+          @info_concept = "Child Health Info"
+
           #if adult
         elsif
           @health_info = concept_set('Maternal health info')
           @danger_signs = concept_set('Danger signs')
+          @health_symptoms = concept_set('Maternal health symptoms')
+          @symptom_concept = "Maternal Health Symptoms"
+          @info_concept = "Maternal Health Info"
         end
       when 'Update outcomes'
         @general_outcomes = concept_set('General outcome')
@@ -296,8 +302,8 @@ class EncountersController < ApplicationController
                'HIV - symptoms',
                'TB - general advice',
                'TB - symptoms',
-               'Registration',
-               'Other']
+               'Nutrition',
+               'Registration'].sort + ['Other']
   end
 
   def call_options

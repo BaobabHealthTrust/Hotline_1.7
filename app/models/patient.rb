@@ -20,7 +20,7 @@ class Patient < ActiveRecord::Base
   		WHERE e.voided = 0 AND TIMESTAMPDIFF(DAY, DATE(e.encounter_datetime), CURDATE()) <= 270
       AND e.patient_id = #{self.patient_id}
   		AND e.encounter_type IN (SELECT encounter_type_id FROM encounter_type 
-  			WHERE name IN ('PREGNANCY STATUS', 'MATERNAL HEALTH SYMPTOMS'))
+  			WHERE name IN ('PREGNANCY STATUS', 'HEALTH SYMPTOMS'))
 		AND ((o.value_coded IN (SELECT concept_id FROM concept_name WHERE name IN ('PREGNANT',
 			'VAGINAL BLEEDING DURING PREGNANCY', 'FEVER DURING PREGNANCY', 'Water breaks', 'No Fetal Movements'))) 
   				OR (o.value_text IN ('PREGNANT',

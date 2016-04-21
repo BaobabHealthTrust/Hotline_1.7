@@ -43,6 +43,7 @@ class Observation < ActiveRecord::Base
     if value.blank?
       value = self.value_text rescue nil
     end
+
     value
   end
 
@@ -52,10 +53,19 @@ class Observation < ActiveRecord::Base
     return "Concept Not Found!!" if concept_id.blank?
     return 'Patient Not Found!!' if Patient.find(person_id).blank?
 
+    last_enc = Encounter.find_by_sql("
+    SELECT encounter.encounter_id FROM encounter
+        INNER JOIN obs ON obs.person_id = encounter.patient_id AND obs.concept_id = #{concept_id}
+      WHERE patient_id = #{person_id} AND DATE(encounter.encounter_datetime) <= '#{date.to_s(:db)}'
+      ORDER BY encounter_datetime DESC LIMIT 1"
+    )
+    return [] if last_enc.length == 0
+
+    last_enc_id = last_enc.last.encounter_id
     Observation.find_by_sql(
-        ["SELECT * FROM obs WHERE person_id = #{person_id} AND concept_id = #{concept_id} AND DATE(obs_datetime) = ?
-          ORDER BY obs_datetime DESC LIMIT 5",
-         date.to_date]).collect{|o| o.answer_string}.delete_if{|a| a.blank?}.uniq
+        "SELECT * FROM obs WHERE person_id = #{person_id} AND encounter_id = #{last_enc_id}
+          AND concept_id = #{concept_id} AND DATEDIFF('#{date.to_s(:db)}', DATE(obs_datetime)) <= 9*30
+          ORDER BY obs_datetime DESC LIMIT 5 ").collect{|o| o.answer_string}.delete_if{|a| a.blank?}.uniq
   end
 
 

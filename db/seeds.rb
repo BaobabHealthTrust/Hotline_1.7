@@ -388,6 +388,16 @@ select_options = {
       ['Vaginal discharge ','VAGINAL DISCHARGE'],
       ['Other','OTHER']
   ],
+  'child_health_symptoms' => [
+      ['Fever','FEVER'],
+      ['Diarrhea','DIARRHEA'],
+      ['Coughing','COUGHING'],
+      ['Convulsions','CONVULSIONS'],
+      ['Trouble eating/drinking','TROUBLE EATING/DRIKING'],
+      ['Red eyes','RED EYES'],
+      ['Sleepy/unconscious','SLEEPY/UNCONSCIOUS'],
+      ['Weight loss/gain','WEIGHT LOSS/GAIN']
+  ],
   #TODO - add the new symptoms above, danger signs below on to concept server
   'danger_signs' => [
       ['Heavy vaginal bleeding during pregnancy','HEAVY VAGINAL BLEEDING DURING PREGNANCY'],
@@ -412,6 +422,12 @@ select_options = {
       ['Umbilicus infection','UMBILICUS INFECTION'],
       ['Growth milestones','GROWTH MILESTONES'],
       ['Accessing healthcare services','ACCESSING HEALTHCARE SERVICES'],
+      ['Eye infection', 'Eye infection'],
+      ['Chest in-drawing', 'Chest in-drawing'],
+      ['Palmar pallor', 'Palmar pallor'],
+      ['Bulging fontanel' , 'Bulging fontanel'],
+      ['Jaundice', 'Jaundice'],
+      ['Fast breathing', 'Fast breathing'],
       ['Other','OTHER']
   ],
   'type_of_message_content' => [
