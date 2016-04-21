@@ -346,11 +346,13 @@
         var next_button = document.getElementById('nextButton');
         next_button.setAttribute('onmousedown','passDateValues(); validate_lmp();');
     }
+
     function passDateValues() {
         document.getElementById('selected_year').value = document.getElementById('tbInputYear').value;
         document.getElementById('selected_month').value = document.getElementById('tbInputMonth').value;
         document.getElementById('selected_day').value = document.getElementById('tbInputDay').value;
     }
+
     function inputDay(e) {
         var tbInput = document.getElementById('tbInputDay');
         if(tbInput.value == 'Unknown' && e.value != 'Unknown') {
@@ -362,9 +364,11 @@
             tbInput.value = tbInput.value + e.value;
         }
     }
+
     function clearInputDay() {
         document.getElementById("tbInputDay").value = '';
     }
+
     function input(e) {
         var tbInput = document.getElementById('tbInputYear');
         if(tbInput.value == 'Unknown' && e.value != 'Unknown')
@@ -375,9 +379,11 @@
             tbInput.value = tbInput.value + e.value;
         }
     }
+
     function clearInputYear() {
         document.getElementById("tbInputYear").value = '';
     }
+
     function load() {
         var array = new Array();
         try {
@@ -395,6 +401,7 @@
         catch(e) {
         }
     }
+
     function dateLayout() {
         var input_frame = $('inputFrame'+tstCurrentPage);
         $("clearButton").style.display = "none";
@@ -575,6 +582,7 @@
         day_div.appendChild(clear_btn);
         input_frame.innerHTML = '<div id="date_layout">' + date_layout.innerHTML + '</div>' ;
     }
+
     function assignMonth(e) {
         allCells = document.getElementsByClassName('cell-table');
         for(var i = 0; i < allCells.length; i++){
@@ -583,6 +591,7 @@
         e.setAttribute('style',"background-color:lightblue;");
         document.getElementById('tbInputMonth').value = e.innerHTML;
     }
+
     function validate_lmp() {
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
@@ -606,25 +615,32 @@
         var current_month = new Date().getMonth();
         var year_diff = parseInt(current_year) - parseInt(year);
         if(year < current_year && year_diff >= 0 && year_diff <= 1){
-            // We expect month to be greater than current and plus 4 ---
+            // We expect month to be of index greater than current and plus 4 ---
             if(parseInt(months.indexOf(month)) > (parseInt(current_month)+3)) {
-                summary(year,month,day,current_year,current_month);
+                summary(year,month,day,current_month,current_year);
             }
             else{
-                showMessage('Invalid input. LMP should be within 9 months.',false,false);
+                showMessage('Invalid input. Entry should be within 9 months.',false,false);
             }
         }
         else if(year == current_year){
-            summary(year,month,day,current_month);
+            // We expect month to be of index less than current ---
+            if(parseInt(months.indexOf(month)) < parseInt(current_month)) {
+                summary(year, month, day, current_month, current_year);
+            }
+            else {
+                showMessage('Invalid input. Month can not be ahead of '+months[current_month],false,false);
+            }
         }
         else if(year > current_year) {
             showMessage('Invalid input. Year can not be ahead of '+current_year,false,false);
         }
         else {
-            showMessage('Invalid input. LMP should be within 9 months.',false,false);
+            showMessage('Invalid input. Entry should be within 9 months.',false,false);
         }
     }
-    function summary(year,month,day,current_month) {
+
+    function summary(year,month,day,current_month,current_year) {
         var pregnancy_status = document.getElementById('pregnancy_status').value;
         var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
         // Client Pregnant ------------
@@ -716,6 +732,7 @@
             var last_menstrual_period = new Date(year, edd_month, day);
             var lmp_year = last_menstrual_period.getFullYear();
             var lmp_month = last_menstrual_period.getMonth();
+            var lmp_day = last_menstrual_period.getDate();
             var trimester_lmp_month = lmp_month;
             // ------------------------------------
             switch(lmp_month) {
@@ -756,17 +773,35 @@
                     lmp_month = 'December';
                     break;
             }
-            var lmp_day = last_menstrual_period.getDate();
-            var trimester = parseInt(current_month) - parseInt(trimester_lmp_month);
-            if(trimester >= 0 && trimester <=3) {
-                trimester = 1+'st';
+            //var trimester = Math.abs(parseInt(trimester_lmp_month) - parseInt(current_month));
+            var trimester;
+
+            if(parseInt(current_year) == parseInt(lmp_year)) {
+                if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 2)) {
+//                    alert('frst'); return;
+                    trimester = 1 + 'st';
+                }
+                else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 5)) {
+//                    alert('scnd'); return;
+                    trimester = 2 + 'nd';
+                }
+                else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 7)) {
+//                    alert('thrd'); return;
+                    trimester = 3 + 'rd';
+                }
             }
-            else if(trimester >= 4 && trimester <= 6) {
-                trimester = 2+'nd';
+            else if(parseInt(current_year) > parseInt(lmp_year)) {
+                if (current_month <= trimester_lmp_month && trimester_lmp_month >= (current_month + 2)) {
+                    trimester = 1 + 'st';
+                }
+                else if (current_month <= trimester_lmp_month && trimester_lmp_month >= (current_month + 5)) {
+                    trimester = 2 + 'nd';
+                }
+                else if (current_month <= trimester_lmp_month && trimester_lmp_month >= (current_month + 7)) {
+                    trimester = 3 + 'rd';
+                }
             }
-            else {
-                trimester = 3+'rd';
-            }
+
             display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
             display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
             display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
@@ -831,4 +866,4 @@
         // submit form -------------------------
         document.getElementById('pregnancy-status').submit();
     }
-</script
+</script>
