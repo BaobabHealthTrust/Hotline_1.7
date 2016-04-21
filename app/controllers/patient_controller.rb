@@ -3,6 +3,11 @@ class PatientController < ApplicationController
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
+
+    if params[:next_task]
+      redirect_to next_task(@patient_obj) and return
+    end
+
     @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
 
     @current_encounters = Encounter.current_encounters(@patient_obj.patient_id)
