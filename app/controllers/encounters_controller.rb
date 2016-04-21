@@ -360,7 +360,7 @@ class EncountersController < ApplicationController
   def nutrition_summary
     @patient_obj = PatientService.get_patient(params[:patient_id])
     @client = Patient.find(params[:patient_id])
-    @clinical_encounter = Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
+    @clinical_encounter = Encounter.last_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
     @clinical_encounter_1 = []
     @clinical_encounter_2 = []
 

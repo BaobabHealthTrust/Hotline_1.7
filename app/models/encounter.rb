@@ -8,13 +8,28 @@ class Encounter < ActiveRecord::Base
 	has_many :observations
   belongs_to :type, class_name: "EncounterType", foreign_key: "encounter_type"
 
+  def self.last_data(name, patient_id)
+    encounter_type_id  = EncounterType.find_by_name(name).id
+    data = {}
+
+    (Encounter.find_by_sql(["SELECT * FROM encounter WHERE encounter_type = #{encounter_type_id}
+                     AND DATE(encounter_datetime) < ? AND patient_id = #{patient_id} 
+                     ", Date.today])
+    .last.observations rescue []).each do |observation|
+      data[observation.concept_name.name.upcase.strip] = [] if data[observation.concept_name.name.upcase.strip].blank?
+      data[observation.concept_name.name.upcase.strip] << observation.answer_string
+    end
+
+    data
+  end
+
   def self.current_data(name, patient_id)
     encounter_type_id  = EncounterType.find_by_name(name).id
     data = {}
 
     (Encounter.find_by_sql(["SELECT * FROM encounter WHERE encounter_type = #{encounter_type_id}
                      AND DATE(encounter_datetime) = ? AND patient_id = #{patient_id}
-                     ", Date.today])
+                            ", Date.today])
     .last.observations rescue []).each do |observation|
       data[observation.concept_name.name.upcase.strip] = [] if data[observation.concept_name.name.upcase.strip].blank?
       data[observation.concept_name.name.upcase.strip] << observation.answer_string
