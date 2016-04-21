@@ -9,6 +9,8 @@ class HomeController < ApplicationController
       session.delete(:tag_encounters)
       session.delete(:tagged_encounters_patient_id)
     end
+
+    session.delete(:end_call) if session[:end_call].present?
   end
 
   def configuration

@@ -148,7 +148,7 @@
 <!-- Layout report -->
 	<!-- report header -->
 	<div class="report_header">
-		<h1 class="report_title">Name of Report</h1>
+		<h1 class="report_title">Patient Analysis Report</h1>
 		<div class="control_buttons">
 			<!-- Go back to reports main page -->
 			<button onclick="window.location='/report'">Back</button>
@@ -168,17 +168,53 @@
 	<!-- report table filled with data -->
 	<table class="table">
 		<tr class="row row_title">
-			<th class="col col_title">
-				Encounter/Observation
-			</th>
-			<th class="col col_title">
-				Count
-			</th>
-			<th class="col col_title">
-				Percentage
-			</th>
-		</tr>
-		<!--loop through entered data to generate records. 
+	 	 <tr>
+          <td width="48%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
+              Total Calls
+          </td>
+          <td width="8%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:left;">
+              Total Callers
+          </td>
+          <td width="14%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+              Any Health Symptoms
+          </td>
+          <td width="14%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+              Any Danger Signs
+          </td>
+          <td width="14%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+              Any Info Requested
+          </td>
+        </tr>
+		<tr>
+          <td width="44%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+              &nbsp;
+          </td>
+          <td width="7%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+              Count
+          </td>
+          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+              Count
+          </td>
+          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+              Count
+          </td>
+          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+              %age
+          </td>
+          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+              Count
+          </td>
+          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+              %age
+          </td>
+          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+              Count
+          </td>
+          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+              %age
+          </td>
+        </tr>
+        <!--loop through entered data to generate records. 
 			For the time being looping through 6 times. Harcoded to be changed.-->
 		<% (1..6).each do %>
 		<tr class="row row_data">
@@ -189,7 +225,25 @@
 				count dynamic_load
 			</td>
 			<td class="col col_data">
-				percentage dynamic_loaded
+				loading_data
+			</td>
+			<td class="col col_data">
+				loading_data
+			</td>
+			<td class="col col_data">
+				loading_data
+			</td>
+			<td class="col col_data">
+				loading_data
+			</td>
+			<td class="col col_data">
+				loading_data
+			</td>
+			<td class="col col_data">
+				loading_data
+			</td>
+			<td class="col col_data">
+				loading_data
 			</td>
 		</tr>
 		<% end %>
