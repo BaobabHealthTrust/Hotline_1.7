@@ -31,12 +31,7 @@ class ApplicationController < ActionController::Base
     patient = Patient.where(:patient_id => patient_obj.patient_id).first
     return '/' if patient.blank?
 
-    current_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
-      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
-      WHERE encounter.patient_id = #{patient_obj.patient_id}
-        AND encounter.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
-        AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') = ''
-      ORDER BY encounter.encounter_datetime DESC")
+    current_encounters = Encounter.current_encounters(patient_obj.patient_id)
 
     current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}
 
@@ -47,15 +42,16 @@ class ApplicationController < ActionController::Base
         }},
 
         {'PREGNANCY STATUS' => {
-          'condition' => "(patient_obj.sex.match('F') && patient_obj.age > 13 && !current_encounter_names.include?('PREGNANCY STATUS'))",
+          'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') && patient_obj.age > 13 && !current_encounter_names.include?('PREGNANCY STATUS'))",
           'link' => "/encounters/new/pregnancy_status?patient_id=#{patient_obj.patient_id}"
         }},
         {'MATERNAL HEALTH SYMPTOMS' => {
-          'condition' => "(patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('MATERNAL HEALTH SYMPTOMS')",
+          'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('MATERNAL HEALTH SYMPTOMS')",
           'link' => "/encounters/new/female_symptoms?patient_id=#{patient_obj.patient_id}"
         }},
         {'UPDATE OUTCOME' => {
-           'condition' => "!current_encounter_names.include?('UPDATE OUTCOME')",
+           'condition' => "!current_encounter_names.include?('UPDATE OUTCOME') && ((0 .. 5).include?(patient_obj.age) || (patient_obj.sex.match('F')  &&
+                              (13 .. 50).include?(patient_obj.age)))",
            'link' => "/encounters/new/update_outcomes?patient_id=#{patient_obj.patient_id}"
         }}
      ]
@@ -66,6 +62,7 @@ class ApplicationController < ActionController::Base
       return tsk[name]['link']
     end
 
+    return "/" if !session[:end_call].blank?
     return "/patient/dashboard/#{@patient.id}/tasks"
   end
 end
