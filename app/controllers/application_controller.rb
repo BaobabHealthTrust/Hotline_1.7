@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
           'link' => "/encounters/new/pregnancy_status?patient_id=#{patient_obj.patient_id}"
         }},
         {'MATERNAL HEALTH SYMPTOMS' => {
-          'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('MATERNAL HEALTH SYMPTOMS')",
+          'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('HEALTH SYMPTOMS')",
           'link' => "/encounters/new/female_symptoms?patient_id=#{patient_obj.patient_id}"
         }},
         {'UPDATE OUTCOME' => {

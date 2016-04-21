@@ -118,9 +118,12 @@
 
     <% if gender == 'Female'
 
-         symp = Observation.by_concept_today(@patient_obj.patient_id,
-                                      'Maternal Health Symptoms',
-                                      Date.today).join(' , ')
+         symp = (Observation.by_concept_today(@patient_obj.patient_id,
+                                              'Child Health Symptoms',
+                                              Date.today).join(' , ') +
+                 Observation.by_concept_today(@patient_obj.patient_id,
+                                              'Maternal Health Symptoms',
+                                              Date.today).join(' , '))
          symp = (symp.length < 50) ? symp : (symp[0..50] + '...')
 
        dang = Observation.by_concept_today(@patient_obj.patient_id,

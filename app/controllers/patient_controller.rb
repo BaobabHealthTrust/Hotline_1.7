@@ -14,7 +14,7 @@ class PatientController < ApplicationController
     @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
     @previous_encounters = Encounter.previous_encounters(@patient_obj.patient_id)
 
-    symptom_encounter_type = EncounterType.find_by_name('Maternal health symptoms')
+    symptom_encounter_type = EncounterType.find_by_name('Health symptoms')
     @symptom_encounters = Encounter.all_encounters_by_type(@patient_obj.patient_id, [symptom_encounter_type.id])
 
     #Adding tasks in proper order
@@ -30,7 +30,7 @@ class PatientController < ApplicationController
       @tasks << {"name" => "Symptoms",
                  "link" =>"/encounters/new/female_symptoms?patient_id=#{@patient_obj.patient_id}",
                  'icon' => "symptoms-2.png",
-                 'done' => @current_encounter_names.include?('MATERNAL HEALTH SYMPTOMS')}
+                 'done' => @current_encounter_names.include?('HEALTH SYMPTOMS')}
     end
 
     @tasks << {"name" => "Outcomes", "link" => "/encounters/new/update_outcomes?patient_id=#{@patient_obj.patient_id}",
