@@ -300,6 +300,7 @@ class EncountersController < ApplicationController
                'HIV - symptoms',
                'TB - general advice',
                'TB - symptoms',
+               'Nutrition',
                'Registration'].sort + ['Other']
   end
 
