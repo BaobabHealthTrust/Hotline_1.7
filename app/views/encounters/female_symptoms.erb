@@ -102,6 +102,7 @@
                            :condition => "$('health_symptoms').value != 'Other'",
                            :tt_onLoad => "$('nextButton').style.display = 'inline' ",
                            :field_type => 'number',
+                           :condition => "parseInt(age) <= 5",
                            :tt_pageStyleClass => 'NumbersOnly',
                            :tt_onUnLoad => 'hideHelpButton();'
         %>
