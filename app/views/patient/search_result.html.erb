@@ -310,7 +310,7 @@ function addNew() {
 function patientDashboard() {
   if(selectedPersonID) {
       <% unless params[:action_type] == 'guardian'%>
-        document.location = '/patient/dashboard/' + selectedPersonID + '/tasks';
+        document.location = '/patient/dashboard/' + selectedPersonID + '/tasks?next_task=true';
       <% else %>
         document.location = '/encounters/new/reminders?patient_id=<%= params[:patient_id]%>&guardian_id=' + selectedPersonID;
       <% end %>

@@ -3,6 +3,11 @@ class PatientController < ApplicationController
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
+
+    if params[:next_task]
+      redirect_to next_task(@patient_obj) and return
+    end
+
     @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
 
     @current_encounters = Encounter.current_encounters(@patient_obj.patient_id)
@@ -221,7 +226,7 @@ class PatientController < ApplicationController
       @districts.map(&:id), location_tag.id).joins("INNER JOIN location_tag_map t USING(location_id)").map do |l|
       @districts << l
     end
-    data = @districts.collect { |l | l.name }
+    data = @districts.sort.collect { |l | l.name }
     
     unless data.blank?
       render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
@@ -237,7 +242,7 @@ class PatientController < ApplicationController
 
     @ta = Location.where("parent_location = ? AND m.location_tag_id = ? 
       AND name LIKE(?)",district.id, location_tag.id, "%#{params[:search_string]}%").joins("INNER JOIN location_tag_map m USING(location_id)")
-    data = @ta.collect { |l | l.name }
+    data = @ta.sort.collect { |l | l.name }
 
     unless data.blank?
       render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
@@ -254,7 +259,7 @@ class PatientController < ApplicationController
 
     @villages = Location.where("parent_location = ? AND m.location_tag_id = ? 
       AND name LIKE(?)",ta.id, location_tag.id, "%#{params[:search_string]}%").joins("INNER JOIN location_tag_map m USING(location_id)")
-    data = @villages.collect { |l | l.name }
+    data = @villages.sort.collect { |l | l.name }
 
     unless data.blank?
       render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
@@ -270,7 +275,7 @@ class PatientController < ApplicationController
 
       @patient = Patient.find(params[:patient_id])
       @patient_obj = PatientService.get_patient(@patient.patient_id)
-
+      session[:end_call] = params[:end_call]
       session[:tag_encounters] = true
       session[:tagged_encounters_patient_id] = params[:patient_id]
       ###
@@ -282,27 +287,18 @@ class PatientController < ApplicationController
                 'encounter_type_name' => ['Purpose of call',
                                   'Update outcome']]
 
-      purpose_encounter_id = EncounterType.find_by_name('Purpose of call').encounter_type_id
+      current_encounters = Encounter.find_by_sql("SELECT distinct encounter.* FROM encounter
+      INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
+      WHERE encounter.patient_id = #{@patient_obj.patient_id}
+        AND encounter.encounter_datetime BETWEEN '#{Date.today.strftime('%Y-%m-%d 00:00:00')}'
+        AND '#{Date.today.strftime('%Y-%m-%d 23:59:59')}' AND COALESCE(obs.comments, '') = ''
+      ORDER BY encounter.encounter_datetime DESC")
 
-      outcome_encounter_id = EncounterType.find_by_name('Update outcome').encounter_type_id
+      current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}
 
-      symptoms_encounter_id = EncounterType.find_by_name('Maternal health symptoms').encounter_type_id
-
-      verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => purpose_encounter_id,
-                                            encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
-                                                (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
-
-      update_outcome_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => outcome_encounter_id,
-                                                 encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
-                                                     (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
-
-      symptoms_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => symptoms_encounter_id,
-                                                 encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
-                                                     (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
-
-      if verify_purpose_encounter.nil? || verify_purpose_encounter.observations.last.nil?
+      if !current_encounter_names.include?("PURPOSE OF CALL")
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
-      elsif update_outcome_encounter.nil? || update_outcome_encounter.observations.last.nil?
+      elsif !current_encounter_names.include?("UPDATE OUTCOME")
         if params[:end_call] == 'true'
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
         elsif params[:next_client] == 'true'
@@ -390,6 +386,11 @@ class PatientController < ApplicationController
   def dietary_assessment
     @patient_obj = Patient.find(params['patient_id'])
   end
+
+  def search_by_name
+    @patient_obj = PatientService.get_patient(params['patient_id']) rescue nil
+  end
+
   private
 
   def search(field_name, search_string, gender = nil)
