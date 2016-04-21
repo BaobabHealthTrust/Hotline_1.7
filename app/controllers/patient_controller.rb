@@ -392,7 +392,7 @@ class PatientController < ApplicationController
   end
 
   def search_by_name
-    @patient_obj = PatientService.get_patient(params['patient_id'])
+    @patient_obj = PatientService.get_patient(params['patient_id']) rescue nil
   end
 
   private
