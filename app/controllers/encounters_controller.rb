@@ -100,7 +100,12 @@ class EncountersController < ApplicationController
     end
 
     # Go to the next task in the workflow (or dashboard)
-    redirect_to next_task(@patient_obj) and return
+    age = @patient_obj.age
+    if age <= 5 || age >= 13 && age <= 50 && @patient_obj.sex == 'F'
+      redirect_to next_task(@patient_obj)
+    else
+      redirect_to "/patient/dashboard/#{@patient.id}/tasks"
+    end
   end
 
   def create_obs(paramz)
@@ -274,15 +279,12 @@ class EncountersController < ApplicationController
   end
 
   def concept_set(concept_name)
-    sett = []
     concept = ConceptName.where(name: concept_name).first.concept
     [''] + (concept.concept_sets || []).collect do |set|
       name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
-      next if name.blank? || name == 'Other'
-      sett << [name]
+      next if name.blank?
+      [name]
     end
-
-    sett.sort + ['Other']
   end
 
   def purpose_of_call_options
@@ -294,13 +296,14 @@ class EncountersController < ApplicationController
                'HIV - symptoms',
                'TB - general advice',
                'TB - symptoms',
-               'Registration'].sort + ['Other']
+               'Registration',
+               'Other']
   end
 
   def call_options
     options = ['Record purpose of call',
                'Irrelevant',
-               'Dropped'].sort
+               'Dropped']
   end
 
   def  create_dietary_assess_obs(enc, paramz)
@@ -357,7 +360,7 @@ class EncountersController < ApplicationController
   def nutrition_summary
     @patient_obj = PatientService.get_patient(params[:patient_id])
     @client = Patient.find(params[:patient_id])
-    @clinical_encounter = Encounter.last_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
+    @clinical_encounter = Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
     @clinical_encounter_1 = []
     @clinical_encounter_2 = []
 
