@@ -27,12 +27,6 @@
                           :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';" 
                           } %>
 
-    <%= select_tag "person[phone_type]", options_for_select([["", ""], ["Community phone", "Community"], ["Personal phone", "Personal"], ["Family member phone", "Family member"], ["Neighbour's phone", "Neighbour's"]]),
-                   :helpText =>"Select phone type",
-                   :id => "phone_type",
-                  :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');"
-    %>
-
     <%= text_field_tag "person[cell_phone_number]",  nil,
                        {
                                :field_type => 'number',
@@ -44,6 +38,14 @@
                                :tt_requireNextClick => true, 
                                :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';"
                        }
+    %>
+
+
+    <%= select_tag "person[phone_type]", options_for_select([["", ""], ["Community phone", "Community"], ["Personal phone", "Personal"], ["Family member phone", "Family member"], ["Neighbour's phone", "Neighbour's"]]),
+                   :helpText =>"Select phone type",
+                   :id => "phone_type",
+                   :condition => "$('cell_phone_number').value != 'Unknown';",
+                   :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');"
     %>
 
   <%= select_tag "person[addresses][region_of_origin]", options_for_select([["", ""], ["Northern Region", "Northern"],
