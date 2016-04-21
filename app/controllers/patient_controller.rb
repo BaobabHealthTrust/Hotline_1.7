@@ -390,6 +390,11 @@ class PatientController < ApplicationController
   def dietary_assessment
     @patient_obj = Patient.find(params['patient_id'])
   end
+
+  def search_by_name
+    @patient_obj = Patient.find(params['patient_id'])
+  end
+
   private
 
   def search(field_name, search_string, gender = nil)

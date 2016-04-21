@@ -13,7 +13,7 @@ class Encounter < ActiveRecord::Base
     data = {}
 
     (Encounter.find_by_sql(["SELECT * FROM encounter WHERE encounter_type = #{encounter_type_id}
-                     AND DATE(encounter_datetime) < ? AND patient_id = #{patient_id} 
+                     AND DATE(encounter_datetime) < ? AND patient_id = #{patient_id}
                      ", Date.today])
     .last.observations rescue []).each do |observation|
       data[observation.concept_name.name.upcase.strip] = [] if data[observation.concept_name.name.upcase.strip].blank?
