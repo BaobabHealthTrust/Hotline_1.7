@@ -286,7 +286,7 @@ class PatientController < ApplicationController
 
       outcome_encounter_id = EncounterType.find_by_name('Update outcome').encounter_type_id
 
-      symptoms_encounter_id = EncounterType.find_by_name('Maternal health symptoms').encounter_type_id
+      symptoms_encounter_id = EncounterType.find_by_name('Health symptoms').encounter_type_id
 
       verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => purpose_encounter_id,
                                             encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
