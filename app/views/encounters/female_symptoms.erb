@@ -96,9 +96,9 @@
         %>
 
 
-        <%= hidden_field_tag('observations[][concept_name]', 'How many days have you had a fever?') %>
+        <%= hidden_field_tag('observations[][concept_name]', 'Number of days') %>
         <%= text_field_tag 'observations[][numeric]', nil,
-                           :helpText => 'Number of days with condition',
+                           :helpText => 'Number of days',
                            :condition => "$('health_symptoms').value != 'Other'",
                            :tt_onLoad => "$('nextButton').style.display = 'inline' ",
                            :field_type => 'number',
