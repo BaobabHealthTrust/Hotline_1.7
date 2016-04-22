@@ -210,64 +210,63 @@ class EncountersController < ApplicationController
   def clinical_questions#(group)
       clinical_questions = [
          'Group 1' => [
-             'Do you have a fever?',
-             'Do you have diarrhea?',
-             'Have you been vomiting?',
-             'Are you HIV-positive?',
-             'Do you have TB/Tuberculosis?',
-             'Do you have high blood pressure/hypertension?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
+             'Fever',
+             'Diarrhea',
+             'Vomiting',
+             'HIV-positive',
+             'TB/Tuberculosis',
+             'High blood pressure/hypertension',
+             'Previously diagnosed as moderate/severely malnourished'
          ],
          'Group 2' => [
-             'Do you have a fever?',
-             'Do you have diarrhea?',
-             'Have you been vomiting?',
-             'Are you HIV-positive?',
-             'Do you have TB/Tuberculosis?',
-             'Do you have high blood pressure/hypertension?',
-             'Are you anemic?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
+             'Fever',
+             'Diarrhea',
+             'Vomiting',
+             'HIV-positive',
+             'TB/Tuberculosis',
+             'High blood pressure/hypertension',
+             'Anemic',
+             'Previously diagnosed as moderate/severely malnourished'
          ],
          'Group 3' => [
-             'Do you have a fever?',
-             'Do you have diarrhea?',
-             'Have you been vomiting?',
-             'Are you HIV-positive?',
-             'Do you have TB/Tuberculosis?',
-             'Do you have high blood pressure/hypertension?',
-             'Have you been previously diagnosed by a health worker as being moderately or severely malnourished?'
+             'Fever',
+             'Diarrhea',
+             'Vomiting',
+             'HIV-positive',
+             'TB/Tuberculosis',
+             'High blood pressure/hypertension',
+             'Previously diagnosed as moderate/severely malnourished'
          ],
          'Group 4' => [
-             'Is the child HIV-positive?',
-             'Is the child anemic?',
-             'Does the child have TB/Tuberculosis?',
-             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following danger signs?',
-             'Is the child currently experiencing any conditions that interfere with breastfeeding?'
+             'Child HIV-positive',
+             'Child anemic',
+             'Child TB/Tuberculosis',
+             'Child previously diagnosed as moderate/severely malnourished',
+             'Danger signs',
+             'Child conditions interfering with breastfeeding'
          ],
          'Group 5' => [
-             'Is the child HIV-positive?',
-             'Is the child anemic?',
-             'Does the child have TB/Tuberculosis?',
-             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?',
-             'Are you currently experiencing any of the following danger signs?',
-             'Are you currently experiencing any of the following danger signs?',
-             'Is the child currently experiencing any conditions that interfere with breastfeeding?'
+             'child HIV-positive',
+             'Child anemic',
+             'Child TB/Tuberculosis',
+             'Child previously diagnosed as moderate/severely malnourished',
+             'Danger signs',
+             'Child conditions interfering with breastfeeding'
          ],
          'Group 6' => [
-             'Is the child HIV-positive?',
-             'Is the child anemic?',
-             'Does the child have TB/Tuberculosis?',
-             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?'
+             'Child HIV-positive',
+             'Child anemic',
+             'Child TB/Tuberculosis',
+             'Child previously diagnosed as moderate/severely malnourished'
          ],
          'Group 7' => [
-             'Does the child have a fever?',
-             'Does the child have diarrhea?',
-             'Has the child been vomiting?',
-             'Is the child HIV-positive?',
-             'Does the child have TB/Tuberculosis?',
-             'Does the child have high blood pressure/hypertension?',
-             'Has the child been previously diagnosed by a health worker as being moderately or severely malnourished?'
+             'Child fever',
+             'Child Diarrhea',
+             'Child vomiting',
+             'Child HIV-positive',
+             'Child TB/Tuberculosis',
+             'Child high blood pressure/hypertension',
+             'Child previously diagnosed as moderate/severely malnourished'
          ]
       ]
       return clinical_questions[0]
