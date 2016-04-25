@@ -480,7 +480,7 @@ select_options = {
   'general_outcome' => [
       ['Given advice', 'GIVEN ADVICE'],
       ['Referral to village clinic', 'REFERRAL TO VILLAGE CLINIC'],
-      ['Referral to a health centre', 'REFERRAL TO A HEALTH CENTRE'],
+      ['Referral to health centre', 'REFERRAL TO HEALTH CENTRE'],
       ['Hospital', 'HOSPITAL'],
       ['Nurse consultation', 'NURSE CONSULTATION'],
       ['Registration','REGISTRRATION' ], #'REGISTERED FOR TIPS AND REMINDERS'],
