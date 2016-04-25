@@ -479,8 +479,8 @@ select_options = {
   ],
   'general_outcome' => [
       ['Given advice', 'GIVEN ADVICE'],
-      ['Referred to nearest village clinic', 'REFERRED TO NEAREST VILLAGE CLINIC'],
-      ['Referred to a health centre', 'REFERRED TO A HEALTH CENTRE'],
+      ['Referral to village clinic', 'REFERRAL TO VILLAGE CLINIC'],
+      ['Referral to a health centre', 'REFERRAL TO A HEALTH CENTRE'],
       ['Hospital', 'HOSPITAL'],
       ['Nurse consultation', 'NURSE CONSULTATION'],
       ['Registration','REGISTRRATION' ], #'REGISTERED FOR TIPS AND REMINDERS'],
@@ -537,7 +537,7 @@ select_options = {
   end
   
   (concept_sets || []).each do |set_name,set_desc|
-    concept_set_name = set_name.capitalize 
+    concept_set_name = set_name 
     concept_set = ConceptName.where(name: concept_set_name).first 
     if concept_set.blank?
       concept_set = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
