@@ -36,11 +36,6 @@ class ApplicationController < ActionController::Base
     current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}
 
     tasks = [
-        {'PURPOSE OF CALL' => {
-            'condition' => "!current_encounter_names.include?('PURPOSE OF CALL')",
-            'link' => "/encounters/new/purpose_of_call?patient_id=#{patient_obj.patient_id}"
-        }},
-
         {'PREGNANCY STATUS' => {
           'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') && patient_obj.age > 13 && !current_encounter_names.include?('PREGNANCY STATUS'))",
           'link' => "/encounters/new/pregnancy_status?patient_id=#{patient_obj.patient_id}"
