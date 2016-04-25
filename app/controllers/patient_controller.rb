@@ -21,7 +21,7 @@ class PatientController < ApplicationController
                  'done' => @current_encounter_names.include?('PREGNANCY STATUS')}
     end
 
-    if @patient_obj.sex.match('F') || @patient_obj.age <= 5
+    if @patient_obj.sex.match('F') && @patient_obj.age < 50 || @patient_obj.age <= 5
       @tasks << {"name" => "Symptoms",
                  "link" =>"/encounters/new/female_symptoms?patient_id=#{@patient_obj.patient_id}",
                  'icon' => "symptoms-2.png",
