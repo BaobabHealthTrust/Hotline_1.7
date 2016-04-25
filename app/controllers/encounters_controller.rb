@@ -261,7 +261,7 @@ class EncountersController < ApplicationController
          ],
          'Group 7' => [
              'Child fever',
-             'Child Diarrhea',
+             'Child diarrhea',
              'Child vomiting',
              'Child HIV-positive',
              'Child TB/Tuberculosis',

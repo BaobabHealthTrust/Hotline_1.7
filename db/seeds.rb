@@ -393,7 +393,7 @@ select_options = {
       ['Diarrhea','DIARRHEA'],
       ['Coughing','COUGHING'],
       ['Convulsions','CONVULSIONS'],
-      ['Trouble eating/drinking','TROUBLE EATING/DRIKING'],
+      ['Trouble eating/drinking','TROUBLE EATING/DRINKING'],
       ['Red eyes','RED EYES'],
       ['Sleepy/unconscious','SLEEPY/UNCONSCIOUS'],
       ['Weight loss/gain','WEIGHT LOSS/GAIN']
