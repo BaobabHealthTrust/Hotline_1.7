@@ -194,7 +194,7 @@ class EncountersController < ApplicationController
             'group 7' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats']
         }
 
-        @consumption_method = ['', 'Eaten', 'Drunk']
+        @consumption_method = ['', 'Yes', 'No']
       when 'Summary'
         encounter_id = EncounterType.find_by_name('Clinical Assessment').encounter_type_id
         @observations = Observation.where(person_id: @patient_obj.patient_id, encounter_id: encounter_id)
