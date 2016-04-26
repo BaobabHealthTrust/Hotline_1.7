@@ -616,11 +616,11 @@
         var year_diff = parseInt(current_year) - parseInt(year);
         if(year < current_year && year_diff >= 0 && year_diff <= 1){
             // We expect month to be of index greater than current and plus 4 ---
-            if(parseInt(months.indexOf(month)) > (parseInt(current_month)+3)) {
+            if(parseInt(months.indexOf(month)) >= parseInt(current_month)) {
                 summary(year,month,day,current_month,current_year);
             }
             else{
-                showMessage('Invalid input. Entry should be within 9 months.',false,false);
+                showMessage('Invalid input. Entry should be within 12 months.',false,false);
             }
         }
         else if(year == current_year){
