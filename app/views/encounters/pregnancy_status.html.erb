@@ -625,7 +625,7 @@
         }
         else if(year == current_year){
             // We expect month to be of index less than current ---
-            if(parseInt(months.indexOf(month)) < parseInt(current_month)) {
+            if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
                 summary(year, month, day, current_month, current_year);
             }
             else {
