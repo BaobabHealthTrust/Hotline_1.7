@@ -1,0 +1,141 @@
+<style>
+    <% buttons_per_row = 4 %>
+    body {
+        -webkit-user-select: none;  /* Chrome all / Safari all */
+        -moz-user-select: none;     /* Firefox all */
+        -ms-user-select: none;      /* IE 10+ */
+        user-select: none;          /* Likely future */
+    }
+
+    img {
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        pointer-events: none;
+    }
+
+    .main-page-container  {
+        display: table;
+        width: 99.7%;
+        padding: 5px 1px 0px 1px;
+    }
+
+    .main-page-container  {
+        display: table;
+        width: 100%;
+        padding: 0px 1px 0px 1px;
+    }
+
+    .main-page-container-rows  {
+        display: table-row;
+    }
+
+    .cells {
+        display: table-cell;
+    }
+
+
+    /* ...................................... */
+    .divbtn {
+        width: 99%;
+        display: table;
+        margin-top: 10px;
+        cursor:pointer;
+        box-shadow: inset 2px -4px 2px 0px;
+        background-color: white;
+        border-radius: 7px;
+        border: solid black 3px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -moz-box-shadow:    inset 0 0 10px #000000;
+        -webkit-box-shadow: inset 0 0 10px #000000;
+        box-shadow:         inset 0 0 10px #000000;
+    }
+
+    .icons {
+        margin-top: 10%;
+        text-align: center;
+    }
+
+    .divbtn p {
+        font-weight: bold;
+    }
+
+    .btncells {
+        text-align: center;
+    }
+
+    .small-icons {
+        width: 100px;
+        height: 100px;
+    }
+
+    .header .cells {
+        vertical-align: bottom;
+        padding-right: 5px;
+    }
+
+   .header .icons {
+        width: 100px;
+        height: 100px;
+    }
+
+    .button-label{
+        /*font: italic small-caps bolder 16px/3 cursive;*/
+        font: italic small-caps bolder condensed 17px/3 cursive;
+    }
+    .row{
+        display: table-row;
+    }
+    /* ...................................... */
+</style>
+
+<%= render :partial => '/home/header' %>
+
+<div class="main-page-container">
+
+  <div class="main-page-container-rows">
+
+
+      <div class="table-div" style="width: 100%;">
+         <!-- loop -->
+
+          <% @reports[params[:report_group]].each_with_index do |task, i|
+            new_role = (i % buttons_per_row == 0)
+            end_role = (i > 0 && i % buttons_per_row == 0 && i < @reports[params[:report_group]].length )
+            halt = (i == @reports[params[:report_group]].length - 1)
+          %>
+              <% if end_role %>
+                  </div>
+              <% end %>
+              <%if new_role %>
+                  <div class="row" style="width: 100%;">
+              <% end %>
+              <div class="cells btncells <%= task['name'] %>">
+                <div class="divbtn"
+                     onclick="document.location.href='<%= task['link']%>'" >
+                  <span class="icons">
+                  <%=image_tag("#{task['icon']}", class: "icons")%>
+                    <p class="button-label"><%= task['name']%></p>
+                  </span>
+                </div>
+              </div>
+              <% if halt %>
+                  </div>
+              <% end %>
+          <% end %>
+
+    </div>
+</div>
+<%= render :partial => '/home/footer' %>
+<script>
+
+    var cells = document.getElementsByClassName("btncells")
+     for(var i in cells){
+         cells[i].style.width = (screen.width/4 - 20) + "px";
+     }
+</script>
