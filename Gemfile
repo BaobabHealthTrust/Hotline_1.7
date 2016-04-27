@@ -23,3 +23,5 @@ gem 'passenger', '4.0.38'
 gem 'mysql'
 
 gem 'mysql2', '~> 0.3.10'
+
+gem 'faster-csv', '1.5.5'
