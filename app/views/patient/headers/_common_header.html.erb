@@ -120,7 +120,7 @@
          symptoms = Encounter.yes_tagged(@patient_obj.patient_id, "CHILD HEALTH SYMPTOMS") rescue []
          symp = @patient_obj.age <= 5 ? symptoms.join(', ').titleize :
                  Observation.by_concept_today(@patient_obj.patient_id,
-                                              'Maternal Health Symptoms',
+                                              'Maternal Health Symptoms', 'Maternal Health Symptoms',
                                               Date.today).join(' , ')
          symp = (symp.length < 40) ? symp : (symp[0..40] + '...')
 
@@ -129,7 +129,7 @@
 
          dang =  @patient_obj.age <= 5 ? (danger_sign_values & symptoms.join(', ').upcase.split(', ')).join(', ').titleize :
                  Observation.by_concept_today(@patient_obj.patient_id,
-                                              'Danger signs',
+                                              'Danger signs', 'Maternal Health Symptoms',
                                               Date.today).join(' , ')
          dang = (dang.length < 40) ? dang : (dang[0..40] + '...')
     %>
