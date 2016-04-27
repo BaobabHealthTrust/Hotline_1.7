@@ -117,7 +117,7 @@
     </div>
 
     <% if gender == 'Female' || @patient_obj.age <= 5
-         symptoms = Encounter.yes_tagged(@patient_obj.patient_id, "CHILD HEALTH SYMPTOMS")
+         symptoms = Encounter.yes_tagged(@patient_obj.patient_id, "CHILD HEALTH SYMPTOMS") rescue []
          symp = @patient_obj.age <= 5 ? symptoms.join(', ').titleize :
                  Observation.by_concept_today(@patient_obj.patient_id,
                                               'Maternal Health Symptoms',
