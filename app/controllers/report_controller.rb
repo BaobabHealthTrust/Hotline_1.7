@@ -66,7 +66,7 @@ class ReportController < ApplicationController
     @report_type        = params[:report_type]
     @query              = params[:query].gsub(" ", "_")
 
-    start_date          = Encounter.first.encounter_datetime
+    start_date          = Encounter.first.encounter_datetime rescue Date.today
     end_date            = session[:datetime].to_date rescue Date.today
 
     report_date_ranges  = Report.generate_report_date_range(start_date, end_date)
