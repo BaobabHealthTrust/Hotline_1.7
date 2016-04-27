@@ -47,9 +47,10 @@ class Observation < ActiveRecord::Base
     value
   end
 
-  def self.by_concept_today(person_id, concept_name, date = Date.today)
+  def self.by_concept_today(person_id, concept_name, encounter_type, date = Date.today)
 
     concept_id = ConceptName.find_by_name(concept_name).concept_id
+    encounter_type_id = EncounterType.find_by_name(encounter_type).id
     return "Concept Not Found!!" if concept_id.blank?
     return 'Patient Not Found!!' if Patient.find(person_id).blank?
 
@@ -57,8 +58,10 @@ class Observation < ActiveRecord::Base
     SELECT encounter.encounter_id FROM encounter
         INNER JOIN obs ON obs.person_id = encounter.patient_id AND obs.concept_id = #{concept_id}
       WHERE patient_id = #{person_id} AND DATE(encounter.encounter_datetime) <= '#{date.to_s(:db)}'
+      AND encounter.encounter_type = #{encounter_type_id}
       ORDER BY encounter_datetime DESC LIMIT 1"
     )
+
     return [] if last_enc.length == 0
 
     last_enc_id = last_enc.last.encounter_id
