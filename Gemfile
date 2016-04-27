@@ -24,4 +24,4 @@ gem 'mysql'
 
 gem 'mysql2', '~> 0.3.10'
 
-gem 'faster-csv', '1.5.5'
+gem 'fastercsv', '1.5.5'
