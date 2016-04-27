@@ -617,7 +617,7 @@
         if(year < current_year && year_diff >= 0 && year_diff <= 1){
             // We expect month to be of index greater than current and plus 4 ---
             if(parseInt(months.indexOf(month)) >= parseInt(current_month)) {
-                summary(year,month,day,current_month,current_year);
+                summary(year,month,day,current_month,current_year,months);
             }
             else{
                 showMessage('Invalid input. Entry should be within 12 months.',false,false);
@@ -626,7 +626,7 @@
         else if(year == current_year){
             // We expect month to be of index less than current ---
             if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
-                summary(year, month, day, current_month, current_year);
+                summary(year, month, day, current_month, current_year,months);
             }
             else {
                 showMessage('Invalid input. Month can not be ahead of '+months[current_month],false,false);
@@ -660,7 +660,7 @@
         return weeks;
     }
 
-    function summary(year,month,day,current_month,current_year) {
+    function summary(year,month,day,current_month,current_year,months) {
         var pregnancy_status = document.getElementById('pregnancy_status').value;
         var display = "<div><span class='title'>Pregnancy status:</span><span class='data'> " + pregnancy_status + "</span></div>";
         // Client Pregnant ------------
@@ -798,27 +798,39 @@
 
             if(parseInt(current_year) == parseInt(lmp_year)) {
                 if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 2)) {
-//                    alert('frst'); return;
                     trimester = 1 + 'st';
                 }
                 else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 5)) {
-//                    alert('scnd'); return;
                     trimester = 2 + 'nd';
                 }
                 else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 7)) {
-//                    alert('thrd'); return;
                     trimester = 3 + 'rd';
                 }
             }
             else if(parseInt(current_year) > parseInt(lmp_year)) {
-                if (current_month <= trimester_lmp_month && trimester_lmp_month >= (current_month + 2)) {
-                    trimester = 1 + 'st';
+                var trimester_array = new Array();
+                var i;
+                for(i = trimester_lmp_month+1; i <= months.length -1; i++) {
+                    trimester_array.push(months[i]);
                 }
-                else if (current_month <= trimester_lmp_month && trimester_lmp_month >= (current_month + 5)) {
-                    trimester = 2 + 'nd';
+                for(i = 0; i <= expected_month ; i++ ) {
+                    trimester_array.push(months[i]);
                 }
-                else if (current_month <= trimester_lmp_month && trimester_lmp_month >= (current_month + 7)) {
-                    trimester = 3 + 'rd';
+                for(i = 0; i <= trimester_array.length-1; i++) {
+                    if( months[current_month] == trimester_array[i]) {
+                        if(i >= 0 && i <= 2){
+                            trimester = 1 + 'st';
+                        }
+                        else if(i >= 3 && i <= 5){
+                            trimester = 2 + 'nd';
+                        }
+                        else if(i >= 6 && i <= 7){
+                            trimester = 3 + 'rd';
+                        }
+                        else {
+                            trimester = 4 + 'th (outlier)'
+                        }
+                    }
                 }
             }
 
