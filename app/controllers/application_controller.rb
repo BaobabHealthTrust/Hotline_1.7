@@ -36,14 +36,6 @@ class ApplicationController < ActionController::Base
     symptom_encounter_name = @patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
 
     tasks = [
-        {'PREGNANCY STATUS' => {
-          'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') && patient_obj.age > 13 && !current_encounter_names.include?('PREGNANCY STATUS'))",
-          'link' => "/encounters/new/pregnancy_status?patient_id=#{patient_obj.patient_id}"
-        }},
-        {'HEALTH SYMPTOMS' => {
-          'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('#{symptom_encounter_name}')",
-          'link' => "/encounters/new/female_symptoms?patient_id=#{patient_obj.patient_id}"
-        }},
         {'UPDATE OUTCOME' => {
            'condition' => "!current_encounter_names.include?('UPDATE OUTCOME') && ((0 .. 5).include?(patient_obj.age) || (patient_obj.sex.match('F')  &&
                               (13 .. 50).include?(patient_obj.age)))",
