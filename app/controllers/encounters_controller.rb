@@ -38,7 +38,8 @@ class EncountersController < ApplicationController
       }.compact
       next if values.length == 0
 
-      concept_id = ConceptName.find_by_name(observation[:concept_name]).concept_id
+      concept_id = ConceptName.find_by_name(observation[:concept_name]).concept_id rescue (
+        raise "Missing concept name : '#{observation[:concept_name]}', Please add it in the configurations files or call help desk line")
 
       next if concept_id.blank?
 

@@ -9,7 +9,8 @@ class PatientController < ApplicationController
     @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
     @previous_encounters = Encounter.previous_encounters(@patient_obj.patient_id)
 
-    symptom_encounter_type = EncounterType.find_by_name('Health symptoms')
+    symptom_encounter_name = @patient_obj.age <= 5 ?  "child health symptoms" : "maternal health symptoms"
+    symptom_encounter_type = EncounterType.find_by_name(symptom_encounter_name)
     @symptom_encounters = Encounter.all_encounters_by_type(@patient_obj.patient_id, [symptom_encounter_type.id])
 
     #Adding tasks in proper order
@@ -20,12 +21,12 @@ class PatientController < ApplicationController
                  'icon' => "pregnacy.png",
                  'done' => @current_encounter_names.include?('PREGNANCY STATUS')}
     end
-
+    symptom_encounter_name = @patient_obj.age <= 5 ?  "child health symptoms" : "maternal health symptoms"
     if @patient_obj.sex.match('F') && @patient_obj.age < 50 || @patient_obj.age <= 5
       @tasks << {"name" => "Symptoms",
                  "link" =>"/encounters/new/female_symptoms?patient_id=#{@patient_obj.patient_id}",
                  'icon' => "symptoms-2.png",
-                 'done' => @current_encounter_names.include?('HEALTH SYMPTOMS')}
+                 'done' => @current_encounter_names.include?(symptom_encounter_name)}
     end
 
     @tasks << {"name" => "Outcomes", "link" => "/encounters/new/update_outcomes?patient_id=#{@patient_obj.patient_id}",
@@ -286,7 +287,8 @@ class PatientController < ApplicationController
 
       outcome_encounter_id = EncounterType.find_by_name('Update outcome').encounter_type_id
 
-      symptoms_encounter_id = EncounterType.find_by_name('Health symptoms').encounter_type_id
+      symptoms_encounter_id = @patient_obj.age <= 5 ? EncounterType.find_by_name('Child Health symptoms').encounter_type_id :
+          EncounterType.find_by_name('Maternal Health symptoms').encounter_type_id
 
       verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => purpose_encounter_id,
                                             encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..

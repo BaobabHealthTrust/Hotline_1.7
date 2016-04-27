@@ -1,0 +1,307 @@
+<script type="text/javascript">
+  <% @patient = Patient.find(@patient_obj.patient_id) %>
+
+  var symptoms_values = [];
+
+  function setConceptNamesAndValues(symptoms, observations, obs_type){
+
+    var values_string = selectedValue(observations);
+    /* clear the fields*/
+   // alert(values_string);
+    for (var index = 0; index < symptoms.length; index++){
+      var concept_name        = obs_type + index +"_concept_name";
+      var value_coded_or_text = obs_type + index +"_value_coded_or_text";
+
+      if(values_string.contains(symptoms[index][0]) && symptoms[index][1] != ""){
+        $(concept_name).value         = symptoms[index][1];
+        $(value_coded_or_text).value  = 'Yes';
+      }
+      else{
+        $(concept_name).value         = '';
+        $(value_coded_or_text).value  = '';
+      }
+    }
+  }
+
+  function humanize(str) {
+    return str.replace(/_/g, ' ')
+    .replace(/(\w+)/g, function(match) {
+      return match.charAt(0).toUpperCase() + match.slice(1);
+    });
+  };
+
+  function summary() {
+
+    var display = "";
+    var sympDisplay = "";
+    var noSympDisplay = "";
+    var symptomIds = ["fever","diarrhea","cough","convulsions","not_eating","red_eye","sleepy_or_unconcious","weight_change"];
+  
+    sympDisplay += "<br /><div><span class='title' style='font-size:25px;'>Symptoms present</span></div>";
+    sympDisplay += "<div><hr /><br />";
+
+    noSympDisplay += "<br /><div><span class='title' style='font-size:25px;'>Symptoms not present</span></div>";
+    noSympDisplay += "<div><hr /><br />";
+
+    for (var i=0 ; i < symptomIds.length; ++i){
+      if ($(symptomIds[i]).value == "Yes") {
+        if (symptomIds[i] == "cough"){
+          sympDisplay += "<span class='title' style='font-size:22px;'>Cough: " + $('cough_days').value + " days </span><br />";
+        } else if  (symptomIds[i] == "diarrhea"){
+          sympDisplay += "<span class='title' style='font-size:22px;'>Diarrhea: " + $('diarrhea_days').value + " days </span><br />";
+        } else if  (symptomIds[i] == "fever"){
+          sympDisplay += "<span class='title' style='font-size:22px;'>Fever: " + $('fever_days').value + " days </span><br />";
+        } else if  (symptomIds[i] == "red_eye"){
+          sympDisplay += "<span class='title' style='font-size:22px;'>Red eye: " + $('red_eye_days').value + " days </span><br />";
+        }else{
+          sympDisplay += "<span class='title' style='font-size:22px;'>" + humanize(symptomIds[i]) + "</span><br />";
+        }
+      }else{
+        noSympDisplay += "<span class='title' style='font-size:22px;'>" + humanize(symptomIds[i]) +  "</span><br />";
+      }
+    }
+      
+    sympDisplay += "</div>";
+    noSympDisplay += "</div>";
+
+    display += sympDisplay;
+    display += noSympDisplay;
+    //Display
+    $('inputFrame'+tstCurrentPage).innerHTML = '<div id="summary" style="height: 520px; !important">' + display + '</div>' ;
+    $("clearButton").style.display = "none";
+    //$('tt_staticControls').style.cssText = "height:670px !important";
+    //                                                                                         
+  }
+
+  function loadDangerSigns() {
+
+    var dangerSignIds = ["cough_days","diarrhea_days","fever_days","red_eye_days","not_eating_anything","blood_in_stool",
+      "convulsions","vomiting_everything","visual_problems","unconcious","swollen_legs_or_face","dry_skin"]
+    var display = "<div><br />";
+
+    for (var i=0 ; i < dangerSignIds.length; ++i){
+     
+      if ((dangerSignIds[i] == "cough_days") && ($(dangerSignIds[i]).value >= 21)) {
+        $("cough_21_days").value = "Yes";
+        display += "<span class='title' style='font-size:22px;'>Cough >= 21 days </span><br />";
+      } else if  ((dangerSignIds[i] == "diarrhea_days") && ($(dangerSignIds[i]).value >= 14)) {
+        $("diarrhea_14_days").value = "Yes";
+        display += "<span class='title' style='font-size:22px;'>Diarrhea >= 14 days </span><br />";
+      } else if  ((dangerSignIds[i] == "fever_days") && ($(dangerSignIds[i]).value >= 7)) {
+        $("fever_7_days").value = "Yes";
+        display += "<span class='title' style='font-size:22px;'>Fever >= 7 days </span><br />";
+      } else if  ((dangerSignIds[i] == "red_eye_days") && ($(dangerSignIds[i]).value >= 4)) {
+        $("red_eye_4_days").value = "Yes";
+        display += "<span class='title' style='font-size:22px;'>Red_eye >= 4 days </span><br />";
+      }else if  ((dangerSignIds[i] == "not_eating_anything") && ($(dangerSignIds[i]).value == "NO")){
+        display += "<span class='title' style='font-size:22px;'>" + humanize(dangerSignIds[i]) + "</span><br />";
+      }else if ($(dangerSignIds[i]).value == "Yes"){
+        display += "<span class='title' style='font-size:22px;'>" + humanize(dangerSignIds[i]) + "</span><br />";
+      }
+    }
+
+    if (display == "<div><br />"){
+      display += "<span class='title' style='font-size:22px;'>No danger signs </span><br />";
+
+    }
+
+    display += "</div>";
+   
+    //Display
+    $('inputFrame'+tstCurrentPage).innerHTML = '<div id="dangerSigns" style="height: 520px;">' + display + '</div>' ;
+    $("clearButton").style.display = "none";
+    //$('tt_staticControls').style.cssText = "height:670px !important";
+    //
+  }
+
+</script>
+
+<%= form_tag :controller => "encounters", :action => "create" do |f| %>
+
+    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("CHILD HEALTH SYMPTOMS").id %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+  <%#TODO Sanitise the concept names especially those requirind numeric answers,
+  The concept names are not consistent with the question%>
+
+    <%= hidden_field_tag("observations[][concept_name]", "FEVER") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   :helpText => "Does the child have fever?",
+                   :id => "fever"
+    %>
+    <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF FEVER' %>
+    <%= text_field_tag 'observations[][value_numeric]', nil,
+                       :helpText => 'How many days has the child had fever?',
+                       :condition => "$('fever').value == 'Yes'",
+                       :field_type => 'number',
+                       :id => "fever_days",
+                       :tt_pageStyleClass => 'NumbersOnly'
+    %>
+    <%= hidden_field_tag 'observations[][concept_name]', 'FEVER OF 7 DAYS OR MORE' %>
+    <%= hidden_field_tag 'observations[][value_numeric]', 'NO', :id => "fever_7_days" %>
+
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "DIARRHEA") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   :helpText => "Does the child have diarrhea?",
+                   :id => "diarrhea"
+    %>
+    <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF DIARRHEA' %>
+    <%= text_field_tag 'observations[][value_numeric]', nil,
+                       :helpText => 'How many days has the child had diarrhea?',
+                       :condition => "$('diarrhea').value == 'Yes'",
+                       :field_type => 'number',
+                       :id => "diarrhea_days",
+                       :tt_pageStyleClass => 'NumbersOnly'
+    %>
+    <%= hidden_field_tag 'observations[][concept_name]', 'DIARRHEA FOR 14 DAYS OR MORE' %>
+    <%= hidden_field_tag 'observations[][value_numeric]', 'No', :id => "diarrhea_14_days"%>
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "BLOOD IN STOOL") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   :helpText => "Is there blood in the stool?",
+                   :id => "blood_in_stool"
+    %>
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "COUGH") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   :helpText => "Is the child coughing?",
+                   :id => "cough"
+    %>
+    <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF COUGH' %>
+    <%= text_field_tag 'observations[][value_numeric]', nil,
+                       :helpText => 'How many days has the child been coughing?',
+                       :condition => "$('cough').value == 'Yes'",
+                       :field_type => 'number',
+                       :id => "cough_days",
+                       :tt_pageStyleClass => 'NumbersOnly'
+    %>
+    <%= hidden_field_tag 'observations[][concept_name]', 'COUGH FOR 21 DAYS OR MORE' %>
+    <%= hidden_field_tag 'observations[][value_numeric]', 'No', :id => "cough_21_days"%>
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "CONVULSIONS SIGN") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   :helpText => "Is the child having convulsions, or has recently had convulsions?",
+                   :id => "convulsions"
+    %>
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "NOT EATING") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+        { :id => "not_eating",
+        :helpText => "Is the child having trouble eating and drinking?" } %>
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "NOT EATING OR DRINKING ANYTHING") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+        { :id => "not_eating_anything",
+        :condition => '$("not_eating").value == "Yes"',
+        :helpText => "Is the child  eating anything?" } %>
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "VOMITING EVERYTHING") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   { :id => "vomiting_everything",
+                     :condition => '$("not_eating").value == "Yes"',
+                     :helpText => "Is the child vomiting everything he/she eats? " } %>
+
+
+
+    <%= hidden_field_tag("observations[][concept_name]", "RED EYE") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   { :id =>  "red_eye",
+                     :helpText => "Does the child have red eyes?" } %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "SEVERITY OF RED EYE") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   { :id => "red_eye_days",
+                     :condition => '$("red_eye").value == "Yes"',
+                     :helpText => "How many days has the child had red eyes?"} %>
+
+    <%= hidden_field_tag 'observations[][concept_name]', 'RED EYE FOR 4 DAYS OR MORE WITH VISUAL PROBLEMS' %>
+    <%= hidden_field_tag 'observations[][value_numeric]', 'No', :id => "red_eye_4_days"%>
+
+
+  <%#TODO Need to change the below concept name to something which talks about child having visual problems%>
+    <%= hidden_field_tag("observations[][concept_name]", "VISUAL PROBLEMS") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+       { :id => "visual_problems",
+        :condition => '$("red_eye").value == "Yes"',
+        :helpText => "Is the child having visual problems?" } %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "VERY SLEEPY OR UNCONSCIOUS") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+        {:id => "sleepy_or_unconcious",
+        :helpText => "Is the child sleepy or unconscious?" } %>
+
+  <%#TODO Need to verify if the below concept name matches the Question i.e. helptext%>
+    <%= hidden_field_tag("observations[][concept_name]", "UNCONSCIOUS") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+        { :id => "unconcious",
+        :condition => '$("sleepy_or_unconcious").value == "Yes"',
+        :helpText => "Is it difficult or impossible to wake the child?" } %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "GAINED OR LOST WEIGHT") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   { :id =>  "weight_change",
+                     :helpText => "Has the child lost or gained lots of weight?" } %>
+
+  <%#TODO Need to verify if the below concept name matches the Question i.e. helptext%>
+    <%= hidden_field_tag("observations[][concept_name]", "SWOLLEN HANDS OR FEET SIGN") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+        { :id => "swollen_legs_or_face",
+        :condition => '$("weight_change").value == "Yes"',
+        :helpText => "Does the child have swollen legs or swollen face?" } %>
+
+  <%#TODO Need to verify if the below concept name matches the Question i.e. helptext%>
+    <%= hidden_field_tag("observations[][concept_name]", "FLAKY SKIN") %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+        { :id => "dry_skin",
+        :condition => '$("weight_change").value == "Yes"',
+        :helpText => "Has the child's skin become dry, loose, or patchy?" } %>
+
+  <%#TODO Replace the OTHER concept below with an appropriate one
+  TODO Define the ajaxUrl below in patientrs controller
+  %>
+  <%= touch_yes_no_tag "OTHER", @patient, nil,
+    {:id => "other_symptom",
+    #:ajaxURL => '/patient/other_child_symptoms',
+    #:optional => true,
+    #:allowFreeText => true,
+    :helpText => 'Is the caller reporting any other symptom?'} %>
+
+  <%#TODO May be there could be a better way to handle the below select?%>
+
+  <% @child_health_info = @health_info.collect{|i| i[0] rescue i} %>
+
+  <script type="text/javascript" language="javascript">
+    child_health_values = []
+  </script>
+  <%= select_tag "child_health_info",options_for_select(@child_health_info, nil),
+    {:id          => "child_health_info_id",
+    :multiple    => true,
+    :optional    => true,
+    :tt_onUnLoad => "setConceptNamesAndValues(child_health_values, 'child_health_info_id', 'child_health_info');",
+    :helptext    => "Does the caller want information on one of the following topics?" } %>
+
+  <% @child_health_info.each_with_index do |e, index| %>
+    <%= hidden_field_tag("observations[][concept_name]",        "", {:id => "child_health_info#{index}_concept_name"}) %>
+    <%= hidden_field_tag("observations[][value_coded_or_text]", "", {:id => "child_health_info#{index}_value_coded_or_text"} ) %>
+    <%= hidden_field_tag("observations[][patient_id]",          @patient.id) %>
+    <%= hidden_field_tag("observations[][obs_datetime]",        DateTime.now()) %>
+  <%end%>
+
+  <label for='summary'>Symptom Confirmation</label>
+  <%= text_field_tag :summary, nil, { :tt_onLoad => "summary()", :optional => "true", :tt_pageStyleClass => "NoControls NoKeyboard" } %>
+
+  <label for='dangerSigns'>Danger signs</label>
+  <%= text_field_tag :dangerSigns, nil, { :tt_onLoad => "loadDangerSigns()", :optional => "true", :tt_pageStyleClass => "NoControls NoKeyboard" } %>
+
+  <%= submit_tag 'Finish' %>
+<% end %>

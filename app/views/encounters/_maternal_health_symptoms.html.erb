@@ -1,0 +1,69 @@
+<script>
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks"
+</script>
+
+<%= form_tag("/encounters/create", id: "pregnancy-status", method: 'post', enctype: 'multipart/form-data') do %>
+    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("MATERNAL HEALTH SYMPTOMS").id %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+    <% @current_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id)%>
+    <%= hidden_field_tag("observations[][concept_name]", @symptom_concept) %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_symptoms , @current_data[@symptom_concept.upcase]),
+                   :helpText =>"Experiencing any of the following symptoms?",
+                   :multiple => true,
+                   :tt_onLoad => "showHelpButton();setListAttributes();",
+                   :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
+                   :tt_onUnLoad => "hideHelpButton();",
+                   :tt_pageStyleClass => 'longSelectList',
+                   :id => "health_symptoms",
+                   :allowFreeText => false
+    %>
+
+    <%= hidden_field_tag('observations[][concept_name]', 'Number of days') %>
+    <%= text_field_tag 'observations[][numeric]', nil,
+                       :helpText => 'Number of days',
+                       :condition => "$('health_symptoms').value != 'Other'",
+                       :tt_onLoad => "$('nextButton').style.display = 'inline' ",
+                       :field_type => 'number',
+                       :condition => "parseInt(age) <= 5",
+                       :tt_pageStyleClass => 'NumbersOnly',
+                       :tt_onUnLoad => 'hideHelpButton();'
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , @current_data['DANGER SIGNS']),
+                   :helpText =>"Select danger signs",
+                   :multiple => true,
+                   :optional => false,
+                   :condition => "parseInt(age) > 5",
+                   :tt_onLoad => "setTimeout('hideSelectedValues()', 100);",
+                   :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
+                   :tt_pageStyleClass => 'longSelectList',
+                   :id => "danger_status",
+                   :allowFreeText => false
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", @info_concept) %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_info , @current_data[@info_concept.upcase]),
+                   :helpText =>"Does the caller want more information from below?",
+                   :multiple => true,
+                   :optional => false,
+                   :tt_pageStyleClass => 'longSelectList',
+                   :id => "more_info_topics",
+                   :allowFreeText => false
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
+                   :helpText =>"Select additional danger signs",
+                   :multiple => true,
+                   :optional => true,
+                   :condition => "parseInt(age) > 5",
+                   :tt_pageStyleClass => 'longSelectList',
+                   :tt_onLoad => "setTimeout('hideSelectedValues()', 100);",
+                   :id => "additional_danger_signs",
+                   :allowFreeText => false
+    %>
+<% end %>

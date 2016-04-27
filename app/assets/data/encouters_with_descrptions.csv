@@ -3,7 +3,7 @@ APPOINTMENT,This encounter specificities when the next appointment is expected
 REGISTRATION,Patient Registration Encounter
 UPDATE OUTCOME,update patient outcome
 TIPS AND REMINDERS,An encounter for patient's enrollment for tips and 
-HEALTH SYMPTOMS,health symptoms
+MATERNAL HEALTH SYMPTOMS,health symptoms
 CHILD HEALTH SYMPTOMS,Child health symptoms
 BABY DELIVERY,This encounter occurs when a mother delivers a baby
 PREGNANCY STATUS,MNCH pregnancy status encounter
