@@ -32,16 +32,16 @@ class ApplicationController < ActionController::Base
     return '/' if patient.blank?
 
     current_encounters = Encounter.current_encounters(patient_obj.patient_id)
-
     current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}
+    symptom_encounter_name = @patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
 
     tasks = [
         {'PREGNANCY STATUS' => {
           'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') && patient_obj.age > 13 && !current_encounter_names.include?('PREGNANCY STATUS'))",
           'link' => "/encounters/new/pregnancy_status?patient_id=#{patient_obj.patient_id}"
         }},
-        {'MATERNAL HEALTH SYMPTOMS' => {
-          'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('HEALTH SYMPTOMS')",
+        {'HEALTH SYMPTOMS' => {
+          'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('#{symptom_encounter_name}')",
           'link' => "/encounters/new/female_symptoms?patient_id=#{patient_obj.patient_id}"
         }},
         {'UPDATE OUTCOME' => {

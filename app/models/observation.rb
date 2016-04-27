@@ -68,5 +68,4 @@ class Observation < ActiveRecord::Base
           ORDER BY obs_datetime DESC LIMIT 5 ").collect{|o| o.answer_string}.delete_if{|a| a.blank?}.uniq
   end
 
-
 end

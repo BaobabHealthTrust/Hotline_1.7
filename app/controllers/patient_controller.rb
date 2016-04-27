@@ -9,7 +9,7 @@ class PatientController < ApplicationController
     @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
     @previous_encounters = Encounter.previous_encounters(@patient_obj.patient_id)
 
-    symptom_encounter_name = @patient_obj.age <= 5 ?  "child health symptoms" : "maternal health symptoms"
+    symptom_encounter_name = @patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
     symptom_encounter_type = EncounterType.find_by_name(symptom_encounter_name)
     @symptom_encounters = Encounter.all_encounters_by_type(@patient_obj.patient_id, [symptom_encounter_type.id])
 
@@ -21,7 +21,7 @@ class PatientController < ApplicationController
                  'icon' => "pregnacy.png",
                  'done' => @current_encounter_names.include?('PREGNANCY STATUS')}
     end
-    symptom_encounter_name = @patient_obj.age <= 5 ?  "child health symptoms" : "maternal health symptoms"
+
     if @patient_obj.sex.match('F') && @patient_obj.age < 50 || @patient_obj.age <= 5
       @tasks << {"name" => "Symptoms",
                  "link" =>"/encounters/new/female_symptoms?patient_id=#{@patient_obj.patient_id}",
@@ -333,27 +333,35 @@ class PatientController < ApplicationController
   def observations
     observations = []
     pre_processor = {}
-    (Encounter.find(params[:encounter_id]).observations || []).each do |ob|
-      value = ConceptName.where(concept_id: ob.value_coded).first.name rescue nil
-      if value.blank?
-        value = ob.value_datetime.to_time.strftime('%d/%b/%Y') rescue nil
-      end
 
-      if value.blank?
-        value = ob.value_numeric rescue nil
-      end
+    encounter = Encounter.find(params[:encounter_id])
+    if ["CHILD HEALTH SYMPTOMS"].include?(encounter.type.name.upcase.strip)
+      symptoms = Encounter.yes_tagged(encounter.patient_id, encounter.type.name.upcase.strip, encounter.encounter_id)
+      observations << ['Symptoms', symptoms.join(', ')]
+    else
 
-      if value.blank?
-        value = ob.value_text rescue nil
+      (encounter.observations || []).each do |ob|
+        value = ConceptName.where(concept_id: ob.value_coded).first.name rescue nil
+        if value.blank?
+          value = ob.value_datetime.to_time.strftime('%d/%b/%Y') rescue nil
+        end
+
+        if value.blank?
+          value = ob.value_numeric rescue nil
+        end
+
+        if value.blank?
+          value = ob.value_text rescue nil
+        end
+        name = ob.concept.concept_names.first.name
+        pre_processor[name] = [] if pre_processor[name].blank?
+        pre_processor[name] << value
       end
-      name = ob.concept.concept_names.first.name
-      pre_processor[name] = [] if pre_processor[name].blank?
-      pre_processor[name] << value
-    end
 
       pre_processor.keys.each do |concept_name|
         observations << [concept_name, pre_processor[concept_name].uniq.join(' , ')]
       end
+    end
     render text: observations.to_json and return
   end
 

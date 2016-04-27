@@ -116,20 +116,22 @@
       </table>
     </div>
 
-    <% if gender == 'Female'
-
-         symp = (Observation.by_concept_today(@patient_obj.patient_id,
-                                      'Maternal Health Symptoms',
-                                      Date.today).join(' , ') +
+    <% if gender == 'Female' || @patient_obj.age <= 5
+         symptoms = Encounter.yes_tagged(@patient_obj.patient_id, "CHILD HEALTH SYMPTOMS")
+         symp = @patient_obj.age <= 5 ? symptoms.join(', ').titleize :
                  Observation.by_concept_today(@patient_obj.patient_id,
-                                     'Child Health Symptoms',
-                                     Date.today).join(' , '))
+                                              'Maternal Health Symptoms',
+                                              Date.today).join(' , ')
          symp = (symp.length < 40) ? symp : (symp[0..40] + '...')
 
-       dang = Observation.by_concept_today(@patient_obj.patient_id,
-                                           'Danger signs',
-                                           Date.today).join(' , ')
-       dang = (dang.length < 40) ? dang : (dang[0..40] + '...')
+         danger_sign_values = ["COUGH DAYS","DIARRHEA DAYS","FEVER DAYS","RED EYE DAYS","NOT EATING ANYTHING","BLOOD IN STOOL",
+                               "CONVULSIONS","VOMITING EVERYTHING","VISUAL PROBLEMS","UNCONSCIOUS","SWOLLEN LEGS OR FACE","DRY SKIN"]
+
+         dang =  @patient_obj.age <= 5 ? (danger_sign_values & symptoms.join(', ').upcase.split(', ')).join(', ').titleize :
+                 Observation.by_concept_today(@patient_obj.patient_id,
+                                              'Danger signs',
+                                              Date.today).join(' , ')
+         dang = (dang.length < 40) ? dang : (dang[0..40] + '...')
     %>
         <div class="cells" style="width: 44%;">
           <table class="attributes-table" valign="top">

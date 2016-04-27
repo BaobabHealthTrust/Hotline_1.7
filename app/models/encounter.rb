@@ -130,4 +130,29 @@ class Encounter < ActiveRecord::Base
     ")
   end
 
+  def self.yes_tagged(patient_id, encounter_type, encounter_id=nil)
+    symptoms = []
+    type = EncounterType.where('name' => encounter_type).first.id
+
+    if encounter_id.blank?
+      obs = Observation.where(:encounter_id => Encounter.where(:patient_id => patient_id,
+                                                             :encounter_type => type).last.id)
+    else
+      obs = Observation.where(:encounter_id => Encounter.where(:patient_id => patient_id,
+                                                               :encounter_id => encounter_id,
+                                                               :encounter_type => type).last.id)
+    end
+
+    obs.each do |ob|
+
+      next if ob.answer_string.to_s.upcase.strip == "NO"
+
+      if ob.answer_string.to_s.upcase.strip == "YES"
+        symptoms << ob.concept.concept_names.last.name
+        next
+      end
+    end
+    symptoms
+  end
+
 end
