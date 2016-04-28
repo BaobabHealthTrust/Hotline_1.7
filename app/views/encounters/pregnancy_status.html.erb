@@ -819,18 +819,20 @@
                 for(i = 0; i <= trimester_array.length-1; i++) {
                     if( months[current_month] == trimester_array[i]) {
                         if(i >= 0 && i <= 2){
-                            trimester = 1 + 'st';
+                            trimester = '1st';
                         }
                         else if(i >= 3 && i <= 5){
-                            trimester = 2 + 'nd';
+                            trimester = '2nd';
                         }
                         else if(i >= 6 && i <= 7){
-                            trimester = 3 + 'rd';
+                            trimester = '3rd';
                         }
                     }
                 }
             }
-
+            if(trimester == undefined ) {
+                trimester = '4th (outlier)';
+            }
             display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
             display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
             display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
