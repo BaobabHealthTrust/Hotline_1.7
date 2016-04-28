@@ -66,8 +66,10 @@ class EncountersController < ApplicationController
 
       #handle available attributes
       attrs["TELEPHONE NUMBER"] = 'Cell Phone Number'
-      if attrs.keys.include?(observation[:concept_name].upcase)
+
+      if attrs.keys.include?(observation[:concept_name].upcase.strip)
         attr_type = PersonAttributeType.find_by_name(attrs[observation[:concept_name].upcase])
+
         PersonAttribute.create(
             :person_attribute_type_id => attr_type.id,
             :person_id => @patient.id,
@@ -291,15 +293,6 @@ class EncountersController < ApplicationController
       return Person.find(rel.person_b) if rel.date_created.to_date == Date.today
     end
     return nil
-  end
-
-  def concept_set(concept_name)
-    concept = ConceptName.where(name: concept_name).first.concept
-    [''] + (concept.concept_sets || []).collect do |set|
-      name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
-      next if name.blank?
-      [name]
-    end
   end
 
   def purpose_of_call_options

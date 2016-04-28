@@ -140,19 +140,46 @@ class PatientController < ApplicationController
   end
 
   def add_patient_attributes
+
     patient_obj = PatientService.get_patient(params[:patient_id])
-    PatientService.add_patient_attributes(patient_obj, params)
+    PatientService.add_patient_attributes(patient_obj, params[:person][:attributes], session[:user_id]) #rescue nil
+    PatientService.add_patient_names(patient_obj, params[:person][:names]) rescue nil
 
-    #location = LocationTag.find_by_name(params[:person][:current_region]).location_tag_id
+    address = PersonAddress.where(:person_id => patient_obj.patient_id).last
+    address = PersonAddress.new if address.blank?
 
-    PersonAddress.create(
-        person_id: patient_obj.patient_id,
-        township_division: session[:district],
-        address2: params[:person][:addresses][:home_district],
-        county_district: params[:person][:addresses][:home_ta],
-        neighborhood_cell: params[:person][:addresses][:home_village],
-        region: params[:person][:addresses][:region_of_origin]
-    )
+    address.person_id = patient_obj.patient_id
+    address.township_division = session[:district]
+    address.address2 = params[:person][:addresses][:home_district]
+    address.county_district = params[:person][:addresses][:home_ta]
+    address.neighborhood_cell =  params[:person][:addresses][:home_village]
+    address.region = params[:person][:addresses][:region_of_origin]
+
+    address.save
+
+    session.delete(:district)
+
+    #Create Registration encounter
+    encounter = Encounter.new(params[:encounter].to_h)
+    encounter.location_id = session[:location_id]
+    encounter.creator = session[:user_id]
+    encounter.save
+    params[:observations].each do |ob|
+
+      concept_id = ConceptName.find_by_name(ob[:concept_name]).concept_id rescue (
+      raise "Missing concept name : '#{ob[:concept_name]}', Please add it in the configurations files or call help desk line")
+
+      next if concept_id.blank?
+      observation = Observation.new
+      observation[:concept_id] = concept_id
+      observation[:encounter_id] = encounter.id
+      observation[:obs_datetime] = encounter.encounter_datetime || Time.now()
+      observation[:person_id] ||= encounter.patient_id
+      observation[:location_id] = session[:location_id]
+      observation[:creator] = session[:user_id]
+      observation[:value_text] = ob[:value_text]
+      observation.save 
+    end
     redirect_to "/encounters/new/purpose_of_call?patient_id=#{patient_obj.patient_id}"
   end
 

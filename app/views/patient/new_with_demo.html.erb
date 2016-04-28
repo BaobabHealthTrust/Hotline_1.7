@@ -15,7 +15,14 @@
 
 <%= form_tag '/patient/add_patient_attributes' do %>
 
+    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("REGISTRATION").id %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
     <%= hidden_field_tag "patient_id", params[:patient_id] %>
+
+    <% address = PersonAddress.where(:person_id => params[:patient_id]).last  %>
 
     <%= text_field_tag "person[names][family_name2]", params[:family_name2], 
                         {:id => 'family_name2', 
@@ -27,7 +34,7 @@
                           :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';" 
                           } %>
 
-    <%= text_field_tag "person[cell_phone_number]",  nil,
+    <%= text_field_tag "person[attributes][cell phone number]", nil,
                        {
                                :field_type => 'number',
                                :helpText => 'Cell Phone Number',
@@ -40,8 +47,8 @@
                        }
     %>
 
-
-    <%= select_tag "person[phone_type]", options_for_select([["", ""], ["Community phone", "Community"], ["Personal phone", "Personal"], ["Family member phone", "Family member"], ["Neighbour's phone", "Neighbour's"]]),
+    <%= hidden_field_tag("observations[][concept_name]", "Phone Type") %>
+    <%= select_tag "observations[][value_text]", options_for_select(concept_set('Phone Type')),
                    :helpText =>"Select phone type",
                    :id => "phone_type",
                    :condition => "$('cell_phone_number').value != 'Unknown';",
@@ -59,14 +66,16 @@
     {:id => "home_district",
     :tt_requireNextClick => false,
     :ajaxURL => "",
-    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');set_ajaxURL_for_suggestions('/patient/district?filter_value=', __$('region_of_origin').value); ",
+    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');set_ajaxURL_for_suggestions('/patient/district?filter_value=',
+     __$('region_of_origin').value); ",
     :helptext => "Home district"}  %>
 
   <%= text_field_tag "person[addresses][home_ta]", nil,
     {:id => "home_ta",
     :tt_requireNextClick => false,
     :ajaxURL => "",
-    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none'; set_ajaxURL_for_suggestions('/patient/ta?filter_value=', __$('home_district').value);",
+    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none';
+    set_ajaxURL_for_suggestions('/patient/ta?filter_value=', __$('home_district').value);",
     :helptext => "Home Traditional authority / TA"}  %>
 
   <%= text_field_tag "person[addresses][home_village]", nil,
@@ -76,12 +85,12 @@
     :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block'; set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);",
     :helptext => "Home village"}  %>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Health facility name") %>
+    <%= hidden_field_tag("observations[][concept_name]", "Nearest health facility") %>
     <%= select_tag "observations[][value_text]", nil,
                            {:id => 'health_centre_name',
                             :field_type => 'alpha',
                             :helpText => 'Select Nearest health centre',
-                            :ajaxURL => '/home/health_facilities?search_string=',
+                            :ajaxURL => "/home/health_facilities?tag=#{(address.township_division rescue session[:district])}&search_string=",
                             :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
                             :allowFreeText => true }%>
 

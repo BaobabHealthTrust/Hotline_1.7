@@ -98,7 +98,11 @@
         </tr>
       </table> 
     </div>
-
+        <% phone = PersonAttribute.where(
+                :person_id => @patient_obj.patient_id,
+                :person_attribute_type_id => PersonAttributeType.where(:name => "Cell Phone Number").first.id
+           ).last.value
+        %>
     <div class="cells" style="width: 27%;">
       <table class="attributes-table">
         <tr>
@@ -111,7 +115,7 @@
         </tr>
         <tr>
           <th style="width:100px;">Phone&nbsp;#:</th>
-          <td class="value"  style="text-align: left;"><%= @patient_obj.cell_phone_number %></td>
+          <td class="value"  style="text-align: left;"><%= phone %></td>
         </tr>
       </table>
     </div>

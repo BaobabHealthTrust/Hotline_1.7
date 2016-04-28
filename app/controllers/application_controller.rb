@@ -26,6 +26,16 @@ class ApplicationController < ActionController::Base
     @group = @client.nutrition_module rescue nil
   end
 
+
+  def concept_set(concept_name)
+    concept = ConceptName.where(name: concept_name).first.concept
+    [''] + (concept.concept_sets || []).collect do |set|
+      name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
+      next if name.blank?
+      [name]
+    end
+  end
+
   def next_task(patient_obj)
 
     patient = Patient.where(:patient_id => patient_obj.patient_id).first

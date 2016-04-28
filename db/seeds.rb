@@ -107,7 +107,7 @@ CSV.foreach("#{Rails.root}/app/assets/data/health_facilities.csv", :headers => t
 end
 
 puts "Creating districts, facilities and location_tag_map ...."
-location_tags = location_tags.uniq + ["Region","District","Traditional Authority","Village","Urban","Rural","Facility location"]
+location_tags = location_tags.uniq + ["Region","District","Traditional Authority","Village","Urban","Rural","Facility location"] + districts.keys
 
 location_tags.each do |location|
   description = nil
@@ -132,6 +132,8 @@ end
     LocationTagMap.create(location_id: facility.id, location_tag_id: LocationTag.find_by_name(facility_attr[4]).id)
     #Tagging facilit to a facility tag (Urban/Rural)
     LocationTagMap.create(location_id: facility.id, location_tag_id: LocationTag.find_by_name(facility_attr[6]).id)
+    #Tagging a facility to district
+    LocationTagMap.create(location_id: facility.id, location_tag_id: LocationTag.find_by_name(district).id)
 
     region = facility_attr[3] if region.blank?
     district_code = facility_attr[0] if district_code

@@ -73,8 +73,16 @@ class HomeController < ApplicationController
 
   def health_facilities
     search_string = params[:search_string] || ''
-    @names = Location.where("name LIKE '%#{search_string}%'").limit(10).map(&:name).sort
-    render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
+
+    if !params[:tag].blank?
+      location_tag    = LocationTag.find_by_name(params[:tag].gsub(/City/i, '').strip)
+      names  = Location.where("m.location_tag_id = #{location_tag.id} AND name LIKE '%#{search_string}%' ").joins("INNER JOIN location_tag_map m
+                          ON m.location_id = location.location_id").limit(30).map(&:name).sort
+    else
+      names = Location.where("name LIKE '%#{search_string}%'").limit(30).map(&:name).sort
+    end
+
+    render :text => "<li>" + names.map{|n| n } .join("</li><li>") + "</li>"
   end
 
   def quick_summary

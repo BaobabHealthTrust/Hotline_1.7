@@ -221,7 +221,7 @@
                       :validationJS => "validateDOB()",
                       :validationMessage => 'Please enter a valid date'%>
 
-  <%= text_field_tag "person[cell_phone_number]",  params[:cell_phone_number], 
+  <%= text_field_tag "person[cell_phone_number]",  params[:cell_phone_number],
                     {
                       :field_type => 'number',
                       :helpText => 'Cell Phone Number', 
@@ -236,7 +236,7 @@
   <% ask_multiple_phone_numbers = get_global_property_value("ask.multiple.phone.numbers") rescue 'false'
      if ask_multiple_phone_numbers == 'true' 
   %>
-  <%= text_field_tag "person[office_phone_number]",  params[:office_phone_number], 
+  <%= text_field_tag "person[office_phone_number]",  params[:office_phone_number],
                     {
                       :field_type => 'number', 
                       :helpText => 'Office Phone Number',
@@ -245,7 +245,7 @@
                     }
                 %>
 
-  <%= text_field_tag "person[home_phone_number]",  params[:home_phone_number], 
+  <%= text_field_tag "person[home_phone_number]",  params[:home_phone_number],
                     {
                       :field_type => 'number', 
                       :helpText => 'Home Phone Number',  

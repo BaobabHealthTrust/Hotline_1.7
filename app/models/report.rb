@@ -2128,7 +2128,7 @@ module Report
   def self.get_nearest_health_centers(district)
     district_id = district
     hc_conditions   = ["district = ?", district_id]
-    location_tag    = LocationTag.find_by_name("Health Centre")
+    location_tag    = LocationTag.find_by_name(Location.find(district_id).name)
     health_centers  = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
      ON m.location_id = location.location_id")
 

@@ -60,28 +60,28 @@ module PatientService
     end
   end
 
-  def self.add_patient_attributes(patient_obj, para)
+  def self.add_patient_attributes(patient_obj, attr, user_id=1)
 
-    uuid_names = ["Cell Phone Number", "Office Phone Number", "Home Phone Number", "Phone Type"]
-    i = 0
-    ["cell_phone_number", "office_phone_number", "home_phone_number", "phone_type"].each do |name|
+    attr.each do |type, value|
 
-      next if para[:person]["#{name}"].blank?
-
+      attr_type = PersonAttributeType.where(:name => type).first.id
       uuid =  ActiveRecord::Base.connection.select_one("SELECT UUID() as uuid")['uuid']
-      value = para[:person]["#{name}"]
-      type = PersonAttributeType.where("name = ?", uuid_names[i]).first.id
-      i = i+1
-
-      next if type.blank?
 
       patient_attribute = PersonAttribute.create(
           person_id: patient_obj.patient_id,
           value: value,
-          creator: 1,
-          person_attribute_type_id: type,
+          creator: user_id,
+          person_attribute_type_id: attr_type,
           uuid: uuid
       )
+    end
+  end
+
+  def self.add_patient_names(patient_obj, names)
+    name = PersonName.where(:person_id => patient_obj.patient_id).first
+    names.each do |name_attr, value|
+      eval("name.#{name_attr} = value")
+      name.save
     end
   end
 
@@ -103,6 +103,7 @@ module PatientService
   end
 
   def self.create(params)
+
     birthdate = self.format_birthdate_params(params[:person]['birthdate'])
     person = Person.create(birthdate: birthdate[0].to_date, birthdate_estimated: birthdate[1], 
              gender: params[:person]['gender'].first) 

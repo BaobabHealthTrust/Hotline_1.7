@@ -22,4 +22,13 @@ module ApplicationHelper
     fancy = GlobalProperty.find_by_property("interface").property_value == "fancy" rescue false
     fancy ? "touch-fancy.css" : "touch-basic.css"
   end
+
+  def concept_set(concept_name)
+    concept = ConceptName.where(name: concept_name).first.concept
+    [''] + (concept.concept_sets || []).collect do |set|
+      name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
+      next if name.blank?
+      [name]
+    end
+  end
 end

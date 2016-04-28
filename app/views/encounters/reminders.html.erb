@@ -26,6 +26,7 @@
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
     <% @current_data = Encounter.current_data("Tips and reminders", @patient_obj.patient_id)%>
+    <% @reg_data = Encounter.current_data("Registration", @patient_obj.patient_id)%>
 
     <% if @patient_obj.age < 6 && false #FALSE TO DISABLE FEATURE IN THIS ENCOUNTER; TO BE MOVED TO ANOTHER ENCOUNTER%>
         <% if !@guardian %>
@@ -61,14 +62,14 @@
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Phone type") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select(([''] + @phone_types), @current_data['PHONE TYPE']),
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(([''] + @phone_types), (@current_data['PHONE TYPE'] || @reg_data['PHONE TYPE'])),
                    :helpText =>"Select phone type",
                    :condition => "__$('enroll').value == 'Yes' ",
                    :id => "phone_type"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Telephone number") %>
-    <%= text_field_tag "observations[][value_numeric]",(("0" + @current_data['TELEPHONE NUMBER'].last.to_i.to_s) rescue nil),
+    <%= text_field_tag "observations[][value_text]",((@current_data['TELEPHONE NUMBER'] || @patient_obj.cell_phone_number) rescue nil),
                        :field_type => "number",
                        :validationRule => "^0\\d{7,9}$|Unknown|Not Available|N\/A",
                        :validationMessage => "Not a valid phone number",
