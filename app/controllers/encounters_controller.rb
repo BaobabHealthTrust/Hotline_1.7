@@ -100,6 +100,10 @@ class EncountersController < ApplicationController
       redirect_to "/encounters/nutrition_summary?patient_id=#{@patient.id}" and return
     end
 
+    if !params[:end_call].blank?
+      session[:end_call] = true
+    end 
+    
     # Go to the next task in the workflow (or dashboard)
     age = @patient_obj.age
     if age <= 5 || age >= 13 && age <= 50 && @patient_obj.sex == 'F'

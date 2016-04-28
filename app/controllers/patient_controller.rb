@@ -266,6 +266,9 @@ class PatientController < ApplicationController
   end
 
   def districts
+    if !params[:end_call].blank?
+      session[:end_call] = true
+    end 
 
     if params[:param] == 'verify_purpose'
 
