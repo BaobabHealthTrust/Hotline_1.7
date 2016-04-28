@@ -431,7 +431,7 @@ select_options = {
   ],
   'type_of_message_content' => [
       ['Child', 'Child'],
-      ['Observer', 'Observer']
+      ['Observer', 'Observer'],
       ['Pregnancy', 'Pregnancy'],
       ['Postnatal', 'Postnatal'],
       ['WCBA', 'WCBA']
