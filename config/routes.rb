@@ -142,6 +142,18 @@ Rails.application.routes.draw do
   post '/encounters/create'
   ######################### encounters end ##########################################
 
+
+  ######################## Report start ############################################
+
+  get '/reports_index' => 'report#index'
+  get '/report/select'
+  get '/report/reports'
+  post '/report/reports'
+  get '/clinic' => 'home#index'
+  get '/report/patient_demographics_report'
+
+  ######################## Reports end  ############################################
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
