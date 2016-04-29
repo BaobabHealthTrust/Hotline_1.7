@@ -9,24 +9,6 @@
 
     }
 
-    function hideselectedOutcomes(){
-      var primaryOutcomes = selected_primary_outcomes.split(";");
-      var liElements = document.getElementsByTagName("li");
-      for (var i = 0; i<= primaryOutcomes.length - 1; i++){
-        primary_outcome = primaryOutcomes[i];
-        for (var j=0; j<=liElements.length -1; j++){
-          li_tst_value = liElements[j].getAttribute('tstvalue');
-          if (primary_outcome.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
-              var img = liElements[j].getElementsByTagName('img')[0];
-              if(img.src.match('unticked')){
-                  liElements[j].click();
-              }
-            break;
-          }
-        }
-      }
-    }
-
 
     function notify_reason() {
         <% if params[:end_call] == 'true' %>
