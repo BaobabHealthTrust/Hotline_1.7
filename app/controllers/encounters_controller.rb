@@ -164,11 +164,7 @@ class EncountersController < ApplicationController
           @info_concept = "Maternal Health Info"
         end
       when 'Update outcomes'
-        if @patient_obj.age <= 5
-          @general_outcomes = concept_set('Child danger signs greater zero outcome')
-        else
           @general_outcomes = concept_set('General outcome')
-        end
       when 'Reminders'
         @phone_types = concept_set('Phone Type')
         @message_types = concept_set('Message Type')
