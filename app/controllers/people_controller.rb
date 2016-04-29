@@ -88,6 +88,8 @@ class PeopleController < ApplicationController
         #------- set attributes --------------------
         when 'phone_numbers'
           patient_attributes.value = params[:person][:phone_numbers]
+        when 'district_of_residence'
+          ### some code come here... -----------------------------------------------
       end
 
       #------ save modified records --------
