@@ -34,7 +34,7 @@
 
     .edit-icons {
         width: 40px;
-        height: 30px;
+        height: 40px;
         text-align: center;
     }
     .anchor_class a{
@@ -128,7 +128,7 @@
 </style>
 
 <%= render :partial => 'patient/headers/common_header' %>
-<div style="padding-top: 70px;"></div>
+<div style="padding-top: 50px;"></div>
 <div class="main-container">
       <div id="details" style="float:none; width:97%;">
         <div class="container">
@@ -156,7 +156,7 @@
                 </p>
               </td>
               <td class='anchor_class'>
-                <a href="/demographic_modify/name/<%= @patient_obj.patient_id %>">
+                <a href="/demographic_modify/mothers_name/<%= @patient_obj.patient_id %>">
                     <span>
                       <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                     </span>
@@ -207,7 +207,7 @@
                 </p>
               </td>
               <td class='anchor_class'>
-                <a href="/demographic_modify/location/<%= @patient_obj.patient_id %>">
+                <a href="/demographic_modify/district_of_residence/<%= @patient_obj.patient_id %>">
                     <span>
                       <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                     </span>
@@ -220,11 +220,11 @@
               </th>
               <td class='data' style='border-width:1px 1px 1px'>
                 <p>
-                  <%= @patient_obj.township_division %>
+                  <%#= @patient_obj.township_division %>
                 </p>
               </td>
               <td class='anchor_class'>
-                <a href="/demographic_modify/location/<%= @patient_obj.patient_id %>">
+                <a href="/demographic_modify/district_of_residence/<%= @patient_obj.patient_id %>">
                     <span>
                       <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                     </span>

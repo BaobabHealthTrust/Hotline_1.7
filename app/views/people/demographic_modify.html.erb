@@ -14,12 +14,20 @@
     <%= render :partial => "people/demographic_modify/mastercard_modify_name"  %>
   <% end %>
 
+  <% if @edit_page == "mothers_name" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_mothers_name"  %>
+  <% end %>
+
   <% if @edit_page == "age" %>
     <%= render :partial => "people/demographic_modify/mastercard_modify_age"  %>
   <% end %>
 
   <% if @edit_page == "sex" %>
     <%= render :partial => "people/demographic_modify/mastercard_modify_sex"  %>
+  <% end %>
+
+  <% if @edit_page == "district_of_residence" %>
+    <%= render :partial => "people/demographic_modify/mastercard_modify_district_of_residence"  %>
   <% end %>
 
   <% if @edit_page == "location" %>
@@ -50,6 +58,7 @@
   <% if @edit_page == "phone_numbers" %>
     <%= render :partial => "people/demographic_modify/mastercard_modify_phone_numbers" %>
   <% end %>
+
   <%= hidden_field_tag "patient_id", params[:patient_id] %>
   <%= hidden_field_tag "field", @edit_page %>
 <% end %>
