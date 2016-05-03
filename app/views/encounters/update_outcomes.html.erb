@@ -37,7 +37,7 @@
 
         <%
             @current_data = Encounter.current_data("UPDATE OUTCOME", @patient_obj.patient_id)
-            @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id).values.flatten.include?("Yess") rescue false
+            @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id).values.flatten.include?("Yes") rescue false
             @symptom_data = (Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id).values.length > 0)  if @symptom_data != true
             @current_data['GENERAL OUTCOME'] = ["Referral to health centre"] if @symptom_data == true
         %>
@@ -60,8 +60,9 @@
                             :helpText => 'Select health centre name',
                             :ajaxURL => "/home/health_facilities?district=#{@patient_obj.township_division}&search_string=",
                             :allowFreeText => true }%>
-        <% @current_data['GENERAL OUTCOME'] = @current_data['GENERAL OUTCOME'] - [@current_data['GENERAL OUTCOME'].first] rescue nil
-        %>
+
+        <% @current_data['GENERAL OUTCOME'] = @current_data['GENERAL OUTCOME'] - [@current_data['GENERAL OUTCOME'].first] rescue nil%>
+
         <%= hidden_field_tag("observations[][concept_name]", "Secondary Outcome") %>
         <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , (@current_data['SECONDARY OUTCOME'] rescue nil)),
                        :helpText =>"Secondary outcome if any",
