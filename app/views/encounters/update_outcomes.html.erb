@@ -35,7 +35,12 @@
             <%= hidden_field_tag 'show_summary', 'true' %>
         <% end %>
 
-        <% @current_data = Encounter.current_data("UPDATE OUTCOME", @patient_obj.patient_id)%>
+        <%
+            @current_data = Encounter.current_data("UPDATE OUTCOME", @patient_obj.patient_id)
+            @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id).values.flatten.include?("Yes") rescue false
+            @symptom_data = (Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id).values.length > 0)  if @symptom_data != true
+            @current_data['GENERAL OUTCOME'] = ["Referral to health centre"] if @symptom_data == true
+        %>
 
         <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
         <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes, (@current_data['GENERAL OUTCOME'].first rescue nil)),
