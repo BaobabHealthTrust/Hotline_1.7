@@ -195,6 +195,23 @@
   <% @current_data = Encounter.current_data("APPOINTMENT", @patient_obj.patient_id)
   date =  @current_data['NEXT ANC VISIT DATE'].last.to_date rescue ((session_date || Date.today) + 2.month)
   %>
+ 
+    <%= hidden_field_tag("observations[][concept_name]", "Nearest health facility") %>
+    <%= select_tag "observations[][value_text]", nil,
+                           {:id => 'health_centre_name',
+                            :field_type => 'alpha',
+                            :helpText => 'Select Nearest health centre',
+                            :ajaxURL => "/home/health_facilities?tag=#{(address.township_division rescue session[:district])}&search_string=",
+                            :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
+                            :allowFreeText => true }%>
+
+    <%= hidden_field_tag("observations[][concept_name]", "Clinic") %>
+    <%= select_tag "observations[][value_text]", options_for_select(['','Antenatal clinic','ART clinic','HTC clinic','Maternity clinic','Nutrition clinic','OPD clinic','Postnatal clinic','Under 5 clinic']),
+                           {:id => 'health_centre_name',
+                            :field_type => 'alpha',
+                            :helpText => 'Select clinic type',
+                            :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
+                            :allowFreeText => true }%>
 
   <%= hidden_field_tag("observations[][concept_name]", "Next ANC visit date") %>
   <%= text_field_tag("observations[][value_datetime]", date.strftime("%Y-%m-%d"),
