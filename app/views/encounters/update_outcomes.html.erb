@@ -37,9 +37,9 @@
 
         <%
             @current_data = Encounter.current_data("UPDATE OUTCOME", @patient_obj.patient_id)
-            @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id)
-            @symptom_data = Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id) if @symptom_data.blank?
-            @current_data['GENERAL OUTCOME'] = ["Referral to health centre"] if !@symptom_data.blank?
+            @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id).values.flatten.include?("Yes") rescue false
+            @symptom_data = (Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id).values.length > 0)  if @symptom_data != true
+            @current_data['GENERAL OUTCOME'] = ["Referral to health centre"] if @symptom_data == true
         %>
 
         <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
