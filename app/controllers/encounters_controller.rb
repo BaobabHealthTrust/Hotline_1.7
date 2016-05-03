@@ -17,8 +17,8 @@ class EncountersController < ApplicationController
 
     if (encounter.type.name.downcase rescue false) == "dietary assessment"
       create_dietary_assess_obs(encounter, params)
-      redirect_to  "/encounters/nutrition_summary?patient_id=#{@patient.id}" and return if !Encounter.current_data('UPDATE OUTCOME', @patient.id).blank?
-      redirect_to  "/encounters/new/update_outcomes?patient_id=#{@patient.id}&show_summary=true" and return
+      redirect_to  "/encounters/nutrition_summary?patient_id=#{@patient.id}&auto_flow=true" and return
+      #redirect_to  "/encounters/new/update_outcomes?patient_id=#{@patient.id}&show_summary=true" and return
     end
 
     attrs = PersonAttributeType.all.inject({}){|result, k| result[k.name.upcase] = k.name; result }
@@ -95,7 +95,6 @@ class EncountersController < ApplicationController
 
     if (encounter.type.name.downcase rescue false) == "clinical assessment"
       redirect_to  "/encounters/new/dietary_assessment?patient_id=#{@patient.id}" and return #if Encounter.current_data('DIETARY ASSESSMENT', @patient.id).blank?
-      redirect_to  "/encounters/new/update_outcomes?patient_id=#{@patient.id}&show_summary=true" and return if Encounter.current_data('UPDATE OUTCOME', @patient.id).blank?
     end
 
     if params[:show_summary]
@@ -203,13 +202,13 @@ class EncountersController < ApplicationController
             'Fats' => '(oils, etc.)'
         }
         @food_types = {
-            'group 1' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 2' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 3' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 4' => ['', 'Breastmilk', 'Foods', 'Other Liquids'],
-            'group 5' => ['', 'Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 6' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 7' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats']
+            'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 4' => ['Breastmilk', 'Foods', 'Other Liquids'],
+            'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats']
         }
 
         @consumption_method = ['', 'Yes', 'No']

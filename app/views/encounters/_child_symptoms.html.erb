@@ -114,6 +114,14 @@
     //
   }
 
+    function populateFirstQuestion(){
+        var selected = __$('start').value;
+        __$("helpText" + (tstCurrentPage)).innerHTML = __$("helpText" + (tstCurrentPage)).innerHTML + selected + "?";
+        __$("start_concept").value = selected;
+
+        
+    }
+
 </script>
 
 <%= form_tag :controller => "encounters", :action => "create" do |f| %>
@@ -126,9 +134,24 @@
   <%#TODO Sanitise the concept names especially those requirind numeric answers,
   The concept names are not consistent with the question%>
 
+    <%= hidden_field_tag("startup_question", "") %>
+    <%= select_tag "startup_question", options_for_select(@health_symptoms),
+                   :helpText => "Start with symptom",
+                   :tt_pageStyleClass => "longSelectList NoKeyboard",
+                   :id => "start"
+    %>
+
+    <%= hidden_field_tag("observations[][concept_name]", "", :id => 'start_concept') %>
+    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+                   :helpText => "Does the child have ",
+                   :tt_onLoad => "populateFirstQuestion()",
+                   :id => "first_question"
+    %>
+
     <%= hidden_field_tag("observations[][concept_name]", "FEVER") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Does the child have fever?",
+                   :condition => "__$('start').value.toUpperCase() != 'FEVER'",
                    :id => "fever"
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF FEVER' %>
@@ -143,10 +166,10 @@
     <%= hidden_field_tag 'observations[][value_numeric]', 'NO', :id => "fever_7_days" %>
 
 
-
     <%= hidden_field_tag("observations[][concept_name]", "DIARRHEA") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Does the child have diarrhea?",
+                   :condition => "__$('start').value.toUpperCase() != 'DIARRHEA'",
                    :id => "diarrhea"
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF DIARRHEA' %>
@@ -164,6 +187,7 @@
     <%= hidden_field_tag("observations[][concept_name]", "BLOOD IN STOOL") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Is there blood in the stool?",
+                   :condition => "__$('start').value.toUpperCase() != 'BLOOD IN STOOL'",
                    :id => "blood_in_stool"
     %>
 
@@ -171,6 +195,7 @@
     <%= hidden_field_tag("observations[][concept_name]", "COUGH") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Is the child coughing?",
+                   :condition => "__$('start').value.toUpperCase() != 'COUGH'",
                    :id => "cough"
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF COUGH' %>
@@ -188,6 +213,7 @@
     <%= hidden_field_tag("observations[][concept_name]", "CONVULSIONS SIGN") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Is the child having convulsions, or has recently had convulsions?",
+                   :condition => "__$('start').value.toUpperCase() != 'CONVULSIONS SIGN'",
                    :id => "convulsions"
     %>
 
@@ -195,7 +221,8 @@
     <%= hidden_field_tag("observations[][concept_name]", "NOT EATING") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         { :id => "not_eating",
-        :helpText => "Is the child having trouble eating and drinking?" } %>
+          :condition => "__$('start').value.toUpperCase() != 'NOT EATING'",
+          :helpText => "Is the child having trouble eating and drinking?" } %>
 
 
     <%= hidden_field_tag("observations[][concept_name]", "NOT EATING OR DRINKING ANYTHING") %>
@@ -216,6 +243,7 @@
     <%= hidden_field_tag("observations[][concept_name]", "RED EYE") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    { :id =>  "red_eye",
+                     :condition => "__$('start').value.toUpperCase() != 'RED EYE'",
                      :helpText => "Does the child have red eyes?" } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "SEVERITY OF RED EYE") %>

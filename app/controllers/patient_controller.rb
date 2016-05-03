@@ -317,24 +317,33 @@ class PatientController < ApplicationController
 
       outcome_encounter_id = EncounterType.find_by_name('Update outcome').encounter_type_id
 
-      symptoms_encounter_id = @patient_obj.age <= 5 ? EncounterType.find_by_name('Child Health symptoms').encounter_type_id :
-          EncounterType.find_by_name('Maternal Health symptoms').encounter_type_id
+      symptoms_encounter = @patient_obj.age <= 5 ? "Child Health symptoms" :
+                                    "Maternal Health symptoms"
 
-      verify_purpose_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => purpose_encounter_id,
+      current_encounters = Encounter.current_encounters(@patient_obj.patient_id)
+      current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}
+
+      verify_purpose_encounter = current_encounter_names.include?("PURPOSE OF CALL")
+      update_outcome_encounter = current_encounter_names.include?("UPDATE OUTCOME")
+      symptoms_encounter = current_encounter_names.include?(symptoms_encounter.upcase)
+
+=begin
+      verify_purpose_encounter = Encounter.joins(" INNER obs ON obs.encounter_id = encounter.encounter_id AND COALESCE(obs.comments, '') != '' ").where(patient_id: params[:patient_id], :encounter_type => purpose_encounter_id,
                                             encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                 (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
 
-      update_outcome_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => outcome_encounter_id,
+      update_outcome_encounter = Encounter.joins(" INNER obs ON obs.encounter_id = encounter.encounter_id AND COALESCE(obs.comments, '') != '' ").where(patient_id: params[:patient_id], :encounter_type => outcome_encounter_id,
                                                  encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                      (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
 
-      symptoms_encounter = Encounter.where(patient_id: params[:patient_id], :encounter_type => symptoms_encounter_id,
+      symptoms_encounter = Encounter.joins(" INNER obs ON obs.encounter_id = encounter.encounter_id AND COALESCE(obs.comments, '') != '' ").where(patient_id: params[:patient_id], :encounter_type => symptoms_encounter_id,
                                                  encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                      (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
+=end
 
-      if verify_purpose_encounter.nil? || verify_purpose_encounter.observations.last.nil?
+      if (!verify_purpose_encounter) || (!verify_purpose_encounter)
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
-      elsif update_outcome_encounter.nil? || update_outcome_encounter.observations.last.nil?
+      elsif (!update_outcome_encounter) || (!update_outcome_encounter)
         if params[:end_call] == 'true'
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
         elsif params[:next_client] == 'true'

@@ -77,7 +77,7 @@
                     <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
                       <select name="food_type[<%=i%>][]" class="<%= i%> select food-type input" multiple="multiple">
                         <% @food_types[@group.downcase].each  do |type|%>
-                            <option value="<%= type %>"><%= type %> <%= @example_foods[type]%></option>
+                            <option value="<%= type %>"><%= type %> <%= @example_foods[type].strip rescue nil%></option>
                         <% end %>
                       </select>
                     </td>

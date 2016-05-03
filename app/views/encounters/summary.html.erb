@@ -6,7 +6,11 @@
     }
     function nextDestination(){
         if(__$("diet_assess").style.display != 'none') {
-            document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
+            <% if params[:auto_flow]%>
+                document.location =  '/encounters/new/update_outcomes?patient_id=<%= @patient_obj.patient_id %>&show_summary=true';
+            <% else %>
+                document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
+            <% end %>
         }else{
             __$("diet_assess").style.display = 'block';
             __$("clinic_assess").style.display = 'none';
@@ -14,13 +18,13 @@
     }
 
     function backDestination(){
-        if(__$("diet_assess").style.display != 'none') {
-            __$("diet_assess").style.display = 'none';
-            __$("clinic_assess").style.display = 'block';
-        }
-        else {
-            document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
-        }
+
+            <% if params[:auto_flow] %>
+                document.location =  '/encounters/new/update_outcomes?patient_id=<%= @patient_obj.patient_id %>&show_summary=true';
+            <% else %>
+                document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
+            <% end %>
+
     }
 </script>
 <style>
@@ -80,7 +84,7 @@
 
     </div>
 
-      <div style="position: absolute; right: 15px; bottom: 15px;" class="btn btn-back" onclick="document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks'">
+      <div style="position: absolute; right: 15px; bottom: 15px;" class="btn btn-back" onclick="backDestination()">
         <%=image_tag("icons/back_white.svg", class: 'task-icons')%>
       </div>
 </body>
