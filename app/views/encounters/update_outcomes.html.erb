@@ -37,7 +37,7 @@
 
         <%
             @current_data = Encounter.current_data("UPDATE OUTCOME", @patient_obj.patient_id)
-            @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id).values.flatten.include?("Yes") rescue false
+            @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id).values.flatten.include?("Yess") rescue false
             @symptom_data = (Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id).values.length > 0)  if @symptom_data != true
             @current_data['GENERAL OUTCOME'] = ["Referral to health centre"] if @symptom_data == true
         %>
@@ -67,6 +67,7 @@
                        :helpText =>"Secondary outcome if any",
                        :id => "secondary_outcome",
                        :multiple => true,
+                       :optional => true,
                        :tt_onLoad => "hideselectedOutcomes();",
                        :tt_pageStyleClass => 'longSelectList',
                        :allowFreeText => false
