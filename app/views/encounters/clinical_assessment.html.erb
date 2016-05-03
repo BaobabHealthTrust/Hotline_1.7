@@ -87,53 +87,48 @@
                    :allowFreeText => false
     %>
 
-    <% @clinical_questions.each do |group, clinical_questions| %>
-        <% clinical_questions.each do | clinical_question| %>
-            <%= hidden_field_tag('observations[][concept_name]', "#{clinical_question}") %>
-            <%= select_tag 'observations[][value_coded_or_text]',
-                           options_for_select(['',
-                                               'Yes',
-                                               'No'] ,
-                                              @current_data['CLINICAL ASSESSMENT']),
-                           :helpText =>"#{clinical_question}",
-                           :tt_onLoad => "showHelpButton();getGroup();$('keyboard').style.display = 'none';getAnswers(); $('nextButton').style.display = 'none' ",
-                           :tt_onUnLoad => "hideHelpButton();setAnswers(group,'#{clinical_question}');",
-                           :condition => "'#{group}'.match(group)",
-                           :tt_requireNextClick => false,
-                           :id => "#{clinical_question}",
-                           :allowFreeText => false
-            %>
+    <%= hidden_field_tag('observations[][concept_name]', "Current complaints or symptoms") %>
+    <%= select_tag 'observations[][value_coded_or_text_multiple]',
+                   options_for_select(@clinical_questions[@group]),
+                   :helpText =>"Does the caller have any of the following conditions?",
+                   :tt_pageStyleClass => "NoKeyboard longSelectList",
+                   :multiple => true,
+                   :id => "complaints",
+                   :allowFreeText => false
+    %>
 
-            <%= hidden_field_tag('observations[][concept_name]', 'Number of days') %>
-            <%= text_field_tag 'observations[][numeric]', nil,
-                               :helpText => 'Number of days',
-                               :condition => "'#{clinical_question}' == 'Fever' && $('#{clinical_question}').value == 'Yes';",
-                               :tt_onLoad => "showHelpButton(); $('nextButton').style.display = 'inline' ",
-                               :field_type => 'number',
-                               :tt_pageStyleClass => 'NumbersOnly',
-                               :tt_onUnLoad => 'hideHelpButton();'
-            %>
+    <%= hidden_field_tag('observations[][concept_name]', "Danger signs") %>
+    <%= select_tag 'observations[][value_coded_or_text_multiple]',
+                   options_for_select(@danger_signs),
+                   :helpText =>"Experiencing any of the following danger signs?",
+                   :tt_pageStyleClass => "NoKeyboard longSelectList",
+                   :multiple => true,
+                   :id => "danger_signs",
+                   :allowFreeText => false
+    %>
 
-            <%= hidden_field_tag("observations[][concept_name]", 'Number of days') %>
-            <%= text_field_tag 'observations[][numeric]', nil,
-                               :helpText => 'Number of days',
-                               :condition => "'#{clinical_question}' == 'Diarrhea' && $('#{clinical_question}').value == 'Yes'; ",
-                               :tt_onLoad => "showHelpButton(); $('nextButton').style.display = 'inline' ;$('nextButton').innerHTML = '<span>Next</span>'",
-                               :field_type => 'number',
-                               :tt_pageStyleClass => 'NumbersOnly',
-                               :tt_onUnLoad => 'hideHelpButton();'
-            %>
+    <% if @patient_obj.age <= 2 %>
+        <%= hidden_field_tag('observations[][concept_name]', "Child conditions interfering with breastfeeding") %>
+        <%= select_tag 'observations[][value_coded_or_text_multiple]',
+                       options_for_select(@breast_feeding_conditions),
+                       :helpText =>"Child conditions interfering with breastfeeding",
+                       :tt_pageStyleClass => "NoKeyboard longSelectList",
+                       :multiple => true,
+                       :id => "breastfeeding_conditions",
+                       :allowFreeText => false
+        %>
+    <% end %>
 
-            <%= hidden_field_tag("observations[][concept_name]", 'Number of days') %>
-            <%= text_field_tag 'observations[][numeric]', nil,
-                               :helpText => 'Number of days',
-                               :condition => "'#{clinical_question}' == 'Vomiting' && $('#{clinical_question}').value == 'Yes'; ",
-                               :tt_onLoad => "showHelpButton(); $('nextButton').style.display = 'inline' ;$('nextButton').innerHTML = '<span>Next</span>'",
-                               :field_type => 'number',
-                               :tt_pageStyleClass => 'NumbersOnly',
-                               :tt_onUnLoad => 'hideHelpButton();'
-            %>
-        <% end %>
+    <% if @group.downcase.strip == 'group 2' %>
+        <%= hidden_field_tag('observations[][concept_name]', "Medicines/supplements in current pregnancy") %>
+        <%= select_tag 'observations[][value_coded_or_text_multiple]',
+                   options_for_select(["", "Deworming tablets", "Iron/Folic Acid", "Malaria prophylaxis", "TTV- 2 doses", "None"]),
+                   :helpText =>"Medicines/supplements in current pregnancy",
+                   :tt_pageStyleClass => "NoKeyboard longSelectList",
+                   :multiple => true,
+                   :id => "medications In pregnancy",
+                   :allowFreeText => false
+        %>
     <% end %>
 
     <% if false %>

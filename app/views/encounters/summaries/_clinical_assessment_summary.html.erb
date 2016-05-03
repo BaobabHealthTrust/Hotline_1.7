@@ -41,7 +41,7 @@
                     nm = (name.scan(/Fever|Diarrhea|Vomiting|Malnourished|HIV-Positive|Tuberculosis|Anemia|Hypertension/i)[0] rescue name) || name
                   %>
                   <td class="answer_name"><%= nm.humanize %></td>
-                  <td class="answer_value"><%= @clinical_encounter[name].join(', ') %></td>
+                  <td class="answer_value"><%= 'Yes' %></td>
                 </tr>
             <% end %>
           </table>
@@ -55,7 +55,7 @@
                      nm = (name.scan(/Fever|Diarrhea|Vomiting|Malnourished|HIV-Positive|Tuberculosis|Anemia|Hypertension/i)[0] rescue name) || name
                   %>
                   <td class="answer_name"><%= nm.humanize %></td>
-                  <td class="answer_value"><%= @clinical_encounter[name].join(' ,') %></td>
+                  <td class="answer_value"><%= 'Yes' %></td>
                 </tr>
             <% end %>
           </table>

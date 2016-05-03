@@ -177,6 +177,12 @@ class EncountersController < ApplicationController
         @confirm_call_options = call_options
       when 'Clinical assessment'
         @clinical_questions = clinical_questions#('Group 2')
+        @danger_signs = ["", "Mouth sores, thrush or difficulty swallowing", "Not able to eat or drink",
+        "Persistent fatigue/weakness", "Pallor of palms, nails", "Symptoms of wasting (loss of muscle, fat, visible ribs)",
+        "Symptoms of underweight or overweight", "Dull, dry, thin or discolored hair", "Convulsions",
+        "Hypoglycemia/Low blood sugar", "Difficult or rapid breathing or increased pulse rate", "Severe dehydration",
+        "Dry or flaking skin/extensive skin lesions", "None"]
+        @breast_feeding_conditions = ["", "Blocked nose", "Cleft lip or palate", "Sick/recovering", "Thrush", "Other", "None"]
       when 'Dietary assessment'
         @meal_types = ['', 'Breakfast', 'Lunch', 'Supper', 'Snack']
         @meal_types = {
@@ -187,6 +193,14 @@ class EncountersController < ApplicationController
             'group 5' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack'],
             'group 6' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack'],
             'group 7' => ['', 'Breakfast', 'Lunch', 'Supper', 'Snack']
+        }
+        @example_foods = {
+            'Staples' => '(cereal grains, etc.)',
+            'Legumes & Nuts' => '(groundnuts, etc.)',
+            'Animal Foods' => '(meat, eggs, etc)',
+            'Fruits' => '(citrus fruits,  etc.)',
+            'Vegetables' => '',
+            'Fats' => '(oils, etc.)'
         }
         @food_types = {
             'group 1' => ['', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
@@ -223,14 +237,14 @@ class EncountersController < ApplicationController
              'Previously diagnosed as moderate/severely malnourished'
          ],
          'Group 2' => [
+             'Anaemia',
+             'BP/Hypertension',
+             'Diarrhoea',
              'Fever',
-             'Diarrhea',
-             'Vomiting',
-             'HIV-positive',
+             'HIV positive/exposed',
+             'Previously diagnosed as malnourished',
              'TB/Tuberculosis',
-             'High blood pressure/hypertension',
-             'Anemic',
-             'Previously diagnosed as moderate/severely malnourished'
+             'Vomiting'
          ],
          'Group 3' => [
              'Fever',
@@ -242,13 +256,13 @@ class EncountersController < ApplicationController
              'Previously diagnosed as moderate/severely malnourished'
          ],
          'Group 4' => [
-             'Child HIV-positive',
-             'Child anemic',
-             'Child TB/Tuberculosis',
-             'Child previously diagnosed as moderate/severely malnourished',
-             'Danger signs',
-             'Child conditions interfering with breastfeeding'
-         ],
+             'Anaemia',
+             'BP/Hypertension',
+             'HIV positive/exposed',
+             'Previously diagnosed as moderate/severely malnourished',
+             'Child conditions interfering with breastfeeding',
+             'TB/Tuberculosis'
+      ],
          'Group 5' => [
              'child HIV-positive',
              'Child anemic',
@@ -364,18 +378,18 @@ class EncountersController < ApplicationController
   def nutrition_summary
     @patient_obj = PatientService.get_patient(params[:patient_id])
     @client = Patient.find(params[:patient_id])
-    @clinical_encounter = Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
+    @clinical_encounter = (Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)['CURRENT COMPLAINTS OR SYMPTOMS'] || []) rescue []
     @clinical_encounter_1 = []
     @clinical_encounter_2 = []
 
 
     #segmenting clinical encounter for two tables
-    if (@clinical_encounter.keys.length > 0)
-      mid = (@clinical_encounter.keys.length/2).to_i
-      @clinical_encounter_1 = @clinical_encounter.keys[0 .. (mid - 1)]
-      @clinical_encounter_2 = @clinical_encounter.keys[(mid) .. (@clinical_encounter.keys.length)]
-    elsif (@clinical_encounter.keys.length == 1)
-      @clinical_encounter_1 = @clinical_encounter.keys
+    if (@clinical_encounter.length > 0)
+      mid = (@clinical_encounter.length/2).to_i
+      @clinical_encounter_1 = @clinical_encounter[0 .. (mid - 1)]
+      @clinical_encounter_2 = @clinical_encounter[(mid) .. (@clinical_encounter.length)]
+    elsif (@clinical_encounter.length == 1)
+      @clinical_encounter_1 = @clinical_encounter
     end
 
 
