@@ -1,0 +1,9 @@
+<%= text_field_tag "person[names][family_name2]", params[:family_name2],
+                   {:id => 'family_name2',
+                    :field_type => 'alpha',
+                    :helpText => 'Mother\'s Surname',
+                    :ajaxURL => "/person_names/family_name2?search_string=",
+                    :allowFreeText => true,
+                    :tt_requireNextClick => true,
+                    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';"
+                   } %>

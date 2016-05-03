@@ -1,12 +1,21 @@
 <style>
-  #date,#qwerty,#decimal,#comma,#Unknown,#char,#percent,#slash,#plus,#minus,#star {
+  #date,#qwerty,#decimal,#comma,#lUnknown,#char,#percent,#slash,#plus,#minus,#star {
     display: none;
   }
 </style>
 
 <%= text_field_tag "person[#{params[:field]}]",  nil,
-  {:field_type => 'number', :helpText => "#{params[:field].gsub('_',' ').humanize}", 
-   :allowFreeText => true, 
+  {:field_type => 'number', :helpText => "Phone number",
+   :allowFreeText => true,
+   :id => 'phone',
    :tt_pageStyleClass => "nota", 
    :validationRule => "^0\\d{7,9}$|Unknown|Not Available|N\/A", 
    :validationMessage => "Not a valid phone number" } %>
+
+<%= hidden_field_tag("observations[][concept_name]", "Phone Type") %>
+<%= select_tag "observations[][value_text]", options_for_select(concept_set('Phone Type')),
+               :helpText =>"Select phone type",
+               :id => "phone_type",
+               :condition => "$('phone').value != 'Unknown'",
+               :tt_onLoad => "$('keyboard').style.display = 'none';showCategory('IVR#: #{@patient_obj.avr_access_number}');"
+%>
