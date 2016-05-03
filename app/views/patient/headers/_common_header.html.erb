@@ -67,18 +67,26 @@
 /* ........................................................... */
 </style>
 
+<% mnch = false%>
+<%
+   gender = @patient_obj.sex
+   gender = gender == 'F' ? 'Female' : 'Male'
+
+    if gender == 'Female' || @patient_obj.age <= 5
+        mnch = true
+    end
+%>
+
   <div class="demographics">
     
     <div class="cells" style="width: 5%; text-align: left;">
       <span class="icons">
-        <%gender = @patient_obj.sex
-          gender = gender == 'F' ? 'Female' : 'Male'
-        %>
+
         <%=image_tag("icons/Person_Undefined_#{gender}_Dark.png", class: 'icons gender-icon')%>
       </span>
     </div>
 
-    <div class="cells" style="width: 29%;">
+    <div class="cells" style="width: <%= mnch ? 29 : 51%>%;">
       <table class="demographics-table" valign="top">
         <tr>
           <th class="titl">Name:</th>
@@ -102,7 +110,7 @@
       </table> 
     </div>
 
-    <div class="cells" style="width: 27%;" valign="top">
+    <div class="cells" style="width: <%= mnch ? 27 : 49%>%;" valign="top">
       <table class="attributes-table">
         <tr>
           <th class="titl">AVR access ID:</th>
@@ -117,6 +125,7 @@
     </div>
 
     <% if gender == 'Female' || @patient_obj.age <= 5
+         mnch = true
          symptoms = Encounter.yes_tagged(@patient_obj.patient_id, "CHILD HEALTH SYMPTOMS") rescue []
          symp = @patient_obj.age <= 5 ? symptoms.join(', ').titleize :
                  Observation.by_concept_today(@patient_obj.patient_id,
