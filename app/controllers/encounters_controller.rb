@@ -423,7 +423,7 @@ class EncountersController < ApplicationController
                                         'veg.jpg'],
                        'Fats' => [['Healthy fats are found in vegetable oils, nuts, seeds, avocado pears and fatty fish(batala)
                                     such as lake trout and tuna'],
-                                  'pork.jpeg'],
+                                  'beef.png'],
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
                        'Breastmilk' => [['Milk'], 'breastf.png'],
                        'Other Liquids' => [['?'], 'drink.jpg'],
