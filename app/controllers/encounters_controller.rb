@@ -412,7 +412,7 @@ class EncountersController < ApplicationController
                        'Legumes & Nuts' => [['Samples: Groundnuts, soya beans, peas, Nzama, Bambara nuts. They provide protein, fibre and energy and healthy fats. '],
                                             'leg.png'],
                        'Animal Foods' => [['Samples: All foods of animal origin e.g meat, eggs, milk products, fish, insects(Ngumbi, bwanoni).
-                                        These provide important proteins, viamins and minerals'],
+                                        These provide important proteins, vitamins and minerals'],
                                           'animal.jpeg'],
                        'Fruits' => [['Samples: Citrus fruits e.g oranges, lemons, <i>baobab</i> and tangerines ; bananas, pineapples, pawpaws, mangoes.
                                      Fruits provide the body with vitamins, minerals, water, energy and dietary fibre'],
