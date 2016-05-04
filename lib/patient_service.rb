@@ -7,6 +7,13 @@ module PatientService
     names = PersonName.where(:person_id => person.id).first
     attributes = PersonAttribute.where(:person_id => person.id).first
     addresses = PersonAddress.where(:person_id => person.id).first
+    nearest_facility = Observation.where(
+        :concept_id => ConceptName.where(:name => "Nearest Health Facility").last.concept_id,
+        :person_id => person_id
+    ).last
+
+    fac = ConceptName.find_by_concept_id(nearest_facility.value_coded).name rescue nil
+    nearest_facility = nearest_facility.blank? ? "" : (fac || nearest_facility.value_text)
 
     patient_obj = PatientBean.new(patient)
     patient_obj.patient_id = patient.id
@@ -18,7 +25,7 @@ module PatientService
     patient_obj.avr_access_number = self.get_identifier(patient, 'IVR access code')
     patient_obj.age = self.age(person)
     patient_obj.sex = person.gender
-    #patient_obj.facility_name = person.facility_name
+    patient_obj.facility_name = nearest_facility
 
     unless addresses.blank?
       patient_obj.region = addresses.region

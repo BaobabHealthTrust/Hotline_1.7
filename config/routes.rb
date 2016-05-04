@@ -28,7 +28,13 @@ Rails.application.routes.draw do
   post 'home/previous_article'
   get 'tag_concepts/:tag_id' => 'home#tag_concepts'
   ######################### home end ############################################
-  
+
+
+
+
+  ######################## Enc #######################
+  get '/encounters/update_health_center'
+  post '/encounters/update_health_center'
   ######################### user start ############################################
   get '/login' => 'user#login'
   post '/login' => 'user#login'

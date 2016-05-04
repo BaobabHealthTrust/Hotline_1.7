@@ -13,7 +13,12 @@ class PeopleController < ApplicationController
 
   def demographics
     @patient_obj = PatientService.get_patient(params[:patient_id])
+    @person_name = get_patient_names(params[:patient_id])
     @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
+    @phoneType = Observation.where(
+        :concept_id => ConceptName.where(:name => "Phone Type").last.concept_id,
+        :person_id => params[:patient_id]
+    ).last.answer_string rescue nil
     render :layout => false
   end
 
@@ -88,13 +93,36 @@ class PeopleController < ApplicationController
         #------- set attributes --------------------
         when 'phone_numbers'
           patient_attributes.value = params[:person][:phone_numbers]
+
+          params['observations'].each do |observation|
+            ob = Observation.where(
+                :concept_id => ConceptName.where(
+                    :name => observation['concept_name']
+                ).last.concept_id,
+                :person_id => params[:patient_id]
+            ).last rescue nil
+            next if ob.blank?
+            ob.value_text = observation['value_text']
+            ob.save
+          end
+
         when 'district_of_residence'
-          ### some code come here... -----------------------------------------------
+          patient_addresses.township_division = params['district']
+          patient_addresses.save
+          health_facility = Observation.where(
+              :person_id => params[:patient_id],
+              :concept_id => ConceptName.where(:name => "Nearest Health Facility").last.concept_id,
+          ).last
+
+          health_facility.value_text = params['nearest_health_facility']
+          health_facility.save
+        when 'mothers_name'
+          patient_names.family_name2 = params['person']['names']['family_name2']
       end
 
       #------ save modified records --------
       update_patient(patient) if params[:field] == 'sex' || params[:field] == 'age'
-      update_patient_names(patient_names) if params[:field] == 'name'
+      update_patient_names(patient_names) if params[:field] == 'name' || params[:field] == 'mothers_name'
       update_addresses(patient_addresses) if params[:field] == 'location'
       update_attributes(patient_attributes) if params[:field] == 'phone_numbers'
 
@@ -102,6 +130,11 @@ class PeopleController < ApplicationController
     else
       @edit_page = params[:field]
       @patient_obj = PatientService.get_patient(params[:patient_id])
+      location_tag = LocationTag.find_by_name("District")
+      @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins('INNER JOIN location_tag_map m
+     ON m.location_id = location.location_id').collect{|l | [l.id, l.name]}
+
+      @location_names = @districts.collect { |location_id, location_name| location_name}
     end
   end
 

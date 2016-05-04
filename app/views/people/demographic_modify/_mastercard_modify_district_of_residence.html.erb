@@ -1,15 +1,19 @@
-<%= select_tag 'district',
-               options_for_select(@locations_names.sort, []), {
-                :helpText => 'Caller\'s District of residence',
-                :id => 'district',
-                :tt_requireNextClick => false,
-                :tt_onLoad => '$(nextButton).style.display = "none";'} %>
 
-<%= hidden_field_tag("observations[][concept_name]", "Nearest health facility") %>
-<%= select_tag "observations[][value_text]", nil,
+
+<%= select_tag 'district',
+               options_for_select(@location_names.sort, []), {
+                :helpText => 'Caller\'s District of residence',
+                :id => 'district'
+                } %>
+
+<%= select_tag "nearest_health_facility", nil,
                {:id => 'health_centre_name',
                 :field_type => 'alpha',
-                :helpText => 'Select Nearest health centre',
-                :ajaxURL => "/home/health_facilities?tag=#{(address.township_division rescue session[:district])}&search_string=",
-                :tt_onLoad => "$('keyboard').style.display = 'none';showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
-                :allowFreeText => true }%>
+                :helpText => 'Select nearest health centre',
+                :ajaxURL => "",
+                :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');
+                        set_ajaxURL_for_suggestions(
+                             '/home/health_facilities?tag=' +  __$('district').value + '&search_string=',
+                             ''
+                        );"
+               }%>
