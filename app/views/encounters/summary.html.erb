@@ -19,11 +19,11 @@
 
     function backDestination(){
 
-            <% if params[:auto_flow] %>
-                document.location =  '/encounters/new/update_outcomes?patient_id=<%= @patient_obj.patient_id %>&show_summary=true';
-            <% else %>
+            <%# if params[:auto_flow] %>
+                //document.location =  '/encounters/new/update_outcomes?patient_id=<%#= @patient_obj.patient_id %>&show_summary=true';
+            <%# else %>
                 document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
-            <% end %>
+            <%# end %>
 
     }
 </script>
