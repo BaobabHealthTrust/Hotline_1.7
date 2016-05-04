@@ -409,7 +409,7 @@ class EncountersController < ApplicationController
     @example_foods =  {'Staples' => [['Samples: Cereal grains e.g sorghum, maize, starchy fruits such
                                       plantains; starchy roots e.g cassava. They provide carbohydrates, proteins, fibre, vitamins and minerals'],
                                      'staple.png'],
-                       'Legumes & Nuts' => [['Samples: Groundnuts, soya beans, peas, Nzama, Bambara nuts. They provide provtein, fibre and energy and healthy fats. '],
+                       'Legumes & Nuts' => [['Samples: Groundnuts, soya beans, peas, Nzama, Bambara nuts. They provide protein, fibre and energy and healthy fats. '],
                                             'leg.png'],
                        'Animal Foods' => [['Samples: All foods of animal origin e.g meat, eggs, milk products, fish, insects(Ngumbi, bwanoni).
                                         These provide important proteins, viamins and minerals'],
