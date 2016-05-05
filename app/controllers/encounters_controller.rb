@@ -145,6 +145,17 @@ class EncountersController < ApplicationController
     case encounter_type
       when 'Pregnancy status'
         @pregnancy_options = concept_set('Pregnancy status')
+        current_lmp = Observation.by_concept_today(@patient_obj.patient_id,
+                                               'Last menstrual period',
+                                               'Pregnancy Status',
+                                               Date.today)
+        current_lmp_str = current_lmp[0].split('/')
+        current_lmp_str_time = current_lmp_str[2].split(' ')
+
+        @current_lmp_day = current_lmp_str[0]
+        @current_lmp_month = current_lmp_str[1]
+        @current_lmp_year = current_lmp_str_time[0]
+
       when 'Female symptoms'
           #if child
         if @patient_obj.age <= 5
