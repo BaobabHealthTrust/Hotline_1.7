@@ -149,8 +149,8 @@ class EncountersController < ApplicationController
                                                'Last menstrual period',
                                                'Pregnancy Status',
                                                Date.today)
-        current_lmp_str = current_lmp[0].split('/')
-        current_lmp_str_time = current_lmp_str[2].split(' ')
+        current_lmp_str = current_lmp[0].split('/') rescue []
+        current_lmp_str_time = current_lmp_str[2].split(' ') rescue []
 
         @current_lmp_day = current_lmp_str[0]
         @current_lmp_month = current_lmp_str[1]
