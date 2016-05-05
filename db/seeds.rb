@@ -335,7 +335,9 @@ end
 
 
   CSV.foreach("#{Rails.root}/app/assets/data/additional_concept_names.csv", :headers => true).with_index do |row, i|
-    concept_name = row[0].capitalize 
+    concept_name = row[0].capitalize
+    check = ConceptName.where(:name => concept_name).last
+    next if !check.blank?
     concept = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
     ConceptName.create(name: concept_name, concept_id: concept.concept_id, locale: 'en')
     puts "Additional concept: ---- #{concept_name}"
