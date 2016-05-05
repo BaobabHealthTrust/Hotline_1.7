@@ -427,6 +427,7 @@
         year_table_cell.appendChild(label);
         var year_input_field = document.createElement('input');
         year_input_field.setAttribute('id','tbInputYear');
+        year_input_field.setAttribute('value', "<%= @current_lmp_year %>");
         year_input_field.setAttribute('type','text');
         year_input_field.setAttribute('maxlength','4');
         year_table_cell.appendChild(year_input_field);
@@ -484,6 +485,7 @@
         var month_input_field = document.createElement('input');
         month_input_field.setAttribute('id','tbInputMonth');
         month_input_field.setAttribute('type','text');
+        month_input_field.setAttribute('value', "<%= @current_lmp_month %>");
         table_cell.appendChild(month_input_field);
         var month_table = document.createElement('div');
         month_table.className = 'month-table';
@@ -539,6 +541,7 @@
         var day_input_field = document.createElement('input');
         day_input_field.setAttribute('id','tbInputDay');
         day_input_field.setAttribute('type','text');
+        day_input_field.setAttribute('value', "<%= @current_lmp_day %>");
         day_input_field.setAttribute('maxlength','2');
         table_cell.appendChild(day_input_field);
         var day_div = document.createElement('div');
