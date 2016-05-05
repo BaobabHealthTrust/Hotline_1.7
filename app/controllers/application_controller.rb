@@ -43,8 +43,7 @@ class ApplicationController < ActionController::Base
 
     current_encounters = Encounter.current_encounters(patient_obj.patient_id)
     current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}
-    symptom_encounter_name = @patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
-
+    symptom_encounter_name = patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
     tasks = [
         {'PREGNANCY STATUS' => {
           'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') && patient_obj.age > 13 && !current_encounter_names.include?('PREGNANCY STATUS'))",
@@ -53,6 +52,10 @@ class ApplicationController < ActionController::Base
         {'HEALTH SYMPTOMS' => {
           'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('#{symptom_encounter_name}')",
           'link' => "/encounters/new/female_symptoms?patient_id=#{patient_obj.patient_id}"
+        }},
+        {'GUARDIAN REGISTRATION' => {
+            'condition' => "session[:end_call].blank? && session[:no_guardian].blank? && patient_obj.age <= 5 && #{patient.current_guardian.blank?}",
+            'link' => "/people/guardian_check?action_type=guardian&patient_id=#{patient_obj.patient_id}"
         }},
         {'UPDATE OUTCOME' => {
            'condition' => "!current_encounter_names.include?('UPDATE OUTCOME') && ((0 .. 5).include?(patient_obj.age) || (patient_obj.sex.match('F')  &&
@@ -63,7 +66,7 @@ class ApplicationController < ActionController::Base
 
     tasks.each do |tsk|
       name = tsk.keys.first
-      next unless eval(tsk[name]['condition']) == true
+      (next unless eval(tsk[name]['condition']) == true) rescue (raise tsk[name]['condition'].inspect)
       return tsk[name]['link']
     end
 

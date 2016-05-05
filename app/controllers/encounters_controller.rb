@@ -244,7 +244,7 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as moderate/severely malnourished'
+             'Previously diagnosed as malnourished'
          ],
          'Group 2' => [
              'Anaemia',
@@ -263,38 +263,38 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as moderate/severely malnourished'
+             'Previously diagnosed as malnourished'
          ],
          'Group 4' => [
              'Anaemia',
              'BP/Hypertension',
              'HIV positive/exposed',
              'Previously diagnosed as moderate/severely malnourished',
-             'Child conditions interfering with breastfeeding',
+             'Conditions interfering with breastfeeding',
              'TB/Tuberculosis'
       ],
          'Group 5' => [
-             'child HIV-positive',
-             'Child anemic',
-             'Child TB/Tuberculosis',
-             'Child previously diagnosed as moderate/severely malnourished',
+             'HIV-positive',
+             'anaemic',
+             'TB/Tuberculosis',
+             'Previously diagnosed as malnourished',
              'Danger signs',
-             'Child conditions interfering with breastfeeding'
+             'Conditions interfering with breastfeeding'
          ],
          'Group 6' => [
-             'Child HIV-positive',
-             'Child anemic',
-             'Child TB/Tuberculosis',
-             'Child previously diagnosed as moderate/severely malnourished'
+             'HIV-positive',
+             'anaemic',
+             'TB/Tuberculosis',
+             'previously diagnosed as malnourished'
          ],
          'Group 7' => [
-             'Child fever',
-             'Child diarrhea',
-             'Child vomiting',
-             'Child HIV-positive',
-             'Child TB/Tuberculosis',
-             'Child high blood pressure/hypertension',
-             'Child previously diagnosed as moderate/severely malnourished'
+             'Fever',
+             'Diarrhea',
+             'Vomiting',
+             'HIV-positive',
+             'TB/Tuberculosis',
+             'High blood pressure/hypertension',
+             'Previously diagnosed as malnourished'
          ]
       ]
       return clinical_questions[0]

@@ -1,4 +1,4 @@
-<%@patient_obj = Patient.find(params['patient_id']) if (@patient_obj.blank? rescue true)%>
+<%@patient_obj = PatientService.get_patient(params[:patient_id]) if (@patient_obj.blank? rescue true)%>
 <style>
 /* .......................... demographics css starts ................................. */
 .demographics {
@@ -69,6 +69,8 @@
 
 <% mnch = false%>
 <%
+   @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
+
    gender = @patient_obj.sex
    gender = gender == 'F' ? 'Female' : 'Male'
 
