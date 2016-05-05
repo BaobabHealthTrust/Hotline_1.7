@@ -21,10 +21,10 @@
                                    :helpText => 'Caller\'s District of residence',
                                    :id => 'district',
                                    :tt_requireNextClick => false,
-                                   :tt_onLoad => '$(nextButton).style.display = "none";'} %>
+                                   :tt_onLoad => '$("nextButton").style.display = "none";'} %>
   <%# if @task == 'new'%>
       <%= select_tag 'call_mode', options_for_select(@call_modes), {
                                         :helpText => 'Select the type of caller?',
                                         :id => 'call_mode',
-                                        :tt_onLoad => 'changeNextBtn();__$(nextButton).style.display = "inline";'}%>
+                                        :tt_onLoad => 'changeNextBtn();__$("nextButton").style.display = "inline";'}%>
 <% end %>

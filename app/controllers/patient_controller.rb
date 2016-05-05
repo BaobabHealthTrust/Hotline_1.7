@@ -120,9 +120,9 @@ class PatientController < ApplicationController
   def create
 
     patient = PatientService.create(params)
-    patient_obj = PatientService.get_patient(params[:patient_id])
 
     if params[:action_type] && params[:action_type] == 'guardian'
+      patient_obj = PatientService.get_patient(params[:patient_id])
 
       rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
       rel = Relationship.new()
