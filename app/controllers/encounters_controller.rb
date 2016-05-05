@@ -233,7 +233,7 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as moderate/severely malnourished'
+             'Previously diagnosed as malnourished'
          ],
          'Group 2' => [
              'Anaemia',
@@ -252,7 +252,7 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as moderate/severely malnourished'
+             'Previously diagnosed as malnourished'
          ],
          'Group 4' => [
              'Anaemia',
@@ -266,7 +266,7 @@ class EncountersController < ApplicationController
              'child HIV-positive',
              'Child anemic',
              'Child TB/Tuberculosis',
-             'Child previously diagnosed as moderate/severely malnourished',
+             'Child previously diagnosed as malnourished',
              'Danger signs',
              'Child conditions interfering with breastfeeding'
          ],
@@ -274,7 +274,7 @@ class EncountersController < ApplicationController
              'Child HIV-positive',
              'Child anemic',
              'Child TB/Tuberculosis',
-             'Child previously diagnosed as moderate/severely malnourished'
+             'Child previously diagnosed as malnourished'
          ],
          'Group 7' => [
              'Child fever',
@@ -283,7 +283,7 @@ class EncountersController < ApplicationController
              'Child HIV-positive',
              'Child TB/Tuberculosis',
              'Child high blood pressure/hypertension',
-             'Child previously diagnosed as moderate/severely malnourished'
+             'Child previously diagnosed as malnourished'
          ]
       ]
       return clinical_questions[0]
