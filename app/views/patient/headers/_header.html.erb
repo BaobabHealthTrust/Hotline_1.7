@@ -123,11 +123,14 @@
            guardian_name = guardian.name rescue nil
            guardian_age = guardian.age rescue nil
            guardian_sex = guardian.gender rescue nil
+
+           if @patient_obj.age <= 5
         %>
-        <tr>
-          <th style="width:100px;">Guardian:</th>
-          <td class="value"  style="text-align: left;"><%= guardian_name.blank? ? "" : "#{guardian_name}(#{guardian_sex}, #{guardian_age})"%></td>
-        </tr>
+            <tr>
+              <th style="width:100px;">Guardian:</th>
+              <td class="value"  style="text-align: left;"><%= guardian_name.blank? ? "" : "#{guardian_name}(#{guardian_sex}, #{guardian_age})"%></td>
+            </tr>
+        <% end %>
       </table>
     </div>
 
