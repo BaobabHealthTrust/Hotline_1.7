@@ -134,6 +134,26 @@ class EncountersController < ApplicationController
     Observation.create(paramz) rescue nil
   end
 
+
+  def create_guardian
+
+    patient_obj = PatientService.get_patient(params[:patient_id])
+
+    rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
+    rel = Relationship.new()
+    rel.relationship = rel_type.id
+    rel.person_a = params[:patient_id]
+    rel.person_b = params[:guardian_id]
+    rel.date_created = DateTime.now.to_s(:db)
+    rel.creator = session[:user_id]
+    rel.save
+
+    session[:tag_encounters] = true
+    session[:tagged_encounters_patient_id] = params[:patient_id]
+
+    redirect_to next_task(patient_obj) and return
+  end
+
   def new
     params[:encounter_type] = 'female_symptoms' if params[:encounter_type] == 'maternal_health_symptoms'
     params[:encounter_type] = 'update_outcomes' if params[:encounter_type] == 'update_outcome'
@@ -402,6 +422,7 @@ class EncountersController < ApplicationController
       @clinical_encounter_1 = @clinical_encounter
     end
 
+    @clinical_encounter_2 = @clinical_encounter_2 - @clinical_encounter_1
 
     @dietary_encounter = Encounter.current_data('DIETARY ASSESSMENT', @patient_obj.patient_id)
     @group = @client.nutrition_module

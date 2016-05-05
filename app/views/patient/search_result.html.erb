@@ -312,7 +312,7 @@ function patientDashboard() {
       <% unless params[:action_type] == 'guardian'%>
         document.location = '/patient/dashboard/' + selectedPersonID + '/tasks?next_task=true';
       <% else %>
-        document.location = '/encounters/new/reminders?patient_id=<%= params[:patient_id]%>&guardian_id=' + selectedPersonID;
+        document.location = '/encounters/create_guardian?patient_id=<%= params[:patient_id]%>&guardian_id=' + selectedPersonID;
       <% end %>
   }
 }

@@ -146,6 +146,8 @@ Rails.application.routes.draw do
 
   get '/encounters/create'
   post '/encounters/create'
+  get '/encounters/create_guardian'
+
   ######################### encounters end ##########################################
 
 
