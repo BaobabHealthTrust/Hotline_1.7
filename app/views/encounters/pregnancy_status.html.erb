@@ -324,7 +324,7 @@
     <%= hidden_field_tag("observations[][concept_name]", "Pregnancy due date") %>
     <%= hidden_field_tag "observations[][value_datetime]", nil, { :tt_onLoad => "load();dateLayout(); __$('keyboard').style.display = 'none'; nextDate();",
                                                                   :id => "expected_due_date",
-                                                                  :condition => "$('pregnancy_status').value == 'Pregnant'",
+                                                                  :condition => "$('tbInputYear').value == 'Unknown'",
                                                                   :tt_pageStyleClass => "NoControls" } %>
 
     <!-- ======= for Delivered, enter delivery date ========= -->
@@ -452,7 +452,7 @@
         btnUnknown.setAttribute('id','btnUnknow');
         btnUnknown.setAttribute('type','button');
         btnUnknown.setAttribute('value','Unknown');
-        btnUnknown.setAttribute('onclick','input(this); popUp();');
+        btnUnknown.setAttribute('onclick','input(this);');
         btnUnknown.className = 'btn-year';
         year_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
@@ -597,6 +597,10 @@
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
 
+        if (day == 'Unknown') {
+            day = 1;
+        }
+
         var months = [
             'January',
             'February',
@@ -614,7 +618,7 @@
         var current_year = new Date().getFullYear();
         var current_month = new Date().getMonth();
         var year_diff = parseInt(current_year) - parseInt(year);
-        if(year < current_year && year_diff >= 0 && year_diff <= 1){
+        if(year < current_year && year_diff >= 0 && year_diff <= 1 && year != 'Unknown'){
             // We expect month to be of index greater than current and plus 4 ---
             if(parseInt(months.indexOf(month)) >= parseInt(current_month)) {
                 summary(year,month,day,current_month,current_year,months);
@@ -623,7 +627,7 @@
                 showMessage('Invalid input. Entry should be within 12 months.',false,false);
             }
         }
-        else if(year == current_year){
+        else if(year == current_year && year != 'Unknown'){
             // We expect month to be of index less than current ---
             if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
                 summary(year, month, day, current_month, current_year,months);
@@ -632,8 +636,12 @@
                 showMessage('Invalid input. Month can not be ahead of '+months[current_month],false,false);
             }
         }
-        else if(year > current_year) {
+        else if(year > current_year && year != 'Unknown') {
             showMessage('Invalid input. Year can not be ahead of '+current_year,false,false);
+        }
+        else if( year == 'Unknown' || day == 'Unknown') {
+            // Code to enter edd should come here and date unknown should be removed.
+            // showMessage('LMP Year unknown.',false,false);
         }
         else {
             showMessage('Invalid input. Entry should be within 9 months.',false,false);
