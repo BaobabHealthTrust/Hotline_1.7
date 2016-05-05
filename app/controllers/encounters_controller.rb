@@ -131,7 +131,7 @@ class EncountersController < ApplicationController
           paramz.delete(key) if paramz.has_key?(key)
     end
 
-    Observation.create(paramz)
+    Observation.create(paramz) rescue nil
   end
 
   def new
