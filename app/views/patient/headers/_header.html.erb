@@ -101,7 +101,7 @@
         <% phone = PersonAttribute.where(
                 :person_id => @patient_obj.patient_id,
                 :person_attribute_type_id => PersonAttributeType.where(:name => "Cell Phone Number").first.id
-           ).last.value
+           ).last.value rescue nil
         %>
     <div class="cells" style="width: 27%;">
       <table class="attributes-table">
@@ -116,6 +116,17 @@
         <tr>
           <th style="width:100px;">Phone&nbsp;#:</th>
           <td class="value"  style="text-align: left;"><%= phone %></td>
+        </tr>
+
+        <%
+           guardian = Patient.find(@patient_obj.patient_id).current_guardian rescue nil
+           guardian_name = guardian.name rescue nil
+           guardian_age = guardian.age rescue nil
+           guardian_sex = guardian.gender rescue nil
+        %>
+        <tr>
+          <th style="width:100px;">Guardian:</th>
+          <td class="value"  style="text-align: left;"><%= guardian_name.blank? ? "" : "#{guardian_name}(#{guardian_sex}, #{guardian_age})"%></td>
         </tr>
       </table>
     </div>

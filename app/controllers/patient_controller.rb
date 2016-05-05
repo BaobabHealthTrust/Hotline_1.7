@@ -119,14 +119,16 @@ class PatientController < ApplicationController
 
   def create
 
-    patient_obj = PatientService.create(params)
+    patient = PatientService.create(params)
+    patient_obj = PatientService.get_patient(params[:patient_id])
+
     if params[:action_type] && params[:action_type] == 'guardian'
 
       rel_type = RelationshipType.where(:a_is_to_b => 'Patient', :b_is_to_a => 'Guardian').first
       rel = Relationship.new()
       rel.relationship = rel_type.id
       rel.person_a = params[:patient_id]
-      rel.person_b = patient_obj.patient_id
+      rel.person_b = patient.patient_id
       rel.date_created = DateTime.now.to_s(:db)
       rel.creator = session[:user_id]
       rel.save
@@ -134,9 +136,9 @@ class PatientController < ApplicationController
       session[:tag_encounters] = true
       session[:tagged_encounters_patient_id] = params[:patient_id]
 
-      redirect_to "/" and return
+      redirect_to next_task(patient_obj) and return
     end
-    redirect_to "/patient/new_with_demo/#{patient_obj.patient_id}"
+    redirect_to "/patient/new_with_demo/#{patient.patient_id}"
   end
 
   def add_patient_attributes

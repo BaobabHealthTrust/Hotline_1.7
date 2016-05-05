@@ -60,4 +60,5 @@ class Patient < ActiveRecord::Base
     end
     return nil
   end
+
 end

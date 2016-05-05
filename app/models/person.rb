@@ -27,4 +27,10 @@ class Person < ActiveRecord::Base
     end     
   end
 
+
+  def name
+    person_name = self.person_names.last rescue (return nil)
+    "#{person_name.given_name} #{person_name.family_name}"
+  end
+
 end

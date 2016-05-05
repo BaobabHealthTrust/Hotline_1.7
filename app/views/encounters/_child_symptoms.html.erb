@@ -131,7 +131,7 @@
     <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
-  <%#TODO Sanitise the concept names especially those requirind numeric answers,
+  <%#TODO Sanitise the concept names especially those requiring numeric answers,
   The concept names are not consistent with the question%>
 
     <%= hidden_field_tag("startup_question", "") %>
@@ -163,7 +163,7 @@
                        :tt_pageStyleClass => 'NumbersOnly'
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'FEVER OF 7 DAYS OR MORE' %>
-    <%= hidden_field_tag 'observations[][value_numeric]', 'NO', :id => "fever_7_days" %>
+    <%= hidden_field_tag 'observations[][value_coded_or_text]', 'NO', :id => "fever_7_days" %>
 
 
     <%= hidden_field_tag("observations[][concept_name]", "DIARRHEA") %>
@@ -181,7 +181,7 @@
                        :tt_pageStyleClass => 'NumbersOnly'
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'DIARRHEA FOR 14 DAYS OR MORE' %>
-    <%= hidden_field_tag 'observations[][value_numeric]', 'No', :id => "diarrhea_14_days"%>
+    <%= hidden_field_tag 'observations[][value_coded_or_text]', 'No', :id => "diarrhea_14_days"%>
 
 
     <%= hidden_field_tag("observations[][concept_name]", "BLOOD IN STOOL") %>
@@ -207,7 +207,7 @@
                        :tt_pageStyleClass => 'NumbersOnly'
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'COUGH FOR 21 DAYS OR MORE' %>
-    <%= hidden_field_tag 'observations[][value_numeric]', 'No', :id => "cough_21_days"%>
+    <%= hidden_field_tag 'observations[][value_coded_or_text]', 'No', :id => "cough_21_days"%>
 
 
     <%= hidden_field_tag("observations[][concept_name]", "CONVULSIONS SIGN") %>
@@ -247,13 +247,16 @@
                      :helpText => "Does the child have red eyes?" } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "SEVERITY OF RED EYE") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
+    <%= text_field_tag "observations[][value_numeric]", nil,
                    { :id => "red_eye_days",
                      :condition => '$("red_eye").value == "Yes"',
-                     :helpText => "How many days has the child had red eyes?"} %>
+                     :field_type => 'number',
+                     :tt_pageStyleClass => 'NumbersOnly',
+                     :helpText => "How many days has the child had red eyes?"
+                   } %>
 
     <%= hidden_field_tag 'observations[][concept_name]', 'RED EYE FOR 4 DAYS OR MORE WITH VISUAL PROBLEMS' %>
-    <%= hidden_field_tag 'observations[][value_numeric]', 'No', :id => "red_eye_4_days"%>
+    <%= hidden_field_tag 'observations[][value_coded_or_text]', 'No', :id => "red_eye_4_days"%>
 
 
   <%#TODO Need to change the below concept name to something which talks about child having visual problems%>
