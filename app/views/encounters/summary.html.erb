@@ -65,29 +65,30 @@
 
 <body onload="onLoads();">
     <div class="main-contain" style=" width: 100%;display: table;">
-        <!-- Partial for header -->
         <div style="display: table-row">
             <div style="display: table-cell; width: 100%;">
+                <!-- Partial for header -->
                 <%= render :partial => 'patient/headers/common_header' %>
                 <!------------------------------------------------------------------------>
             </div>
         </div>
 
         <div id="clinic_assess" style="display: table-row">
-            <!-- Partial summary for clinical assessment -->
-            <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
-            <!------------------------------------------------------------------------>
+            <div style="display: table-cell; width: 100%;">
+                <!-- Partial summary for clinical assessment -->
+                <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
+                <!------------------------------------------------------------------------>
+            </div>
         </div>
 
         <div id="diet_assess" class="half-height" style=" width: 100%;display: table-row">
-          <!-- Partial for dietary assessment -->
-          <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
-          <!------------------------------------------------------------------------>
+            <div style="display: table-cell; width: 100%;">
+                <!-- Partial for dietary assessment -->
+                <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
+                <!------------------------------------------------------------------------>
+            </div>
         </div>
 
-
-
-    </div>
         <!-- commented out for touchscreen toolkit footer instead of custom hotline ui buttons.
         <div style="position: absolute; left: 15px; bottom: 15px;" class="btn btn-back" onclick="backDestination()">
            <%#=image_tag("icons/back_white.png", class: 'task-icons')%>
@@ -96,7 +97,14 @@
           <%#=image_tag("icons/next_white.png", class: 'task-icons')%>
         </div>
         -->
-        <%= render :partial => 'patient/birthdate/button_footer' %>
+        <div style="display: table-row">
+            <div style="display: table-cell; width: 100%;">
+                <!-- Partial summary for clinical assessment -->
+                <%= render :partial => 'patient/birthdate/button_footer' %>
+                <!------------------------------------------------------------------------>
+            </div>
+        </div>
+    </div>
 </body>
 
 
