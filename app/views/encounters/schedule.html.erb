@@ -210,7 +210,7 @@
                            {:id => 'health_centre_name',
                             :field_type => 'alpha',
                             :helpText => 'Select clinic type',
-                            :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
+                            :tt_onLoad => "$('keyboard').style.display = 'none';showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
                             :allowFreeText => true }%>
 
   <%= hidden_field_tag("observations[][concept_name]", "Next ANC visit date") %>
