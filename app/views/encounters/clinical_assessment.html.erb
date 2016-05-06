@@ -110,10 +110,10 @@
     %>
 
     <% if @patient_obj.age <= 2 %>
-        <%= hidden_field_tag('observations[][concept_name]', "Child conditions interfering with breastfeeding") %>
+        <%= hidden_field_tag('observations[][concept_name]', "Conditions interfering with breastfeeding") %>
         <%= select_tag 'observations[][value_coded_or_text_multiple]',
                        options_for_select(@breast_feeding_conditions),
-                       :helpText =>"Child conditions interfering with breastfeeding",
+                       :helpText =>"Conditions interfering with breastfeeding",
                        :tt_pageStyleClass => "longSelectList",
                        :tt_onLoad => "$('keyboard').style.display = 'none'",
                        :multiple => true,
@@ -122,7 +122,7 @@
         %>
     <% end %>
 
-    <% if @group.downcase.strip == 'group 2' %>
+    <% if @group.downcase.strip == 'group 2' && @current_pregnancy_status['PREGNANCY STATUS'] == ['Pregnant'] %>
         <%= hidden_field_tag('observations[][concept_name]', "Medicines/supplements in current pregnancy") %>
         <%= select_tag 'observations[][value_coded_or_text_multiple]',
                    options_for_select(["", "Deworming tablets", "Iron/Folic Acid", "Malaria prophylaxis", "TTV- 2 doses", "None"]),

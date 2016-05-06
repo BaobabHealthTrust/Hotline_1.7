@@ -213,6 +213,7 @@ class EncountersController < ApplicationController
         "Hypoglycemia/Low blood sugar", "Difficult or rapid breathing or increased pulse rate", "Severe dehydration",
         "Dry or flaking skin/extensive skin lesions", "None"]
         @breast_feeding_conditions = ["", "Blocked nose", "Cleft lip or palate", "Sick/recovering", "Thrush", "Other", "None"]
+        @current_pregnancy_status = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)
       when 'Dietary assessment'
         @meal_types = ['', 'Breakfast', 'Lunch', 'Supper', 'Snack']
         @meal_types = {
