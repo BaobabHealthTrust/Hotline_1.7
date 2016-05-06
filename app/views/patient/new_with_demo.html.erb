@@ -52,14 +52,14 @@
                    :helpText =>"Select phone type",
                    :id => "phone_type",
                    :condition => "$('cell_phone_number').value != 'Unknown';",
-                   :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');"
+                   :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('keyboard').style.display = 'none'"
     %>
 
   <%= select_tag "person[addresses][region_of_origin]", options_for_select([["", ""], ["Northern Region", "Northern"],
       ["Central Region", "Central"], ["Southern Region", "Southern"]]),
     {:id => "region_of_origin",
     :tt_requireNextClick => false,
-    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none';",
+    :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'none';$('keyboard').style.display = 'none'",
     :helptext => "Region of origin"}  %>
 
   <%= text_field_tag "person[addresses][home_district]", nil,

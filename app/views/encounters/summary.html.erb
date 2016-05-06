@@ -1,5 +1,4 @@
 <script>
-    var tt_cancel_destination = "/patient/dashboard/<%#= @patient_obj.patient_id %>/tasks";
 
     function __$(id){
         return document.getElementById(id);
@@ -18,13 +17,19 @@
     }
 
     function backDestination(){
+         document.location =  '/encounters/new/update_outcomes?patient_id=<%= @patient_obj.patient_id %>&show_summary=true';
+    }
 
-            <%# if params[:auto_flow] %>
-                //document.location =  '/encounters/new/update_outcomes?patient_id=<%#= @patient_obj.patient_id %>&show_summary=true';
-            <%# else %>
-                document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
-            <%# end %>
+    function onLoads() {
+        var cancel_button = document.getElementById('btnCancel');
+        cancel_button.setAttribute('onclick',"document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';");
 
+        var next_button = document.getElementById('btnNext');
+        <% if params[:auto_flow]%>
+            next_button.setAttribute('onclick','nextDestination();');
+        <% else %>
+            next_button.style.display = 'none';
+        <% end %>
     }
 </script>
 <style>
@@ -58,7 +63,7 @@
 
 </style>
 
-<body>
+<body onload="onLoads();">
     <div class="main-contain" style=" width: 100%;display: table;">
         <!-- Partial for header -->
         <div style="display: table-row">
@@ -83,13 +88,15 @@
 
 
     </div>
-
-      <div style="position: absolute; left: 15px; bottom: 15px;" class="btn btn-back" onclick="backDestination()">
-        <%=image_tag("icons/back_white.png", class: 'task-icons')%>
-      </div>
-    <div style="position: absolute; right: 15px; bottom: 15px;" class="btn btn-back" onclick="nextDestination()">
-      <%=image_tag("icons/next_white.png", class: 'task-icons')%>
-    </div>
+        <!-- commented out for touchscreen toolkit footer instead of custom hotline ui buttons.
+        <div style="position: absolute; left: 15px; bottom: 15px;" class="btn btn-back" onclick="backDestination()">
+           <%#=image_tag("icons/back_white.png", class: 'task-icons')%>
+        </div>
+        <div style="position: absolute; right: 15px; bottom: 15px;" class="btn btn-back" onclick="nextDestination()">
+          <%#=image_tag("icons/next_white.png", class: 'task-icons')%>
+        </div>
+        -->
+        <%= render :partial => 'patient/birthdate/button_footer' %>
 </body>
 
 

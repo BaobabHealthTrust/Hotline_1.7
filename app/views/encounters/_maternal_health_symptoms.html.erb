@@ -13,23 +13,11 @@
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_symptoms , @current_data[@symptom_concept.upcase]),
                    :helpText =>"Experiencing any of the following symptoms?",
                    :multiple => true,
-                   :tt_onLoad => "showHelpButton();setListAttributes();",
+                   :tt_onLoad => "showHelpButton();setListAttributes();$('keyboard').style.display = 'none'",
                    :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
-                   :tt_onUnLoad => "hideHelpButton();",
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "health_symptoms",
                    :allowFreeText => false
-    %>
-
-    <%= hidden_field_tag('observations[][concept_name]', 'Number of days') %>
-    <%= text_field_tag 'observations[][numeric]', nil,
-                       :helpText => 'Number of days',
-                       :condition => "$('health_symptoms').value != 'Other'",
-                       :tt_onLoad => "$('nextButton').style.display = 'inline' ",
-                       :field_type => 'number',
-                       :condition => "parseInt(age) <= 5",
-                       :tt_pageStyleClass => 'NumbersOnly',
-                       :tt_onUnLoad => 'hideHelpButton();'
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
@@ -38,7 +26,7 @@
                    :multiple => true,
                    :optional => false,
                    :condition => "parseInt(age) > 5",
-                   :tt_onLoad => "setTimeout('hideSelectedValues()', 100);",
+                   :tt_onLoad => "setTimeout('hideSelectedValues()', 100);$('keyboard').style.display = 'none'",
                    :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "danger_status",
@@ -51,6 +39,7 @@
                    :multiple => true,
                    :optional => false,
                    :tt_pageStyleClass => 'longSelectList',
+                   :tt_onLoad => "$('keyboard').style.display = 'none';",
                    :id => "more_info_topics",
                    :allowFreeText => false
     %>
@@ -62,7 +51,7 @@
                    :optional => true,
                    :condition => "parseInt(age) > 5",
                    :tt_pageStyleClass => 'longSelectList',
-                   :tt_onLoad => "setTimeout('hideSelectedValues()', 100);",
+                   :tt_onLoad => "setTimeout('hideSelectedValues()', 100);$('keyboard').style.display = 'none'",
                    :id => "additional_danger_signs",
                    :allowFreeText => false
     %>
