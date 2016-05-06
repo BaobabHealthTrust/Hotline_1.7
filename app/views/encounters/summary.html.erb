@@ -6,7 +6,8 @@
     function nextDestination(){
         if(__$("diet_assess").style.display != 'none') {
             <% if params[:auto_flow]%>
-                document.location =  '/encounters/new/update_outcomes?patient_id=<%= @patient_obj.patient_id %>&show_summary=true';
+                document.location =  '/encounters/new/update_outcomes?patient_id=<%= @patient_obj.patient_id %>'
+                //&show_summary=true'; No summary needed else include show_summary
             <% else %>
                 document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';
             <% end %>
