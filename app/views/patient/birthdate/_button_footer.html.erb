@@ -23,7 +23,10 @@
 
 <div id="buttons" class="buttons" style="top: 0px;">
   <button style="margin: 5px 0px 0px;" link="" class="red left" id="btnCancel" onclick="document.location='/start_call'"><span>Cancel</span></button>
-  <button style="margin: 5px 0px 0px; min-width: 190px;" class="green" onclick="validateBirthdate()"><span>Next</span></button>
+  <button id='btnNext' style="margin: 5px 0px 0px; min-width: 190px;" class="green" onclick="validateBirthdate()"><span>Next</span></button>
+  <% if params[:patient_id].present? %>
+    <button id='backButton' style="float:right; margin: 5px 0px 0px; min-width: 190px;" class="blue" onclick="document.location='/encounters/new/clinical_assessment?patient_id=<%= @patient_obj.patient_id%>'"><span>Back</span></button>
+  <% end %>
 </div>
 
 </div>

@@ -32,7 +32,7 @@
         <% if !@guardian %>
             <%= select_tag "guardian_available", options_for_select([['', ''],['No', 'No'], ['Yes', 'Yes']]),
                            :helpText =>"Is guardian present?",
-                           :tt_onUnLoad =>"checkGuardian(); ",
+                           :tt_onUnLoad =>"checkGuardian(); $('keyboard').style.display = 'none'",
                            :id => "guardian_present"
             %>
         <% end %>
@@ -58,14 +58,16 @@
     <%= hidden_field_tag("observations[][concept_name]", "On tips and reminders program") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['', 'No', 'Yes'], @current_data['On tips and reminders program'.upcase]),
                    :helpText =>"Enroll for tips and reminders program?",
-                   :id => "enroll"
+                   :id => "enroll",
+                   :tt_onLoad => "$('keyboard').style.display = 'none'"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Phone type") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(([''] + @phone_types), (@current_data['PHONE TYPE'] || @reg_data['PHONE TYPE'])),
                    :helpText =>"Select phone type",
                    :condition => "__$('enroll').value == 'Yes' ",
-                   :id => "phone_type"
+                   :id => "phone_type",
+                   :tt_onLoad => "$('keyboard').style.display = 'none'"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Telephone number") %>
@@ -84,21 +86,24 @@
     <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @language_types, @current_data['LANGUAGE PREFERENCE']),
                    :helpText =>"Language preference",
                    :condition => "__$('enroll').value == 'Yes' ",
-                   :id => "language_preference"
+                   :id => "language_preference",
+                   :tt_onLoad => "$('keyboard').style.display = 'none'"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Message type") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @message_types, @current_data['MESSAGE TYPE']),
                    :helpText =>"Message type",
                    :condition => "__$('enroll').value == 'Yes' ",
-                   :id => "message_type"
+                   :id => "message_type",
+                   :tt_onLoad  => "$('keyboard').style.display = 'none'"
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Type of message content") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @content_types, @current_data['TYPE OF MESSAGE CONTENT']),
                    :helpText =>"Type of message content",
                    :condition => "__$('enroll').value == 'Yes' ",
-                   :id => "message_content"
+                   :id => "message_content",
+                   :tt_onLoad => "$('keyboard').style.display = 'none'"
     %>
 
 <% end %>

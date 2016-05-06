@@ -91,7 +91,8 @@
     <%= select_tag 'observations[][value_coded_or_text_multiple]',
                    options_for_select(@clinical_questions[@group]),
                    :helpText =>"Does the caller have any of the following conditions?",
-                   :tt_pageStyleClass => "NoKeyboard longSelectList",
+                   :tt_pageStyleClass => "longSelectList",
+                   :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none';",
                    :multiple => true,
                    :id => "complaints",
                    :allowFreeText => false
@@ -101,7 +102,8 @@
     <%= select_tag 'observations[][value_coded_or_text_multiple]',
                    options_for_select(@danger_signs),
                    :helpText =>"Experiencing any of the following danger signs?",
-                   :tt_pageStyleClass => "NoKeyboard longSelectList",
+                   :tt_pageStyleClass => "longSelectList",
+                   :tt_onLoad => "$('keyboard').style.display = 'none'",
                    :multiple => true,
                    :id => "danger_signs",
                    :allowFreeText => false
@@ -112,7 +114,8 @@
         <%= select_tag 'observations[][value_coded_or_text_multiple]',
                        options_for_select(@breast_feeding_conditions),
                        :helpText =>"Child conditions interfering with breastfeeding",
-                       :tt_pageStyleClass => "NoKeyboard longSelectList",
+                       :tt_pageStyleClass => "longSelectList",
+                       :tt_onLoad => "$('keyboard').style.display = 'none'",
                        :multiple => true,
                        :id => "breastfeeding_conditions",
                        :allowFreeText => false
@@ -124,7 +127,8 @@
         <%= select_tag 'observations[][value_coded_or_text_multiple]',
                    options_for_select(["", "Deworming tablets", "Iron/Folic Acid", "Malaria prophylaxis", "TTV- 2 doses", "None"]),
                    :helpText =>"Medicines/supplements in current pregnancy",
-                   :tt_pageStyleClass => "NoKeyboard longSelectList",
+                   :tt_pageStyleClass => "longSelectList",
+                   :tt_onLoad => "$('keyboard').style.display = 'none'",
                    :multiple => true,
                    :id => "medications In pregnancy",
                    :allowFreeText => false

@@ -199,7 +199,7 @@ class EncountersController < ApplicationController
         @phone_types = concept_set('Phone Type')
         @message_types = concept_set('Message Type')
         @language_types = concept_set('Language Type')
-        @content_types = concept_set('Type of message content') - [['Postnatal'], ['Observer']]
+        @content_types = concept_set('Type of message content') - [['Postnatal'], ['Observer'], ['Wcba']] + ['WCBA']
         @guardian = current_guardian(params[:guardian_id], @patient_obj.patient_id)
       when 'Purpose of call'
         @purpose_of_call_options = purpose_of_call_options

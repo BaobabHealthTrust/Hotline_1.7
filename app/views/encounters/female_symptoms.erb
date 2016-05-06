@@ -74,7 +74,9 @@
     }
 </style>
 <body onLoad="notify_reason()">
-    <%= render :partial => 'patient/birthdate/button_footer' %>
+    <!-- This footer partial below removed
+     to avoid overlapping with default touchscreen toolkit footer. -->
+    <%#= render :partial => 'patient/birthdate/button_footer' %>
 
     <% if @age <= 5 %>
         <%= render :partial => 'child_symptoms' %>

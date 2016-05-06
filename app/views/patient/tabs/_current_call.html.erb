@@ -200,6 +200,9 @@ function addRows(data) {
       if (observations[i][0] == 'Last menstrual period') {
           observations[i][0] = 'Last menstrual period (LMP)';
       }
+      if (observations[i][1] == 'Wcba') {
+          observations[i][1] = 'WCBA';
+      }
       //----------------------------------------------------------------------
     tr = document.createElement('tr');       
     td = document.createElement('td');
