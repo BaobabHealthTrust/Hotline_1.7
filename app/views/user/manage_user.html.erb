@@ -183,6 +183,18 @@
                   </div>
                 <%end%>
                 </div>
+                          <!-- loop -->
+          <div class="cells btncells">
+            <%if User.current.admin?%>
+            <div class="divbtn" onclick="document.location='/'" >
+              <span class="icons">
+                <%=image_tag("icons/calendar-and-tasks.png", class: 'icons')%>
+                  <p class="button-label">Clinic Schedule</p>
+                </span>
+              </div>
+            <%end%>
+            </div>
+            <!-- endloop -->
                 <!-- loop -->
                 <div class="cells btncells">
                   <div class="divbtn" style="width: 99%; display: none;" onclick="document.location='/user/change_password'" >
@@ -194,16 +206,6 @@
                 </div>
                 <!-- endloop -->
 
-                <!-- loop -->
-                <div class="cells btncells">
-                  <div class="divbtn" style="width: 99%; display: none;" >
-                    <span class="icons">
-          <%#=image_tag("icons/register.png", class: 'icons')%>
-                      <p>&nbsp;</p>
-                    </span>
-                  </div>
-                </div>
-                <!-- endloop -->
                 <!-- loop -->
                 <div class="cells btncells">
                   <div class="divbtn" onclick="document.location='/'" >
