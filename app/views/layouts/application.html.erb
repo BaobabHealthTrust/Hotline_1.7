@@ -52,11 +52,11 @@
       //var currentConcept = "Potential chest indrawing";
       var currentConcept = "";
       function loadArticles(){
-
+          setListAttributes();
           jQuery.ajax({
               type: "POST",
               url: "/home/retrieve_articles",
-              data: "concept=" + currentConcept,
+              data: "concept=" + $("touchscreenInput" + tstCurrentPage).value,
               success: function(results){
                   results = eval("(" + results  + ")");
                   currentKey = results["key"];
@@ -74,6 +74,7 @@
       }
 
       function loadNextArticle(){
+          setListAttributes();
           jQuery.ajax({
               type: "POST",
               url: "/home/next_article",
@@ -105,7 +106,7 @@
       }
 
       function loadPrevArticle(){
-
+          setListAttributes();
           jQuery.ajax({
               type: "POST",
               url: "/home/previous_article",
@@ -137,12 +138,7 @@
       }
 
       function setListAttributes(){
-          liElements = document.getElementsByTagName("li");
-          for (i=0; i <= liElements.length - 1; i++){
-              liElements[i].onmouseup = function(){
-                  currentConcept = this.getAttribute("tstvalue");
-              }
-          }
+          currentConcept = $("touchscreenInput" + tstCurrentPage).value;
       }
 
   //-->
