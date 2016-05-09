@@ -2,7 +2,11 @@
 <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
 
 <script>
-    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+    <% if params[:cancel_destination] == 'current_call' %>
+        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/current_call";
+    <% else %>
+        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+    <% end %>
 
     function checkGuardian(){
 
