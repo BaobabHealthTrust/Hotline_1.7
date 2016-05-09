@@ -45,7 +45,7 @@ function showLibPopup(){
     popupDiv.style.position = 'absolute';
     popupDiv.style.marginTop = '70px';
     popupDiv.style.width = (0.85*screen.width) + "px";
-    popupDiv.style.marginLeft = (0.1*screen.width) + "px";
+    popupDiv.style.marginLeft = (0.05*screen.width) + "px";
     popupDiv.style.zIndex = '1022';
     content.appendChild(popupDiv);
 
