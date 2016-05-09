@@ -1,3 +1,6 @@
+<script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
+<script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
+
 <script type="text/javascript">
   <% @patient = Patient.find(@patient_obj.patient_id) %>
 
@@ -138,7 +141,8 @@
     <%= hidden_field_tag("startup_question", "") %>
     <%= select_tag "startup_question", options_for_select(@health_symptoms),
                    :helpText => "Start with symptom",
-                   :tt_pageStyleClass => "longSelectList NoKeyboard",
+                   :tt_pageStyleClass => "longSelectList",
+                   :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none'",
                    :id => "start"
     %>
 
