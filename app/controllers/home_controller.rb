@@ -30,8 +30,7 @@ class HomeController < ApplicationController
 
   def concept_sets
     search_string = params[:search_string] || ''
-    @names = ConceptName.where("name LIKE '%#{search_string}%'").joins("INNER JOIN concept_set s 
-      ON concept_name.concept_id = s.concept_set").limit(10).map(&:name).sort
+    @names = ConceptName.where("name LIKE '%#{search_string}%'").select(" distinct name ").limit(20).map(&:name).sort
     render :text => "<li>" + @names.map{|n| n } .join("</li><li>") + "</li>"
   end
 
@@ -113,7 +112,6 @@ class HomeController < ApplicationController
     end
 =end
     @tags = Publify.all
-    render :layout => false
   end
 
   def tag_concepts
