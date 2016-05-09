@@ -357,6 +357,7 @@ select_options = {
       ['Baby\'s growth', 'BABY\'S GROWTH'],
       ['Birth planning - male','BIRTH PLANNING MALE'],
       ['Birth planning - female','BIRTH PLANNING FEMALE'],
+      ['Cervical cancer','CERVICAL CANCER'],
       ['Concerns', 'CONCERNS'],
       ['Discomfort', 'DISCOMFORT'],
       ['Emotions', 'EMOTIONS'],
@@ -390,6 +391,7 @@ select_options = {
       ['Vaginal bleeding (not during pregnancy)','VAGINAL BLEEDING NOT DURING PREGNANCY'],
       ['Vaginal itching','VAGINAL ITCHING'],
       ['Vaginal discharge ','VAGINAL DISCHARGE'],
+      ['None','NONE'],
       ['Other','OTHER']
   ],
   'child_health_symptoms' => [
@@ -398,7 +400,9 @@ select_options = {
       ['Diarrhea','DIARRHEA'],
       ['Fever','FEVER'],
       ['Red eyes','RED EYES'],
+      ['Skin conditions','SKIN CONDITIONS'],
       ['Sleepy/unconscious','SLEEPY/UNCONSCIOUS'],
+      ['Swollen legs or face','SWOLLEN LEGS OR FACE'],
       ['Trouble eating/drinking','TROUBLE EATING/DRINKING'],
       ['Weight loss/gain','WEIGHT LOSS/GAIN']
   ],
