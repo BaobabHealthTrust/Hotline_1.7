@@ -39,12 +39,12 @@ function showLibPopup(){
     popupDiv.style.backgroundColor = '#F4F4F4';
     popupDiv.style.border = '2px solid #E0E0E0';
     popupDiv.style.borderRadius = '15px';
-    popupDiv.style.height = (0.55*screen.height) + "px";
+    popupDiv.style.height = (0.65*screen.height) + "px";
     popupDiv.style.padding = '5px';
     popupDiv.style.top = "-5vh";
     popupDiv.style.position = 'absolute';
     popupDiv.style.marginTop = '70px';
-    popupDiv.style.width = (0.75*screen.width) + "px";
+    popupDiv.style.width = (0.85*screen.width) + "px";
     popupDiv.style.marginLeft = (0.1*screen.width) + "px";
     popupDiv.style.zIndex = '1022';
     content.appendChild(popupDiv);
