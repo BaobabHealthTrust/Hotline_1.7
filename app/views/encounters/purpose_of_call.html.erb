@@ -1,5 +1,9 @@
 <script>
-    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks"
+    <% if params[:cancel_destination] == 'current_call' %>
+        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/current_call";
+    <% else %>
+        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+    <% end %>
 </script>
 
 <%= form_tag("/encounters/create", id: "purpose_of_call", method: 'post', enctype: 'multipart/form-data') do %>

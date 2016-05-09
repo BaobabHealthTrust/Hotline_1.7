@@ -1,3 +1,6 @@
+<script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
+<script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
+
 <script type="text/javascript">
   <% @patient = Patient.find(@patient_obj.patient_id) %>
 
@@ -138,7 +141,8 @@
     <%= hidden_field_tag("startup_question", "") %>
     <%= select_tag "startup_question", options_for_select(@health_symptoms),
                    :helpText => "Start with symptom",
-                   :tt_pageStyleClass => "longSelectList NoKeyboard",
+                   :tt_pageStyleClass => "longSelectList",
+                   :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none'",
                    :id => "start"
     %>
 
@@ -313,6 +317,7 @@
     <%= hidden_field_tag("observations[][concept_name]", "UNCONSCIOUS") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         { :id => "unconcious",
+          :tt_onLoad => "$('keyboard').style.display = 'none';",
         :condition => '$("sleepy_or_unconcious").value == "Yes"',
         :helpText => "Is it difficult or impossible to wake the child?",
         :tt_requireNextClick => false,
@@ -325,12 +330,11 @@
                      :tt_requireNextClick => false,
                      :tt_onLoad => '$("nextButton").style.display = "none";' } %>
 
-
-
   <%#TODO Need to verify if the below concept name matches the Question i.e. helptext%>
     <%= hidden_field_tag("observations[][concept_name]", "SWOLLEN HANDS OR FEET SIGN") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         { :id => "swollen_legs_or_face",
+          :tt_onLoad => "$('keyboard').style.display = 'none';",
         :condition => '$("weight_change").value == "Yes"',
         :helpText => "Does the child have swollen legs or swollen face?",
         :tt_requireNextClick => false,
@@ -340,6 +344,7 @@
     <%= hidden_field_tag("observations[][concept_name]", "FLAKY SKIN") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         { :id => "dry_skin",
+          :tt_onLoad => "$('keyboard').style.display = 'none';",
         :condition => '$("weight_change").value == "Yes"',
         :helpText => "Has the child's skin become dry, loose, or patchy?",
         :tt_requireNextClick => false,
@@ -353,6 +358,7 @@
     #:ajaxURL => '/patient/other_child_symptoms',
     #:optional => true,
     #:allowFreeText => true,
+    :tt_onLoad => "$('keyboard').style.display = 'none';",
     :helpText => 'Is the caller reporting any other symptom?'} %>
 
   <%#TODO May be there could be a better way to handle the below select?%>
@@ -364,9 +370,10 @@
   </script>
   <%= select_tag "child_health_info",options_for_select(@child_health_info, nil),
     {:id          => "child_health_info_id",
+     :tt_onLoad => "$('keyboard').style.display = 'none'",
     :multiple    => true,
     :optional    => true,
-    :tt_onUnLoad => "setConceptNamesAndValues(child_health_values, 'child_health_info_id', 'child_health_info');",
+    :tt_onUnLoad => "setConceptNamesAndValues(child_health_values, 'child_health_info_id', 'child_health_info');hideHelpButton();$('keyboard').style.display = 'none'",
     :tt_requireNextClick => true,
     :tt_onLoad => '$("nextButton").style.display = "block";',
     :helptext    => "Does the caller want information on one of the following topics?" } %>
@@ -379,10 +386,10 @@
   <%end%>
 
   <label for='summary'>Symptom Confirmation</label>
-  <%= text_field_tag :summary, nil, { :tt_onLoad => "summary()", :optional => "true", :tt_pageStyleClass => "NoControls NoKeyboard" } %>
+  <%= text_field_tag :summary, nil, { :tt_onLoad => "summary();$('keyboard').style.display = 'none';", :optional => "true", :tt_pageStyleClass => "NoControls" } %>
 
   <label for='dangerSigns'>Danger signs</label>
-  <%= text_field_tag :dangerSigns, nil, { :tt_onLoad => "loadDangerSigns()", :optional => "true", :tt_pageStyleClass => "NoControls NoKeyboard" } %>
+  <%= text_field_tag :dangerSigns, nil, { :tt_onLoad => "loadDangerSigns();$('keyboard').style.display = 'none';", :optional => "true", :tt_pageStyleClass => "NoControls" } %>
 
   <%= submit_tag 'Finish' %>
 <% end %>
