@@ -327,7 +327,7 @@
     {:id          => "child_health_info_id",
     :multiple    => true,
     :optional    => true,
-    :tt_onUnLoad => "setConceptNamesAndValues(child_health_values, 'child_health_info_id', 'child_health_info');",
+    :tt_onUnLoad => "setConceptNamesAndValues(child_health_values, 'child_health_info_id', 'child_health_info');hideHelpButton();$('keyboard').style.display = 'none'",
     :helptext    => "Does the caller want information on one of the following topics?" } %>
 
   <% @child_health_info.each_with_index do |e, index| %>
