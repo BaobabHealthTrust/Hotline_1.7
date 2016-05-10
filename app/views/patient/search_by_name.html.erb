@@ -29,7 +29,8 @@
     <%= select_tag("person[gender]", options_for_select(['','Male','Female'] ,params[:gender]),
                    :helpText =>"#{label_prefix} Gender",
                    :id => "gender",
-                   :allowFreeText => false)
+                   :allowFreeText => false,
+                   :tt_onLoad => "$('keyboard').style.display = 'none'")
     %>
 
     <%= text_field_tag "person[names][given_name]", params[:firstname],
