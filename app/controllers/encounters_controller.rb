@@ -171,9 +171,11 @@ class EncountersController < ApplicationController
                                                Date.today)
         current_lmp_str = current_lmp[0].split('/') rescue []
         current_lmp_str_time = current_lmp_str[2].split(' ') rescue []
+        months = Date::MONTHNAMES
+        shortnames = Date::ABBR_MONTHNAMES
 
         @current_lmp_day = current_lmp_str[0]
-        @current_lmp_month = current_lmp_str[1]
+        @current_lmp_month = months[shortnames.index(current_lmp_str[1])]
         @current_lmp_year = current_lmp_str_time[0]
 
       when 'Female symptoms'
