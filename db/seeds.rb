@@ -399,7 +399,7 @@ select_options = {
       ['Coughing','COUGHING'],
       ['Diarrhea','DIARRHEA'],
       ['Fever','FEVER'],
-      ['Red eyes','RED EYES'],
+      ['Red eye','RED EYE'],
       ['Skin conditions','SKIN CONDITIONS'],
       ['Sleepy/unconscious','SLEEPY/UNCONSCIOUS'],
       ['Swollen legs or face','SWOLLEN LEGS OR FACE'],
