@@ -285,7 +285,7 @@
     <%= hidden_field_tag("observations[][concept_name]", "BLOOD IN STOOL") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Is there blood in the stool?",
-                   :condition => "__$('start').value.toUpperCase() != 'BLOOD IN STOOL'",
+                   :condition => "__$('start').value.toUpperCase() != 'BLOOD IN STOOL' && $('diarrhea').value == 'Yes'",
                    :id => "blood_in_stool",
                    :tt_requireNextClick => false,
                    :tt_onLoad => '$("nextButton").style.display = "none";'
