@@ -178,6 +178,18 @@ class EncountersController < ApplicationController
         @current_lmp_month = months[shortnames.index(current_lmp_str[1])]
         @current_lmp_year = current_lmp_str_time[0]
 
+        @pregnancy_options = concept_set('Pregnancy status')
+        current_delivery_date = Observation.by_concept_today(@patient_obj.patient_id,
+                                                   'Delivery date',
+                                                   'Pregnancy Status',
+                                                   Date.today)
+        current_delivery_date_str = current_delivery_date[0].split('/') rescue []
+        current_delivery_date_str_time = current_delivery_date_str[2].split(' ') rescue []
+
+        @current_delivery_date_day = current_delivery_date_str[0]
+        @current_delivery_date_month = months[shortnames.index(current_delivery_date_str[1])]
+        @current_delivery_date_year = current_delivery_date_str_time[0]
+
       when 'Female symptoms'
           #if child
         if @patient_obj.age <= 5
