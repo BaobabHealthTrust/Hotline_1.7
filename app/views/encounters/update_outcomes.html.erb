@@ -71,7 +71,6 @@
         <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , (@current_data['SECONDARY OUTCOME'] rescue nil)),
                        :helpText =>"Secondary outcome if any",
                        :id => "secondary_outcome",
-                       :multiple => true,
                        :optional => true,
                        :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none'",
                        :tt_pageStyleClass => 'longSelectList',

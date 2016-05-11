@@ -3,6 +3,7 @@ class HomeController < ApplicationController
   
   def index
     render :layout => false
+    session[:automatic_flow] = true
 
     if !session[:tag_encounters].blank?
       Encounter.feed_tags(session[:tagged_encounters_patient_id])

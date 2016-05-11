@@ -4,6 +4,10 @@ class PatientController < ApplicationController
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
 
+    if request.referrer.match("/encounters\/new/")
+      session[:automatic_flow] = false
+    end
+
     #Coming from dashboard, has to select purpose of call before everything
     redirect_to "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}" and return if params[:next_task] == "true"
 
