@@ -1,42 +1,55 @@
 <style>
 
 .btn-year {
-  display: inline;
-  margin: 5px 2px 2px;
-  text-align: center;
-  background-color: blue;
-  color: white;
-  font-size: 1.3em;
-  line-height: 57px;
-  min-width: 120px;
-  font-weight: bold;
-  min-height: 100px;
+    display: inline;
+    margin: 5px 2px 2px;
+    text-align: center;
+    background-color: #477EEB;
+    border: solid #477EEB 1px;
+    border-radius: 7px;
+    box-shadow: 5px 5px 15px lightblue inset;
+    color: white;
+    font-size: 1.7em;
+    line-height: 57px;
+    min-width: 120px;
+    font-weight: bold;
+    min-height: 100px;
 }
 
 .btn-red {
-  display: inline;
-  margin: 5px 2px 2px;
-  text-align: center;
-  background-color: red;
-  color: white;
-  font-size: 1.3em;
-  line-height: 57px;
-  min-width: 120px;
-  font-weight: bold;
-  min-height: 100px;
+    display: inline;
+    margin: 5px 2px 2px;
+    text-align: center;
+    background-color: darkred;
+    border: solid #477EEB 1px;
+    border-radius: 7px;
+    box-shadow: 5px 5px 15px lightblue inset;
+    color: white;
+    font-size: 1.7em;
+    line-height: 57px;
+    min-width: 120px;
+    font-weight: bold;
+    min-height: 100px;
 }
 
 .btn-green {
-  display: inline;
-  margin: 5px 2px 2px;
-  text-align: center;
-  background-color: green;
-  color: white;
-  font-size: 1.3em;
-  line-height: 57px;
-  min-width: 120px;
-  font-weight: bold;
-  min-height: 100px;
+    display: inline;
+    margin: 5px 2px 2px;
+    text-align: center;
+    background-color: darkgreen;
+    border: solid #477EEB 1px;
+    border-radius: 7px;
+    box-shadow: 5px 5px 15px lightblue inset;
+    color: white;
+    font-size: 1.7em;
+    line-height: 57px;
+    min-width: 120px;
+    font-weight: bold;
+    min-height: 100px;
+}
+
+.lower_buttons {
+    font-size: 1.4em;
 }
  
 #tbInputYear, #tbInputAge {
@@ -174,9 +187,9 @@
     <input id="btn8" type="button" onclick="input(this);" value="8"  class="btn-year" />
     <input id="btn9" type="button" onclick="input(this);" value="9"  class="btn-year" />
     <br />
-    <input id="btnUnknow" type="button" value="Unknown" onclick="input(this); popUp();" class="btn-year" />
-    <input id="btn0" type="button" onclick="input(this)" value="0"  class="btn-year" />
-    <input id="btnCl" type="button" value="Clear" onclick="clearInput();" class="btn-year" />
+    <input id="btnUnknow" type="button" value="Unknown" onclick="input(this); popUp();" class="btn-year lower_buttons" />
+    <input id="btn0" type="button" onclick="input(this)" value="0"  class="btn-year lower_buttons" />
+    <input id="btnCl" type="button" value="Clear" onclick="clearInput();" class="btn-year lower_buttons" />
 </div>
 
 <!-- ================================================== PopUp ================================================= -->
@@ -213,9 +226,9 @@
             <input id="btn8" type="button" onclick="inputAge(this);" value="8"  class="btn-year" />
             <input id="btn9" type="button" onclick="inputAge(this);" value="9"  class="btn-year" />
             <br />
-            <input id="btnCancel" type="button" value="Clear" onclick="clearInputAge();" class="btn-red" />
-            <input id="btn0" type="button" onclick="inputAge(this)" value="0"  class="btn-year" />
-            <input id="btnCl" type="button" value="Create" onclick="saveByAge();" class="btn-green" />
+            <input id="btnCancel" type="button" value="Clear" onclick="clearInputAge();" class="btn-red lower_buttons" />
+            <input id="btn0" type="button" onclick="inputAge(this)" value="0"  class="btn-year lower_buttons" />
+            <input id="btnCl" type="button" value="Create" onclick="saveByAge();" class="btn-green lower_buttons" />
         </div>
         <br />
       </center>

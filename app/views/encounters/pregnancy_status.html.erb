@@ -2,13 +2,44 @@
 <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
 
 <style type="text/css">
+    /*============ */
+    .btn-day {
+        display: inline;
+        margin: 5px 2px 2px;
+        text-align: center;
+        background-color: #477EEB;
+        border: solid #477EEB 1px;
+        border-radius: 7px;
+        box-shadow: 5px 5px 15px lightblue inset;
+        color: white;
+        font-size: 1.7em;
+        line-height: 57px;
+        min-width: 120px;
+        font-weight: bold;
+        min-height: 100px;
+    }
+    #tbInputDay {
+        margin-top: 10px;
+        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+        border-color: -moz-use-text-color -moz-use-text-color silver;
+        border-style: none none solid;
+        border-width: medium medium 1px;
+        font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+        font-size: 2.2em;
+        padding-left: 5px;
+        width: 99%;
+        text-align: center;
+    }
     .btn-year {
         display: inline;
         margin: 5px 2px 2px;
         text-align: center;
-        background-color: blue;
+        background-color: #477EEB;
+        border: solid #477EEB 1px;
+        border-radius: 7px;
+        box-shadow: 5px 5px 20px lightblue inset;
         color: white;
-        font-size: 1.3em;
+        font-size: 1.7em;
         line-height: 57px;
         min-width: 120px;
         font-weight: bold;
@@ -241,31 +272,6 @@
         position: relative;
         padding-right: 15px;
     }
-    /*============ */
-    .btn-day {
-        display: inline;
-        margin: 5px 2px 2px;
-        text-align: center;
-        background-color: blue;
-        color: white;
-        font-size: 1.3em;
-        line-height: 57px;
-        min-width: 120px;
-        font-weight: bold;
-        min-height: 100px;
-    }
-    #tbInputDay {
-        margin-top: 10px;
-        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-        border-color: -moz-use-text-color -moz-use-text-color silver;
-        border-style: none none solid;
-        border-width: medium medium 1px;
-        font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
-        font-size: 2.2em;
-        padding-left: 5px;
-        width: 99%;
-        text-align: center;
-    }
 </style>
 <!-- ======================================================================================== -->
 <script>
@@ -453,12 +459,14 @@
         var btnUnknown = document.createElement('input');
         btnUnknown.setAttribute('id','btnUnknow');
         btnUnknown.setAttribute('type','button');
+        btnUnknown.style.fontSize = '1.4em';
         btnUnknown.setAttribute('value','Unknown');
         btnUnknown.setAttribute('onclick','input(this);');
         btnUnknown.className = 'btn-year';
         year_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
         btn0.setAttribute('id','btn0');
+        btn0.style.fontSize = '1.4em';
         btn0.setAttribute('type','button');
         btn0.setAttribute('onclick','input(this);');
         btn0.setAttribute('value','0');
@@ -468,6 +476,7 @@
         clear_btn.setAttribute('id','btnCl');
         clear_btn.setAttribute('type','button');
         clear_btn.setAttribute('value','Clear');
+        clear_btn.style.fontSize = '1.4em';
         clear_btn.setAttribute('onclick','clearInputYear();');
         clear_btn.className = 'btn-year';
         year_div.appendChild(clear_btn);
@@ -567,12 +576,14 @@
         btnUnknown.setAttribute('id','btnUnknow');
         btnUnknown.setAttribute('type','button');
         btnUnknown.setAttribute('value','Unknown');
+        btnUnknown.style.fontSize = '1.4em';
         btnUnknown.setAttribute('onclick','inputDay(this);');
         btnUnknown.className = 'btn-day';
         day_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
         btn0.setAttribute('id','btn0');
         btn0.setAttribute('type','button');
+        btn0.style.fontSize = '1.4em';
         btn0.setAttribute('onclick','inputDay(this);');
         btn0.setAttribute('value','0');
         btn0.className = 'btn-day';
@@ -580,6 +591,7 @@
         var clear_btn = document.createElement('input');
         clear_btn.setAttribute('id','btnCl');
         clear_btn.setAttribute('type','button');
+        clear_btn.style.fontSize = '1.4em';
         clear_btn.setAttribute('value','Clear');
         clear_btn.setAttribute('onclick','clearInputDay();');
         clear_btn.className = 'btn-day';
