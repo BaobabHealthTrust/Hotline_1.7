@@ -299,6 +299,8 @@ function load() {
 }
 
 function saveByAge() {
+        birth_month = document.getElementById('tbInputMonth').value;
+        document.getElementById('selected_month').value = birth_month;
         estimated_age = document.getElementById('tbInputAge').value;
         document.getElementById('age_estimate').value = estimated_age;
         age_max_digits = estimated_age.length > 3

@@ -122,7 +122,6 @@ class PatientController < ApplicationController
   end
 
   def create
-
     patient = PatientService.create(params)
 
     if params[:action_type] && params[:action_type] == 'guardian'
