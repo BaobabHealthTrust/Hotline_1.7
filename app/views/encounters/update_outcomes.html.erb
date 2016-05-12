@@ -44,10 +44,12 @@
             @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id).values.flatten.include?("Yes") rescue false
             @symptom_data = (Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id).values.length > 0)  if @symptom_data != true
             @current_data['GENERAL OUTCOME'] = ["Referral to health centre"] if @symptom_data == true
+
+            @current_call_purpose_data = Encounter.current_data("PURPOSE OF CALL", @patient_obj.patient_id)
         %>
 
         <%= hidden_field_tag("observations[][concept_name]", "General Outcome") %>
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes, (@current_data['GENERAL OUTCOME'].first rescue nil)),
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes, (@current_call_purpose_data['PURPOSE OF CALL'] == ['Registration'])?@current_call_purpose_data['PURPOSE OF CALL']:(@current_data['GENERAL OUTCOME'].first rescue nil)),
                        :helpText =>"Select Primary Outcome",
                        :tt_onLoad => "showHelpButton();setListAttributes();__$('keyboard').style.display='none';",
                        :tt_onUnLoad => "hideHelpButton();__$('keyboard').style.display='none';selectedOutcomes();",
