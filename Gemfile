@@ -25,3 +25,5 @@ gem 'mysql'
 gem 'mysql2', '~> 0.3.10'
 
 gem 'fastercsv', '1.5.5'
+
+gem 'activerecord-session_store'

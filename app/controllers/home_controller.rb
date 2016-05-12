@@ -3,7 +3,6 @@ class HomeController < ApplicationController
   
   def index
     render :layout => false
-    session[:automatic_flow] = true
 
     if !session[:tag_encounters].blank?
       Encounter.feed_tags(session[:tagged_encounters_patient_id])
@@ -160,9 +159,9 @@ class HomeController < ApplicationController
       articles.each do |article|
         article_id = article.id
         articles_hash[article_id]= {}
-        articles_hash[article_id]["title"] = article.title
+        articles_hash[article_id]["title"] = article.title.force_encoding("utf-8")
         articles_hash[article_id]["author"] = article.author
-        articles_hash[article_id]["body"] = article.body
+        articles_hash[article_id]["body"] = article.body.force_encoding("utf-8")
       end
 
       session[:articles_hash] = articles_hash
@@ -173,7 +172,7 @@ class HomeController < ApplicationController
   end
 
   def next_article
-    key = params[:key]
+    key = !params[:key].blank? ? params[:key].to_i : -2
     next_item_pos = (session[:articles_hash].keys.index(key) + 1)
     disabled = false
     if (next_item_pos > (session[:articles_hash].keys.count - 2))
@@ -191,7 +190,7 @@ class HomeController < ApplicationController
   end
 
   def previous_article
-    key = params[:key].to_s
+    key = !params[:key].blank? ? params[:key].to_i : -2
     prev_item_pos = (session[:articles_hash].keys.index(key) - 1)
     disabled = false
 
