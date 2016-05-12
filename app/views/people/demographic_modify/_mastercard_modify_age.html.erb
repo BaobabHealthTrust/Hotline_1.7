@@ -7,9 +7,12 @@
       display: inline;
       margin: 5px 2px 2px;
       text-align: center;
-      background-color: blue;
+      background-color: #5281E0;
+      border: solid dodgerblue 3px;
+      border-radius: 7px;
+      box-shadow: 2px 2px 10px lightblue inset;
       color: white;
-      font-size: 1.3em;
+      font-size: 1.7em;
       line-height: 57px;
       min-width: 120px;
       font-weight: bold;
@@ -276,9 +279,12 @@
       display: inline;
       margin: 5px 2px 2px;
       text-align: center;
-      background-color: blue;
+      background-color: #5281E0;
+      border: solid dodgerblue 3px;
+      border-radius: 7px;
+      box-shadow: 2px 2px 10px lightblue inset;
       color: white;
-      font-size: 1.3em;
+      font-size: 1.7em;
       line-height: 57px;
       min-width: 120px;
       font-weight: bold;
@@ -296,6 +302,10 @@
       padding-left: 5px;
       width: 99%;
       text-align: center;
+  }
+
+  .lower_buttons {
+      font-size: 1.4em;
   }
 </style>
 
@@ -430,7 +440,7 @@
         btnUnknown.setAttribute('type','button');
         btnUnknown.setAttribute('value','Unknown');
         btnUnknown.setAttribute('onclick','input(this); popUp();');
-        btnUnknown.className = 'btn-year';
+        btnUnknown.className = 'btn-year lower_buttons';
         year_div.appendChild(btnUnknown);
 
         var btn0 = document.createElement('input');
@@ -438,7 +448,7 @@
         btn0.setAttribute('type','button');
         btn0.setAttribute('onclick','input(this);');
         btn0.setAttribute('value','0');
-        btn0.className = 'btn-year';
+        btn0.className = 'btn-year lower_buttons';
         year_div.appendChild(btn0);
 
         var clear_btn = document.createElement('input');
@@ -446,7 +456,7 @@
         clear_btn.setAttribute('type','button');
         clear_btn.setAttribute('value','Clear');
         clear_btn.setAttribute('onclick','clearInputYear();');
-        clear_btn.className = 'btn-year';
+        clear_btn.className = 'btn-year lower_buttons';
         year_div.appendChild(clear_btn);
 
         var table_cell = document.createElement('div');
@@ -553,7 +563,7 @@
         btnUnknown.setAttribute('type','button');
         btnUnknown.setAttribute('value','Unknown');
         btnUnknown.setAttribute('onclick','inputDay(this);');
-        btnUnknown.className = 'btn-day';
+        btnUnknown.className = 'btn-day lower_buttons';
         day_div.appendChild(btnUnknown);
 
         var btn0 = document.createElement('input');
@@ -561,7 +571,7 @@
         btn0.setAttribute('type','button');
         btn0.setAttribute('onclick','inputDay(this);');
         btn0.setAttribute('value','0');
-        btn0.className = 'btn-day';
+        btn0.className = 'btn-day lower_buttons';
         day_div.appendChild(btn0);
 
         var clear_btn = document.createElement('input');
@@ -569,7 +579,7 @@
         clear_btn.setAttribute('type','button');
         clear_btn.setAttribute('value','Clear');
         clear_btn.setAttribute('onclick','clearInputDay();');
-        clear_btn.className = 'btn-day';
+        clear_btn.className = 'btn-day lower_buttons';
         day_div.appendChild(clear_btn);
 
         input_frame.innerHTML = '<div id="date_layout">' + date_layout.innerHTML + '</div>' ;
