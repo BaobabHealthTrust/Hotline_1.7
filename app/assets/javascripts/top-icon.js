@@ -37,41 +37,58 @@ function showLibPopup(){
     popupDiv = document.createElement('div');
     popupDiv.className = 'popup-div';
     popupDiv.style.backgroundColor = '#F4F4F4';
-    popupDiv.style.border = '2px solid #E0E0E0';
-    popupDiv.style.borderRadius = '15px';
-    popupDiv.style.height = (0.65*screen.height) + "px";
+    popupDiv.style.border = '1px solid black';
+    popupDiv.style.height = (0.64*screen.height) + "px";
     popupDiv.style.padding = '5px';
-    popupDiv.style.top = "-5vh";
+    popupDiv.style.top = "-7vh";
     popupDiv.style.position = 'absolute';
     popupDiv.style.marginTop = '70px';
     popupDiv.style.width = (0.85*screen.width) + "px";
+    popupDiv.style.width = (0.85*screen.width) + "px";
     popupDiv.style.marginLeft = (0.05*screen.width) + "px";
-    popupDiv.style.zIndex = '1022';
+    popupDiv.style.zIndex = '1000';
     content.appendChild(popupDiv);
 
     popupHeader = document.createElement('div');
     popupHeader.className = 'popup-header';
     popupHeader.innerHTML = 'Data';
-    popupHeader.style.borderBottom = '2px solid #7D9EC0';
-    popupHeader.style.marginLeft = '-5px';
-    popupHeader.style.width = '101%';
-    popupHeader.style.backgroundColor = '#FFFFFF';
-    popupHeader.style.marginTop = '-5px';
-    popupHeader.style.paddingTop = '5px';
-    popupHeader.style.borderRadius = '15px 15px 0 0';
-    popupHeader.style.fontSize = '14pt';
-    popupHeader.style.fontWeight = 'bolder';
+    popupHeader.style.borderBottom = '1px solid #7D9EC0';
 
+    popupHeader.style.marginLeft = '-5px';
+    popupHeader.style.width = '100%';
+    popupHeader.style.backgroundColor = '#F4F4F4';
+    popupHeader.style.marginTop = '0px';
+    popupHeader.style.paddingTop = '8px';
+    popupHeader.style.paddingBottom = '8px';
+    popupHeader.style.paddingLeft = '10px';
+
+    popupHeader.style.fontSize = '1.4em';
+    popupHeader.style.fontWeight = 'bold';
 
     popupDiv.appendChild(popupHeader);
     popupData = document.createElement('div');
     popupData.className = 'popup-data';
+    popupData.style.height = "81%";
+    popupData.style.minWidth = "96.5%";
+    popupData.style.overflow = "auto";
+    popupData.style.paddingLeft = "20px";
+    popupData.style.paddingRight = "20px";
+    popupData.style.background = 'white';
     popupData.innerHTML = 'Your data goes here<br /><br /><br />'
     popupDiv.appendChild(popupData);
+
+
     popupFooter = document.createElement('div');
     popupFooter.className = 'popup-footer';
     popupFooter.style.position = 'absolute';
-    popupFooter.style.marginBottom = '60px';
+    popupFooter.style.width = '98%';
+    popupFooter.style.backgroundColor = '#F4F4F4';
+    popupFooter.style.bottom = '0px';
+    popupFooter.style.paddingTop = '20px';
+    popupFooter.style.paddingBottom = '8px';
+    popupFooter.style.lineHeight = '1.94857';
+    popupFooter.style.height = "6%";
+    popupFooter.style.borderTop ='1px solid #7D9EC0';
 
     okaySpan = document.createElement('span');
     okaySpan.className = 'prevButton';
@@ -101,7 +118,7 @@ function showLibPopup(){
         if (popupDiv) popupDiv.parentNode.removeChild(popupDiv);*/
         loadPrevArticle()
     }
-    popupDiv.appendChild(okaySpan);
+    popupFooter.appendChild(okaySpan);
 
     //prev article//
 
@@ -119,6 +136,7 @@ function showLibPopup(){
     prevSpan.style.position = 'absolute';
     prevSpan.style.bottom = '10px';
     prevSpan.style.padding = '6px 30px';
+
     prevSpan.style.textAlign = 'center';
     prevSpan.style.verticalAlign = 'middle';
     prevSpan.style.whiteSpace = 'nowrap';
@@ -134,7 +152,7 @@ function showLibPopup(){
         loadNextArticle();
     }
 
-    popupDiv.appendChild(prevSpan);
+    popupFooter.appendChild(prevSpan);
 
 
     //START cancel Button article
@@ -166,7 +184,7 @@ function showLibPopup(){
         if (popupDiv) popupDiv.parentNode.removeChild(popupDiv);
     }
 
-    popupDiv.appendChild(cancelSpan);
+    popupFooter.appendChild(cancelSpan);
     //END cancel Button
 
 
@@ -181,7 +199,7 @@ function showLibPopup(){
     popupCover.style.left = '0%';
     popupCover.style.top = '0%';
     popupCover.style.zIndex = '990';
-    popupCover.style.opacity = '0.65';
+    popupCover.style.opacity = '0.4';
     content.appendChild(popupCover);
 
     loadArticles();
