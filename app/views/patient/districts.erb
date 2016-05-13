@@ -26,5 +26,5 @@
       <%= select_tag 'call_mode', options_for_select(@call_modes), {
                                         :helpText => 'Select the type of caller?',
                                         :id => 'call_mode',
-                                        :tt_onLoad => 'changeNextBtn();__$("nextButton").style.display = "inline";'}%>
+                                        :tt_onLoad => '$("keyboard").style.display = "none";changeNextBtn();__$("nextButton").style.display = "inline";'}%>
 <% end %>
