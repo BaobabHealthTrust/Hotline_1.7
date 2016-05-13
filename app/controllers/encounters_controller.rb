@@ -79,7 +79,7 @@ class EncountersController < ApplicationController
         )
       end
       if observation[:value_coded_or_text] == 'Irrelevant' || observation[:value_coded_or_text] == 'Dropped' 
-        redirect_to "/" and return
+        redirect_to "/encounters/new/purpose_of_call?patient_id=#{@patient.patient_id}" and return
       end
     end
 
@@ -107,11 +107,13 @@ class EncountersController < ApplicationController
     if !params[:end_call].blank?
       session[:end_call] = true
     end 
-    
+
     # Go to the next task in the workflow (or dashboard)
     age = @patient_obj.age
     if (age <= 5 || age >= 13 && age <= 50 && @patient_obj.sex == 'F') && session[:automatic_flow] == true
       redirect_to next_task(@patient_obj)
+    elsif params[:encounter_type] == 'Update outcomes' && session[:end_call] == true
+      redirect_to '/' and return
     else
       redirect_to "/patient/dashboard/#{@patient.id}/tasks"
     end
@@ -211,6 +213,7 @@ class EncountersController < ApplicationController
           @info_concept = "Maternal Health Info"
         end
       when 'Update outcomes'
+          @encounter_type = encounter_type
           @general_outcomes = concept_set('General outcome')
       when 'Reminders'
         @phone_types = concept_set('Phone Type')
