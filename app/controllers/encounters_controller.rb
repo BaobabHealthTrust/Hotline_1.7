@@ -78,6 +78,9 @@ class EncountersController < ApplicationController
             :value => observation[:value_numeric] || observation[:value_text] || observation[:value_datetime] || observation[:value_coded_or_text]
         )
       end
+      if observation[:value_coded_or_text] == 'Irrelevant' || observation[:value_coded_or_text] == 'Dropped' 
+        redirect_to "/" and return
+      end
     end
 
     #handle a few attributes[]
