@@ -158,86 +158,34 @@ img {
 
 </style>
 
-<div class="table-container" style="height: 15%;">
-  <div class="table-row">
-    <div class="table-cell" style="width: 80%;">
-      <h3><%=@article.title%></h3>
-      <p>Author:&nbsp;<%=@article.author%></p>
-    </div>
-    <div class="table-cell" style="width: 10%; vertical-align: middle; text-align: right;">
-      <span class="icons">
-        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
-      </span>
-    </div>
-  </div>
-</div>
 
-<!-- .................................................. results .......................................... -->
+<script>
+    function loadControls(){
+        tt_cancel_destination = "/patient/dashboard/<%=params[:patient_id]%>/tasks"
+        __$("keyboard").innerHTML = "";
+        __$("keyboard").parentNode.removeChild(__$("keyboard"));
+
+        var page = document.getElementsByClassName('inputPage')[0];
+        page.parentNode.removeChild(page);
+
+        __$("clearButton").style.display = "none";
+        __$("cancelButton").style.display = "none";
+        __$("nextButton").innerHTML = "<span>Back</span>";
+    }
+</script>
+
+<form action='/patient/reference_material/<%=params[:patient_id]%>'>
+  <input name="test" type="text" id="hook" tt_onLoad="loadControls()"/>
+</form>
 
 <div class="table-container" style="height: 75%; border-width: 0px;">
   <div class="table-row">
-    <div class="table-cell" style="width: 78%; vertical-align: top;">
+    <div class="table-cell" style="width: 96%; vertical-align: top;background: white;position: absolute; height: 77vh; overflow: auto;padding-left: 45px;">
       <p><%= render :partial => 'patient/reference/article'%></p>
     </div>
-    <div class="table-cell" style="width: 20%; text-align: center;">
-      <!-- ... -->
-      <div class="table-container" style="height: 50%; border-width: 0px;">
-        <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <div class="divbtn" onclick="document.location='/patient/reference_material/<%=params[:patient_id]%>'" >
-              <span>
-                <%=image_tag("icons/back.png", class: 'search-icons')%>
-                <p>Back</p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <!-- btn ends .. -->
-        <!-- btn starts .. -->
-        <!-- btn ends .. -->
-      </div>
-      <!-- ... -->
-    </div>
   </div>
 </div>
 
-<!-- .................................................. results ends .......................................... -->
-
-
-<!-- ================================================== PopUp ================================================= -->
-<div id="popup-div">
-  <div id="popup-header">
-    <center>Missing attribute !</center>
-  </div>
-  <br />
-  <div>
-    <span style="font-size: 16pt;">
-      <center>
-        <i>
-          <%= flash[:missing_family_name] %>
-        </i>
-        <br />
-      </center>
-    </span>
-    <div style="padding-top: 65px;">
-      <span id="no" onclick="hidePopup();" class="my_button" style=" position: relative; right: 20px;">OK</span>
-    </div>
-  </div>
-</div>
-<div id="cover"></div>
-
-<!-- ============================================================================================================= -->
-
-
-<%= render :partial => 'home/footer' %>
-
-
-<%= form_tag("/patient/new", id: "new-person", method: 'post', enctype: 'multipart/form-data') do %>
-  <input type="hidden" name="given_name" value="<%=@given_name%>" />
-  <input type="hidden" name="family_name" value="<%=@family_name%>" />
-  <input type="hidden" name="gender" value="<%=@gender%>" />
-<%end%>
 
 <script>
 

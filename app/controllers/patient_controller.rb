@@ -88,12 +88,12 @@ class PatientController < ApplicationController
 
   def reference_material
     @material = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article'")
-    render :layout => false
+    #render :layout => false
   end
 
   def reference_article
     @article = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article' AND id = #{params[:article_id]}").first
-    render :layout => false
+    #render :layout => false
   end
 
   def search_result
