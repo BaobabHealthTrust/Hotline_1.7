@@ -52,7 +52,7 @@ img {
   width: 50px;
   height: 50px;
   margin-top: 10%;
-  text-align: middle;
+  text-align: center;
 }
 
 .divbtn p {
@@ -185,14 +185,15 @@ img {
 
   <div class="table-cell" style="width: 98%; vertical-align: top;height: 7vh;border-bottom: 1px solid black;
           background: white;color: #000000;text-align: left; ">
-    <table style="width: 100%">
+    <table style="width: 100%" >
         <tr>
-            <td>
+            <td style="width: 40%;">
               <h2 style="margin-left: 30px;"> Reference Material </h2>
             </td>
 
             <td>
-              <input type="text" style="margin-left: 70%; width: 20%;line-height: 1.5; font-size: 1.4em; " id="search" align="right" />
+              <input type="text" style="margin-left: 59%; width: 30%;line-height: 1.5; font-size: 1.4em;
+              " id="search" align="right"  placeholder="search" onkeyup="search()" />
             </td>
         </tr>
     </table>
@@ -200,7 +201,7 @@ img {
 
   <div class="table-row">
 
-    <div class="table-cell" style="width: 99%; vertical-align: top; position: absolute; height: 70vh; overflow: auto;background: white;">
+    <div class="table-cell" style="width: 99%; vertical-align: top; position: absolute; height: 66vh; overflow: auto;background: white;">
       <p><%= render :partial => 'patient/reference/search_results_table'%></p>
     </div>
 
@@ -357,7 +358,7 @@ document.getElementById('search').setAttribute("onclick","showKeyboardX();");
         padding: 5px;
         position: absolute;
         right: 15px;
-        top: 77px;
+        top: 85px;
         width: auto !important;
         z-index: 1100;
         opacity: 0.9;
