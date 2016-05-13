@@ -302,6 +302,9 @@ class PatientController < ApplicationController
   end
 
   def districts
+
+    
+
     if !params[:end_call].blank?
       session[:end_call] = true
     end 
@@ -349,14 +352,11 @@ class PatientController < ApplicationController
                                                  encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                      (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
 =end
-
-      if (!verify_purpose_encounter)
+      if verify_purpose_encounter == false
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
-      elsif (!update_outcome_encounter)
-        if params[:end_call] == 'true'
+      elsif update_outcome_encounter == false
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
-        end
-      elsif params[:end_call] == 'true'
+      else
         if @patient_obj.age < 6
           @guardian = @patient.current_guardian
           if @guardian.blank?
