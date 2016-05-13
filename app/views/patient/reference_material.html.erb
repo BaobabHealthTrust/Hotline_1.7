@@ -185,7 +185,7 @@ img {
 
   <div class="table-cell" style="width: 98%; vertical-align: top;height: 7vh;border-bottom: 1px solid black;
           background: white;color: #000000;text-align: left; ">
-    <table style="width: 100%" >
+    <table style="width: 100%;padding: 0px;" >
         <tr>
             <td style="width: 40%;">
               <h2 style="margin-left: 30px;"> Reference Material </h2>
@@ -193,7 +193,7 @@ img {
 
             <td>
               <input type="text" style="margin-left: 59%; width: 30%;line-height: 1.5; font-size: 1.4em;
-              " id="search" align="right"  placeholder="search" onkeyup="search()" />
+              " id="search" align="right"  placeholder="search" />
             </td>
         </tr>
     </table>
@@ -245,8 +245,9 @@ function showKeyboardX(){
 }
 
 function search(value){
+
     jQuery('.hidable').hide();
-    jQuery('.hidable :Contains("'+value+'")').parent('tr').show();
+    jQuery('.hidable :Contains("'+value+'")').parent("div").show();
 
 }
 
@@ -322,6 +323,11 @@ function showAlphaKeypad(){
 
 document.getElementById('search').setAttribute("onclick","showKeyboardX();");
 
+jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
 </script>
 
 <style>
