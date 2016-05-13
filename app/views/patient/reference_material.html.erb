@@ -1,4 +1,4 @@
-
+<%= javascript_include_tag "jquery" %>
 <style>
 .main-container {
   width:  100%
@@ -140,7 +140,7 @@ img {
     height: 102%;
     left: 0%;
     top: 0%;
-    z-index: 990;
+    z-index: 3000;
     opacity: 0.65;
 }
 
@@ -158,117 +158,57 @@ img {
 
 </style>
 
-<div class="table-container" style="height: 15%;">
-  <div class="table-row">
-    <div class="table-cell" style="width: 80%;">
-      <h3>Article List</h3>
-      <p>Page:&nbsp;<span id='page_number'>1</span>&nbsp;of&nbsp;<span id='total_page_number'>1</span>&nbsp;
-      (Total number of article(s) found:&nbsp;<%=@material.length%>)</p>
-    </div>
-    <div class="table-cell" style="width: 10%; vertical-align: middle; text-align: right;">
-      <span class="icons">
-        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
-      </span>
-    </div>
-  </div>
+<script>
+    function loadControls(){
+        tt_cancel_destination = "/patient/dashboard/<%=params[:patient_id]%>/tasks"
+        __$("keyboard").innerHTML = "";
+        __$("keyboard").parentNode.removeChild(__$("keyboard"));
+
+        var page = document.getElementsByClassName('inputPage')[0];
+        page.parentNode.removeChild(page);
+
+        __$("clearButton").style.display = "none";
+        __$("cancelButton").style.display = "none";
+    }
+</script>
+
+<form action="/patient/dashboard/<%=params[:patient_id]%>/tasks">
+  <input name="test" type="text" id="hook" tt_onLoad="loadControls()"/>
+</form>
+<!-- .................................................. results .......................................... -->
+<div id="keypad">
+  <span class="keypad">
+  </span>
 </div>
 
-<!-- .................................................. results .......................................... -->
+<div class="table-container" style="border-width: 0px;">
 
-<div class="table-container" style="height: 75%; border-width: 0px;">
+  <div class="table-cell" style="width: 98%; vertical-align: top;height: 7vh;border-bottom: 1px solid black;
+          background: white;color: #000000;text-align: left; ">
+    <table style="width: 100%">
+        <tr>
+            <td>
+              <h2 style="margin-left: 30px;"> Reference Material </h2>
+            </td>
+
+            <td>
+              <input type="text" style="margin-left: 70%; width: 20%;line-height: 1.5; font-size: 1.4em; " id="search" align="right" />
+            </td>
+        </tr>
+    </table>
+  </div>
+
   <div class="table-row">
-    <div class="table-cell" style="width: 78%; vertical-align: top;">
+
+    <div class="table-cell" style="width: 99%; vertical-align: top; position: absolute; height: 70vh; overflow: auto;background: white;">
       <p><%= render :partial => 'patient/reference/search_results_table'%></p>
     </div>
-    <div class="table-cell" style="width: 20%; text-align: center;">
-      <!-- ... -->
-      <div class="table-container" style="height: 50%; border-width: 0px;">
-        <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <div class="divbtn" onclick="Article();" >
-              <span>
-                <%=image_tag("icons/button_ok.png", class: 'search-icons')%>
-                <p>Select Article</p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <!-- btn ends .. -->
-        <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <div class="divbtn" onclick="document.location='/patient/dashboard/<%=params[:patient_id]%>/tasks'" >
-              <span>
-                <%=image_tag("icons/back.png", class: 'search-icons')%>
-                <p>Back</p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <!-- btn ends .. -->
-        <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <!-- ................................ -->
-            <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: left;" onclick="goPrevious();" >
-              <span>
-                <%=image_tag("icons/previous-track.png", class: 'search-icons')%>
-                <p>Previous</p>
-              </span>
-            </div>
-            <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: right;" onclick="goNext();" >
-              <span>
-                <%=image_tag("icons/next-track.png", class: 'search-icons')%>
-                <p>Next</p>
-              </span>
-            </div>
-            <!-- ................................ -->
-          </div>
-        </div>
-        <!-- btn ends .. -->
-      </div>
-      <!-- ... -->
-    </div>
+
   </div>
 </div>
 
 <!-- .................................................. results ends .......................................... -->
 
-
-<!-- ================================================== PopUp ================================================= -->
-<div id="popup-div">
-  <div id="popup-header">
-    <center>Missing attribute !</center>
-  </div>
-  <br />
-  <div>
-    <span style="font-size: 16pt;">
-      <center>
-        <i>
-          <%= flash[:missing_family_name] %>
-        </i>
-        <br />
-      </center>
-    </span>
-    <div style="padding-top: 65px;">
-      <span id="no" onclick="hidePopup();" class="my_button" style=" position: relative; right: 20px;">OK</span>
-    </div>
-  </div>
-</div>
-<div id="cover"></div>
-
-<!-- ============================================================================================================= -->
-
-
-<%= render :partial => 'home/footer' %>
-
-
-<%= form_tag("/patient/new", id: "new-person", method: 'post', enctype: 'multipart/form-data') do %>
-  <input type="hidden" name="given_name" value="<%=@given_name%>" />
-  <input type="hidden" name="family_name" value="<%=@family_name%>" />
-  <input type="hidden" name="gender" value="<%=@gender%>" />
-<%end%>
 
 <script>
 
@@ -293,4 +233,139 @@ function hidePopup(){
     document.getElementById("cover").style.display = 'none';
 }
 
+function showKeyboardX(){
+    key = document.getElementById("keypad")
+    if(key.style.display == 'none' || key.style.display == ""){
+        key.style.display = "inline";
+        return
+    }
+
+    key.style.display = "none";
+}
+
+function search(value){
+    jQuery('.hidable').hide();
+    jQuery('.hidable :Contains("'+value+'")').parent('tr').show();
+
+}
+
+function pressX(pressedChar){
+    searchVal = document.getElementById("search")
+    switch (pressedChar) {
+        case 'backspace':
+            searchVal.value = searchVal.value.substring(0,searchVal.value.length-1);
+            search(searchVal.value)
+            return;
+        case 'Space':
+            searchVal.value+= " "
+            search(searchVal.value)
+            return
+        case 'clear':
+            searchVal.value = ""
+            search(searchVal.value)
+            return
+        case 'slash':
+            searchVal.value+= "/"
+            search(searchVal.value)
+            return
+        case 'dash':
+            searchVal.value+= "-"
+            search(searchVal.value)
+            return
+    }
+    searchVal.value+= pressedChar
+    search(searchVal.value)
+}
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+document.getElementById('search').setAttribute("onclick","showKeyboardX();");
+//document.getElementById("find").innerHTML = "<span>Back</span>";
+//document.getElementById("find").style.cssFloat = "left";
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+keyboard = document.getElementsByClassName("keypad")[0]
+function getCharButtonSetID(character,id){
+    return '<button onMouseDown="pressX(\''+character+'\');" class="keyboardButton blue button" id="'+id+'">' +"<span>"+character+"</span>"+ "</button>";
+}
+function getButtonString(id,string){
+    return "<button \
+                            onMouseDown='pressX(this.id);' \
+                            class='keyboardButton' \
+                            id='"+id+"'>"+
+            string +
+            "</button>";
+}
+
+function getButtons(chars){
+    var buttonLine = "";
+    for(var i=0; i<chars.length; i++){
+        character = chars.substring(i,i+1)
+        buttonLine += getCharButtonSetID(character,character)
+    }
+    return buttonLine;
+}
+
+showAlphaKeypad();
+
+function showAlphaKeypad(){
+    document.getElementById("keypad").style.height = "280";
+    keyboard.innerHTML= getButtons("0123456789") + "</br>"
+    keyboard.innerHTML+= getButtons("QWERTYUIOP") + "</br>"
+    keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
+    keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
+    keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+    keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
+    keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+}
+
+
+document.getElementById('search').setAttribute("onclick","showKeyboardX();");
+
 </script>
+
+<style>
+    #backspace{
+        position:absolute;
+        left:100px;
+        bottom:2px;
+    }
+
+    #Space{
+        position:absolute;
+        left:220px;
+        bottom:2px;
+        width:200px;
+    }
+
+    #clear{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+    }
+    #num{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+        width:200px;
+    }
+    #keypad{
+        background-color: #FFFFFF;
+        border: 2px solid #9999FF;
+        border-radius: 15px 15px 15px 15px;
+        display: none;
+        height: 320px;
+        padding: 5px;
+        position: absolute;
+        right: 15px;
+        top: 65px;
+        width: auto !important;
+        z-index: 1100;
+        opacity: 0.9;
+    }
+
+    .keyboardButton{
+    }
+
+
+</style>
+

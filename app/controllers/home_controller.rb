@@ -156,18 +156,30 @@ class HomeController < ApplicationController
       articles = Publify.find_by_sql("SELECT * FROM contents WHERE id IN (#{article_ids})")
       
       articles_hash = {}
+      article_override = nil
+      article_key = nil
       articles.each do |article|
         article_id = article.id
         articles_hash[article_id]= {}
         articles_hash[article_id]["title"] = article.title.force_encoding("utf-8")
+        if params[:title] && params[:title] ==  articles_hash[article_id]["title"]
+          article_override = articles_hash[article_id]
+          article_key = article_id
+        end
+
         articles_hash[article_id]["author"] = article.author
         articles_hash[article_id]["body"] = article.body.force_encoding("utf-8")
       end
 
+      titles = [];
+      articles_hash.each do |key, article|
+        titles << article['title']
+      end
+
       session[:articles_hash] = articles_hash
       first_key = articles_hash.keys.first
-      article = articles_hash[first_key]
-      hash = {:key => first_key, :data => article}
+      article = article_override.blank? ? articles_hash[first_key] : article_override
+      hash = {:key => (article_key || first_key), :data => article, :all_keys => titles.join('|') }
       render :text => hash.to_json
   end
 
@@ -183,9 +195,14 @@ class HomeController < ApplicationController
       next_item_pos = session[:articles_hash].keys.count - 1
     end
 
+    titles = [];
+    session[:articles_hash].each do |key, article|
+      titles << article['title']
+    end
+
     my_key = session[:articles_hash].keys[next_item_pos]
     article = session[:articles_hash][my_key]
-    hash = {:key => my_key, :data => article, :disabled => disabled}
+    hash = {:key => my_key, :data => article, :disabled => disabled, :all_keys => titles.join('|')  }
     render :text => hash.to_json
   end
 
@@ -199,9 +216,15 @@ class HomeController < ApplicationController
       prev_item_pos = 0
       disabled = true
     end
+
+    titles = [];
+    session[:articles_hash].each do |key, article|
+      titles << article['title']
+    end
+
     my_key = session[:articles_hash].keys[prev_item_pos]
     article = session[:articles_hash][my_key]
-    hash = {:key => my_key, :data => article , :disabled => disabled}
+    hash = {:key => my_key, :data => article , :disabled => disabled, :all_keys => titles.join('|') }
     render :text => hash.to_json
   end
   

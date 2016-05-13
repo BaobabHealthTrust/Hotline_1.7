@@ -18,7 +18,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'spring', group: :development
 
-gem 'passenger', '4.0.38'
+gem 'passenger', '4.0.53'
 
 gem 'mysql'
 

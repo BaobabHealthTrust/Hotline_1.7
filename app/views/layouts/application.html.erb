@@ -51,29 +51,42 @@
       var currentKey = ""
       //var currentConcept = "Potential chest indrawing";
       var currentConcept = "";
-      function loadArticles(){
+      function loadArticles(title){
+
           setListAttributes();
           jQuery.ajax({
               type: "POST",
               url: "/home/retrieve_articles",
-              data: "concept=" + $("touchscreenInput" + tstCurrentPage).value,
+              data: "concept=" + $("touchscreenInput" + tstCurrentPage).value + (title ? ("&title=" + title) : ""),
               success: function(results){
                   try {
                       results = eval("(" + results + ")");
                   }catch(e){
                   }
+
+                  var all_keys = results["all_keys"];
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];
                   author = results["data"]["author"];
 
                   popupHeader = document.getElementsByClassName("popup-header")[0];
-                  popupHeader.innerHTML = title;
+                  popupHeader.innerHTML = '';
                   popupContent = document.getElementsByClassName("popup-data")[0];
                   popupContent.innerHTML = body;
+                  nextButton = document.getElementsByClassName("nextButton")[0];
+                  prevButton = document.getElementsByClassName("prevButton")[0];
+
+                  nextButton.style.backgroundColor = '#6495ED';
+                  prevButton.style.backgroundColor = '#6495ED';
+
+                  buildSelect(all_keys.split("|"), title);
               }
 
           });
+
+
+
       }
 
       function loadNextArticle(){
@@ -88,6 +101,7 @@
                   }catch(e){
                   }
 
+                  var all_keys = results["all_keys"];
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];
@@ -103,14 +117,17 @@
                       nextButton.style.backgroundColor = '#6495ED';
                       prevButton.style.backgroundColor = '#6495ED';
                   }
+
                   popupHeader = document.getElementsByClassName("popup-header")[0];
-                  popupHeader.innerHTML = title;
+                  popupHeader.innerHTML = '';
                   popupContent = document.getElementsByClassName("popup-data")[0];
                   popupContent.innerHTML = body;
+                  buildSelect(all_keys.split("|"), title);
               }
 
           });
       }
+
 
       function loadPrevArticle(){
           setListAttributes();
@@ -123,6 +140,8 @@
                       results = eval("(" + results + ")");
                   }catch(e) {
                   }
+
+                  var all_keys = results["all_keys"];
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];
@@ -139,9 +158,11 @@
                   }
 
                   popupHeader = document.getElementsByClassName("popup-header")[0];
-                  popupHeader.innerHTML = title;
+                  popupHeader.innerHTML = '';
                   popupContent = document.getElementsByClassName("popup-data")[0];
                   popupContent.innerHTML = body;
+                  buildSelect(all_keys.split("|"), title);
+
               }
 
           });
@@ -149,6 +170,28 @@
 
       function setListAttributes(){
           currentConcept = $("touchscreenInput" + tstCurrentPage).value;
+      }
+
+      function buildSelect(options, val){
+          var select = document.createElement('select');
+          select.id = "select";
+
+          for (var o in options){
+              var opt = document.createElement('option');
+              opt.setAttribute('value', options[o]);
+              opt.innerHTML =  options[o];
+              if (options[o].trim() == val.trim()){
+                  opt.setAttribute("selected", true);
+              }
+              select.appendChild(opt);
+          }
+
+          select.onchange = function(){
+              loadArticles(select.value);
+          }
+
+          var popupHeader = document.getElementsByClassName("popup-header")[0];
+          popupHeader.appendChild(select);
       }
 
   //-->
@@ -180,6 +223,18 @@
    <% end %>
     <style>
       html{
+      }
+    </style>
+
+    <style>
+      #select{
+          min-width: 30%;
+          font-size: 1.2em !important;
+          background: white;
+          margin-left: 15px;
+          padding-left: 10px;
+          padding-right: 30px;
+          color: black;
       }
     </style>
   </head>
