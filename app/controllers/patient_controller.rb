@@ -350,13 +350,11 @@ class PatientController < ApplicationController
                                                      (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
 =end
 
-      if (!verify_purpose_encounter) || (!verify_purpose_encounter)
+      if (!verify_purpose_encounter)
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
-      elsif (!update_outcome_encounter) || (!update_outcome_encounter)
+      elsif (!update_outcome_encounter)
         if params[:end_call] == 'true'
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
-        elsif params[:next_client] == 'true'
-          redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}" and return
         end
       elsif params[:end_call] == 'true'
         if @patient_obj.age < 6

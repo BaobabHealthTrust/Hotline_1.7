@@ -445,28 +445,34 @@
   <script type="text/javascript" language="javascript">
     child_health_values = []
   </script>
-  <%= select_tag "child_health_info",options_for_select(@child_health_info, nil),
-    {:id          => "child_health_info_id",
-     :tt_onLoad => "$('keyboard').style.display = 'none'",
-    :multiple    => true,
-    :optional    => true,
-    :tt_onUnLoad => "setConceptNamesAndValues(child_health_values, 'child_health_info_id', 'child_health_info');hideHelpButton();$('keyboard').style.display = 'none'",
-    :tt_requireNextClick => true,
-    :tt_onLoad => '$("nextButton").style.display = "block";',
-    :helptext    => "Does the caller want information on one of the following topics?" } %>
-
-  <% @child_health_info.each_with_index do |e, index| %>
-    <%= hidden_field_tag("observations[][concept_name]",        "", {:id => "child_health_info#{index}_concept_name"}) %>
-    <%= hidden_field_tag("observations[][value_coded_or_text]", "", {:id => "child_health_info#{index}_value_coded_or_text"} ) %>
-    <%= hidden_field_tag("observations[][patient_id]",          @patient.id) %>
-    <%= hidden_field_tag("observations[][obs_datetime]",        DateTime.now()) %>
-  <%end%>
 
   <label for='summary'>Symptom Confirmation</label>
-  <%= text_field_tag :summary, nil, { :tt_onLoad => "summary();$('keyboard').style.display = 'none';", :optional => "true", :tt_pageStyleClass => "NoControls" } %>
+  <%= text_field_tag :summary, nil, {
+                                     :tt_onLoad => "hideHelpButton();summary();$('keyboard').style.display = 'none';",
+                                     :optional => "true",
+                                     :tt_pageStyleClass => "NoControls" } %>
 
   <label for='dangerSigns'>Danger signs</label>
-  <%= text_field_tag :dangerSigns, nil, { :tt_onLoad => "loadDangerSigns();$('keyboard').style.display = 'none';", :optional => "true", :tt_pageStyleClass => "NoControls" } %>
+  <%= text_field_tag :dangerSigns, nil, {
+                                         :tt_onLoad => "hideHelpButton();loadDangerSigns();$('keyboard').style.display = 'none';",
+                                         :optional => "true",
+                                         :tt_pageStyleClass => "NoControls" } %>
+
+    <%= select_tag "child_health_info",options_for_select(@child_health_info, nil),
+                   {:id          => "child_health_info_id",
+                    :multiple    => true,
+                    :optional    => true,
+                    :tt_onUnLoad => "setConceptNamesAndValues(child_health_values, 'child_health_info_id', 'child_health_info');hideHelpButton();$('keyboard').style.display = 'none'",
+                    :tt_requireNextClick => true,
+                    :tt_onLoad => 'showHelpButton();$("nextButton").style.display = "block";$("keyboard").style.display = "none"',
+                    :helptext    => "Does the caller want information on one of the following topics?" } %>
+
+    <% @child_health_info.each_with_index do |e, index| %>
+        <%= hidden_field_tag("observations[][concept_name]",        "", {:id => "child_health_info#{index}_concept_name"}) %>
+        <%= hidden_field_tag("observations[][value_coded_or_text]", "", {:id => "child_health_info#{index}_value_coded_or_text"} ) %>
+        <%= hidden_field_tag("observations[][patient_id]",          @patient.id) %>
+        <%= hidden_field_tag("observations[][obs_datetime]",        DateTime.now()) %>
+    <%end%>
 
   <%= submit_tag 'Finish' %>
 <% end %>
