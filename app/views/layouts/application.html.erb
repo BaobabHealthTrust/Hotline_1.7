@@ -58,7 +58,10 @@
               url: "/home/retrieve_articles",
               data: "concept=" + $("touchscreenInput" + tstCurrentPage).value,
               success: function(results){
-                  results = eval("(" + results  + ")");
+                  try {
+                      results = eval("(" + results + ")");
+                  }catch(e){
+                  }
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];
@@ -80,7 +83,11 @@
               url: "/home/next_article",
               data: "key=" + currentKey,
               success: function(results){
-                  results = eval("(" + results  + ")");
+                  try {
+                      results = eval("(" + results + ")");
+                  }catch(e){
+                  }
+
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];
@@ -112,7 +119,10 @@
               url: "/home/previous_article",
               data: "key=" + currentKey,
               success: function(results){
-                  results = eval("(" + results  + ")");
+                  try {
+                      results = eval("(" + results + ")");
+                  }catch(e) {
+                  }
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];

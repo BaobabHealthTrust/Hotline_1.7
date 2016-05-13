@@ -118,11 +118,29 @@
           <th class="titl">AVR access ID:</th>
           <td class="value" ><%=@patient_obj.avr_access_number%></td>
         </tr>
-        <tr>
-          <th class="titl">District:</th>
-          <td class="value"  style="text-align: left;"><%= @patient_obj.township_division %></td>
-        </tr>
 
+
+        <% if @patient_obj.age >= 13 && @patient_obj.age <= 50
+
+            preg_status = Observation.by_concept_today(@patient_obj.patient_id,
+                                                      'Pregnancy status', "PREGNANCY STATUS",
+                                                      Date.today).join(' , ') rescue nil
+
+            edd = Observation.by_concept_today(@patient_obj.patient_id,
+                                               'Pregnancy due date',  "PREGNANCY STATUS",
+                                               Date.today).first.to_date.strftime("%d/%b/%Y") rescue nil
+            preg_status_string = preg_status + (edd.blank? ? "" : " (EDD - #{edd})")
+        %>
+            <tr>
+              <th style="width:150px;">Pregnancy status:</th>
+              <td class="value" style="text-align: left;"><%= preg_status_string%></td>
+            </tr>
+        <% else %>
+            <tr>
+              <th class="titl">District:</th>
+              <td class="value"  style="text-align: left;"><%= @patient_obj.township_division %></td>
+            </tr>
+        <% end %>
       </table>
     </div>
 
