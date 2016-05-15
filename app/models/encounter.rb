@@ -35,7 +35,7 @@ class Encounter < ActiveRecord::Base
       data[observation.concept_name.name.upcase.strip] << observation.answer_string
       .gsub(/Hiv/i, 'HIV')
       .gsub(/TB\//i, "TB/")
-      .gsub(/BP\/H/i, "BP/H")
+      .gsub(/BP\/H/i, "BP/H") rescue nil
     end
 
     data
