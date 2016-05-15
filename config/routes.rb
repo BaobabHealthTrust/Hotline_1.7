@@ -24,6 +24,10 @@ Rails.application.routes.draw do
   get 'home/reference_material'
   get 'home/retrieve_articles'
   post 'home/retrieve_articles'
+
+  get 'home/check_articles'
+  post 'home/check_articles'
+
   post 'home/next_article'
   post 'home/previous_article'
   get 'tag_concepts/:tag_id' => 'home#tag_concepts'

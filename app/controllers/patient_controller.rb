@@ -4,7 +4,7 @@ class PatientController < ApplicationController
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
 
-    if request.referrer.match("/encounters\/new/")
+    if (request.referrer.match("/encounters\/new/") rescue false)
       session[:automatic_flow] = false
     end
 

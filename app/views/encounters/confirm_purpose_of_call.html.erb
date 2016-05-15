@@ -18,7 +18,6 @@
                             :helpText => 'Select Reason for end call',
                             :id => 'purpose_of_call',
                             :optional => true,
-                            :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');
-                            $('nextButton').style.display = 'block';$('keyboard').style.display = 'none';",
+                            :tt_onLoad => "$('nextButton').style.display = 'block';$('keyboard').style.display = 'none';",
                             :tt_pageStyleClass => 'longSelectList'} %>
 <% end %>

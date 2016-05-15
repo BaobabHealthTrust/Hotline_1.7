@@ -285,7 +285,8 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as malnourished'
+             'Previously diagnosed as malnourished',
+             'None'
          ],
          'Group 2' => [
              'Anaemia',
@@ -295,7 +296,8 @@ class EncountersController < ApplicationController
              'HIV positive/exposed',
              'Previously diagnosed as malnourished',
              'TB/Tuberculosis',
-             'Vomiting'
+             'Vomiting',
+             'None'
          ],
          'Group 3' => [
              'Fever',
@@ -304,7 +306,8 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as malnourished'
+             'Previously diagnosed as malnourished',
+             'None'
          ],
          'Group 4' => [
              'Anaemia',
@@ -312,7 +315,8 @@ class EncountersController < ApplicationController
              'HIV positive/exposed',
              'Previously diagnosed as moderate/severely malnourished',
              'Conditions interfering with breastfeeding',
-             'TB/Tuberculosis'
+             'TB/Tuberculosis',
+             'None'
       ],
          'Group 5' => [
              'HIV-positive',
@@ -320,13 +324,15 @@ class EncountersController < ApplicationController
              'TB/Tuberculosis',
              'Previously diagnosed as malnourished',
              'Danger signs',
-             'Conditions interfering with breastfeeding'
+             'Conditions interfering with breastfeeding',
+             'None'
          ],
          'Group 6' => [
              'HIV-positive',
              'anaemic',
              'TB/Tuberculosis',
-             'previously diagnosed as malnourished'
+             'previously diagnosed as malnourished',
+             'None'
          ],
          'Group 7' => [
              'Fever',
@@ -335,7 +341,8 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as malnourished'
+             'Previously diagnosed as malnourished',
+             'None'
          ]
       ]
       return clinical_questions[0]

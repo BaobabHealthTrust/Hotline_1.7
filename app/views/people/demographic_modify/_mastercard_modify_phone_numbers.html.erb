@@ -16,6 +16,5 @@
 <%= select_tag "observations[][value_text]", options_for_select(concept_set('Phone Type')),
                :helpText =>"Select phone type",
                :id => "phone_type",
-               :condition => "$('phone').value != 'Unknown'",
-               :tt_onLoad => "$('keyboard').style.display = 'none';showCategory('IVR#: #{@patient_obj.avr_access_number}');"
+               :tt_onLoad => "$('keyboard').style.display = 'none';"
 %>

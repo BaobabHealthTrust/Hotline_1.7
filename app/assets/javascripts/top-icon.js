@@ -4,28 +4,34 @@ function showHelpButton(){
     imgCircle = document.getElementById('img-circle');
     if (imgCircle) imgCircle.parentNode.removeChild(imgCircle);
 
-    imgCircle = document.createElement('div');
-    imgCircle.id = 'img-circle';
-    imgCircle.style.position = 'relative';
-    imgCircle.style.zIndex = '900';
+    imgWrapper = document.getElementById('img-wrapper');
+    if (imgWrapper) imgWrapper.parentNode.removeChild(imgWrapper);
+
+    imgCircle = document.createElement('img');
+    imgCircle.id = "img-circle";
     imgCircle.style.borderRadius = '50%';
     imgCircle.style.width = '50px';
-    imgCircle.style.cursor = 'pointer';
-    imgCircle.style.top = '0px';
-    imgCircle.style.float = 'right';
-    imgCircle.style.right = '1%';
     imgCircle.style.height = '50px';
-    imgCircle.style.background = "#f3f3f3 url('/assets/icons/info-sign.png') no-repeat center";
+    imgCircle.src = "/assets/icons/info-sign-disabled.png";
     imgCircle.style.boxShadow = '0 0 8px rgba(0, 0, 0, .8)';
     imgCircle.style.backgroundSize = "60px 60px";
 
-    imgCircle.onclick = function(){
+    wrapper = document.createElement("div");
+    wrapper.id = 'img-wrapper';
+    wrapper.className = "disabled";
+    wrapper.style.position = 'relative';
+    wrapper.style.zIndex = '900';
+    wrapper.style.top = '0px';
+    wrapper.style.float = 'right';
+    wrapper.style.right = '1.5%';
+    wrapper.style.cursor = 'pointer';
+
+    wrapper.appendChild(imgCircle);
+    wrapper.onclick = function(){
         showLibPopup();
     }
 
-    img = document.createElement('img');
-    imgCircle.appendChild(img);
-    content.appendChild(imgCircle);
+    content.appendChild(wrapper);
 }
 
 function hideHelpButton(){
@@ -34,6 +40,11 @@ function hideHelpButton(){
 }
 
 function showLibPopup(){
+
+    if (wrapper && wrapper.className == "disabled"){
+        return;
+    }
+
     popupDiv = document.createElement('div');
     popupDiv.className = 'popup-div';
     popupDiv.style.backgroundColor = '#F4F4F4';

@@ -70,8 +70,9 @@
         <% @current_data['GENERAL OUTCOME'] = @current_data['GENERAL OUTCOME'] - [@current_data['GENERAL OUTCOME'].first] rescue nil%>
 
         <%= hidden_field_tag("observations[][concept_name]", "Secondary Outcome") %>
-        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@general_outcomes , (@current_data['SECONDARY OUTCOME'] rescue nil)),
-                       :helpText =>"Secondary outcome if any",
+        <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@general_outcomes , (@current_data['SECONDARY OUTCOME'] rescue nil)),
+                       :helpText =>"Secondary outcomes if any",
+                       :multiple => true,
                        :id => "secondary_outcome",
                        :optional => true,
                        :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none'",

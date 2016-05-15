@@ -89,7 +89,7 @@
 
     <%= hidden_field_tag('observations[][concept_name]', "Current complaints or symptoms") %>
     <%= select_tag 'observations[][value_coded_or_text_multiple]',
-                   options_for_select(@clinical_questions[@group]),
+                   options_for_select(@clinical_questions[@group],  @current_data['Current complaints or symptoms'.upcase]),
                    :helpText =>"Does the caller have any of the following conditions?",
                    :tt_pageStyleClass => "longSelectList",
                    :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none';",
@@ -100,7 +100,7 @@
 
     <%= hidden_field_tag('observations[][concept_name]', "Danger signs") %>
     <%= select_tag 'observations[][value_coded_or_text_multiple]',
-                   options_for_select(@danger_signs),
+                   options_for_select(@danger_signs, @current_data['DANGER SIGNS']),
                    :helpText =>"Experiencing any of the following danger signs?",
                    :tt_pageStyleClass => "longSelectList",
                    :tt_onLoad => "$('keyboard').style.display = 'none'",
@@ -112,7 +112,7 @@
     <% if @patient_obj.age <= 2 %>
         <%= hidden_field_tag('observations[][concept_name]', "Conditions interfering with breastfeeding") %>
         <%= select_tag 'observations[][value_coded_or_text_multiple]',
-                       options_for_select(@breast_feeding_conditions),
+                       options_for_select(@breast_feeding_conditions, @current_data['Conditions interfering with breastfeeding'.upcase]),
                        :helpText =>"Conditions interfering with breastfeeding",
                        :tt_pageStyleClass => "longSelectList",
                        :tt_onLoad => "$('keyboard').style.display = 'none'",

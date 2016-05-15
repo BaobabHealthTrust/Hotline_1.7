@@ -335,7 +335,7 @@ end
 
 
   CSV.foreach("#{Rails.root}/app/assets/data/additional_concept_names.csv", :headers => true).with_index do |row, i|
-    concept_name = row[0].capitalize
+    concept_name = row[0].strip
     check = ConceptName.where(:name => concept_name).last
     next if !check.blank?
     concept = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
@@ -534,7 +534,7 @@ select_options = {
 }
 
 (select_options || {}).each do |concept_name, concept_sets|
-  concept_name = concept_name.gsub('_',' ').capitalize
+  concept_name = concept_name.gsub('_',' ').strip
   concept_names = ConceptName.where(name: concept_name).first 
   if concept_names.blank?
     concept = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)
@@ -560,7 +560,7 @@ end
 
 ###################################### Encounter Type starts ##############################################################
   CSV.foreach("#{Rails.root}/app/assets/data/encouters_with_descrptions.csv", :headers => true).with_index do |row, i|
-    name = row[0].capitalize ; des = row[1].capitalize
+    name = row[0].strip ; des = row[1].capitalize
     EncounterType.create(name: name, description: des)
     puts "EncounterType ---- #{name}"
   end
