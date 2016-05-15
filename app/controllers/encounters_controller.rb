@@ -79,7 +79,7 @@ class EncountersController < ApplicationController
         )
       end
       if observation[:value_coded_or_text] == 'Irrelevant' || observation[:value_coded_or_text] == 'Dropped' 
-        redirect_to "/encounters/new/purpose_of_call?patient_id=#{@patient.patient_id}" and return
+        redirect_to "/" and return
       end
     end
 
