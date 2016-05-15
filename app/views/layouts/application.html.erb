@@ -334,7 +334,8 @@
 
                 setTimeout("checkArticles()", 1000);
             }
-
+        }).fail(function(){
+            setTimeout("checkArticles()", 3000);
         });
 
     }
