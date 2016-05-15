@@ -202,7 +202,7 @@
                             :field_type => 'alpha',
                             :helpText => 'Select Nearest health centre',
                             :ajaxURL => "/home/health_facilities?tag=#{(address.township_division rescue session[:district])}&search_string=",
-                            :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
+                            :tt_onLoad => "$('nextButton').style.display = 'block';",
                             :allowFreeText => true }%>
 
     <%= hidden_field_tag("observations[][concept_name]", "Clinic") %>
@@ -210,7 +210,7 @@
                            {:id => 'health_centre_name',
                             :field_type => 'alpha',
                             :helpText => 'Select clinic type',
-                            :tt_onLoad => "$('keyboard').style.display = 'none';showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';",
+                            :tt_onLoad => "$('keyboard').style.display = 'none';$('nextButton').style.display = 'block';",
                             :allowFreeText => true }%>
 
   <%= hidden_field_tag("observations[][concept_name]", "Next ANC visit date") %>

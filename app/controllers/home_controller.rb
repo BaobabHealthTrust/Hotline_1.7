@@ -12,6 +12,8 @@ class HomeController < ApplicationController
 
     session.delete(:end_call) if session[:end_call].present?
     session.delete(:no_guardian) if session[:no_guardian].present?
+
+    session[:automatic_flow] = true
   end
 
   def configuration

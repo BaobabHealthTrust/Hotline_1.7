@@ -19,7 +19,7 @@
                                         :helpText => 'Select purpose of call',
                                         :id => 'purpose_of_call_id',
                                         :optional => true,
-                                        :tt_onLoad => "showCategory('IVR#: #{@patient_obj.avr_access_number}');$('nextButton').style.display = 'block';$('keyboard').style.display = 'none';",
+                                        :tt_onLoad => "$('nextButton').style.display = 'block';$('keyboard').style.display = 'none';",
                                         :tt_pageStyleClass => 'longSelectList'} %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Purpose of call") %>
