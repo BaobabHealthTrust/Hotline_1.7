@@ -33,6 +33,9 @@ class Encounter < ActiveRecord::Base
     .last.observations rescue []).each do |observation|
       data[observation.concept_name.name.upcase.strip] = [] if data[observation.concept_name.name.upcase.strip].blank?
       data[observation.concept_name.name.upcase.strip] << observation.answer_string
+      .gsub(/Hiv/i, 'HIV')
+      .gsub(/TB\//i, "TB/")
+      .gsub(/BP\/H/i, "BP/H")
     end
 
     data
