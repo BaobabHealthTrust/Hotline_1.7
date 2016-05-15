@@ -127,11 +127,11 @@
 
             preg_status = Observation.by_concept_today(@patient_obj.patient_id,
                                                       'Pregnancy status', "PREGNANCY STATUS",
-                                                      Date.today).join(' , ') rescue nil
+                                                      Date.today, 10.months.ago).join(' , ') rescue nil
 
             edd = Observation.by_concept_today(@patient_obj.patient_id,
                                                'Pregnancy due date',  "PREGNANCY STATUS",
-                                               Date.today).first.to_date.strftime("%d/%b/%Y") rescue nil
+                                               Date.today, 10.months.ago).first.to_date.strftime("%d/%b/%Y") rescue nil
             preg_status_string = preg_status + (edd.blank? ? "" : " (EDD - #{edd})")
         %>
             <tr>
