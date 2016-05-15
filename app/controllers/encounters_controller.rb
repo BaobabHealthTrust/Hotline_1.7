@@ -437,7 +437,7 @@ class EncountersController < ApplicationController
     @patient_obj = PatientService.get_patient(params[:patient_id])
     @client = Patient.find(params[:patient_id])
     @clinical_data = Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
-    @clinical_encounter = (@clinical_data['CURRENT COMPLAINTS OR SYMPTOMS'] || []) rescue []
+    @clinical_encounter = (@clinical_data['CURRENT COMPLAINTS OR SYMPTOMS'] - ['None'] || []) rescue []
     @danger_signs = (@clinical_data['DANGER SIGNS'] || []) rescue []
     @medicines = (@clinical_data['Medicines/supplements in current pregnancy'.upcase] - ['None'] || []) rescue []
     @feeding_challenges = (@clinical_data['CONDITIONS INTERFERING WITH BREASTFEEDING'] - ['None'] || []) rescue []
