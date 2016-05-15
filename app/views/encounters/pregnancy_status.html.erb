@@ -409,6 +409,21 @@
         }
     }
 
+    var get_edd;
+
+    function changeToEDD() {
+        showMessage('LMP Unknown. Enter estimated due date',false,false);
+        dateLayout();
+        document.getElementById('tbInputYear').value = '';
+        document.getElementById('tbInputMonth').value = '';
+        document.getElementById('tbInputDay').value = '';
+
+        var helpText = document.getElementById('helpText'+tstCurrentPage);
+        helpText.innerHTML = 'Estimated Due Date';
+
+        get_edd = true;
+    }
+
     function dateLayout() {
         var input_frame = $('inputFrame'+tstCurrentPage);
         $("clearButton").style.display = "none";
@@ -461,7 +476,7 @@
         btnUnknown.setAttribute('type','button');
         btnUnknown.style.fontSize = '1.4em';
         btnUnknown.setAttribute('value','Unknown');
-        btnUnknown.setAttribute('onclick','input(this);');
+        btnUnknown.setAttribute('onclick','input(this);changeToEDD();');
         btnUnknown.className = 'btn-year';
         year_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
@@ -608,7 +623,52 @@
         document.getElementById('tbInputMonth').value = e.innerHTML;
     }
 
+    function validate_edd() {
+
+        var year = document.getElementById('selected_year').value;
+        var month = document.getElementById('selected_month').value;
+        var day = document.getElementById('selected_day').value;
+
+        if (day == 'Unknown') {
+            day = 1;
+        }
+
+        var months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+        var current_year = new Date().getFullYear();
+        var current_month = new Date().getMonth();
+        var year_diff = parseInt(current_year) - parseInt(year);
+
+        if((year > current_year || year == current_year) && parseInt(year) < parseInt(current_year)+2) {
+            summary(year,month,day,current_month,current_year,months);
+        }
+        else if(year < current_year) {
+            showMessage('Invalid input. EDD year can not be behind '+current_year);
+        }
+        else if(parseInt(year) > parseInt(current_year)+2) {
+            showMessage('Invalid input. EDD year is far ahead of possible due date.');
+        }
+        else {
+            showMessage('Invalid input.');
+        }
+    }
+
     function validate_lmp() {
+        if(get_edd == true) {
+            validate_edd();
+        }
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
@@ -690,6 +750,11 @@
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
             var edd_month;
+            var expected_edd_month;
+            var expected_date_of_delivery;
+            var expected_year;
+            var expected_month;
+            var expected_day;
             switch(month) {
                 case 'January':
                     edd_month = 0;
@@ -728,57 +793,76 @@
                     edd_month = 11;
                     break;
             }
-            var edd_day = parseInt(day);
-            edd_day += 280;
-            var expected_edd_month;
-            var expected_date_of_delivery = new Date(year, edd_month, edd_day);
-            var expected_year = expected_date_of_delivery.getFullYear();
-            var expected_month = expected_date_of_delivery.getMonth();
-            var expected_day = expected_date_of_delivery.getDate();
-            switch(expected_month) {
-                case 0:
-                    expected_edd_month = 'January';
-                    break;
-                case 1:
-                    expected_edd_month = 'February';
-                    break;
-                case 2:
-                    expected_edd_month = 'March';
-                    break;
-                case 3:
-                    expected_edd_month = 'April';
-                    break;
-                case 4:
-                    expected_edd_month = 'May';
-                    break;
-                case 5:
-                    expected_edd_month = 'June';
-                    break;
-                case 6:
-                    expected_edd_month = 'July';
-                    break;
-                case 7:
-                    expected_edd_month = 'August';
-                    break;
-                case 8:
-                    expected_edd_month = 'September';
-                    break;
-                case 9:
-                    expected_edd_month = 'October';
-                    break;
-                case 10:
-                    expected_edd_month = 'November';
-                    break;
-                case 11:
-                    expected_edd_month = 'December';
-                    break;
+
+            if( get_edd == true ) {
+                // Load edd_data
+                expected_year = year;
+                expected_edd_month = month;
+                expected_day = day;
+
+                expected_date_of_delivery = new Date(expected_year, edd_month, expected_day);
+                // Calculate LMP
+                var lmp_day = parseInt(expected_day);
+                lmp_day -= 280;
+                var last_menstrual_period = new Date(expected_year,edd_month,lmp_day);
+                var lmp_year = last_menstrual_period.getFullYear();
+                var lmp_month = last_menstrual_period.getMonth();
+                var lmp_day = last_menstrual_period.getDate();
+
             }
-            var last_menstrual_period = new Date(year, edd_month, day);
-            var lmp_year = last_menstrual_period.getFullYear();
-            var lmp_month = last_menstrual_period.getMonth();
-            var lmp_day = last_menstrual_period.getDate();
+            else {
+                var edd_day = parseInt(day);
+                edd_day += 280;
+                expected_date_of_delivery = new Date(year, edd_month, edd_day);
+                expected_year = expected_date_of_delivery.getFullYear();
+                expected_month = expected_date_of_delivery.getMonth();
+                expected_day = expected_date_of_delivery.getDate();
+                switch(expected_month) {
+                    case 0:
+                        expected_edd_month = 'January';
+                        break;
+                    case 1:
+                        expected_edd_month = 'February';
+                        break;
+                    case 2:
+                        expected_edd_month = 'March';
+                        break;
+                    case 3:
+                        expected_edd_month = 'April';
+                        break;
+                    case 4:
+                        expected_edd_month = 'May';
+                        break;
+                    case 5:
+                        expected_edd_month = 'June';
+                        break;
+                    case 6:
+                        expected_edd_month = 'July';
+                        break;
+                    case 7:
+                        expected_edd_month = 'August';
+                        break;
+                    case 8:
+                        expected_edd_month = 'September';
+                        break;
+                    case 9:
+                        expected_edd_month = 'October';
+                        break;
+                    case 10:
+                        expected_edd_month = 'November';
+                        break;
+                    case 11:
+                        expected_edd_month = 'December';
+                        break;
+                }
+                var last_menstrual_period = new Date(year, edd_month, day);
+                var lmp_year = last_menstrual_period.getFullYear();
+                var lmp_month = last_menstrual_period.getMonth();
+                var lmp_day = last_menstrual_period.getDate();
+
+                // ------------------------------------
+            }
             var trimester_lmp_month = lmp_month;
-            // ------------------------------------
             switch(lmp_month) {
                 case 0:
                     lmp_month = 'January';
