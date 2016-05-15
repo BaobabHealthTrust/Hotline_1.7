@@ -436,10 +436,13 @@ class EncountersController < ApplicationController
   def nutrition_summary
     @patient_obj = PatientService.get_patient(params[:patient_id])
     @client = Patient.find(params[:patient_id])
-    @clinical_encounter = (Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)['CURRENT COMPLAINTS OR SYMPTOMS'] || []) rescue []
+    @clinical_data = Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
+    @clinical_encounter = (@clinical_data['CURRENT COMPLAINTS OR SYMPTOMS'] || []) rescue []
+    @danger_signs = (@clinical_data['DANGER SIGNS'] || []) rescue []
+    @medicines = (@clinical_data['Medicines/supplements in current pregnancy'.upcase] - ['None'] || []) rescue []
+    @feeding_challenges = (@clinical_data['CONDITIONS INTERFERING WITH BREASTFEEDING'] - ['None'] || []) rescue []
     @clinical_encounter_1 = []
     @clinical_encounter_2 = []
-
 
     #segmenting clinical encounter for two tables
     if (@clinical_encounter.length > 0)
@@ -449,18 +452,36 @@ class EncountersController < ApplicationController
     elsif (@clinical_encounter.length == 1)
       @clinical_encounter_1 = @clinical_encounter
     end
+    @current_pregnancy_status = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)
 
     @clinical_encounter_2 = @clinical_encounter_2 - @clinical_encounter_1
 
     @dietary_encounter = Encounter.current_data('DIETARY ASSESSMENT', @patient_obj.patient_id)
     @group = @client.nutrition_module
+    @symptoms_not_available = clinical_questions[@group] - @clinical_encounter - ['None']
+
     @consumed_groups = Encounter.current_food_groups('DIETARY ASSESSMENT', @patient_obj.patient_id)
+
+    count = @consumed_groups.count
+    @comment = ""
+    if count.between?(0, 2)
+      @comment = "<span style='color: red;'>No diversity</span>"
+    elsif count.between?(3, 4)
+      @comment = "Inadequate <br /> diversification"
+    elsif count >= 5
+      @comment = "<span style='color: green'>Adequate <br /> diversification</span>"
+    end
+
+    infant_age = PatientService.get_infant_age(@patient_obj)
+    if !infant_age.blank? && infant_age <= 6
+      @comment = "Children under 6 months should be exclusively breastfed"
+    end
 
     @groups = {
       'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
-      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids'],
+      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids', 'Groups Cons.'],
       'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
       'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
@@ -487,7 +508,7 @@ class EncountersController < ApplicationController
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
                        'Breastmilk' => [['Milk'], 'breastf.png'],
                        'Other Liquids' => [['?'], 'drink.jpg'],
-                       'Groups Cons.' => [["<span style='font-weight: bold'>#{@consumed_groups.uniq.count}</span>"], '']
+                       'Groups Cons.' => [["<span style='font-weight: normal'>#{@comment}</span>"], '']
     }
     render :layout => false, :template => 'encounters/summary'
   end

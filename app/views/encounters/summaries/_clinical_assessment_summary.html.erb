@@ -25,40 +25,115 @@
 .inner-table{
    width: 100%;
 }
+.topic{
+    cursor: pointer;
+    border-radius: 10px;
+    background: #d3d3d3;
+    font-size: 1.2em;
+    padding: 10px;
+    font-weight: bold;
+    color: darkslategray;
+    border: 1px solid #696969;
+    padding-left: 20px;
+}
 
+.active{
+    background: lightblue;
+}
 </style>
 <div id="clinic">
 
     <table style="width: 100%; margin: auto;">
       <caption style="padding-top: 5px;width:100%;margin: auto;background-color: #b9c7cc;"> Nutrition Summary</caption>
       <tr>
-        <td valign="top" style="padding: 5px;width:50%;border: 1px solid gray;">
-          <table class="inner-table">
-            <% (@clinical_encounter_1 || []).each do |name| %>
-                <tr class ="<%= cycle('even', 'odd')%> ">
-                  <%
-                    nm = (name.scan(/Fever|Diarrhea|Vomiting|Malnourished|HIV-Positive|Tuberculosis|Anemia|Hypertension/i)[0] rescue name) || name
-                  %>
-                  <td class="answer_name"><%= nm.humanize %></td>
-                  <td class="answer_value"><%= 'Yes' %></td>
-                </tr>
-            <% end %>
-          </table>
+        <td valign="top" style="padding: 5px;width:40%;border: 1px solid gray;">
+          <div style="height: 25vh;overflow: auto;">
+              <table style="width: 100%;">
+                    <tr>
+                      <td class="topic active" onmousedown="load(this, 'present')">Symptoms present (<%= (@clinical_encounter || []).length%>)</td>
+                    </tr>
+                    <tr>
+                      <td class="topic" onmousedown="load(this, 'not_present')">Symptoms not present (<%= @symptoms_not_available.length %>)</td>
+                    </tr>
+                    <tr>
+                      <td class="topic"  onmousedown="load(this, 'danger_signs')">Danger signs (<%= @danger_signs.length%>)</td>
+                    </tr>
+                    <% if @group.downcase.strip == 'group 2' && @current_pregnancy_status['PREGNANCY STATUS'] == ['Pregnant'] %>
+                        <tr>
+                          <td class="topic" onmousedown="load(this, 'medicines')">Medicines/supplements in current pregnancy(<%= @medicines.length%>)</td>
+                        </tr>
+                    <% end %>
+
+                    <% if @patient_obj.age <= 2 %>
+                        <tr>
+                          <td class="topic" onmousedown="load(this, 'feeding_challenges')">Conditions interfering with breastfeeding <%= @feeding_challenges.length%></td>
+                        </tr>
+                    <% end %>
+              </table>
+          </div>
         </td>
 
-        <td valign="top" style="padding: 5px;width:50%;border: 1px solid gray;">
-          <table class="inner-table">
-            <% (@clinical_encounter_2 || []).each do |name| %>
-                <tr class ="<%= cycle('even', 'odd')%> ">
-                  <%
-                     nm = (name.scan(/Fever|Diarrhea|Vomiting|Malnourished|HIV-Positive|Tuberculosis|Anemia|Hypertension/i)[0] rescue name) || name
-                  %>
-                  <td class="answer_name"><%= nm.humanize %></td>
-                  <td class="answer_value"><%= 'Yes' %></td>
-                </tr>
-            <% end %>
-          </table>
+        <td valign="top" style="padding: 5px;width:60%;border: 1px solid gray;">
+          <div style="height: 25vh;overflow: auto;">
+              <table id="present" class="inner-table">
+                <% (@clinical_encounter || []).each do |name| %>
+                    <tr class ="<%= cycle('even', 'odd')%> ">
+                      <td class="answer_name"><%= name %></td>
+                    </tr>
+                <% end %>
+              </table>
+
+            <table id="danger_signs" class="inner-table" style="display: none">
+              <% (@danger_signs || []).each do |name| %>
+                  <tr class ="<%= cycle('even', 'odd')%> ">
+                    <td class="answer_name"><%= name %></td>
+                  </tr>
+              <% end %>
+            </table>
+
+            <table id="not_present" class="inner-table" style="display: none">
+              <% (@symptoms_not_available || []).each do |name| %>
+                  <tr class ="<%= cycle('even', 'odd')%> ">
+                    <td class="answer_name"><%= name %></td>
+                  </tr>
+              <% end %>
+            </table>
+
+            <table id= "medicines" class="inner-table" style="display: none">
+              <% (@medicines || []).each do |name| %>
+                  <tr class ="<%= cycle('even', 'odd')%> ">
+                    <td class="answer_name"><%= name %></td>
+                  </tr>
+              <% end %>
+            </table>
+
+            <table id="feeding_challenges" class="inner-table" style="display: none">
+              <% (@feeding_challenges || []).each do |name| %>
+                  <tr class ="<%= cycle('even', 'odd')%> ">
+                    <td class="answer_name"><%= name %></td>
+                  </tr>
+              <% end %>
+            </table>
+          </div>
         </td>
       </tr>
     </table>
 </div>
+
+<script>
+  function load(item, id){
+      var nodes = document.getElementsByClassName("topic");
+      var cur_node = __$(id);
+      for(var i = 0; i < nodes.length; i ++){
+          nodes[i].style.background = "#d3d3d3";
+      }
+      item.style.background = "lightblue";
+
+      var tables = document.getElementsByClassName("inner-table");
+      for(var i = 0; i < tables.length; i ++){
+          tables[i].style.display = "none";
+      }
+
+      cur_node.style.display = "table";
+  }
+</script>
