@@ -339,10 +339,17 @@
 
     }
 
-    setTimeout(function() {
-        var img = document.getElementById("img-circle");
-        if (img) {
-            setTimeout("checkArticles()", 1000);
-        }
-    }, 500);
+    function start() {
+        setTimeout(function () {
+            var img = document.getElementById("img-circle");
+            if (img) {
+                setTimeout("checkArticles()", 1000);
+            }
+            else {
+                setTimeout("start()", 1000);
+            }
+        }, 200);
+    }
+
+    start();
 </script>
