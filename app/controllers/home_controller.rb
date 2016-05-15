@@ -148,9 +148,10 @@ class HomeController < ApplicationController
   end
 
   def retrieve_articles
-      concept_id = ConceptName.where("name = '#{params[:concept]}'").last.concept_id
-      tag_ids = TagConceptRelationship.where("concept_id = #{concept_id}").map(&:tag_id).join(",")
-      tag_ids = '0' if tag_ids.blank?
+    c = params[:concept].split('|').join("', '") rescue "----------"
+    concept_ids = ConceptName.where("name IN ('#{c}')").map(&:concept_id).join(" , ") rescue -1
+    tag_ids = TagConceptRelationship.where("concept_id IN (#{concept_ids})").map(&:tag_id).join(",") rescue "0"
+    tag_ids = '0' if tag_ids.blank?
 
       article_ids = Publify.find_by_sql("SELECT * FROM articles_tags  WHERE tag_id IN (#{tag_ids})"
           ).map(&:article_id).join(",")
@@ -183,6 +184,22 @@ class HomeController < ApplicationController
       article = article_override.blank? ? articles_hash[first_key] : article_override
       hash = {:key => (article_key || first_key), :data => article, :all_keys => titles.join('|') }
       render :text => hash.to_json
+  end
+
+  def check_articles
+
+    c = params[:concept].split('|').join("', '") rescue "----------"
+    concept_ids = ConceptName.where("name IN ('#{c}')").map(&:concept_id).join(" , ") rescue -1
+    tag_ids = TagConceptRelationship.where("concept_id IN (#{concept_ids})").map(&:tag_id).join(",") rescue "0"
+    tag_ids = '0' if tag_ids.blank?
+
+    article_ids = Publify.find_by_sql("SELECT * FROM articles_tags  WHERE tag_id IN (#{tag_ids})"
+    ).map(&:article_id).join(",")
+    article_ids = '0' if article_ids.blank?
+    articles = Publify.find_by_sql("SELECT * FROM contents WHERE id IN (#{article_ids})")
+
+    render :text => "true" and return if articles.length > 0
+    render :text => "false"
   end
 
   def next_article
