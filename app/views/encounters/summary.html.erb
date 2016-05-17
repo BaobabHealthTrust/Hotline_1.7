@@ -116,21 +116,22 @@
   }
   /* Edit icon/button */
   .edit-icons {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       text-align: center;
       border-radius: 50px;
   }
   .anchor_class a{
-      border: 1px solid black;
-      border-style: outset;
+      /*border: 1px solid black;*/
+      /*border-style: outset;*/
       position: absolute;
-      right: 5px;
+      right: 3px;
+      border: 1px solid royalblue;
       border-radius: 50px;
       cursor: pointer;
       display: block;
       text-align: center;
-      background-color: white;
+      background-color: #ffffff;
       box-shadow: inset 3px -3px 3px -2px grey;
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
@@ -159,7 +160,7 @@
                 <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
                 <!------------------------------------------------------------------------>
             </div>
-            <div class="anchor_class" style="position: absolute; top: 75px;">
+            <div class="anchor_class" style="position: absolute; top: 70px;">
                 <a href="/encounters/new/clinical_assessment?patient_id=<%= @patient_obj.patient_id %>">
                      <span>
                           <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
@@ -174,7 +175,7 @@
                 <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
                 <!------------------------------------------------------------------------>
             </div>
-            <div class="anchor_class" style="position: absolute; top: 5px;">
+            <div class="anchor_class" style="position: absolute; top: 0px;">
                 <a href="/encounters/new/dietary_assessment?patient_id=<%= @patient_obj.patient_id %>">
                       <span>
                           <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
