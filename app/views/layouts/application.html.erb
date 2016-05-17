@@ -320,8 +320,13 @@
     }
 
     function checkArticles(){
-        if ($("touchscreenInput" + tstCurrentPage) && $("touchscreenInput" + tstCurrentPage).value){
-
+        var concept = "";
+        if ($("touchscreenInput" + tstCurrentPage)){
+            try {
+                concept = $("touchscreenInput" + tstCurrentPage).value.replace(/\;/g, '|');
+            }catch(e){
+                concept = "";
+            }
         }else{
             setTimeout("checkArticles()", 3000);
         }
@@ -330,7 +335,7 @@
         jQuery.ajax({
             type: "POST",
             url: "/home/check_articles",
-            data: "concept=" + $("touchscreenInput" + tstCurrentPage).value.replace(/\;/g, '|'),
+            data: "concept=" + concept,
             success: function(results){
                 if (eval(results)){
                     animate();
