@@ -307,17 +307,25 @@
         }
 
         var img = __$("img-wrapper");
-        __$('img-circle').src = "/assets/icons/info-sign.png";
-        if ( (count % 2) == 1) {
-            img.className = "active bounce";
+        if(__$('img-circle')) {
+            __$('img-circle').src = "/assets/icons/info-sign.png";
+            if ((count % 2) == 1) {
+                img.className = "active bounce";
+            }
+            setTimeout(
+                    function () {
+                        img.className = "active";
+                    }, 1000);
         }
-        setTimeout(
-                function(){
-                    img.className = "active";
-                }, 1000);
     }
 
     function checkArticles(){
+        if ($("touchscreenInput" + tstCurrentPage) && $("touchscreenInput" + tstCurrentPage).value){
+
+        }else{
+            setTimeout("checkArticles()", 3000);
+        }
+
         count += 1;
         jQuery.ajax({
             type: "POST",
@@ -343,7 +351,8 @@
     function start() {
         setTimeout(function () {
             var img = document.getElementById("img-circle");
-            if (img) {
+            var inputAvailable = document.getElementById("touchscreenInput" + tstCurrentPage);
+            if (img && inputAvailable) {
                 setTimeout("checkArticles()", 1000);
             }
             else {
