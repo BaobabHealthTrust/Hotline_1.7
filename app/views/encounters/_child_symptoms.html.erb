@@ -150,8 +150,8 @@
     <%= hidden_field_tag("observations[][concept_name]", "", :id => 'start_concept') %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Does the child have ",
-                   :tt_onLoad => "populateFirstQuestion()",
-                   :tt_requireNextClick => true,
+                   :tt_onLoad => "populateFirstQuestion(); $('nextButton').style.display = 'none'",
+                   :tt_requireNextClick => false,
                    :id => "first_question"
     %>
 
@@ -163,6 +163,16 @@
 
 
 
+    <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF FEVER' %>
+    <%= text_field_tag 'observations[][value_numeric]', nil,
+                       :helpText => 'How many days has the child had fever?',
+                       :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value == 'Fever'",
+                       :field_type => 'number',
+                       :tt_requireNextClick => true,
+                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
+                       :id => "fever_days",
+                       :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
+    %>
 
     <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF DIARRHEA' %>
     <%= text_field_tag 'observations[][value_numeric]', nil,
@@ -314,10 +324,10 @@
     <%= hidden_field_tag 'observations[][value_coded_or_text]', 'No', :id => "cough_21_days"%>
 
 
-    <%= hidden_field_tag("observations[][concept_name]", "CONVULSIONS SIGN") %>
+    <%= hidden_field_tag("observations[][concept_name]", "CONVULSIONS") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Is the child having convulsions, or has recently had convulsions?",
-                   :condition => "__$('start').value.toUpperCase() != 'CONVULSIONS SIGN'",
+                   :condition => "__$('start').value.toUpperCase() != 'CONVULSIONS'",
                    :id => "convulsions",
                    :tt_requireNextClick => false,
                    :tt_onLoad => '$("nextButton").style.display = "none";'
@@ -349,8 +359,6 @@
                      :helpText => "Is the child vomiting everything he/she eats? ",
                      :tt_requireNextClick => false,
                      :tt_onLoad => '$("nextButton").style.display = "none";' } %>
-
-
 
     <%= hidden_field_tag("observations[][concept_name]", "RED EYE") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
@@ -448,7 +456,8 @@
 
   <label for='summary'>Symptom Confirmation</label>
   <%= text_field_tag :summary, nil, {
-                                     :tt_onLoad => "hideHelpButton();summary();$('keyboard').style.display = 'none';",
+                                     :tt_onLoad => "hideHelpButton();summary();$('keyboard').style.display = 'none';
+                                     __$('nextButton').style.display = 'block'; ",
                                      :optional => "true",
                                      :tt_pageStyleClass => "NoControls" } %>
 
