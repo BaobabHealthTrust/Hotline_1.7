@@ -66,6 +66,10 @@
     <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
+    <% if params[:show_summary] == 'true' %>
+        <%= hidden_field_tag 'show_summary', params[:show_summary] %>
+    <% end %>
+
     <% @current_data = Encounter.current_data("CLINICAL ASSESSMENT", @patient_obj.patient_id)%>
 
     <%= select_tag 'nutrition_group',
