@@ -126,7 +126,7 @@
       /*border-style: outset;*/
       position: absolute;
       right: 3px;
-      border: 1px solid royalblue;
+      /*border: 1px solid royalblue;*/
       border-radius: 50px;
       cursor: pointer;
       display: block;
@@ -161,7 +161,7 @@
                 <!------------------------------------------------------------------------>
             </div>
             <div class="anchor_class" style="position: absolute; top: 70px;">
-                <a href="/encounters/new/clinical_assessment?patient_id=<%= @patient_obj.patient_id %>">
+                <a href="/encounters/new/clinical_assessment?patient_id=<%= @patient_obj.patient_id %>&show_summary=true">
                      <span>
                           <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
                      </span>

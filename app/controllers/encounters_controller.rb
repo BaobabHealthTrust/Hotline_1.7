@@ -81,6 +81,10 @@ class EncountersController < ApplicationController
       if observation[:value_coded_or_text] == 'Irrelevant' || observation[:value_coded_or_text] == 'Dropped' 
         redirect_to "/" and return
       end
+
+      if params[:show_summary] == 'true'
+        redirect_to "/encounters/nutrition_summary?patient_id=#{@patient.id}" and return
+      end
     end
 
     #handle a few attributes[]
