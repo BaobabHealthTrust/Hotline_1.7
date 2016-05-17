@@ -392,7 +392,7 @@ class EncountersController < ApplicationController
 
     food_type_concept = ConceptName.find_by_name('Food Type').concept_id
     meal_type_concept = ConceptName.find_by_name(meal_type_concept).concept_id
-    consumption_method_concept = ConceptName.find_by_name('Consumption Method').concept_id
+    consumption_method_concept = ConceptName.find_by_name('Typically Eaten').concept_id
 
     ((0 .. paramz['consumption_method'].length - 1)).each do |index|
       meal_type = meal_type_values[index.to_s] rescue next
