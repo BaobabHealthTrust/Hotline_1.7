@@ -710,11 +710,13 @@
         }
         else if(year == current_year && year != 'Unknown'){
             // We expect month to be of index less than current ---
-            if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
-                summary(year, month, day, current_month, current_year,months);
-            }
-            else {
-                showMessage('Invalid input. Month can not be ahead of '+months[current_month],false,false);
+            if( get_edd != true ){
+                if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
+                    summary(year, month, day, current_month, current_year,months);
+                }
+                else {
+                    showMessage('Invalid input. Month can not be ahead of '+months[current_month],false,false);
+                }
             }
         }
         else if(year > current_year && year != 'Unknown') {
@@ -729,7 +731,7 @@
         }
     }
 
-    //note: month is 0 based, just like Dates in js
+    // note: month is 0 based, just like Dates in js
     // code to get weeks of a month given month and in year.
     function getWeeksInMonth(month, year){
         var weeks=[],
@@ -909,43 +911,82 @@
             //var trimester = Math.abs(parseInt(trimester_lmp_month) - parseInt(current_month));
             var trimester;
 
-            if(parseInt(current_year) == parseInt(lmp_year)) {
-                if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 2)) {
-                    trimester = 1 + 'st';
+            if( get_edd == true ) {
+                if(parseInt(current_year) == parseInt(lmp_year)) {
+                    if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 2)) {
+                        trimester = 1 + 'st';
+                    }
+                    else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 5)) {
+                        trimester = 2 + 'nd';
+                    }
+                    else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 7)) {
+                        trimester = 3 + 'rd';
+                    }
                 }
-                else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 5)) {
-                    trimester = 2 + 'nd';
-                }
-                else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 7)) {
-                    trimester = 3 + 'rd';
-                }
-            }
-            else if(parseInt(current_year) > parseInt(lmp_year)) {
-                var trimester_array = new Array();
-                var i;
-                for(i = trimester_lmp_month+1; i <= months.length -1; i++) {
-                    trimester_array.push(months[i]);
-                }
-                for(i = 0; i <= expected_month ; i++ ) {
-                    trimester_array.push(months[i]);
-                }
-                for(i = 0; i <= trimester_array.length-1; i++) {
-                    if( months[current_month] == trimester_array[i]) {
-                        if(i >= 0 && i <= 2){
-                            trimester = '1st';
-                        }
-                        else if(i >= 3 && i <= 5){
-                            trimester = '2nd';
-                        }
-                        else if(i >= 6 && i <= 7){
-                            trimester = '3rd';
+                else if(parseInt(current_year) < parseInt(lmp_year)) {
+                    var trimester_array = new Array();
+                    var i;
+                    for(i = trimester_lmp_month+1; i <= months.length -1; i++) {
+                        trimester_array.push(months[i]);
+                    }
+                    for(i = 0; i <= expected_month ; i++ ) {
+                        trimester_array.push(months[i]);
+                    }
+                    for(i = 0; i <= trimester_array.length-1; i++) {
+                        if( months[current_month] == trimester_array[i]) {
+                            if(i >= 0 && i <= 2){
+                                trimester = '1st';
+                            }
+                            else if(i >= 3 && i <= 5){
+                                trimester = '2nd';
+                            }
+                            else if(i >= 6 && i <= 7){
+                                trimester = '3rd';
+                            }
                         }
                     }
                 }
             }
-            if(trimester == undefined ) {
-                trimester = 'Outlier';
+            else    {
+                if(parseInt(current_year) == parseInt(lmp_year)) {
+                    if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 2)) {
+                        trimester = 1 + 'st';
+                    }
+                    else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 5)) {
+                        trimester = 2 + 'nd';
+                    }
+                    else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 7)) {
+                        trimester = 3 + 'rd';
+                    }
+                }
+                else if(parseInt(current_year) > parseInt(lmp_year)) {
+                    var trimester_array = new Array();
+                    var i;
+                    for(i = trimester_lmp_month+1; i <= months.length -1; i++) {
+                        trimester_array.push(months[i]);
+                    }
+                    for(i = 0; i <= expected_month ; i++ ) {
+                        trimester_array.push(months[i]);
+                    }
+                    for(i = 0; i <= trimester_array.length-1; i++) {
+                        if( months[current_month] == trimester_array[i]) {
+                            if(i >= 0 && i <= 2){
+                                trimester = '1st';
+                            }
+                            else if(i >= 3 && i <= 5){
+                                trimester = '2nd';
+                            }
+                            else if(i >= 6 && i <= 7){
+                                trimester = '3rd';
+                            }
+                        }
+                    }
+                }
+                if(trimester == undefined ) {
+                    trimester = 'Outlier';
+                }
             }
+
             display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
             display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
             display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";
