@@ -9,6 +9,15 @@
 
       __$("clearButton").style.display = "none";
   }
+
+  function switchView(){
+    var uri = window.location.toString();
+    if (uri.match(/by\_concepts/)){
+        window.location = "/view_tags"
+    }else{
+        window.location = "/view_tags?by_concepts=true"
+    }
+  }
 </script>
 <style>
 .main-container {
@@ -93,18 +102,20 @@ img {
 }
 
         /* --------------------- popUp For Alert -----------------------*/
-.my_button {
+#switch-btn {
     -moz-user-select: none;
     background-image: none;
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
     display: inline-block;
     font-size: 16px;
     font-weight: bolder;
     line-height: 1.82857;
-    margin-bottom: 0;
-    padding: 6px 56px;
+    padding: 5px;
+    padding-left: 20px;
+    width: 200px !important;
+    padding-right: 20px;
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;
@@ -112,7 +123,8 @@ img {
     border-color: #2e6da4;
     color: #fff;
     float: right;
-    margin-top: -5px;
+    margin-top: 20px;
+    border: outset 3px;
 }
 
 
@@ -173,9 +185,17 @@ img {
 </form>
 <div id="container" class="table-container" style="height: 11%;">
   <div class="table-row">
-    <div class="table-cell" style="width: 80%;padding-left: 15px;">
-      <h3>View Tags</h3>
+    <div class="table-cell" style="width: 65%;padding-left: 15px;">
+    <% if params[:by_concepts]%>
+      <h2>View tags by concept</h2>
+    <% else %>
+      <h2>View concepts by tag</h2>
+    <% end %>
+
     </div>
+
+    <div class="table-cell" id="switch-btn" style="width:15%;" onclick="switchView();"></div>
+
     <div class="table-cell" style="width: 10%; vertical-align: middle; text-align: right;">
       <span class="icons">
         <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
@@ -203,4 +223,8 @@ img {
 <%= render :partial => 'home/footer' %>
 
 
-
+<script>
+  setTimeout(function(){
+        __$("switch-btn").innerHTML = "<%= params[:by_concepts] ? 'View by tags' : 'View by concepts' %>"
+  }, 200);
+</script>

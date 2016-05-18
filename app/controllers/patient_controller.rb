@@ -20,7 +20,7 @@ class PatientController < ApplicationController
     if(!(@patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50 || @patient_obj.age <= 5))
       symptom_encounter_name = "HEALTH SYMPTOMS"
     else
-      symptom_encounter_name = patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
+      symptom_encounter_name = @patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
     end
     symptom_encounter_type = EncounterType.where(:name => symptom_encounter_name).first
     @symptom_encounters = Encounter.all_encounters_by_type(@patient_obj.patient_id, [symptom_encounter_type.id])

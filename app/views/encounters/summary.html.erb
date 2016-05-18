@@ -123,7 +123,7 @@
       /*border: 1px solid black;*/
       /*border-style: outset;*/
       position: absolute;
-      right: 3px;
+      right: 10px;
       border: 0px solid royalblue;
       border-radius: 5px;
       cursor: pointer;
@@ -160,7 +160,7 @@
                 <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
                 <!------------------------------------------------------------------------>
             </div>
-            <div class="anchor_class" style="position: absolute; top: 70px;">
+            <div class="anchor_class" style="position: absolute; top: 90px;">
                 <a href="/encounters/new/clinical_assessment?patient_id=<%= @patient_obj.patient_id %>&show_summary=true">
                      <span>
                           <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
@@ -175,7 +175,7 @@
                 <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
                 <!------------------------------------------------------------------------>
             </div>
-            <div class="anchor_class" style="position: absolute; top: 0px;">
+            <div class="anchor_class" style="position: absolute; top: 30px;">
                 <a href="/encounters/new/dietary_assessment?patient_id=<%= @patient_obj.patient_id %>">
                       <span>
                           <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>

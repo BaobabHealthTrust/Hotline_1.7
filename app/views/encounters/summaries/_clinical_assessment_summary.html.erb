@@ -90,7 +90,7 @@
                    if @clinical_encounter.blank?
                 %>
                     <tr class ="<%= cycle('even', 'odd')%> ">
-                      <td class="alert-none">No symptoms available<span style="color:blue">!</span></td>
+                      <td class="alert-none">No symptoms available<span style="">!</span></td>
                     </tr>
                 <% end %>
               </table>
@@ -104,7 +104,7 @@
               if @danger_signs.blank?
               %>
                   <tr class ="<%= cycle('even', 'odd')%> ">
-                    <td class="alert-none">No danger signs available<span style="color:blue">!</span></td>
+                    <td class="alert-none">No danger signs available<span style="">!</span></td>
                   </tr>
               <% end %>
             </table>
@@ -119,7 +119,7 @@
                  if @symptoms_not_available.blank?
               %>
                   <tr class ="<%= cycle('even', 'odd')%> ">
-                    <td class="alert-none">None available<span style="color:blue">!</span></td>
+                    <td class="alert-none">None available<span style="">!</span></td>
                   </tr>
               <% end %>
             </table>
@@ -134,7 +134,7 @@
                  if @medicines.blank?
               %>
                   <tr class ="<%= cycle('even', 'odd')%> ">
-                    <td class="alert-none">No medicines/supplements available<span style="color:blue">!</span></td>
+                    <td class="alert-none">No medicines/supplements available<span style="">!</span></td>
                   </tr>
               <% end %>
             </table>
@@ -149,7 +149,7 @@
                  if @feeding_challenges.blank?
               %>
                   <tr class ="<%= cycle('even', 'odd')%> ">
-                    <td class="alert-none">None feeding challenges available<span style="color:blue">!</span></td>
+                    <td class="alert-none">None feeding challenges available<span style="">!</span></td>
                   </tr>
               <% end %>
             </table>
