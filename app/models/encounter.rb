@@ -23,16 +23,29 @@ class Encounter < ActiveRecord::Base
     data
   end
 
-  def self.current_data(name, patient_id)
+  def self.current_data(name, patient_id, current_cal = false)
     encounter_type_id  = EncounterType.find_by_name(name).id
     data = {}
 
-    (Encounter.find_by_sql(["SELECT * FROM encounter WHERE encounter_type = #{encounter_type_id}
-                     AND DATE(encounter_datetime) = ? AND patient_id = #{patient_id}
-                            ", Date.today])
-    .last.observations rescue []).each do |observation|
+    if current_cal
+      encs = Encounter.find_by_sql(["SELECT * FROM encounter e WHERE e.encounter_type = #{encounter_type_id}
+                        AND DATE(e.encounter_datetime) = ? AND e.patient_id = #{patient_id}
+                        AND (SELECT COUNT(*) FROM obs o WHERE o.encounter_id = e.encounter_id AND COALESCE(o.comments, '') = '' ) > 0
+                        ORDER BY encounter_datetime DESC LIMIT 1", Date.today])
+              .first.observations rescue []
+    else
+      encs = Encounter.find_by_sql(["SELECT * FROM encounter WHERE encounter_type = #{encounter_type_id}
+                       AND DATE(encounter_datetime) = ? AND patient_id = #{patient_id}
+                        ORDER BY encounter_datetime DESC LIMIT 1    ", Date.today])
+      .first.observations rescue []
+    end
+
+    (encs).each do |observation|
       data[observation.concept_name.name.upcase.strip] = [] if data[observation.concept_name.name.upcase.strip].blank?
       data[observation.concept_name.name.upcase.strip] << observation.answer_string
+      .gsub(/Hiv/i, 'HIV')
+      .gsub(/TB\//i, "TB/")
+      .gsub(/BP\/H/i, "BP/H") rescue nil
     end
 
     data

@@ -52,7 +52,7 @@
           if (danger_sign.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
             var img = liElements[j].getElementsByTagName('img')[0];
             if(img.src.match('unticked')){
-                liElements[j].click();
+                liElements[j].style.display = 'none';
                 break;
             }
             }

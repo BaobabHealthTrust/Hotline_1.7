@@ -51,26 +51,42 @@
       var currentKey = ""
       //var currentConcept = "Potential chest indrawing";
       var currentConcept = "";
-      function loadArticles(){
+      function loadArticles(title){
+
           setListAttributes();
           jQuery.ajax({
               type: "POST",
               url: "/home/retrieve_articles",
-              data: "concept=" + $("touchscreenInput" + tstCurrentPage).value,
+              data: "concept=" + $("touchscreenInput" + tstCurrentPage).value.replace(/\;/g, '|') + (title ? ("&title=" + title) : ""),
               success: function(results){
-                  results = eval("(" + results  + ")");
+                  try {
+                      results = eval("(" + results + ")");
+                  }catch(e){
+                  }
+
+                  var all_keys = results["all_keys"];
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];
                   author = results["data"]["author"];
 
                   popupHeader = document.getElementsByClassName("popup-header")[0];
-                  popupHeader.innerHTML = title;
+                  popupHeader.innerHTML = '';
                   popupContent = document.getElementsByClassName("popup-data")[0];
                   popupContent.innerHTML = body;
+                  nextButton = document.getElementsByClassName("nextButton")[0];
+                  prevButton = document.getElementsByClassName("prevButton")[0];
+
+                  nextButton.style.backgroundColor = '#6495ED';
+                  prevButton.style.backgroundColor = '#6495ED';
+
+                  buildSelect(all_keys.split("|"), title);
               }
 
           });
+
+
+
       }
 
       function loadNextArticle(){
@@ -80,7 +96,12 @@
               url: "/home/next_article",
               data: "key=" + currentKey,
               success: function(results){
-                  results = eval("(" + results  + ")");
+                  try {
+                      results = eval("(" + results + ")");
+                  }catch(e){
+                  }
+
+                  var all_keys = results["all_keys"];
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];
@@ -96,14 +117,17 @@
                       nextButton.style.backgroundColor = '#6495ED';
                       prevButton.style.backgroundColor = '#6495ED';
                   }
+
                   popupHeader = document.getElementsByClassName("popup-header")[0];
-                  popupHeader.innerHTML = title;
+                  popupHeader.innerHTML = '';
                   popupContent = document.getElementsByClassName("popup-data")[0];
                   popupContent.innerHTML = body;
+                  buildSelect(all_keys.split("|"), title);
               }
 
           });
       }
+
 
       function loadPrevArticle(){
           setListAttributes();
@@ -112,7 +136,12 @@
               url: "/home/previous_article",
               data: "key=" + currentKey,
               success: function(results){
-                  results = eval("(" + results  + ")");
+                  try {
+                      results = eval("(" + results + ")");
+                  }catch(e) {
+                  }
+
+                  var all_keys = results["all_keys"];
                   currentKey = results["key"];
                   title = results["data"]["title"];
                   body = results["data"]["body"];
@@ -129,9 +158,11 @@
                   }
 
                   popupHeader = document.getElementsByClassName("popup-header")[0];
-                  popupHeader.innerHTML = title;
+                  popupHeader.innerHTML = '';
                   popupContent = document.getElementsByClassName("popup-data")[0];
                   popupContent.innerHTML = body;
+                  buildSelect(all_keys.split("|"), title);
+
               }
 
           });
@@ -139,6 +170,28 @@
 
       function setListAttributes(){
           currentConcept = $("touchscreenInput" + tstCurrentPage).value;
+      }
+
+      function buildSelect(options, val){
+          var select = document.createElement('select');
+          select.id = "select";
+
+          for (var o in options){
+              var opt = document.createElement('option');
+              opt.setAttribute('value', options[o]);
+              opt.innerHTML =  options[o];
+              if (options[o].trim() == val.trim()){
+                  opt.setAttribute("selected", true);
+              }
+              select.appendChild(opt);
+          }
+
+          select.onchange = function(){
+              loadArticles(select.value);
+          }
+
+          var popupHeader = document.getElementsByClassName("popup-header")[0];
+          popupHeader.appendChild(select);
       }
 
   //-->
@@ -172,6 +225,50 @@
       html{
       }
     </style>
+
+    <style>
+      #select{
+          min-width: 30%;
+          font-size: 1.2em !important;
+          background: white;
+          margin-left: 15px;
+          padding-left: 10px;
+          padding-right: 30px;
+          color: black;
+      }
+
+      .bounce {
+          background-repeat: no-repeat;
+          background-position: left top;
+          -webkit-animation-duration: 0.9s;
+          animation-duration: 0.9s;
+          -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+      }
+
+      @-webkit-keyframes bounce {
+          0%, 20%, 50%, 80%, 100% {-webkit-transform: translateY(0);}
+          40% {-webkit-transform: translateY(-10px);}
+          60% {-webkit-transform: translateY(-5px);}
+      }
+
+      @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+          40% {transform: translateY(-10px);}
+          60% {transform: translateY(-5px);}
+      }
+
+      .bounce {
+          -webkit-animation-name: bounce;
+          animation-name: bounce;
+      }
+
+      .active{
+      }
+
+      .disabled{
+      }
+    </style>
   </head>
 
   <body id="mateme">
@@ -199,3 +296,75 @@
     </div>
   </body>
 </html>
+
+<script>
+    var count = 0;
+    function animate(){
+        var popup = document.getElementsByClassName("popup-cover");
+
+        if (popup.length > 0){
+            return;
+        }
+
+        var img = __$("img-wrapper");
+        if(__$('img-circle')) {
+            __$('img-circle').src = "/assets/icons/info-sign.png";
+            if ((count % 2) == 1) {
+                img.className = "active bounce";
+            }
+            setTimeout(
+                    function () {
+                        img.className = "active";
+                    }, 1000);
+        }
+    }
+
+    function checkArticles(){
+        var concept = "";
+        if ($("touchscreenInput" + tstCurrentPage)){
+            try {
+                concept = $("touchscreenInput" + tstCurrentPage).value.replace(/\;/g, '|');
+            }catch(e){
+                concept = "";
+            }
+        }else{
+            setTimeout("checkArticles()", 3000);
+        }
+
+        count += 1;
+        jQuery.ajax({
+            type: "POST",
+            url: "/home/check_articles",
+            data: "concept=" + concept,
+            success: function(results){
+                if (eval(results)){
+                    animate();
+                }else{
+                    var img = __$("img-wrapper");
+                    img.className = "disabled";
+                    __$('img-circle').src = "/assets/icons/info-sign-disabled.png";
+                }
+
+                setTimeout("checkArticles()", 1000);
+            }
+        }).fail(function(){
+            setTimeout("checkArticles()", 3000);
+        });
+
+    }
+
+    function start() {
+        setTimeout(function () {
+            var img = document.getElementById("img-circle");
+            var inputAvailable = document.getElementById("touchscreenInput" + tstCurrentPage);
+            if (img && inputAvailable) {
+                setTimeout("checkArticles()", 1000);
+            }
+            else {
+                setTimeout("start()", 1000);
+            }
+        }, 200);
+    }
+
+    start();
+</script>

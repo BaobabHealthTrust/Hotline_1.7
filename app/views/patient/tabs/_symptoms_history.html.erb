@@ -116,7 +116,7 @@
           </div>
           <div class="min-container-table-cell encounters" id="<%=e.id%>"
           style="width: 88%; padding-left: 10px;" onclick = "javascript:selectEncounter(this)">
-            <p><%= e.type.name %>&nbsp;<small><%=e.encounter_datetime.strftime('%d/%b/%Y %H:%M:%S')%></small></p>
+            <p><%= e.encounter_datetime.strftime('%d/%b/%Y %H:%M:%S')%>&nbsp;<small><%#=e.encounter_datetime.strftime('%d/%b/%Y %H:%M:%S')%></small></p>
           </div>
         </div>
         <br />
@@ -183,8 +183,9 @@ function addRows(data) {
   }
 
   observations = JSON.parse(data);
-  
-  for(var i = 0; i < observations.length; i++) {        
+
+  for(var i = 0; i < observations.length; i++) {
+      console.log(observations[i][0]);
     tr = document.createElement('tr');       
     td = document.createElement('td');
     td.setAttribute('class','obs_title')

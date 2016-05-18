@@ -67,7 +67,7 @@
 
                     <% if @group.downcase != 'group 4'%>
                         <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
-                            <select name="meal_type[<%=i%>]" class="<%= i%> select meal-type input">
+                            <select name="meal_type[<%=i%>]" class="<%= i%> select meal-type input" >
                               <% @meal_types[@group.downcase].each  do |type|%>
                                 <option><%= type %></option>
                               <% end %>
@@ -76,7 +76,7 @@
                     <% end %>
 
                     <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
-                      <select name="food_type[<%=i%>][]" class="<%= i%> select food-type input" multiple="multiple">
+                      <select name="food_type[<%=i%>][]" class="<%= i%> select food-type input" multiple="multiple" >
                         <% @food_types[@group.downcase].each  do |type|%>
                             <option value="<%= type %>"><%= type %> <%= @example_foods[type].strip rescue nil%></option>
                         <% end %>
@@ -85,7 +85,7 @@
 
                     <% if @group.downcase == 'group 4'%>
                         <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
-                          <select name="times_per_day[<%= i%>]" class="<%= i%> select times-per-day input">
+                          <select name="times_per_day[<%= i%>]" class="<%= i%> select times-per-day input" >
                             <option></option>
                             <% (1 .. 12).each do |type|%>
                                 <option><%= type %></option>
@@ -104,6 +104,11 @@
                   </tr>
               <% end %>
         </table>
+
+      <div id="alert" style="width: 90%;margin:auto;height: 15vh; margin-top: 20px;
+              border: 1px solid #f5f5f5;color: red; text-align: center; font-size: 1.5em;">
+
+      </div>
 
       <form action="/encounters/create" method="POST">
         <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("DIETARY ASSESSMENT").id %>
@@ -251,11 +256,53 @@
     function pageSetup(){
         __$('page' + tstCurrentPage).innerHTML = "";
         __$('page' + tstCurrentPage).appendChild(__$('table'));
+        __$('page' + tstCurrentPage).appendChild(__$('alert'));
+
         __$('nextButton').onmousedown = function(){
-           submitForm();
+           checkValidations();
+           if(Object.keys(messages).length == 0) {
+               submitForm();
+           }else{
+               showMessage("Incomplete entries for " + Object.keys(messages).length + " row" + (Object.keys(messages).length > 1 ? "s" : ''));
+           }
         }
         __$('clearButton').style.display = 'none';
     }
+
+    var messages = {};
+
+    function checkValidations(){
+        var fields = document.getElementsByClassName("select");
+       messages = {};
+        __$("alert").innerHTML = "";
+        for(var i = 0; i < fields.length; i++){
+            var text = fields[i].parentNode.getElementsByClassName("ui-dropdownchecklist-text")[0];
+            try{txt = text.innerHTML.replace(/&nbsp\;/g, '')}catch(e){};
+            console.log(txt);
+            if(txt && txt.trim().length > 0){
+                validate(fields[i].className.split(" ")[0].trim());
+            }
+        }
+
+        for(var i in messages){
+            __$("alert").innerHTML = __$("alert").innerHTML + messages[i] + "<br />";
+        }
+
+        setTimeout("checkValidations()", 1000);
+    }
+
+    function validate(classNum){
+        var rowFields = document.getElementsByClassName(classNum);
+        delete messages[classNum];
+        for(var i = 0; i < rowFields.length; i ++){
+            var text = rowFields[i].parentNode.getElementsByClassName("ui-dropdownchecklist-text")[0];
+            if(text.innerHTML.replace(/&nbsp\;/g, '').trim().length == 0){
+                messages[classNum] = "Incomplete entries for row : <i style='color: blue'>" + (parseInt(classNum) + 1) + "</i>";
+            }
+        }
+    }
+
+    setTimeout("checkValidations()", 500)
 </script>
 
 
