@@ -1,11 +1,4 @@
-<html>
-  <head>
-    <title><%=@report_name%></title>
-    <%= stylesheet_link_tag fancy_or_high_contrast_touch %>
-    <link href="/stylesheets/report.css" media="screen" rel="stylesheet" type="text/css" />
-    <link href="/stylesheets/report_print.css" media="print" rel="stylesheet" type="text/css" />
-  </head>
-  <body>
+<%= render :partial => 'header' %>
     <div class="btn-menu">
       <%params[:format] = 'pdf'%>
       <%select_report_criteria = '/report/select?report_type=' +@report_type +'&query=' + @query%>
@@ -71,8 +64,4 @@
       
     </div>
 
-    <%# (1..2000).each{ %>
-    <%#= "<hr /><br />" %>
-    <%# } %>
-  </body>
-</html>
+  <%= render :partial => 'footer' %>

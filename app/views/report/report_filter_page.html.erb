@@ -1,0 +1,217 @@
+<%= render :partial => 'header' %>
+<style type="text/css">
+  .filter_form{
+      width: 98%;
+      margin: auto;
+      color: blue;
+      margin-top:1%;
+      border: 1px solid #ddd;
+      overflow-y: scroll;
+      overflow-x:hidden;
+      background: #f7f7f7;
+
+  }
+  #filter_table{
+      width: 100%;
+      color: #40869e;
+      border-collapse: collapse;
+  }
+
+ #filter_table th,  #filter_table td {
+      padding: 1%;
+      font-size: 20px;
+      font-weight: bold;
+      border-bottom: 1px dotted #ddd;
+      border-left: 1px dotted #ddd;
+  }
+  #filter_table th{
+      font-size: 22px;
+  }
+  select{
+    width:94%;
+    color: #40869e;
+    font-size: 20px;
+    font-weight: bold;
+    border:  1px solid #ddd;
+  }
+
+  select option{
+   font-size: 20px;
+  }
+
+  legend{
+    font-size: 22px;
+    text-align: center;
+    font-weight: bold;
+    //color: #999999;
+    color: #40869e;
+  }
+</style>
+<script>
+  var tt_cancel_destination = '/clinic';
+  var date_ranges = <%= raw @report_date_range.to_json%>;
+  function setDateRange(quarter){
+    var date_range;
+    quarter     = $("#"+quarter).val();
+    date_range  = date_ranges[quarter];
+    
+    $('#start_date').val(date_range[0]);
+    $('#end_date').val(date_range[1]);
+  }
+  
+  function setDistrict(aDistrict){
+    $('district').value = aDistrict;
+  }
+</script>
+<fieldset>
+     <legend>Report Filters</legend>
+  
+  <form id="filter_form" class="filter_form" method='POST' action="reports">
+    <table id="filter_table">
+      <thead>
+      </thead>
+      <tbody>
+        <tr>
+            <td>District</td>
+            <td>
+                <%= select_tag :currentdistrict, options_for_select(@districts.sort), 
+                  {:helpText => 'Select the district to base the report on',
+                   :onchange=>"setDistrict('currentdistrict');"}%>
+            </td>
+        </tr>
+        <% if not @query == "individual_current_enrollments" %>
+                    <tr>
+                        <td>Date Range</td>
+                        <td>
+                           <%= select_tag :report_date_range, options_for_select(@date_range_values),
+                            {:helpText => "Select Date Range",
+                             :onchange=>"setDateRange('report_date_range');"} %>
+                        </td>
+                    </tr>
+            <% if @report_type.downcase != 'tips' && @report_type.downcase != 'family_planning' %>
+                <%if @query != "new_vs_repeat_callers" && @query != "follow_up" %>
+                  <tr>
+                      <td>Patient Type</td>
+                      <td>
+                          <%= select_tag :patient_type, options_for_select(@patient_type),
+                          {:helpText => "Select Patient Type"} %>
+                      </td>
+                  </tr>
+                <%end%>
+            <% end %>
+                <tr>
+                    <td>Grouping Criterion</td>
+                    <td>
+                        <%= select_tag :grouping,     options_for_select(@grouping),
+                          {:helpText => "Select Grouping Criterion"} %>
+                    </td>
+                </tr>
+             <%if @query == "health_issues"%>
+               <tr>
+                    <td>Health Task</td>
+                    <td>
+                        <%= select_tag :health_task, options_for_select(@health_task),
+                                {:helpText => "Select Health Task"} %>
+                    </td>
+              </tr>
+            <%end%>
+
+            <%if @query == "referral_followup"%>
+            <tr>
+                    <td>Outcome</td>
+                    <td>
+                      <%= select_tag :outcome, options_for_select(@outcomes),
+                                  {:helpText => "Select Outcome"} %>
+                    </td>
+            </tr>
+            <%end%>
+
+            <% if @report_type.downcase == 'call_analysis'%>
+              <%if @query != "new_vs_repeat_callers" && @query != "follow_up" %>
+                <tr>
+                    <td>Staff to Report on</td>
+                    <td>
+                        <%= select_tag :staff_member,     options_for_select(@staff),
+                              {:helpText => "Select a Staff member to report on"} %>
+                     </td>
+                </tr>
+                <tr>
+                    <td>Call type</td>
+                    <td>
+                        <%= select_tag :call_type,     options_for_select(@call_type),
+                              {:helpText => "Select Call type"} %>
+                    </td>
+                </tr>
+              <%end%>
+            <% elsif @report_type.downcase == 'tips' %>
+                  <tr>
+                    <td>Content to Report on</td>
+                    <td>
+                      <%= select_tag :content_type,     options_for_select(@content_type),
+                                  {:helpText => "Select the Content to report on"} %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Language to Report on</td>
+                    <td>
+                      <%= select_tag :language,     options_for_select(@language),
+                                  {:helpText => "Select the language to report on"} %>
+                    </td>
+                  </tr>
+              <% if @query != 'current_enrollment_totals' %>
+                  <tr>
+                    <td>Phone Type</td>
+                    <td>
+                      <%= select_tag :phone_type,     options_for_select(@phone_type),
+                                  {:helpText => "Select Phone type"} %>
+                    </td>
+                  </tr>
+              <% end %>
+                  <tr>
+                    <td>Tips Delivery Mode</td>
+                    <td>
+                      <%= select_tag :delivery,     options_for_select(@delivery),
+                                  {:helpText => "Select tips delivery method"} %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Number Prefix</td>
+                    <td>
+                      <%= select_tag :network_prefix,     options_for_select(@network_prefix),
+                                  {:helpText => "Select the number prefix"} %>
+                    </td>
+                  </tr>
+            <% end %>
+       <% end %>
+        <!--tr>
+              <td>Destination</td>
+              <td><%= select_tag :report_destination,     options_for_select(@destination),
+                {:helpText => "Select report destination"} %></td>
+        </tr-->
+      </tbody>
+    </table>
+
+
+            <%= hidden_field_tag :query, "#{@query}"%>
+            <%= hidden_field_tag :start_date, "", {:id => 'start_date'}%>
+            <%= hidden_field_tag :end_date,   "", {:id => 'end_date'}%>
+            <%= hidden_field_tag :district,   "", {:id => 'district'}%>
+            <%= hidden_field_tag :report_type, "#{@report_type}", {:id => 'report_type'}%>
+    </form>
+    <div style="float:right; margin-top:0.5%;">
+        <button  class="button green" onclick="submitForm()">
+           <span>Finish</span>
+        </button>
+      <button class="button red"  onclick="window.location ='/report'"><span>Back</span></button>
+    </div>
+   </fieldset>
+<script type="text/javascript">
+  function submitForm(){
+    $("#filter_form").submit();
+  }
+  $("#filter_form").css("height",window.innerHeight * 0.65);
+  window.onresize = function(){
+    $("#filter_form").css("height",window.innerHeight * 0.65);
+  }
+</script>
+<%= render :partial => 'footer' %>

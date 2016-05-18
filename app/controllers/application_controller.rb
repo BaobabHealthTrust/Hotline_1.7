@@ -73,4 +73,8 @@ class ApplicationController < ActionController::Base
     return "/" if !session[:end_call].blank?
     return "/patient/dashboard/#{@patient.id}/tasks"
   end
+  def get_staff_members_list
+    staff = User.all.map{|u| ["#{u.username}", "#{u.user_id}"]}
+    return staff
+  end
 end

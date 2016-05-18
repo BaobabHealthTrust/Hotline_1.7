@@ -171,7 +171,6 @@ class PatientController < ApplicationController
     encounter.creator = session[:user_id]
     encounter.save
     params[:observations].each do |ob|
-
       concept_id = ConceptName.find_by_name(ob[:concept_name]).concept_id rescue (
       raise "Missing concept name : '#{ob[:concept_name]}', Please add it in the configurations files or call help desk line")
 

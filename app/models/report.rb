@@ -73,10 +73,10 @@ module Report
 
     case patient_type.downcase
       when "women"
-        pregnancy_status_concept_id         = Concept.find_by_name("PREGNANCY STATUS").concept_id
+        pregnancy_status_concept_id = ConceptName.find_by_name("PREGNANCY STATUS").id
         pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
-        delivered_status_concept = Concept.find_by_name("Delivered").concept_id
-        call_id = Concept.find_by_name("CALL ID").concept_id
+        delivered_status_concept = ConceptName.find_by_name("Delivered").id
+        call_id = ConceptName.find_by_name("Call id").concept_id
 
         extra_parameters = ", CASE pregnancy_status_table.value_coded " +
             " WHEN #{delivered_status_concept} THEN 'Delivered' " +
@@ -290,15 +290,15 @@ module Report
     #TODO find a better way of getting concpet_names that are not tagged concept_name_tag_map as danger, health_symptom or health info
     concept_names =  '"' + essential_params[:concept_map].inject([]) {|result, concept| result << concept[:concept_name].to_s}.uniq.join('","') + '"'
 
-    value_coded_indicator = Concept.find_by_name("YES").id
-    call_id = Concept.find_by_name("CALL ID").id
+    value_coded_indicator = ConceptName.find_by_name("YES").id
+    call_id = ConceptName.find_by_name("Call id").id
 
     child_maximum_age = 9
 
-    required_tags = ConceptNameTag.find(:all,
-                                        :select => "concept_name_tag_id",
-                                        :conditions => ["tag IN ('DANGER SIGN', 'HEALTH INFORMATION', 'HEALTH SYMPTOM')"]
-    ).map(&:concept_name_tag_id).join(', ')
+    #required_tags = ConceptNameTag.find(:all,
+    #                                   :select => "concept_name_tag_id",
+    #                                    :conditions => ["tag IN ('DANGER SIGN', 'HEALTH INFORMATION', 'HEALTH SYMPTOM')"]
+    #).map(&:concept_name_tag_id).join(', ')
 
     query = "SELECT encounter_type.name AS encounter_type_name, " +
         "COUNT(obs.person_id) AS number_of_patients," + extra_parameters +
@@ -492,7 +492,7 @@ module Report
     call_percentage = 0
 
     concepts_list.each do |concept_name|
-      concept_id = Concept.find_by_name("#{concept_name}").id rescue nil
+      concept_id = ConceptName.find_by_name("#{concept_name}").id rescue nil
       next if concept_id.nil?
 
       concept_ids += concept_id.to_s + ", "
@@ -531,7 +531,7 @@ module Report
   end
 
   def self.call_count(date_range, patient_type, district_id, count_type = nil)
-    call_id = Concept.find_by_name("CALL ID").id
+    call_id = ConceptName.find_by_name("Call id").id
     child_maximum_age = 9
 
     if patient_type.humanize.downcase == "children"
@@ -589,7 +589,7 @@ module Report
   end
 
   def self.call_count_for_period(date_range, patient_type, district_id)
-    call_id = Concept.find_by_name("CALL ID").id
+    call_id = ConceptName.find_by_name("Call id").id
     child_maximum_age = 9
 
     if patient_type.humanize.downcase == "children"
@@ -628,9 +628,9 @@ module Report
   def self.get_callers(date_range, essential_params, patient_type, district_id, task = nil)
     child_maximum_age     = 9 # see definition of a female adult above
     concept_ids = essential_params[:concept_map].inject([]) {|result, concept| result << concept[:concept_id]}.uniq.join(',')
-    value_coded_indicator = Concept.find_by_name("YES").id
+    value_coded_indicator = ConceptName.find_by_name("YES").id
 
-    call_id = Concept.find_by_name("CALL ID").id
+    call_id = ConceptName.find_by_name("Call id").id
 
     if patient_type.humanize.downcase == "children"
       extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
@@ -664,9 +664,9 @@ module Report
   end
 
   def self.patient_health_issues(patient_type, grouping, health_task, start_date, end_date, district)
-    district_id = District.find_by_name(district).id
-    patients_data = []
+     district_id = Location.find_by_name(district).id
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
+    patients_data = []
 
     essential_params  = self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
 
@@ -736,9 +736,9 @@ module Report
   end
 
   def self.patient_age_distribution(patient_type, grouping, start_date, end_date, district)
-    district_id = District.find_by_name(district).id
-    date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
+    district_id = Location.find_by_name(district).id
+    date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
     patients_data = []
 
     date_ranges.map do |date_range|
@@ -784,14 +784,18 @@ module Report
   def self.get_age_statistics(patient_type, date_range, district_id)
 
     child_maximum_age     = 9 # see definition of a female adult above
-    nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id
-    call_id = Concept.find_by_name("CALL ID").concept_id
+    #nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id
+    nearest_health_center = ConceptName.find_by_name("Nearest health facility").id
+
+    #call_id = Concept.find_by_name("CALL ID").concept_id
+    call_id = ConceptName.find_by_name("Call id").id
 
     case patient_type.downcase
+
       when "women"
-        pregnancy_status_concept_id         = Concept.find_by_name("PREGNANCY STATUS").concept_id
+        pregnancy_status_concept_id         = ConceptName.find_by_name("PREGNANCY STATUS").id
         pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
-        delivered_status_concept = Concept.find_by_name("Delivered").concept_id
+        delivered_status_concept = ConceptName.find_by_name("Delivered").id
 
         extra_parameters = "SELECT (YEAR(p.date_created) - YEAR(ps.birthdate)) AS Age,
                             pregnancy_status_table.pregnancy_status AS pregnancy_status_text "
@@ -1055,9 +1059,11 @@ module Report
   end
 
   def self.patient_activity(patient_type, grouping, start_date, end_date, district)
-    district_id = District.find_by_name(district).id
-    patients_data = []
+    district_id = Location.find_by_name(district).id
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
+  
+    patients_data = []
+    
 
     date_ranges.map do |date_range|
 
@@ -1162,13 +1168,13 @@ module Report
   end
 
   def self.patient_activity_query_builder(patient_type, health_task, date_range, essential_params, district_id)
-    call_id = Concept.find_by_name("CALL ID").id
+    call_id = ConceptName.find_by_name("Call id").id
     concept_ids         = essential_params[:concept_ids]
     encounter_type_ids  = essential_params[:encounter_type_ids]
     #extra_conditions    = essential_params[:extra_conditions]
     #extra_parameters    = essential_params[:extra_parameters]
 
-    value_coded_indicator = Concept.find_by_name("YES").id
+    value_coded_indicator = ConceptName.find_by_name("YES").id
 =begin
     query = "SELECT COUNT(obs.person_id) AS number_of_patients "  +
             "FROM encounter, encounter_type, obs, concept, concept_name " +
@@ -1202,8 +1208,8 @@ module Report
   end
 
   def self.patient_referral_followup(patient_type, grouping, outcome, start_date, end_date, district)
-    district_id = District.find_by_name(district).id
-    call_id = Concept.find_by_name("CALL ID").id
+    district_id = Location.find_by_name(district).id
+    call_id = ConceptName.find_by_name("Call id").id
     patient_data = []
     youth_age = 9
 
@@ -1228,7 +1234,7 @@ module Report
                               AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?",
                              EncounterType.find_by_name("Update Outcome").id,
                              date_range.first, date_range.last,
-                             Concept.find_by_name("Outcome").id,
+                             ConceptName.find_by_name("Outcome").id,
                              outcome, youth_age]
       elsif patient_type.downcase == 'children'
         condition_options = ["encounter_type = ?
@@ -1239,7 +1245,7 @@ module Report
                               AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?",
                              EncounterType.find_by_name("Update Outcome").id,
                              date_range.first, date_range.last,
-                             Concept.find_by_name("Outcome").id,
+                             ConceptName.find_by_name("Outcome").id,
                              outcome, youth_age]
       else
         condition_options = ["encounter_type = ?
@@ -1249,21 +1255,18 @@ module Report
                               AND obs.value_text IN (?)",
                              EncounterType.find_by_name("Update Outcome").id,
                              date_range.first, date_range.last,
-                             Concept.find_by_name("Outcome").id,
+                             ConceptName.find_by_name("Outcome").id,
                              outcome]
 
       end
-
-      o_encounters = Encounter.find(:all,
-                                    :joins =>"INNER JOIN obs ON encounter.encounter_id = obs.encounter_id
+      
+      o_encounters = Encounter.joins("INNER JOIN obs ON encounter.encounter_id = obs.encounter_id
                              INNER JOIN person ON patient_id = person.person_id
                              INNER JOIN obs obs_call ON obs_call.encounter_id = obs.encounter_id
                               AND obs_call.concept_id = #{call_id}
                               INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id 
-                                AND cl.district = #{district_id}" ,
-                                    :conditions => condition_options
-      )
-
+                                AND cl.district = #{district_id}").where(condition_options)
+     
       #raise o_encounters.to_yaml
       o_encounters.each do |a_encounter|
 
@@ -1310,7 +1313,7 @@ module Report
 
   def self.call_day_distribution(patient_type, grouping, call_type, call_status,
       staff_member, start_date, end_date, district)
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     call_data = []
 
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date,
@@ -1350,7 +1353,7 @@ module Report
   def self.call_analysis_query_builder(patient_type, date_range, staff_id, call_type, call_status, district_id)
 
     child_maximum_age     = 9 # see definition of a female adult above
-    call_concept_id = Concept.find_by_name('call id').id
+    call_concept_id = ConceptName.find_by_name('call id').id
     extra_conditions = " "
     extra_grouping = " "
 
@@ -1413,7 +1416,7 @@ module Report
 
   def self.call_time_of_day(patient_type, grouping, call_type, call_status,
       staff_member, start_date, end_date, district)
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     call_data = []
     norm_date = Date.today
 
@@ -1467,7 +1470,7 @@ module Report
 
   def self.call_lengths(patient_type, grouping, call_type, call_status,
       staff_member, start_date, end_date, district)
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     call_data = []
     norm_date = Date.today
 
@@ -1545,7 +1548,7 @@ module Report
   def self.tips_activity(start_date, end_date, grouping, content_type, language,
       phone_type, delivery, number_prefix, district)
 
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     call_data = []
 
     # main obs conceps
@@ -1606,7 +1609,7 @@ module Report
 
   def self.get_tips_data(date_range, district_id)
 
-    call_id = Concept.find_by_name("CALL ID").id
+    call_id = ConceptName.find_by_name("Call id").id
     encounter_type_list = ["TIPS AND REMINDERS"]
     encounter_types = self.get_encounter_types(encounter_type_list)
     encounters_list = Encounter.find(:all,
@@ -1631,7 +1634,7 @@ module Report
 
     encounter_type_list = ["TIPS AND REMINDERS"]
     encounter_types = self.get_encounter_types(encounter_type_list)
-    call_id = Concept.find_by_name("CALL ID").id
+    call_id = ConceptName.find_by_name("Call id").id
 
     query = "SELECT COUNT(DISTINCT obs.value_text) AS count " +
         "FROM encounter " +
@@ -1661,7 +1664,7 @@ module Report
     nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id
     encounter_type_list = ["TIPS AND REMINDERS"]
     encounter_types = self.get_encounter_types(encounter_type_list)
-    call_id = Concept.find_by_name("CALL ID").id
+    call_id = ConceptName.find_by_name("Call id").id
 
     query = "SELECT pa.value AS catchment, o.* " +
         "FROM obs o " +
@@ -1714,7 +1717,7 @@ module Report
 
   def self.current_enrollment_totals(start_date, end_date, grouping, content_type, language,
       delivery, number_prefix, district)
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     call_data = []
 
     # main obs conceps
@@ -1798,7 +1801,7 @@ module Report
 
   def self.individual_current_enrollments(start_date, end_date, grouping, content_type, language,
       phone_type, delivery, number_prefix, district)
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     call_data = []
 
     # main obs concepts
@@ -1888,7 +1891,7 @@ module Report
 
   def self.get_tips_data_by_name(date_range, district_id)
 
-    call_id = Concept.find_by_name("CALL ID").id
+    call_id = ConceptName.find_by_name("Call id").id
     encounter_type_list = ["TIPS AND REMINDERS"]
     encounter_types = self.get_encounter_types(encounter_type_list)
 
@@ -1966,7 +1969,7 @@ module Report
 
   def self.family_planning_satisfaction(start_date, end_date, grouping, district)
 
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     patients_data = []
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
@@ -2071,7 +2074,7 @@ module Report
   end
   def self.info_on_family_planning(start_date, end_date, grouping, district)
 
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     patients_data = []
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
@@ -2127,16 +2130,17 @@ module Report
 
   def self.get_nearest_health_centers(district)
     district_id = district
-    hc_conditions   = ["district = ?", district_id]
-    location_tag    = LocationTag.find_by_name(Location.find(district_id).name)
-    health_centers  = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
-     ON m.location_id = location.location_id")
+    hc_conditions  = ["district = ?", district_id]
+    location_tag = LocationTag.find_by_name(Location.find(district_id).name.gsub(/City/i, '').strip)
+    health_centers = Location.where("m.location_tag_id = #{location_tag.id} ").joins("INNER JOIN location_tag_map m
+                          ON m.location_id = location.location_id")
+    #health_centers  = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id")
 
     return health_centers
 
   end
   def self.new_vs_repeat_callers_report(start_date, end_date, grouping, district)
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     patients_data = []
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
@@ -2170,7 +2174,7 @@ module Report
     return patients_data
   end
   def self.follow_up_report(start_date, end_date, grouping, district)
-    district_id = District.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     patients_data = []
     #follow_up_reasons = self.create_follow_up_structure
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
