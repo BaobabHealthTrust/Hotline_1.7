@@ -78,6 +78,13 @@ class EncountersController < ApplicationController
             :value => observation[:value_numeric] || observation[:value_text] || observation[:value_datetime] || observation[:value_coded_or_text]
         )
       end
+      if observation[:value_coded_or_text] == 'Irrelevant' || observation[:value_coded_or_text] == 'Dropped' 
+        redirect_to "/" and return
+      end
+
+      if params[:show_summary] == 'true'
+        redirect_to "/encounters/nutrition_summary?patient_id=#{@patient.id}" and return
+      end
     end
 
     #handle a few attributes[]
@@ -104,11 +111,13 @@ class EncountersController < ApplicationController
     if !params[:end_call].blank?
       session[:end_call] = true
     end 
-    
+
     # Go to the next task in the workflow (or dashboard)
     age = @patient_obj.age
-    if age <= 5 || age >= 13 && age <= 50 && @patient_obj.sex == 'F'
+    if (age <= 5 || age >= 13 && age <= 50 && @patient_obj.sex == 'F') && session[:automatic_flow] == true
       redirect_to next_task(@patient_obj)
+    elsif params[:encounter_type] == 'Update outcomes' && session[:end_call] == true
+      redirect_to '/' and return
     else
       redirect_to "/patient/dashboard/#{@patient.id}/tasks"
     end
@@ -171,10 +180,24 @@ class EncountersController < ApplicationController
                                                Date.today)
         current_lmp_str = current_lmp[0].split('/') rescue []
         current_lmp_str_time = current_lmp_str[2].split(' ') rescue []
+        months = Date::MONTHNAMES
+        shortnames = Date::ABBR_MONTHNAMES
 
         @current_lmp_day = current_lmp_str[0]
-        @current_lmp_month = current_lmp_str[1]
+        @current_lmp_month = months[shortnames.index(current_lmp_str[1])]
         @current_lmp_year = current_lmp_str_time[0]
+
+        @pregnancy_options = concept_set('Pregnancy status')
+        current_delivery_date = Observation.by_concept_today(@patient_obj.patient_id,
+                                                   'Delivery date',
+                                                   'Pregnancy Status',
+                                                   Date.today)
+        current_delivery_date_str = current_delivery_date[0].split('/') rescue []
+        current_delivery_date_str_time = current_delivery_date_str[2].split(' ') rescue []
+
+        @current_delivery_date_day = current_delivery_date_str[0]
+        @current_delivery_date_month = months[shortnames.index(current_delivery_date_str[1])]
+        @current_delivery_date_year = current_delivery_date_str_time[0]
 
       when 'Female symptoms'
           #if child
@@ -194,6 +217,7 @@ class EncountersController < ApplicationController
           @info_concept = "Maternal Health Info"
         end
       when 'Update outcomes'
+          @encounter_type = encounter_type
           @general_outcomes = concept_set('General outcome')
       when 'Reminders'
         @phone_types = concept_set('Phone Type')
@@ -230,17 +254,18 @@ class EncountersController < ApplicationController
             'Legumes & Nuts' => '(groundnuts, etc.)',
             'Animal Foods' => '(meat, eggs, etc)',
             'Fruits' => '(citrus fruits,  etc.)',
-            'Vegetables' => '',
-            'Fats' => '(oils, etc.)'
+            'Vegetables' => '(bonongwe, chisoso, etc)',
+            'Fats' => '(oils, etc.)',
+            'None' => ''
         }
         @food_types = {
-            'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
+            'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
+            'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
             'group 4' => ['Breastmilk', 'Foods', 'Other Liquids'],
-            'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats']
+            'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
+            'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
+            'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None']
         }
 
         @consumption_method = ['', 'Yes', 'No']
@@ -265,7 +290,8 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as malnourished'
+             'Previously diagnosed as malnourished',
+             'None'
          ],
          'Group 2' => [
              'Anaemia',
@@ -275,7 +301,8 @@ class EncountersController < ApplicationController
              'HIV positive/exposed',
              'Previously diagnosed as malnourished',
              'TB/Tuberculosis',
-             'Vomiting'
+             'Vomiting',
+             'None'
          ],
          'Group 3' => [
              'Fever',
@@ -284,7 +311,8 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as malnourished'
+             'Previously diagnosed as malnourished',
+             'None'
          ],
          'Group 4' => [
              'Anaemia',
@@ -292,7 +320,8 @@ class EncountersController < ApplicationController
              'HIV positive/exposed',
              'Previously diagnosed as moderate/severely malnourished',
              'Conditions interfering with breastfeeding',
-             'TB/Tuberculosis'
+             'TB/Tuberculosis',
+             'None'
       ],
          'Group 5' => [
              'HIV-positive',
@@ -300,13 +329,15 @@ class EncountersController < ApplicationController
              'TB/Tuberculosis',
              'Previously diagnosed as malnourished',
              'Danger signs',
-             'Conditions interfering with breastfeeding'
+             'Conditions interfering with breastfeeding',
+             'None'
          ],
          'Group 6' => [
              'HIV-positive',
              'anaemic',
              'TB/Tuberculosis',
-             'previously diagnosed as malnourished'
+             'previously diagnosed as malnourished',
+             'None'
          ],
          'Group 7' => [
              'Fever',
@@ -315,7 +346,8 @@ class EncountersController < ApplicationController
              'HIV-positive',
              'TB/Tuberculosis',
              'High blood pressure/hypertension',
-             'Previously diagnosed as malnourished'
+             'Previously diagnosed as malnourished',
+             'None'
          ]
       ]
       return clinical_questions[0]
@@ -361,7 +393,7 @@ class EncountersController < ApplicationController
 
     food_type_concept = ConceptName.find_by_name('Food Type').concept_id
     meal_type_concept = ConceptName.find_by_name(meal_type_concept).concept_id
-    consumption_method_concept = ConceptName.find_by_name('Consumption Method').concept_id
+    consumption_method_concept = ConceptName.find_by_name('Typically Eaten').concept_id
 
     ((0 .. paramz['consumption_method'].length - 1)).each do |index|
       meal_type = meal_type_values[index.to_s] rescue next
@@ -409,10 +441,13 @@ class EncountersController < ApplicationController
   def nutrition_summary
     @patient_obj = PatientService.get_patient(params[:patient_id])
     @client = Patient.find(params[:patient_id])
-    @clinical_encounter = (Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)['CURRENT COMPLAINTS OR SYMPTOMS'] || []) rescue []
+    @clinical_data = Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
+    @clinical_encounter = (@clinical_data['CURRENT COMPLAINTS OR SYMPTOMS'] - ['None'] || []) rescue []
+    @danger_signs = (@clinical_data['DANGER SIGNS'] || []) rescue []
+    @medicines = (@clinical_data['Medicines/supplements in current pregnancy'.upcase] - ['None'] || []) rescue []
+    @feeding_challenges = (@clinical_data['CONDITIONS INTERFERING WITH BREASTFEEDING'] - ['None'] || []) rescue []
     @clinical_encounter_1 = []
     @clinical_encounter_2 = []
-
 
     #segmenting clinical encounter for two tables
     if (@clinical_encounter.length > 0)
@@ -422,21 +457,39 @@ class EncountersController < ApplicationController
     elsif (@clinical_encounter.length == 1)
       @clinical_encounter_1 = @clinical_encounter
     end
+    @current_pregnancy_status = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)
 
     @clinical_encounter_2 = @clinical_encounter_2 - @clinical_encounter_1
 
     @dietary_encounter = Encounter.current_data('DIETARY ASSESSMENT', @patient_obj.patient_id)
     @group = @client.nutrition_module
-    @consumed_groups = Encounter.current_food_groups('DIETARY ASSESSMENT', @patient_obj.patient_id)
+    @symptoms_not_available = clinical_questions[@group] - @clinical_encounter - ['None']
+
+    @consumed_groups = Encounter.current_food_groups('DIETARY ASSESSMENT', @patient_obj.patient_id).uniq
+
+    count = @consumed_groups.count
+    @comment = ""
+    if count.between?(0, 2)
+      @comment = "<span style='color: red;'>No diversity</span>"
+    elsif count.between?(3, 4)
+      @comment = "Inadequate <br /> diversification"
+    elsif count >= 5
+      @comment = "<span style='color: green'>Adequate <br /> diversification</span>"
+    end
+
+    infant_age = PatientService.get_infant_age(@patient_obj)
+    if !infant_age.blank? && infant_age <= 6
+      @comment = "Children under 6 months should be exclusively breastfed"
+    end
 
     @groups = {
-      'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
-      'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
-      'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
-      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids'],
-      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-      'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
-      'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
+      'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
+      'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
+      'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
+      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids', 'None', 'Groups Cons.'],
+      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'None', 'Fats'],
+      'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
+      'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.']
     }
 
     @example_foods =  {'Staples' => [['Samples: Cereal grains e.g sorghum, maize, starchy fruits such
@@ -459,8 +512,9 @@ class EncountersController < ApplicationController
                                   'beef.png'],
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
                        'Breastmilk' => [['Milk'], 'breastf.png'],
-                       'Other Liquids' => [['?'], 'drink.jpg'],
-                       'Groups Cons.' => [["<span style='font-weight: bold'>#{@consumed_groups.uniq.count}</span>"], '']
+                       'Other Liquids' => [['Other liquids <br>(water, juice, dairy/goat milk, etc.)'], 'drink.jpg'],
+                       'None' => [['none'], 'none.png'],
+                       'Groups Cons.' => [["<span style='font-weight: normal'>#{@comment}</span>"], '']
     }
     render :layout => false, :template => 'encounters/summary'
   end

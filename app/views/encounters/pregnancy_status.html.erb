@@ -2,13 +2,44 @@
 <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
 
 <style type="text/css">
+    /*============ */
+    .btn-day {
+        display: inline;
+        margin: 5px 2px 2px;
+        text-align: center;
+        background-color: #5281E0;
+        border: solid dodgerblue 3px;
+        border-radius: 7px;
+        box-shadow: 2px 2px 10px lightblue inset;
+        color: white;
+        font-size: 1.7em;
+        line-height: 57px;
+        min-width: 120px;
+        font-weight: bold;
+        min-height: 100px;
+    }
+    #tbInputDay {
+        margin-top: 10px;
+        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+        border-color: -moz-use-text-color -moz-use-text-color silver;
+        border-style: none none solid;
+        border-width: medium medium 1px;
+        font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+        font-size: 2.2em;
+        padding-left: 5px;
+        width: 99%;
+        text-align: center;
+    }
     .btn-year {
         display: inline;
         margin: 5px 2px 2px;
         text-align: center;
-        background-color: blue;
+        background-color: #5281E0;
+        border: solid dodgerblue 3px;
+        border-radius: 7px;
+        box-shadow: 2px 2px 10px lightblue inset;
         color: white;
-        font-size: 1.3em;
+        font-size: 1.7em;
         line-height: 57px;
         min-width: 120px;
         font-weight: bold;
@@ -241,31 +272,6 @@
         position: relative;
         padding-right: 15px;
     }
-    /*============ */
-    .btn-day {
-        display: inline;
-        margin: 5px 2px 2px;
-        text-align: center;
-        background-color: blue;
-        color: white;
-        font-size: 1.3em;
-        line-height: 57px;
-        min-width: 120px;
-        font-weight: bold;
-        min-height: 100px;
-    }
-    #tbInputDay {
-        margin-top: 10px;
-        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-        border-color: -moz-use-text-color -moz-use-text-color silver;
-        border-style: none none solid;
-        border-width: medium medium 1px;
-        font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
-        font-size: 2.2em;
-        padding-left: 5px;
-        width: 99%;
-        text-align: center;
-    }
 </style>
 <!-- ======================================================================================== -->
 <script>
@@ -307,7 +313,6 @@
                    :id => "pregnancy_status",
                    :allowFreeText => false
     %>
-
 
     <input type = "hidden" id = "selected_year" />
     <input type = "hidden" id = "selected_month" />
@@ -403,6 +408,21 @@
         }
     }
 
+    var get_edd;
+
+    function changeToEDD() {
+        showMessage('LMP Unknown. Enter estimated due date',false,false);
+        dateLayout();
+        document.getElementById('tbInputYear').value = '';
+        document.getElementById('tbInputMonth').value = '';
+        document.getElementById('tbInputDay').value = '';
+
+        var helpText = document.getElementById('helpText'+tstCurrentPage);
+        helpText.innerHTML = 'Estimated Due Date';
+
+        get_edd = true;
+    }
+
     function dateLayout() {
         var input_frame = $('inputFrame'+tstCurrentPage);
         $("clearButton").style.display = "none";
@@ -453,12 +473,20 @@
         var btnUnknown = document.createElement('input');
         btnUnknown.setAttribute('id','btnUnknow');
         btnUnknown.setAttribute('type','button');
+        btnUnknown.style.fontSize = '1.4em';
         btnUnknown.setAttribute('value','Unknown');
-        btnUnknown.setAttribute('onclick','input(this);');
+        var pregnancy_status = document.getElementById('pregnancy_status').value;
+        if( pregnancy_status == 'Pregnant') {
+            btnUnknown.setAttribute('onclick','input(this);changeToEDD();');
+        }
+        else {
+            btnUnknown.setAttribute('onclick','input(this);');
+        }
         btnUnknown.className = 'btn-year';
         year_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
         btn0.setAttribute('id','btn0');
+        btn0.style.fontSize = '1.4em';
         btn0.setAttribute('type','button');
         btn0.setAttribute('onclick','input(this);');
         btn0.setAttribute('value','0');
@@ -468,6 +496,7 @@
         clear_btn.setAttribute('id','btnCl');
         clear_btn.setAttribute('type','button');
         clear_btn.setAttribute('value','Clear');
+        clear_btn.style.fontSize = '1.4em';
         clear_btn.setAttribute('onclick','clearInputYear();');
         clear_btn.className = 'btn-year';
         year_div.appendChild(clear_btn);
@@ -567,12 +596,14 @@
         btnUnknown.setAttribute('id','btnUnknow');
         btnUnknown.setAttribute('type','button');
         btnUnknown.setAttribute('value','Unknown');
+        btnUnknown.style.fontSize = '1.4em';
         btnUnknown.setAttribute('onclick','inputDay(this);');
         btnUnknown.className = 'btn-day';
         day_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
         btn0.setAttribute('id','btn0');
         btn0.setAttribute('type','button');
+        btn0.style.fontSize = '1.4em';
         btn0.setAttribute('onclick','inputDay(this);');
         btn0.setAttribute('value','0');
         btn0.className = 'btn-day';
@@ -580,6 +611,7 @@
         var clear_btn = document.createElement('input');
         clear_btn.setAttribute('id','btnCl');
         clear_btn.setAttribute('type','button');
+        clear_btn.style.fontSize = '1.4em';
         clear_btn.setAttribute('value','Clear');
         clear_btn.setAttribute('onclick','clearInputDay();');
         clear_btn.className = 'btn-day';
@@ -596,7 +628,52 @@
         document.getElementById('tbInputMonth').value = e.innerHTML;
     }
 
+    function validate_edd() {
+
+        var year = document.getElementById('selected_year').value;
+        var month = document.getElementById('selected_month').value;
+        var day = document.getElementById('selected_day').value;
+
+        if (day == 'Unknown') {
+            day = 1;
+        }
+
+        var months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+        var current_year = new Date().getFullYear();
+        var current_month = new Date().getMonth();
+        var year_diff = parseInt(current_year) - parseInt(year);
+
+        if((year > current_year || year == current_year) && parseInt(year) < parseInt(current_year)+2) {
+            summary(year,month,day,current_month,current_year,months);
+        }
+        else if(year < current_year) {
+            showMessage('Invalid input. EDD year can not be behind '+current_year);
+        }
+        else if(parseInt(year) > parseInt(current_year)+2) {
+            showMessage('Invalid input. EDD year is far ahead of possible due date.');
+        }
+        else {
+            showMessage('Invalid input.');
+        }
+    }
+
     function validate_lmp() {
+        if(get_edd == true) {
+            validate_edd();
+        }
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
@@ -625,7 +702,12 @@
         if(year < current_year && year_diff >= 0 && year_diff <= 1 && year != 'Unknown'){
             // We expect month to be of index greater than current and plus 4 ---
             if(parseInt(months.indexOf(month)) >= parseInt(current_month)) {
-                summary(year,month,day,current_month,current_year,months);
+                if( day > 31 || ( day>=29 && (month == 'February') && (parseInt(year)%4 == 0)) ){
+                    showMessage('Invalid input of day.',false,false);
+                }
+                else {
+                    summary(year,month,day,current_month,current_year,months);
+                }
             }
             else{
                 showMessage('Invalid input. Entry should be within 12 months.',false,false);
@@ -633,11 +715,18 @@
         }
         else if(year == current_year && year != 'Unknown'){
             // We expect month to be of index less than current ---
-            if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
-                summary(year, month, day, current_month, current_year,months);
-            }
-            else {
-                showMessage('Invalid input. Month can not be ahead of '+months[current_month],false,false);
+            if( get_edd != true ){
+                if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
+                    if( day > 31 || ( day>=29 && (month == 'February') && (parseInt(year)%4 == 0)) ){
+                        showMessage('Invalid input of day.',false,false);
+                    }
+                    else {
+                        summary(year,month,day,current_month,current_year,months);
+                    }
+                }
+                else {
+                    showMessage('Invalid input. Month can not be ahead of '+months[current_month],false,false);
+                }
             }
         }
         else if(year > current_year && year != 'Unknown') {
@@ -648,11 +737,11 @@
             // showMessage('LMP Year unknown.',false,false);
         }
         else {
-            showMessage('Invalid input. Entry should be within 9 months.',false,false);
+            showMessage('Invalid input. Entry should be within 12 months.',false,false);
         }
     }
 
-    //note: month is 0 based, just like Dates in js
+    // note: month is 0 based, just like Dates in js
     // code to get weeks of a month given month and in year.
     function getWeeksInMonth(month, year){
         var weeks=[],
@@ -678,6 +767,11 @@
         // Client Pregnant ------------
         if (pregnancy_status == 'Pregnant') {
             var edd_month;
+            var expected_edd_month;
+            var expected_date_of_delivery;
+            var expected_year;
+            var expected_month;
+            var expected_day;
             switch(month) {
                 case 'January':
                     edd_month = 0;
@@ -716,57 +810,76 @@
                     edd_month = 11;
                     break;
             }
-            var edd_day = parseInt(day);
-            edd_day += 280;
-            var expected_edd_month;
-            var expected_date_of_delivery = new Date(year, edd_month, edd_day);
-            var expected_year = expected_date_of_delivery.getFullYear();
-            var expected_month = expected_date_of_delivery.getMonth();
-            var expected_day = expected_date_of_delivery.getDate();
-            switch(expected_month) {
-                case 0:
-                    expected_edd_month = 'January';
-                    break;
-                case 1:
-                    expected_edd_month = 'February';
-                    break;
-                case 2:
-                    expected_edd_month = 'March';
-                    break;
-                case 3:
-                    expected_edd_month = 'April';
-                    break;
-                case 4:
-                    expected_edd_month = 'May';
-                    break;
-                case 5:
-                    expected_edd_month = 'June';
-                    break;
-                case 6:
-                    expected_edd_month = 'July';
-                    break;
-                case 7:
-                    expected_edd_month = 'August';
-                    break;
-                case 8:
-                    expected_edd_month = 'September';
-                    break;
-                case 9:
-                    expected_edd_month = 'October';
-                    break;
-                case 10:
-                    expected_edd_month = 'November';
-                    break;
-                case 11:
-                    expected_edd_month = 'December';
-                    break;
+
+            if( get_edd == true ) {
+                // Load edd_data
+                expected_year = year;
+                expected_edd_month = month;
+                expected_day = day;
+
+                expected_date_of_delivery = new Date(expected_year, edd_month, expected_day);
+                // Calculate LMP
+                var lmp_day = parseInt(expected_day);
+                lmp_day -= 280;
+                var last_menstrual_period = new Date(expected_year,edd_month,lmp_day);
+                var lmp_year = last_menstrual_period.getFullYear();
+                var lmp_month = last_menstrual_period.getMonth();
+                var lmp_day = last_menstrual_period.getDate();
+
             }
-            var last_menstrual_period = new Date(year, edd_month, day);
-            var lmp_year = last_menstrual_period.getFullYear();
-            var lmp_month = last_menstrual_period.getMonth();
-            var lmp_day = last_menstrual_period.getDate();
+            else {
+                var edd_day = parseInt(day);
+                edd_day += 280;
+                expected_date_of_delivery = new Date(year, edd_month, edd_day);
+                expected_year = expected_date_of_delivery.getFullYear();
+                expected_month = expected_date_of_delivery.getMonth();
+                expected_day = expected_date_of_delivery.getDate();
+                switch(expected_month) {
+                    case 0:
+                        expected_edd_month = 'January';
+                        break;
+                    case 1:
+                        expected_edd_month = 'February';
+                        break;
+                    case 2:
+                        expected_edd_month = 'March';
+                        break;
+                    case 3:
+                        expected_edd_month = 'April';
+                        break;
+                    case 4:
+                        expected_edd_month = 'May';
+                        break;
+                    case 5:
+                        expected_edd_month = 'June';
+                        break;
+                    case 6:
+                        expected_edd_month = 'July';
+                        break;
+                    case 7:
+                        expected_edd_month = 'August';
+                        break;
+                    case 8:
+                        expected_edd_month = 'September';
+                        break;
+                    case 9:
+                        expected_edd_month = 'October';
+                        break;
+                    case 10:
+                        expected_edd_month = 'November';
+                        break;
+                    case 11:
+                        expected_edd_month = 'December';
+                        break;
+                }
+                var last_menstrual_period = new Date(year, edd_month, day);
+                var lmp_year = last_menstrual_period.getFullYear();
+                var lmp_month = last_menstrual_period.getMonth();
+                var lmp_day = last_menstrual_period.getDate();
+
+                // ------------------------------------
+            }
             var trimester_lmp_month = lmp_month;
-            // ------------------------------------
             switch(lmp_month) {
                 case 0:
                     lmp_month = 'January';
@@ -808,43 +921,82 @@
             //var trimester = Math.abs(parseInt(trimester_lmp_month) - parseInt(current_month));
             var trimester;
 
-            if(parseInt(current_year) == parseInt(lmp_year)) {
-                if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 2)) {
-                    trimester = 1 + 'st';
+            if( get_edd == true ) {
+                if(parseInt(current_year) == parseInt(lmp_year)) {
+                    if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 2)) {
+                        trimester = 1 + 'st';
+                    }
+                    else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 5)) {
+                        trimester = 2 + 'nd';
+                    }
+                    else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 7)) {
+                        trimester = 3 + 'rd';
+                    }
                 }
-                else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 5)) {
-                    trimester = 2 + 'nd';
-                }
-                else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 7)) {
-                    trimester = 3 + 'rd';
-                }
-            }
-            else if(parseInt(current_year) > parseInt(lmp_year)) {
-                var trimester_array = new Array();
-                var i;
-                for(i = trimester_lmp_month+1; i <= months.length -1; i++) {
-                    trimester_array.push(months[i]);
-                }
-                for(i = 0; i <= expected_month ; i++ ) {
-                    trimester_array.push(months[i]);
-                }
-                for(i = 0; i <= trimester_array.length-1; i++) {
-                    if( months[current_month] == trimester_array[i]) {
-                        if(i >= 0 && i <= 2){
-                            trimester = '1st';
-                        }
-                        else if(i >= 3 && i <= 5){
-                            trimester = '2nd';
-                        }
-                        else if(i >= 6 && i <= 7){
-                            trimester = '3rd';
+                else if(parseInt(current_year) < parseInt(lmp_year)) {
+                    var trimester_array = new Array();
+                    var i;
+                    for(i = trimester_lmp_month+1; i <= months.length -1; i++) {
+                        trimester_array.push(months[i]);
+                    }
+                    for(i = 0; i <= expected_month ; i++ ) {
+                        trimester_array.push(months[i]);
+                    }
+                    for(i = 0; i <= trimester_array.length-1; i++) {
+                        if( months[current_month] == trimester_array[i]) {
+                            if(i >= 0 && i <= 2){
+                                trimester = '1st';
+                            }
+                            else if(i >= 3 && i <= 5){
+                                trimester = '2nd';
+                            }
+                            else if(i >= 6 && i <= 7){
+                                trimester = '3rd';
+                            }
                         }
                     }
                 }
             }
-            if(trimester == undefined ) {
-                trimester = 'Outlier';
+            else    {
+                if(parseInt(current_year) == parseInt(lmp_year)) {
+                    if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 2)) {
+                        trimester = 1 + 'st';
+                    }
+                    else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 5)) {
+                        trimester = 2 + 'nd';
+                    }
+                    else if (current_month >= trimester_lmp_month && current_month <= (trimester_lmp_month + 7)) {
+                        trimester = 3 + 'rd';
+                    }
+                }
+                else if(parseInt(current_year) > parseInt(lmp_year)) {
+                    var trimester_array = new Array();
+                    var i;
+                    for(i = trimester_lmp_month+1; i <= months.length -1; i++) {
+                        trimester_array.push(months[i]);
+                    }
+                    for(i = 0; i <= expected_month ; i++ ) {
+                        trimester_array.push(months[i]);
+                    }
+                    for(i = 0; i <= trimester_array.length-1; i++) {
+                        if( months[current_month] == trimester_array[i]) {
+                            if(i >= 0 && i <= 2){
+                                trimester = '1st';
+                            }
+                            else if(i >= 3 && i <= 5){
+                                trimester = '2nd';
+                            }
+                            else if(i >= 6 && i <= 7){
+                                trimester = '3rd';
+                            }
+                        }
+                    }
+                }
+                if(trimester == undefined ) {
+                    trimester = 'Outlier';
+                }
             }
+
             display += "<div><span class='title'>Last menstrual period (LMP):</span><span class='data'> " + lmp_day + " " + lmp_month + " " + lmp_year +"</span></div>";
             display += "<div><span class='title'>Estimated due date (EDD):</span><span class='data'> " + expected_day + " " + expected_edd_month + " "+ expected_year +"</span></div>";
             display += "<div><span class='title'>Trimester:</span><span class='data'> " + trimester +"</span></div>";

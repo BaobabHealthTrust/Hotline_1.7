@@ -110,7 +110,6 @@ module PatientService
   end
 
   def self.create(params)
-
     birthdate = self.format_birthdate_params(params[:person]['birthdate'])
     person = Person.create(birthdate: birthdate[0].to_date, birthdate_estimated: birthdate[1], 
              gender: params[:person]['gender'].first) 
@@ -188,9 +187,32 @@ module PatientService
   end
 
   def self.format_birthdate_params(birthday_params)
-    if birthday_params["birth_year"] == "Unknown" and not birthday_params['age_estimate'].blank?
+
+    if !birthday_params['age_estimate'].blank?
+      year = birthday_params["birth_year"]
+      month = birthday_params["birth_month"]
+      day = birthday_params["birth_day"]
+
+      month_i = (month || 0).to_i
+      month_i = Date::MONTHNAMES.index(month) if month_i == 0 || month_i.blank?
+      month_i = Date::ABBR_MONTHNAMES.index(month) if month_i == 0 || month_i.blank?
+
+      if (month_i == 0 || month == 'Unknown' || month.blank?) && (day == 0 || day == 'Unknown' || day.blank?)
+        birthdate = Date.new(Date.today.year - birthday_params["age_estimate"].to_i,7,1)
+        birthdate_estimated = 1
+      elsif month.present?
+        birthdate = Date.new(Date.today.year - birthday_params["age_estimate"].to_i,month_i,15)
+        birthdate_estimated = 1
+      elsif day.present?
+        birthdate = Date.new(Date.today.year - birthday_params["age_estimate"].to_i,7,day)
+        birthdate_estimated = 1
+      elsif month.present? && day.present?
+        birthdate = Date.new(Date.today.year - birthday_params["age_estimate"].to_i,month_i,day)
+        birthdate_estimated = 1
+      else
         birthdate = Date.new(Date.today.year - birthday_params["age_estimate"].to_i, 7, 1)
         birthdate_estimated = 1
+      end
     else
       year = birthday_params["birth_year"]
       month = birthday_params["birth_month"]

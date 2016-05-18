@@ -22,6 +22,7 @@
     }
 
     function onLoads() {
+
         var cancel_button = document.getElementById('btnCancel');
         cancel_button.setAttribute('onclick',"document.location = '/patient/dashboard/<%= @patient_obj.patient_id %>/tasks';");
 
@@ -62,6 +63,85 @@
       width: 130px;
   }
 
+  .diet{
+      border: 1px solid #d3d3d3 !important;
+      width: 97%;
+      margin: auto;
+      display: table-cell;
+      padding: 0px;
+  }
+  #table2{
+      width: 100%;
+      margin:auto;
+      margin-top: 10px;
+      font-size: 1em;
+  }
+  #table2 caption{
+      font-size: 1em;
+      font-weight: bold;
+      width: 90%
+  }
+
+  #table2 th{
+      background-color: #b9c7cc;
+      border: 0px solid white;
+      padding: 7px;
+  }
+
+  #table2 tr .even{
+      padding: 0px;
+      background: ghostwhite !important;
+  }
+
+  #table2 tr .odd{
+      padding: 3px;
+      border-bottom: 1px solid lightgray;
+  }
+  .food-icon{
+      height: 110px;
+      width: 110px;
+      margin-left: 15%;
+      margin-bottom: 15px;
+  }
+
+  .done{
+      width: 40px;
+      height: 40px;
+  }
+
+  .row{
+      width: 100%;
+  }
+  /* Edit icon/button */
+  .edit-icons {
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      border: none;
+  }
+  .anchor_class a{
+      /*border: 1px solid black;*/
+      /*border-style: outset;*/
+      position: absolute;
+      right: 3px;
+      border: 0px solid royalblue;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      text-align: center;
+      background-color: #ffffff;
+      box-shadow: inset 3px -3px 3px -2px grey;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -moz-box-shadow: inset 0 0 10px #000000;
+      -webkit-box-shadow: inset 0 0 10px #000000;
+      text-decoration: none;
+      transform: rotate(5deg);
+
+  }
+        /* --------------------------------- */
+
 </style>
 
 <body onload="onLoads();">
@@ -74,19 +154,33 @@
             </div>
         </div>
 
-        <div id="clinic_assess" style="display: table-row">
-            <div style="display: table-cell; width: 100%;">
+        <div id="clinic_assess" style="display: table-row; position: relative;">
+            <div style="display: table-cell; width: 100%;height: 37vh;">
                 <!-- Partial summary for clinical assessment -->
                 <%= render :partial => 'encounters/summaries/clinical_assessment_summary' %>
                 <!------------------------------------------------------------------------>
             </div>
+            <div class="anchor_class" style="position: absolute; top: 70px;">
+                <a href="/encounters/new/clinical_assessment?patient_id=<%= @patient_obj.patient_id %>&show_summary=true">
+                     <span>
+                          <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+                     </span>
+                </a>
+            </div>
         </div>
 
-        <div id="diet_assess" class="half-height" style=" width: 100%;display: table-row">
+        <div id="diet_assess" class="half-height" style=" width: 100%;display: table-row; position: relative;">
             <div style="display: table-cell; width: 100%;">
                 <!-- Partial for dietary assessment -->
                 <%= render :partial => 'encounters/summaries/dietary_assessment_summary' %>
                 <!------------------------------------------------------------------------>
+            </div>
+            <div class="anchor_class" style="position: absolute; top: 0px;">
+                <a href="/encounters/new/dietary_assessment?patient_id=<%= @patient_obj.patient_id %>">
+                      <span>
+                          <%=image_tag("icons/edit-demographic.png", class: 'edit-icons')%>
+                      </span>
+                </a>
             </div>
         </div>
 

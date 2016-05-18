@@ -7,11 +7,13 @@ class Patient < ActiveRecord::Base
   has_one :person, class_name: "Person", foreign_key: "person_id"
 
   def nutrition_module
+    patient_obj = PatientService.get_patient(self.patient_id)
   	patient_age = self.person.age
   	temp_date =  DateTime.new(0000, 6, 1)
   	six_months = temp_date.month.to_i
+    infant_age = PatientService.get_infant_age(patient_obj)
 
-  	category  = "Group 6"
+    category  = "Group 6"
   	female = self.person.gender.scan(/F/i).length > 0 rescue false
 
   	recent_preg_obs =  Encounter.find_by_sql(
@@ -28,17 +30,16 @@ class Patient < ActiveRecord::Base
   			)
 
   	pregnant_obs =  ""
-
-    if !recent_preg_obs.blank? && female
-      category = "Group 2"
-    elsif female && patient_age >= 14 && patient_age < 50
-      category = "Group 1"
-    elsif patient_age < six_months
+    if patient_age == 0 && infant_age < six_months
       category = "Group 4"
-    elsif patient_age > six_months && patient_age <= 2
+    elsif patient_age <= 2
       category = "Group 5"
     elsif patient_age > 2 && patient_age < 5
       category = "Group 6"
+    elsif !recent_preg_obs.blank? && female
+      category = "Group 2"
+    elsif female && patient_age >= 14 && patient_age < 50
+      category = "Group 1"
     elsif patient_age > 5 && patient_age < 14
       category = "Group 7"
     elsif patient_age >= 14

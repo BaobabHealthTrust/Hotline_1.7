@@ -167,13 +167,13 @@
                   <th style="width:150px;">Pregnancy status:</th>
                   <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
                                                                                   'Pregnancy status', "PREGNANCY STATUS",
-                                                                                  Date.today).join(' , ')%></td>
+                                                                                  Date.today, 10.months.ago).join(' , ')%></td>
                 </tr>
                 <tr>
                   <th style="width:150px;">EDD:</th>
                   <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
                                                                                   'Pregnancy due date',  "PREGNANCY STATUS",
-                                                                                  Date.today).first.to_date.strftime("%d-%b-%Y") rescue nil%></td>
+                                                                                  Date.today, 10.months.ago).first.to_date.strftime("%d-%b-%Y") rescue nil%></td>
                 </tr>
             <% end %>
           </table>

@@ -47,9 +47,8 @@
 .village-reach-icon {
   width: 60px !important;
   height: 60px !important;
-  border-style: solid;
-  border-width: 1px;
   padding: 0px;
+  border-right: 1px solid #000000 !important;
   float: right;
 }
 .value{
@@ -63,6 +62,10 @@
     text-align: left;
     background: white !important;
     padding: 3px;
+}
+
+.icons{
+    margin-top: 0px !important;
 }
 /* ........................................................... */
 </style>
@@ -80,8 +83,8 @@
 %>
 
   <div class="demographics">
-    
-    <div class="cells" style="width: 5%; text-align: left;">
+
+    <div class="cells" style="width: 5%; text-align: left;display: table-cell;">
       <span class="icons">
 
         <%=image_tag("icons/Person_Undefined_#{gender}_Dark.png", class: 'icons gender-icon')%>
@@ -118,11 +121,31 @@
           <th class="titl">AVR access ID:</th>
           <td class="value" ><%=@patient_obj.avr_access_number%></td>
         </tr>
-        <tr>
-          <th class="titl">District:</th>
-          <td class="value"  style="text-align: left;"><%= @patient_obj.township_division %></td>
-        </tr>
 
+
+        <% if @patient_obj.age >= 13 && @patient_obj.age <= 50
+
+            preg_status = Observation.by_concept_today(@patient_obj.patient_id,
+                                                      'Pregnancy status', "PREGNANCY STATUS",
+                                                      Date.today, 10.months.ago).join(' , ') rescue nil
+
+            edd = Observation.by_concept_today(@patient_obj.patient_id,
+                                               'Pregnancy due date',  "PREGNANCY STATUS",
+                                               Date.today, 10.months.ago).first.to_date.strftime("%d/%b/%Y") rescue nil
+            preg_status_string = preg_status + (edd.blank? ? "" : " (EDD - #{edd})")
+        %>
+            <tr>
+
+              <th class="titl" >Pregnancy status:</th>
+
+              <td class="value" style="text-align: left;"><%= preg_status_string%></td>
+            </tr>
+        <% else %>
+            <tr>
+              <th class="titl">District:</th>
+              <td class="value"  style="text-align: left;"><%= @patient_obj.township_division %></td>
+            </tr>
+        <% end %>
       </table>
     </div>
 
@@ -158,9 +181,9 @@
         </div>
     <% end %>
 
-    <div class="cells" style="width: 10%; vertical-align: middle; text-align: right;">
+    <div class="cells" style="width: 10%; vertical-align: middle; text-align: right;display: table-cell;">
       <span class="icons">
-        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
+        <%=image_tag("vr.jpeg", class: 'village-reach-icon')%>
       </span>
     </div>
 

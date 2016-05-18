@@ -1,297 +1,378 @@
-
+<%= javascript_include_tag "jquery" %>
 <style>
-.main-container {
-  width:  100%
-}
+    .main-container {
+        width:  100%
+    }
 
-body {
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */
-}
+    body {
+        -webkit-user-select: none;  /* Chrome all / Safari all */
+        -moz-user-select: none;     /* Firefox all */
+        -ms-user-select: none;      /* IE 10+ */
+        user-select: none;          /* Likely future */
+    }
 
-img {
-  user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  pointer-events: none;
-}
+    img {
+        user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        pointer-events: none;
+    }
 
-/* .................................. header starts ........................................................ */
-.table-container {
-  width: 99%;
-  display: table;
-  padding: 0px 1px 0px 1px;
-  border-style: solid;
-  border-width: 0px 0px 1px 0px;
-}
+    /* .................................. header starts ........................................................ */
+    .table-container {
+        width: 99%;
+        display: table;
+        padding: 0px 1px 0px 1px;
+        border-style: solid;
+        border-width: 0px 0px 1px 0px;
+    }
 
-.table-row  {
-  display: table-row;
-  width: 100%;
-}
+    .table-row  {
+        display: table-row;
+        width: 100%;
+    }
 
-.table-cell {
-  display: table-cell;
-}
+    .table-cell {
+        display: table-cell;
+    }
 
-.village-reach-icon {
-  width: 100px;
-  height: 100px;
-  border-style: solid;
-  border-width: 1px;
-}
-/* .................................. header ends........................................................ */
-
-
-.search-icons {
-  width: 50px;
-  height: 50px;
-  margin-top: 10%;
-  text-align: middle;
-}
-
-.divbtn p {
-  font-weight: bold;
-}
-
-.divbtn {
-  height: 135px;
-  display: table;
-  margin-top: 10px;
-  cursor:pointer;
-  box-shadow: inset 2px -4px 2px 0px;
-    background-color: white;
-    border-radius: 7px;
-    width: 99%;
-    border: solid black 3px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    -moz-box-shadow:    inset 0 0 10px #000000;
-    -webkit-box-shadow: inset 0 0 10px #000000;
-    box-shadow:         inset 0 0 10px #000000;
-}
-
-.navigation {
-  height: 100px;
-}
-
-        /* --------------------- popUp For Alert -----------------------*/
-.my_button {
-    -moz-user-select: none;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bolder;
-    line-height: 1.82857;
-    margin-bottom: 0;
-    padding: 6px 56px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
-    background-color: #337ab7;
-    border-color: #2e6da4;
-    color: #fff;
-    float: right;
-    margin-top: -5px;
-}
+    .village-reach-icon {
+        width: 100px;
+        height: 100px;
+        border-style: solid;
+        border-width: 1px;
+    }
+    /* .................................. header ends........................................................ */
 
 
-#popup-div {
-    display: none;
-    background-color: #F4F4F4;
-    border: 2px solid #E0E0E0;
-    border-radius: 15px;
-    height: 239px;
-    padding: 5px;
-    top: 20%;
-    position: absolute;
-    margin-top: 100px;
-    width: 560px;
-    margin-left: 430px;
-    z-index: 991;
-}
+    .search-icons {
+        width: 50px;
+        height: 50px;
+        margin-top: 10%;
+        text-align: center;
+    }
 
-#popup-header{
-    border-bottom: 2px solid #7D9EC0;
-    margin-left: -5px;
-    width: 101.5%;
-    background-color: #FFFFFF;
-    margin-top: -5px;
-    padding-top: 5px;
-    border-radius: 15px 15px 0 0;
-    font-size: 14pt;
-    font-weight: bolder;
-}
+    .divbtn p {
+        font-weight: bold;
+    }
 
-#cover{
-    display: none;
-    position: absolute;
-    background-color: black;
-    width: 100%;
-    height: 102%;
-    left: 0%;
-    top: 0%;
-    z-index: 990;
-    opacity: 0.65;
-}
+    .divbtn {
+        height: 135px;
+        display: table;
+        margin-top: 10px;
+        cursor:pointer;
+        box-shadow: inset 2px -4px 2px 0px;
+        background-color: white;
+        border-radius: 7px;
+        width: 99%;
+        border: solid black 3px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -moz-box-shadow:    inset 0 0 10px #000000;
+        -webkit-box-shadow: inset 0 0 10px #000000;
+        box-shadow:         inset 0 0 10px #000000;
+    }
 
-#no {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
+    .navigation {
+        height: 100px;
+    }
 
-.button-label{
-    /*font: italic small-caps bolder 16px/3 cursive;*/
-    font: italic small-caps bolder condensed 17px/3 cursive;
-  }
-/* ------------------------------------------------------------------- */
+    /* --------------------- popUp For Alert -----------------------*/
+    .my_button {
+        -moz-user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: bolder;
+        line-height: 1.82857;
+        margin-bottom: 0;
+        padding: 6px 56px;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        background-color: #337ab7;
+        border-color: #2e6da4;
+        color: #fff;
+        float: right;
+        margin-top: -5px;
+    }
+
+
+    #popup-div {
+        display: none;
+        background-color: #F4F4F4;
+        border: 2px solid #E0E0E0;
+        border-radius: 15px;
+        height: 239px;
+        padding: 5px;
+        top: 20%;
+        position: absolute;
+        margin-top: 100px;
+        width: 560px;
+        margin-left: 430px;
+        z-index: 991;
+    }
+
+    #popup-header{
+        border-bottom: 2px solid #7D9EC0;
+        margin-left: -5px;
+        width: 101.5%;
+        background-color: #FFFFFF;
+        margin-top: -5px;
+        padding-top: 5px;
+        border-radius: 15px 15px 0 0;
+        font-size: 14pt;
+        font-weight: bolder;
+    }
+
+    #cover{
+        display: none;
+        position: absolute;
+        background-color: black;
+        width: 100%;
+        height: 102%;
+        left: 0%;
+        top: 0%;
+        z-index: 3000;
+        opacity: 0.65;
+    }
+
+    #no {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .button-label{
+        /*font: italic small-caps bolder 16px/3 cursive;*/
+        font: italic small-caps bolder condensed 17px/3 cursive;
+    }
+    /* ------------------------------------------------------------------- */
 
 </style>
 
-<div class="table-container" style="height: 15%;">
-  <div class="table-row">
-    <div class="table-cell" style="width: 80%;">
-      <h3>Article List</h3>
-      <p>Page:&nbsp;<span id='page_number'>1</span>&nbsp;of&nbsp;<span id='total_page_number'>1</span>&nbsp;
-      (Total number of article(s) found:&nbsp;<%=@material.length%>)</p>
-    </div>
-    <div class="table-cell" style="width: 10%; vertical-align: middle; text-align: right;">
-      <span class="icons">
-        <%=image_tag("vr.jpeg", class: 'icons village-reach-icon')%>
-      </span>
-    </div>
-  </div>
+<script>
+    function loadControls(){
+        tt_cancel_destination = "/configurations"
+        __$("keyboard").innerHTML = "";
+        __$("keyboard").parentNode.removeChild(__$("keyboard"));
+
+        var page = document.getElementsByClassName('inputPage')[0];
+        page.parentNode.removeChild(page);
+
+        __$("clearButton").style.display = "none";
+        __$("cancelButton").style.display = "none";
+    }
+</script>
+
+<form action="/configurations">
+  <input name="test" type="text" id="hook" tt_onLoad="loadControls()"/>
+</form>
+<!-- .................................................. results .......................................... -->
+<div id="keypad">
+  <span class="keypad">
+  </span>
 </div>
 
-<!-- .................................................. results .......................................... -->
+<div class="table-container" style="border-width: 0px;">
 
-<div class="table-container" style="height: 75%; border-width: 0px;">
+  <div class="table-cell" style="width: 98%; vertical-align: top;height: 7vh;border-bottom: 1px solid black;
+          background: white;color: #000000;text-align: left; ">
+    <table style="width: 100%;padding: 0px;" >
+      <tr>
+        <td style="width: 40%;">
+          <h2 style="margin-left: 30px;"> Reference Material </h2>
+        </td>
+
+        <td>
+          <input type="text" style="margin-left: 59%; width: 30%;line-height: 1.5; font-size: 1.4em;
+          " id="search" align="right"  placeholder="search" />
+        </td>
+      </tr>
+    </table>
+  </div>
+
   <div class="table-row">
-    <div class="table-cell" style="width: 78%; vertical-align: top;">
+
+    <div class="table-cell" style="width: 99%; vertical-align: top; position: absolute; height: 66vh; overflow: auto;background: white;">
       <p><%= render :partial => 'home/reference/search_results_table'%></p>
     </div>
-    <div class="table-cell" style="width: 20%; text-align: center;">
-      <!-- ... -->
-      <div class="table-container" style="height: 50%; border-width: 0px;">
-        <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <div class="divbtn" onclick="Article();" >
-              <span>
-                <%=image_tag("icons/button_ok.png", class: 'search-icons')%>
-                <p>Select Article</p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <!-- btn ends .. -->
-        <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <div class="divbtn" onclick="document.location=<%= User.current.system_id == 'admin' %>?'/configurations':'/'" >
-              <span>
-                <%=image_tag("icons/back.png", class: 'search-icons')%>
-                <p>Back</p>
-              </span>
-            </div>
-          </div>
-        </div>
-        <!-- btn ends .. -->
-        <!-- btn starts .. -->
-        <div class="table-row">
-          <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-            <!-- ................................ -->
-            <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: left;" onclick="goPrevious();" >
-              <span>
-                <%=image_tag("icons/previous-track.png", class: 'search-icons')%>
-                <p>Previous</p>
-              </span>
-            </div>
-            <div class="divbtn navigation" style="background-color: #4d8eff;border: 1px solid #2e6da4; width: 48%; float: right;" onclick="goNext();" >
-              <span>
-                <%=image_tag("icons/next-track.png", class: 'search-icons')%>
-                <p>Next</p>
-              </span>
-            </div>
-            <!-- ................................ -->
-          </div>
-        </div>
-        <!-- btn ends .. -->
-      </div>
-      <!-- ... -->
-    </div>
+
   </div>
 </div>
 
 <!-- .................................................. results ends .......................................... -->
 
 
-<!-- ================================================== PopUp ================================================= -->
-<div id="popup-div">
-  <div id="popup-header">
-    <center>Missing attribute !</center>
-  </div>
-  <br />
-  <div>
-    <span style="font-size: 16pt;">
-      <center>
-        <i>
-          <%= flash[:missing_family_name] %>
-        </i>
-        <br />
-      </center>
-    </span>
-    <div style="padding-top: 65px;">
-      <span id="no" onclick="hidePopup();" class="my_button" style=" position: relative; right: 20px;">OK</span>
-    </div>
-  </div>
-</div>
-<div id="cover"></div>
-
-<!-- ============================================================================================================= -->
-
-
-<%= render :partial => 'home/footer' %>
-
-
-<%= form_tag("/patient/new", id: "new-person", method: 'post', enctype: 'multipart/form-data') do %>
-  <input type="hidden" name="given_name" value="<%=@given_name%>" />
-  <input type="hidden" name="family_name" value="<%=@family_name%>" />
-  <input type="hidden" name="gender" value="<%=@gender%>" />
-<%end%>
-
 <script>
 
-function addNew() {
-    if (<%= @family_name.blank? %>){
-        document.getElementById("popup-div").style.display = 'inline';
-        document.getElementById("cover").style.display = 'inline';
+    function addNew() {
+        if (<%= @family_name.blank? %>){
+            document.getElementById("popup-div").style.display = 'inline';
+            document.getElementById("cover").style.display = 'inline';
+        }
+        else{
+            document.getElementById('new-person').submit();
+        }
     }
-    else{
-        document.getElementById('new-person').submit();
+
+    function Article() {
+        if(selectedPersonID)
+            document.location='/home/reference_article/'+ selectedPersonID
     }
-}
 
-function Article() {
-  if(selectedPersonID)
-    document.location='/home/reference_article/'+ selectedPersonID;
+    function hidePopup(){
+        //clearInput();
+        document.getElementById("popup-div").style.display = 'none';
+        document.getElementById("cover").style.display = 'none';
+    }
 
-}
+    function showKeyboardX(){
+        key = document.getElementById("keypad")
+        if(key.style.display == 'none' || key.style.display == ""){
+            key.style.display = "inline";
+            return
+        }
 
-function hidePopup(){
-    //clearInput();
-    document.getElementById("popup-div").style.display = 'none';
-    document.getElementById("cover").style.display = 'none';
-}
+        key.style.display = "none";
+    }
 
+    function search(value){
+
+        jQuery('.hidable').hide();
+        jQuery('.hidable :Contains("'+value+'")').parent("div").show();
+
+    }
+
+    function pressX(pressedChar){
+        searchVal = document.getElementById("search")
+        switch (pressedChar) {
+            case 'backspace':
+                searchVal.value = searchVal.value.substring(0,searchVal.value.length-1);
+                search(searchVal.value)
+                return;
+            case 'Space':
+                searchVal.value+= " "
+                search(searchVal.value)
+                return
+            case 'clear':
+                searchVal.value = ""
+                search(searchVal.value)
+                return
+            case 'slash':
+                searchVal.value+= "/"
+                search(searchVal.value)
+                return
+            case 'dash':
+                searchVal.value+= "-"
+                search(searchVal.value)
+                return
+        }
+        searchVal.value+= pressedChar
+        search(searchVal.value)
+    }
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+    document.getElementById('search').setAttribute("onclick","showKeyboardX();");
+    //document.getElementById("find").innerHTML = "<span>Back</span>";
+    //document.getElementById("find").style.cssFloat = "left";
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    keyboard = document.getElementsByClassName("keypad")[0]
+    function getCharButtonSetID(character,id){
+        return '<button onMouseDown="pressX(\''+character+'\');" class="keyboardButton blue button" id="'+id+'">' +"<span>"+character+"</span>"+ "</button>";
+    }
+    function getButtonString(id,string){
+        return "<button \
+                            onMouseDown='pressX(this.id);' \
+                            class='keyboardButton' \
+                            id='"+id+"'>"+
+                string +
+                "</button>";
+    }
+
+    function getButtons(chars){
+        var buttonLine = "";
+        for(var i=0; i<chars.length; i++){
+            character = chars.substring(i,i+1)
+            buttonLine += getCharButtonSetID(character,character)
+        }
+        return buttonLine;
+    }
+
+    showAlphaKeypad();
+
+    function showAlphaKeypad(){
+        document.getElementById("keypad").style.height = "280";
+        keyboard.innerHTML= getButtons("0123456789") + "</br>"
+        keyboard.innerHTML+= getButtons("QWERTYUIOP") + "</br>"
+        keyboard.innerHTML+= getButtons("ASDFGHJKL:") + "</br>"
+        keyboard.innerHTML+= getButtons("ZXCVBNM,.?")
+        keyboard.innerHTML+= getButtonString('backspace','<span>Bksp</span>')
+        keyboard.innerHTML+= getButtonString('Space','<span>Space</span>')
+        keyboard.innerHTML+= getButtonString('clear','<span>Clear</span>')
+    }
+
+
+    document.getElementById('search').setAttribute("onclick","showKeyboardX();");
+
+    jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
+        return function( elem ) {
+            return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+        };
+    });
 </script>
+
+<style>
+    #backspace{
+        position:absolute;
+        left:100px;
+        bottom:2px;
+    }
+
+    #Space{
+        position:absolute;
+        left:220px;
+        bottom:2px;
+        width:200px;
+    }
+
+    #clear{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+    }
+    #num{
+        position:absolute;
+        left:470px;
+        bottom:2px;
+        width:200px;
+    }
+    #keypad{
+        background-color: #FFFFFF;
+        border: 2px solid #9999FF;
+        border-radius: 15px 15px 15px 15px;
+        display: none;
+        height: 320px;
+        padding: 5px;
+        position: absolute;
+        right: 15px;
+        top: 85px;
+        width: auto !important;
+        z-index: 1100;
+        opacity: 0.9;
+    }
+
+    .keyboardButton{
+    }
+
+
+</style>
+

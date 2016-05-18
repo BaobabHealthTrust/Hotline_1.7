@@ -2,7 +2,7 @@
 
 .table-results  {
   display: table;
-  width: 98%;
+  width: 99%;
   padding: 0px 1px 0px 1px;
 }
 
@@ -12,9 +12,10 @@
 
 .table-results-cell {
   display: table-cell;
-  padding: 0px 0px 5px 15px;
+  padding: 0px 0px 0px 0px;
   border-style: solid;
   border-width: 1px;
+  cursor: pointer;
 }
 
 .color_stripes {
@@ -56,7 +57,13 @@
 .selected_row {
   background-color: lightblue;
 }
+.odd{
+    background: #F6F6F6;
+}
 
+.even{
+    background: #DDECEF;
+}
 </style>
 
 
@@ -72,12 +79,13 @@ number_of_records = 0
   
 %>
   
-  <div class="table-results-row color_<%=color%> all-table-rows row_number_<%=row_page%>" id="person_<%=article.id%>" onclick="selectRow(this);">
-    <div class="table-results-cell">
-      <table class="table-data">
+  <div style="background: white;" class="table-results-row color_<%=color%> all-table-rows row_number_<%=row_page%>"
+       id="person_<%=article.id%>" onclick="selectRow(this);Article()">
+    <div class="table-results-cell hidable <%= cycle('odd', 'even')%>">
+      <table class="table-data" cellpadding="0" celspacing="0">
         <tr>
           <th>Tile:</th>
-          <td><%=article.title%></td>
+          <td style="text-decoration: underline;"><%=article.title%></td>
         </tr>
         <tr>
           <th>Author:</th>
@@ -146,9 +154,7 @@ function showPage(page) {
   for(var i = 0; i < rows.length; i++){
     rows[i].style.display ='table-row';
   }
-  
-  document.getElementById('page_number').innerHTML = page;
-  document.getElementById('total_page_number').innerHTML = number_of_pages;
+
 }
 
 function selectRow(e) {

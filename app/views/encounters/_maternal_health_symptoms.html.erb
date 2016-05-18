@@ -30,7 +30,7 @@
                    :multiple => true,
                    :optional => false,
                    :condition => "parseInt(age) > 5",
-                   :tt_onLoad => "setTimeout('hideSelectedValues()', 100);$('keyboard').style.display = 'none'",
+                   :tt_onLoad => "$('keyboard').style.display = 'none'",
                    :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
                    :tt_pageStyleClass => 'longSelectList',
                    :id => "danger_status",

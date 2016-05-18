@@ -4,6 +4,10 @@ class PatientController < ApplicationController
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
 
+    if (request.referrer.match("/encounters\/new/") rescue false)
+      session[:automatic_flow] = false
+    end
+
     #Coming from dashboard, has to select purpose of call before everything
     redirect_to "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}" and return if params[:next_task] == "true"
 
@@ -84,12 +88,12 @@ class PatientController < ApplicationController
 
   def reference_material
     @material = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article'")
-    render :layout => false
+    #render :layout => false
   end
 
   def reference_article
     @article = Publify.find_by_sql("SELECT * FROM contents c WHERE c.type = 'Article' AND id = #{params[:article_id]}").first
-    render :layout => false
+    #render :layout => false
   end
 
   def search_result
@@ -122,7 +126,6 @@ class PatientController < ApplicationController
   end
 
   def create
-
     patient = PatientService.create(params)
 
     if params[:action_type] && params[:action_type] == 'guardian'
@@ -298,6 +301,9 @@ class PatientController < ApplicationController
   end
 
   def districts
+
+    
+
     if !params[:end_call].blank?
       session[:end_call] = true
     end 
@@ -345,16 +351,11 @@ class PatientController < ApplicationController
                                                  encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                      (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
 =end
-
-      if (!verify_purpose_encounter) || (!verify_purpose_encounter)
+      if verify_purpose_encounter == false
         redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
-      elsif (!update_outcome_encounter) || (!update_outcome_encounter)
-        if params[:end_call] == 'true'
+      elsif update_outcome_encounter == false
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
-        elsif params[:next_client] == 'true'
-          redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}" and return
-        end
-      elsif params[:end_call] == 'true'
+      else
         if @patient_obj.age < 6
           @guardian = @patient.current_guardian
           if @guardian.blank?
