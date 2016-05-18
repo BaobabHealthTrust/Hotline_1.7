@@ -5,6 +5,7 @@ UPDATE OUTCOME,update patient outcome
 TIPS AND REMINDERS,An encounter for patient's enrollment for tips and 
 MATERNAL HEALTH SYMPTOMS,health symptoms
 CHILD HEALTH SYMPTOMS,Child health symptoms
+HEALTH SYMPTOMS,NON-MNCH health symptoms
 BABY DELIVERY,This encounter occurs when a mother delivers a baby
 PREGNANCY STATUS,MNCH pregnancy status encounter
 BIRTH PLAN,This encounter specificities where and when the baby
