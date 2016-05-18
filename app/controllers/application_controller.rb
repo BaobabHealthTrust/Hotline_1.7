@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
       name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
       next if name.blank?
       [name]
-    end
+    end.sort_by{|n| n}
   end
 
   def next_task(patient_obj)
@@ -43,7 +43,12 @@ class ApplicationController < ActionController::Base
 
     current_encounters = Encounter.current_encounters(patient_obj.patient_id)
     current_encounter_names = current_encounters.collect{|e| e.type.name.upcase}
-    symptom_encounter_name = patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
+    if(!(patient_obj.sex.match('F') && patient_obj.age > 13 && patient_obj.age < 50 || patient_obj.age <= 5))
+      symptom_encounter_name = "HEALTH SYMPTOMS"
+    else
+      symptom_encounter_name = patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
+    end
+
     tasks = [
         {'PREGNANCY STATUS' => {
           'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') && patient_obj.age > 13 && !current_encounter_names.include?('PREGNANCY STATUS'))",
@@ -53,14 +58,14 @@ class ApplicationController < ActionController::Base
           'condition' => "session[:end_call].blank? && (patient_obj.sex.match('F') || patient_obj.age <= 5) && !current_encounter_names.include?('#{symptom_encounter_name}')",
           'link' => "/encounters/new/female_symptoms?patient_id=#{patient_obj.patient_id}"
         }},
-        {'GUARDIAN REGISTRATION' => {
-            'condition' => "session[:end_call].blank? && session[:no_guardian].blank? && patient_obj.age <= 5 && #{patient.current_guardian.blank?}",
-            'link' => "/people/guardian_check?action_type=guardian&patient_id=#{patient_obj.patient_id}"
-        }},
         {'UPDATE OUTCOME' => {
            'condition' => "!current_encounter_names.include?('UPDATE OUTCOME') && ((0 .. 5).include?(patient_obj.age) || (patient_obj.sex.match('F')  &&
                               (13 .. 50).include?(patient_obj.age)))",
            'link' => "/encounters/new/update_outcomes?patient_id=#{patient_obj.patient_id}"
+        }},
+        {'GUARDIAN REGISTRATION' => {
+            'condition' => "session[:end_call].blank? && session[:no_guardian].blank? && patient_obj.age <= 5 && #{patient.current_guardian.blank?}",
+            'link' => "/people/guardian_check?action_type=guardian&patient_id=#{patient_obj.patient_id}"
         }}
      ]
 
