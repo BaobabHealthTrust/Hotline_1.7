@@ -66,7 +66,7 @@
     :tt_requireNextClick => false,
     :ajaxURL => "",
     :tt_onLoad => "set_ajaxURL_for_suggestions('/patient/district?filter_value=',
-     __$('region_of_origin').value); ",
+     __$('region_of_origin').value); setTimeout('clearInput()', 150) ",
     :helptext => "Home district"}  %>
 
   <%= text_field_tag "person[addresses][home_ta]", nil,
@@ -74,14 +74,17 @@
     :tt_requireNextClick => false,
     :ajaxURL => "",
     :tt_onLoad => "$('nextButton').style.display = 'none';
-    set_ajaxURL_for_suggestions('/patient/ta?filter_value=', __$('home_district').value);",
+    set_ajaxURL_for_suggestions('/patient/ta?filter_value=', __$('home_district').value);
+    setTimeout('clearInput()', 150)",
     :helptext => "Home Traditional authority / TA"}  %>
 
   <%= text_field_tag "person[addresses][home_village]", nil,
     {:id => "home_village",
     :tt_requireNextClick => true,
     :ajaxURL => "",
-    :tt_onLoad => "$('nextButton').style.display = 'block'; set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);",
+    :tt_onLoad => "$('nextButton').style.display = 'block';
+    set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);
+    setTimeout('clearInput()', 150)",
     :helptext => "Home village"}  %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Nearest health facility") %>
@@ -90,7 +93,7 @@
                             :field_type => 'alpha',
                             :helpText => 'Select Nearest health centre',
                             :ajaxURL => "/home/health_facilities?tag=#{(address.township_division rescue session[:district])}&search_string=",
-                            :tt_onLoad => "$('nextButton').style.display = 'block';",
+                            :tt_onLoad => "$('nextButton').style.display = 'block';__$('clearButton').onmousedown.apply();",
                             :allowFreeText => true }%>
 
 <% end %>
