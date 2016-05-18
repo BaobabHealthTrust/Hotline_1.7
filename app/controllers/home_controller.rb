@@ -132,7 +132,7 @@ class HomeController < ApplicationController
   def create_tag_concept_relationships
 
     ActiveRecord::Base.transaction do
-      concept_id = ConceptName.where("name = '#{params[:concept]}'").last.concept_id
+      concept_id = ConceptName.where("name = \"#{params[:concept]}\" ").last.concept_id
       params[:tags].each do |tag|
         tag_id = Publify.where("name = '#{tag}'").last.id
         tag_concept_relationship = TagConceptRelationship.new
