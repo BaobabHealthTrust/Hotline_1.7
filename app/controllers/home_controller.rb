@@ -148,8 +148,8 @@ class HomeController < ApplicationController
   end
 
   def retrieve_articles
-    c = params[:concept].split('|').join("', '") rescue "----------"
-    concept_ids = ConceptName.where("name IN ('#{c}')").map(&:concept_id).join(" , ") rescue -1
+    c = params[:concept].split('|').join("\", \"") rescue "----------"
+    concept_ids = ConceptName.where("name IN (\"#{c}\")").map(&:concept_id).join(" , ") rescue -1
     tag_ids = TagConceptRelationship.where("concept_id IN (#{concept_ids})").map(&:tag_id).join(",") rescue "0"
     tag_ids = '0' if tag_ids.blank?
 
@@ -188,8 +188,8 @@ class HomeController < ApplicationController
 
   def check_articles
 
-    c = params[:concept].split('|').join("', '") rescue "----------"
-    concept_ids = ConceptName.where("name IN ('#{c}')").map(&:concept_id).join(" , ") rescue -1
+    c = params[:concept].split('|').join("\", \"") rescue "----------"
+    concept_ids = ConceptName.where("name IN (\"#{c}\")").map(&:concept_id).join(" , ") rescue -1
     tag_ids = TagConceptRelationship.where("concept_id IN (#{concept_ids})").map(&:tag_id).join(",") rescue "0"
     tag_ids = '0' if tag_ids.blank?
 
