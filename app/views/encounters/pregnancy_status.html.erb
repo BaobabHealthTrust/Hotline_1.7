@@ -702,7 +702,7 @@
         if(year < current_year && year_diff >= 0 && year_diff <= 1 && year != 'Unknown'){
             // We expect month to be of index greater than current and plus 4 ---
             if(parseInt(months.indexOf(month)) >= parseInt(current_month)) {
-                if( day > 31 || ( day>28 && (month == 'February') && (parseInt(year)%4 != 0)) ){
+                if( day > 31 || ( day>=29 && (month == 'February') && (parseInt(year)%4 == 0)) ){
                     showMessage('Invalid input of day.',false,false);
                 }
                 else {
@@ -717,7 +717,7 @@
             // We expect month to be of index less than current ---
             if( get_edd != true ){
                 if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
-                    if( day > 31 || ( day>28 && (month == 'February') && (parseInt(year)%4 != 0)) ){
+                    if( day > 31 || ( day>=29 && (month == 'February') && (parseInt(year)%4 == 0)) ){
                         showMessage('Invalid input of day.',false,false);
                     }
                     else {
