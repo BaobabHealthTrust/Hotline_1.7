@@ -512,7 +512,7 @@ class EncountersController < ApplicationController
                                   'beef.png'],
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
                        'Breastmilk' => [['Milk'], 'breastf.png'],
-                       'Other Liquids' => [['?'], 'drink.jpg'],
+                       'Other Liquids' => [['Other liquids <br>(water, juice, dairy/goat milk, etc.)'], 'drink.jpg'],
                        'None' => [['none'], 'none.png'],
                        'Groups Cons.' => [["<span style='font-weight: normal'>#{@comment}</span>"], '']
     }
