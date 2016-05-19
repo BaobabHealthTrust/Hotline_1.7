@@ -172,7 +172,7 @@
                        :tt_requireNextClick => true,
                        :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
                        showHelpButton('SEVERITY OF FEVER')",
-                       :id => "fever_days",
+                       :id => "fever_id_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
 
@@ -184,7 +184,7 @@
                        :tt_requireNextClick => true,
                        :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
                        showHelpButton('SEVERITY OF DIARRHEA')",
-                       :id => "diarrhea_days",
+                       :id => "diarrhea_id_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
 
@@ -196,7 +196,7 @@
                        :tt_requireNextClick => true,
                        :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
                        showHelpButton('SEVERITY OF COUGH')",
-                       :id => "cough_days",
+                       :id => "coughing_id_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
 
@@ -219,7 +219,7 @@
 
     <%= hidden_field_tag("observations[][concept_name]", "SEVERITY OF RED EYE") %>
     <%= text_field_tag "observations[][value_numeric]", nil,
-                       { :id => "red_eye_days",
+                       { :id => "red_eye_id_days",
                          :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value.toUpperCase() == 'RED EYE'",
                          :field_type => 'number',
                          :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
