@@ -1,72 +1,123 @@
 <%= render :partial => 'header' %>
 <style type="text/css">
-  .filter_form{
+    #main-div{
       width: 98%;
       margin: auto;
-      color: blue;
-      margin-top:1%;
-      border: 1px solid #ddd;
-      overflow-y: scroll;
-      overflow-x:hidden;
-      background: #f7f7f7;
+      margin-top: 1%;
+    }
+    #main-div fieldset{
+      height: 500px;
+       border-radius: 1%;
+    }
+    #left{
+      width: 50%;
+      float:left;
+      height: 100px;
+    
+    }
+    .right{
+      position: absolute;
+      right: 2%;
+      top :15%;
+      width:48%;
+      visibility: hidden;
+      height: 300px;
+      float:right;
+      overflow-y :scroll;
+    }
+    #filter_table td {
+        padding: 2%;
+        font-size: 20px;
+        width: 50%;
+        font-weight: bold;
 
-  }
-  #filter_table{
-      width: 100%;
-      color: #40869e;
-      border-collapse: collapse;
-  }
-
- #filter_table th,  #filter_table td {
+    }
+    ul {
+      list-style: none;
       padding: 1%;
+    }
+    li{
+      text-indent: 2%;
+      display: block;
       font-size: 20px;
       font-weight: bold;
-      border-bottom: 1px dotted #ddd;
-      border-left: 1px dotted #ddd;
-  }
-  #filter_table th{
-      font-size: 22px;
-  }
-  select{
-    width:94%;
-    color: #40869e;
-    font-size: 20px;
-    font-weight: bold;
-    border:  1px solid #ddd;
-  }
-
-  select option{
-   font-size: 20px;
-  }
-
-  legend{
-    font-size: 22px;
-    text-align: center;
-    font-weight: bold;
-    //color: #999999;
-    color: #40869e;
-  }
+      padding: 1%;
+      background: #e2dfdf;
+    }
+    li:hover{
+      background: #b4c6cf;
+    }
+    li:active{
+      background: #b4c6cf;
+    }
+    input{
+       width: 100%;
+       height:25px;
+       font-size:20px;
+       border: 2px solid #e2dfdf;
+    }
 </style>
-<script>
-  var tt_cancel_destination = '/clinic';
-  var date_ranges = <%= raw @report_date_range.to_json%>;
-  function setDateRange(quarter){
-    var date_range;
-    quarter     = $("#"+quarter).val();
-    date_range  = date_ranges[quarter];
-    
-    $('#start_date').val(date_range[0]);
-    $('#end_date').val(date_range[1]);
-  }
-  
-  function setDistrict(aDistrict){
-    $('district').value = aDistrict;
-  }
+<script type="text/javascript">
+      var date_ranges = <%= raw @report_date_range.to_json%>;
+      var inputs = {}
+      var UpdateInputHash = function(hash, newKey, newVal, fn, bind){
+        var prevKey=null, prevVal=null, inserted=false, newhash={};
+        for(var currKey in hash){
+          if (hash.hasOwnProperty(currKey)){
+            var currVal = hash[currKey];
+            if( !inserted && fn.call(bind, prevKey, prevVal, currKey, currVal) ){
+              newhash[newKey] = newVal;
+              inserted=true;
+            }
+            newhash[currKey] = currVal;
+            prevKey = currKey;
+            prevVal = currVal;
+          } 
+        }
+        if(!inserted) newhash[newKey] = newVal;
+        return newhash;
+      };
+      function setDateRange(quarter){
+          var date_range;
+          //quarter     = $(quarter).value;
+          date_range  = date_ranges[quarter];
+          inputs = UpdateInputHash(inputs,'start_date',date_range[0], function(pk, pv, nk, nv){ 
+                    return (nk=='Earl'); 
+                  });
+          inputs = UpdateInputHash(inputs,'end_date',date_range[1], function(pk, pv, nk, nv){ 
+                    return (nk=='Earl'); 
+                  });
+      }
+      function setInpt(id,value,text){
+        if(id =="report_date_range"){
+            setDateRange(value);
+        }else{
+          inputs = UpdateInputHash(inputs,id,value, function(pk, pv, nk, nv){ 
+                    return (nk=='Earl'); 
+                  });
+        }
+          document.getElementById(id).value = text.replace("<a>", "").replace("</a>",""); 
+      }
+      function changeDiv(id){
+        jQuery(".right").css("visibility","hidden");
+        jQuery("#"+id).css('visibility','visible');
+      }
+      function submitForm(){
+          var form = document.createElement("form");
+          form.setAttribute("method", "POST");
+          form.setAttribute("action", "reports");
+          var input = document.createElement("input");
+          input.setAttribute("type","hidden");
+          input.value = inputs['currentdistrict'];
+          form.appendChild(input);
+          document.getElementById("actions").appendChild(form);
+          form.submit();
+      }
 </script>
-<fieldset>
-     <legend>Report Filters</legend>
-  
-  <form id="filter_form" class="filter_form" method='POST' action="reports">
+<div  id="main-div">
+  <fieldset>
+  <legend>Report Filters</legend>
+  <div id="left">
     <table id="filter_table">
       <thead>
       </thead>
@@ -74,18 +125,14 @@
         <tr>
             <td>District</td>
             <td>
-                <%= select_tag :currentdistrict, options_for_select(@districts.sort), 
-                  {:helpText => 'Select the district to base the report on',
-                   :onchange=>"setDistrict('currentdistrict');"}%>
+                <input name="currentdistrict" id="currentdistrict" onfocus="changeDiv('district')">
             </td>
         </tr>
         <% if not @query == "individual_current_enrollments" %>
                     <tr>
                         <td>Date Range</td>
                         <td>
-                           <%= select_tag :report_date_range, options_for_select(@date_range_values),
-                            {:helpText => "Select Date Range",
-                             :onchange=>"setDateRange('report_date_range');"} %>
+                            <input name="report_date_range" id="report_date_range" onfocus="changeDiv('date_range')">
                         </td>
                     </tr>
             <% if @report_type.downcase != 'tips' && @report_type.downcase != 'family_planning' %>
@@ -93,8 +140,7 @@
                   <tr>
                       <td>Patient Type</td>
                       <td>
-                          <%= select_tag :patient_type, options_for_select(@patient_type),
-                          {:helpText => "Select Patient Type"} %>
+                          <input name="patient_type" id="patient_type" onfocus="changeDiv('p_type')">
                       </td>
                   </tr>
                 <%end%>
@@ -102,26 +148,30 @@
                 <tr>
                     <td>Grouping Criterion</td>
                     <td>
-                        <%= select_tag :grouping,     options_for_select(@grouping),
-                          {:helpText => "Select Grouping Criterion"} %>
+                         <input name="grouping" id="grouping" onfocus="changeDiv('group')">
                     </td>
                 </tr>
              <%if @query == "health_issues"%>
                <tr>
                     <td>Health Task</td>
                     <td>
-                        <%= select_tag :health_task, options_for_select(@health_task),
-                                {:helpText => "Select Health Task"} %>
+                       <input name="health_task" id="health_task" onfocus="changeDiv('tasks')">
                     </td>
               </tr>
+              <div id="task" class="right">
+                  <ul>
+                    <% @health_task.each do |task| %>
+                         <li><%=task%></li>
+                    <%end %>
+                  </ul>
+              </div>
             <%end%>
 
             <%if @query == "referral_followup"%>
             <tr>
                     <td>Outcome</td>
                     <td>
-                      <%= select_tag :outcome, options_for_select(@outcomes),
-                                  {:helpText => "Select Outcome"} %>
+                       <input name="outcome" id="outcome" onfocus="changeDiv('outcom')">
                     </td>
             </tr>
             <%end%>
@@ -131,54 +181,48 @@
                 <tr>
                     <td>Staff to Report on</td>
                     <td>
-                        <%= select_tag :staff_member,     options_for_select(@staff),
-                              {:helpText => "Select a Staff member to report on"} %>
+                         <input name="staff_member" id="staff_member" onfocus="changeDiv('staff')">
                      </td>
                 </tr>
                 <tr>
                     <td>Call type</td>
                     <td>
-                        <%= select_tag :call_type,     options_for_select(@call_type),
-                              {:helpText => "Select Call type"} %>
+                        <input name="call_type" id="call_type" onfocus="changeDiv('c_type')">
                     </td>
                 </tr>
               <%end%>
             <% elsif @report_type.downcase == 'tips' %>
                   <tr>
                     <td>Content to Report on</td>
+                       <input name="content_type" id="content_type" onfocus="changeDiv('content')">
                     <td>
-                      <%= select_tag :content_type,     options_for_select(@content_type),
-                                  {:helpText => "Select the Content to report on"} %>
+                      
                     </td>
                   </tr>
                   <tr>
                     <td>Language to Report on</td>
                     <td>
-                      <%= select_tag :language,     options_for_select(@language),
-                                  {:helpText => "Select the language to report on"} %>
+                         <input name="language" id="language" onfocus="changeDiv('lan')">
                     </td>
                   </tr>
               <% if @query != 'current_enrollment_totals' %>
                   <tr>
                     <td>Phone Type</td>
                     <td>
-                      <%= select_tag :phone_type,     options_for_select(@phone_type),
-                                  {:helpText => "Select Phone type"} %>
+                         <input name="phone_type" id="phone_type" onfocus="changeDiv('phone')">
                     </td>
                   </tr>
               <% end %>
                   <tr>
                     <td>Tips Delivery Mode</td>
                     <td>
-                      <%= select_tag :delivery,     options_for_select(@delivery),
-                                  {:helpText => "Select tips delivery method"} %>
+                       <input name="delivery" id="delivery" onfocus="changeDiv('tips')">
                     </td>
                   </tr>
                   <tr>
                     <td>Number Prefix</td>
                     <td>
-                      <%= select_tag :network_prefix,     options_for_select(@network_prefix),
-                                  {:helpText => "Select the number prefix"} %>
+                         <input name="network_prefix" id="network_prefix" onfocus="changeDiv('network')">
                     </td>
                   </tr>
             <% end %>
@@ -190,28 +234,95 @@
         </tr-->
       </tbody>
     </table>
+  </div>
+  <div id="district" class="right" style="visibility:hidden">
+      <ul>
+        <% @districts.sort.each do |district| %>
+              <li onclick="setInpt('currentdistrict','<%=district%>',this.innerHTML)"><a ><%= district %></a></li>
+        <%end %>
+      </ul>
+  </div>
+  <% if not @query == "individual_current_enrollments" %>
+                <div id="date_range" class="right">
+                    <ul>
+                      <% @date_range_values.each do |range| %>
+                            <li onclick="setInpt('report_date_range','<%=range[1]%>',this.innerHTML)"><a><%=range[0]%></a></li>
+                      <%end %>
+                    </ul>
+                </div>
+            <% if @report_type.downcase != 'tips' && @report_type.downcase != 'family_planning' %>
+                <%if @query != "new_vs_repeat_callers" && @query != "follow_up" %>
+                     <div id="p_type" class="right">
+                        <ul>
+                          <% @patient_type.each do |type| %>
+                               <li onclick="setInpt('patient_type','<%=type%>',this.innerHTML)"><a><%=type%></a></li>
+                          <%end %>
+                        </ul>
+                    </div>
+                <%end%>
+            <% end %>
+            <div id="group" class="right">
+                <ul>
+                  <% @grouping.each do |group| %>
+                        <li onclick="setInpt('grouping','<%=group[1]%>',this.innerHTML)"><a><%=group[0]%></a></li>
+                  <%end %>
+                </ul>
+            </div>
+             <%if @query == "health_issues"%>
+                <div id="tasks" class="right">
+                    <ul>
+                      <% @health_task.each do |task| %>
+                            <li onclick="setInpt('health_task','<%=task%>',this.innerHTML)"><a><%=task%></a></li>
+                      <%end %>
+                    </ul>
+                </div>
+            <%end%>
 
+            <%if @query == "referral_followup"%>
+                <div id="outcom" class="right">
+                    <ul>
+                      <% @outcomes.each do |outcome| %>
+                            <li onclick="setInpt('outcome','<%=outcome%>',this.innerHTML)"><a><%=outcome%></a></li>
+                      <%end %>
+                    </ul>
+                </div>
+            <%end%>
 
-            <%= hidden_field_tag :query, "#{@query}"%>
-            <%= hidden_field_tag :start_date, "", {:id => 'start_date'}%>
-            <%= hidden_field_tag :end_date,   "", {:id => 'end_date'}%>
-            <%= hidden_field_tag :district,   "", {:id => 'district'}%>
-            <%= hidden_field_tag :report_type, "#{@report_type}", {:id => 'report_type'}%>
-    </form>
-    <div style="float:right; margin-top:0.5%;">
+            <% if @report_type.downcase == 'call_analysis'%>
+              <%if @query != "new_vs_repeat_callers" && @query != "follow_up" %>
+                <div id="staff" class="right">
+                    <ul>
+                      <% @staff.each do |staf| %>
+                            <li onclick="setInpt('staff_member','<%=staf[1]%>',this.innerHTML)"><a><%=staf[0]%></a></li>
+                      <%end %>
+                    </ul>
+                </div>
+                <div id="c_type" class="right">
+                    <ul>
+                      <% @call_type.each do |c_type| %>
+                            <li onclick="setInpt('call_type','<%=c_type%>',this.innerHTML)"><a><%=c_type%></a></li>
+                      <%end %>
+                    </ul>
+                </div>
+              <%end%>
+            <% elsif @report_type.downcase == 'tips' %>
+                  Content and Language
+              <% if @query != 'current_enrollment_totals' %>
+                  Phone
+              <% end %>
+                  Delivery and Prefix
+            <% end %>
+       <% end %>
+  </fieldset>
+</div>
+
+<div style="position:absolute;right:2%; bottom:8%" id="actions">
         <button  class="button green" onclick="submitForm()">
            <span>Finish</span>
         </button>
       <button class="button red"  onclick="window.location ='/report'"><span>Back</span></button>
-    </div>
-   </fieldset>
+</div>
 <script type="text/javascript">
-  function submitForm(){
-    $("#filter_form").submit();
-  }
-  $("#filter_form").css("height",window.innerHeight * 0.65);
-  window.onresize = function(){
-    $("#filter_form").css("height",window.innerHeight * 0.65);
-  }
+    jQuery('#currentdistrict').focus();
 </script>
 <%= render :partial => 'footer' %>

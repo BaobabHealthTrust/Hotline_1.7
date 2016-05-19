@@ -156,7 +156,6 @@ class ReportController < ApplicationController
             @destination         = [["",""],["To CSV Format", "csv"], ["To Screen", "screen"]]
 
         end
-      render :layout => false
   end
   def select
     location_tag = LocationTag.find_by_name("District")
