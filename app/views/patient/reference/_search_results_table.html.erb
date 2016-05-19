@@ -84,12 +84,10 @@ number_of_records = 0
     <div class="table-results-cell hidable <%= cycle('odd', 'even')%>">
       <table class="table-data" cellpadding="0" celspacing="0">
         <tr>
-          <th>Tile:</th>
-          <td style="text-decoration: underline;"><%=article.title%></td>
+          <th style="text-decoration: underline;"><%=article.title%></th>
         </tr>
         <tr>
-          <th>Author:</th>
-          <td><%=article.author%></td>
+          <td><%=truncate(article.body)%></td>
         </tr>
       </table>
     </div>
