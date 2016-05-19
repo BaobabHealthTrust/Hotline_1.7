@@ -240,7 +240,6 @@
     <%= hidden_field_tag("observations[][concept_name]", "UNCONSCIOUS") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    { :id => "unconcious",
-                     :tt_onLoad => "$('keyboard').style.display = 'none';",
                      :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value.toUpperCase() == 'VERY SLEEPY OR UNCONSCIOUS' ",
                      :helpText => "Is it difficult or impossible to wake the child?",
                      :tt_requireNextClick => false,
@@ -413,8 +412,7 @@
           :tt_onLoad => "$('keyboard').style.display = 'none';showHelpButton('UNCONSCIOUS')",
         :condition => '$("sleepy_or_unconcious").value == "Yes"',
         :helpText => "Is it difficult or impossible to wake the child?",
-        :tt_requireNextClick => false,
-        :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+        :tt_requireNextClick => false } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "GAINED OR LOST WEIGHT") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
@@ -427,7 +425,6 @@
     <%= hidden_field_tag("observations[][concept_name]", "SWOLLEN HANDS OR FEET SIGN") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         { :id => "swollen_legs_or_face",
-          :tt_onLoad => "$('keyboard').style.display = 'none';",
         :condition => '$("weight_change").value == "Yes"',
         :helpText => "Does the child have swollen legs or swollen face?",
         :tt_requireNextClick => false,
@@ -440,8 +437,7 @@
           :tt_onLoad => "$('keyboard').style.display = 'none';showHelpButton('FLAKY SKIN');",
         :condition => '$("weight_change").value == "Yes"',
         :helpText => "Has the child's skin become dry, loose, or patchy?",
-        :tt_requireNextClick => false,
-        :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+        :tt_requireNextClick => false} %>
 
   <%#TODO Replace the OTHER concept below with an appropriate one
   TODO Define the ajaxUrl below in patientrs controller
@@ -467,14 +463,12 @@
                                      :tt_onLoad => "summary();$('keyboard').style.display = 'none';
                                      showHelpButton('Child Health Symptoms');
                                      __$('nextButton').style.display = 'block'; ",
-                                     :optional => "true",
-                                     :tt_pageStyleClass => "NoControls" } %>
+                                     :optional => "true"} %>
 
   <label for='dangerSigns'>Danger signs</label>
   <%= text_field_tag :dangerSigns, nil, {
                                          :tt_onLoad => "loadDangerSigns();$('keyboard').style.display = 'none';showHelpButton('Danger Signs');",
-                                         :optional => "true",
-                                         :tt_pageStyleClass => "NoControls" } %>
+                                         :optional => "true" } %>
 
     <%= select_tag "child_health_info",options_for_select(@child_health_info, nil),
                    {:id          => "child_health_info_id",
