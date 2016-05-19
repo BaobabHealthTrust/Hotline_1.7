@@ -1,5 +1,5 @@
-<script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
-<script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
+<script type="text/javascript" src="/assets/jquery.js"></script>
+<script type="text/javascript" src="/assets/top-icon.js"></script>
 
 <script>
     var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks"
@@ -40,23 +40,42 @@
 
     }
 
+    function getSelectedInitialDangerSigns() {
+        //Rather preselect and not hide
+        var dangerSigns = selected_danger_signs;
+        var liElements = __$('page' + tstCurrentPage).getElementsByTagName("li");
+
+        for (var i = 0; i<= dangerSigns.length - 1; i++){
+            var danger_sign = dangerSigns[i];
+            for (var j=0; j<=liElements.length -1; j++){
+                var li_tst_value = liElements[j].getAttribute('tstvalue');
+                if (danger_sign.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
+                    var img = liElements[j].getElementsByTagName('img')[0];
+                    if(img.src.match('unticked')){
+                        liElements[j].click();
+                    }
+                }
+            }
+        }
+    }
+
     function hideSelectedValues(){
         //Rather preselect and not hide
       var dangerSigns = selected_danger_signs;
       var liElements = __$('page' + tstCurrentPage).getElementsByTagName("li");
 
         for (var i = 0; i<= dangerSigns.length - 1; i++){
-        var danger_sign = dangerSigns[i];
-        for (var j=0; j<=liElements.length -1; j++){
-          var li_tst_value = liElements[j].getAttribute('tstvalue');
-          if (danger_sign.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
-            var img = liElements[j].getElementsByTagName('img')[0];
-            if(img.src.match('unticked')){
-                liElements[j].style.display = 'none';
-                break;
+            var danger_sign = dangerSigns[i];
+            for (var j=0; j<=liElements.length -1; j++){
+              var li_tst_value = liElements[j].getAttribute('tstvalue');
+              if (danger_sign.trim().toUpperCase() == li_tst_value.trim().toUpperCase()){
+                var img = liElements[j].getElementsByTagName('img')[0];
+                if(img.src.match('unticked')){
+                    liElements[j].style.display = 'none';
+                    break;
+                }
+                }
             }
-            }
-        }
         }
     }
 
