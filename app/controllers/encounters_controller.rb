@@ -114,10 +114,13 @@ class EncountersController < ApplicationController
 
     # Go to the next task in the workflow (or dashboard)
     age = @patient_obj.age
+    #raise session[:end_call].inspect
     if (age <= 5 || age >= 13 && age <= 50 && @patient_obj.sex == 'F') && session[:automatic_flow] == true
       redirect_to next_task(@patient_obj)
     elsif params[:encounter_type] == 'Update outcomes' && session[:end_call] == true
       redirect_to '/' and return
+    elsif session[:end_call] == true
+        redirect_to "/encounters/new/update_outcomes?patient_id=#{@patient.id}" and return
     else
       redirect_to "/patient/dashboard/#{@patient.id}/tasks"
     end
@@ -255,17 +258,16 @@ class EncountersController < ApplicationController
             'Animal Foods' => '(meat, eggs, etc)',
             'Fruits' => '(citrus fruits,  etc.)',
             'Vegetables' => '(bonongwe, chisoso, etc)',
-            'Fats' => '(oils, etc.)',
-            'None' => ''
+            'Fats' => '(oils, etc.)'
         }
         @food_types = {
-            'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
-            'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
-            'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
+            'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
             'group 4' => ['Breastmilk', 'Foods', 'Other Liquids'],
-            'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
-            'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
-            'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None']
+            'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats']
         }
 
         @consumption_method = ['', 'Yes', 'No']
@@ -483,13 +485,13 @@ class EncountersController < ApplicationController
     end
 
     @groups = {
-      'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
-      'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
-      'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
-      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids', 'None', 'Groups Cons.'],
-      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'None', 'Fats'],
-      'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
-      'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.']
+      'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids', 'Groups Cons.'],
+      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+      'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
     }
 
     @example_foods =  {'Staples' => [['Samples: Cereal grains e.g sorghum, maize, starchy fruits such
@@ -513,7 +515,6 @@ class EncountersController < ApplicationController
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
                        'Breastmilk' => [['Milk'], 'breastf.png'],
                        'Other Liquids' => [['Other liquids <br>(water, juice, dairy/goat milk, etc.)'], 'drink.jpg'],
-                       'None' => [['none'], 'none.png'],
                        'Groups Cons.' => [["<span style='font-weight: normal'>#{@comment}</span>"], '']
     }
     render :layout => false, :template => 'encounters/summary'

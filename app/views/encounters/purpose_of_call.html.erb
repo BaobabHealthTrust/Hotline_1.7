@@ -22,6 +22,7 @@
                                         :tt_onLoad => "$('nextButton').style.display = 'block';$('keyboard').style.display = 'none';",
                                         :tt_pageStyleClass => 'longSelectList'} %>
 
+
     <%= hidden_field_tag("observations[][concept_name]", "Purpose of call") %>
     <%= text_field_tag 'observations[][value_coded_or_text]', nil,
                        {:id => 'other_purpose_of_call',
