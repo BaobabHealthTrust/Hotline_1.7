@@ -54,10 +54,28 @@
       function loadArticles(title){
 
           setListAttributes();
+
+          var concept = "";
+          var passed = "";
+          if (__$("img-circle")) {
+              passed = __$("img-circle").getAttribute("passedConcept");
+          }
+
+          if ($("touchscreenInput" + tstCurrentPage)){
+              try {
+                  concept = $("touchscreenInput" + tstCurrentPage).value.replace(/\;/g, '|');
+                  if (passed != ""){
+                      concept += ("|" + passed);
+                  }
+              }catch(e){
+                  concept = passed;
+              }
+          }
+
           jQuery.ajax({
               type: "POST",
               url: "/home/retrieve_articles",
-              data: "concept=" + $("touchscreenInput" + tstCurrentPage).value.replace(/\;/g, '|') + (title ? ("&title=" + title) : ""),
+              data: "concept=" + concept + (title ? ("&title=" + title) : ""),
               success: function(results){
                   try {
                       results = eval("(" + results + ")");
@@ -321,11 +339,19 @@
 
     function checkArticles(){
         var concept = "";
+        var passed = "";
+        if (__$("img-circle")) {
+            passed = __$("img-circle").getAttribute("passedConcept");
+        }
+
         if ($("touchscreenInput" + tstCurrentPage)){
             try {
                 concept = $("touchscreenInput" + tstCurrentPage).value.replace(/\;/g, '|');
+                if (passed != ""){
+                    concept += ("|" + passed);
+                }
             }catch(e){
-                concept = "";
+                concept = passed;
             }
         }else{
             setTimeout("checkArticles()", 3000);

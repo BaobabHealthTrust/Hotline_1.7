@@ -123,7 +123,7 @@
         </tr>
 
 
-        <% if @patient_obj.age >= 13 && @patient_obj.age <= 50
+        <% if @patient_obj.age > 13 && @patient_obj.age < 50  && @patient_obj.sex.match(/F/i)
 
             preg_status = Observation.by_concept_today(@patient_obj.patient_id,
                                                       'Pregnancy status', "PREGNANCY STATUS",

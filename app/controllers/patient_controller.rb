@@ -17,8 +17,12 @@ class PatientController < ApplicationController
     @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
     @previous_encounters = Encounter.previous_encounters(@patient_obj.patient_id)
 
-    symptom_encounter_name = @patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
-    symptom_encounter_type = EncounterType.find_by_name(symptom_encounter_name)
+    if(!(@patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50 || @patient_obj.age <= 5))
+      symptom_encounter_name = "HEALTH SYMPTOMS"
+    else
+      symptom_encounter_name = @patient_obj.age <= 5 ?  "CHILD HEALTH SYMPTOMS" : "MATERNAL HEALTH SYMPTOMS"
+    end
+    symptom_encounter_type = EncounterType.where(:name => symptom_encounter_name).first
     @symptom_encounters = Encounter.all_encounters_by_type(@patient_obj.patient_id, [symptom_encounter_type.id])
 
     #Adding tasks in proper order
@@ -30,12 +34,12 @@ class PatientController < ApplicationController
                  'done' => @current_encounter_names.include?('PREGNANCY STATUS')}
     end
 
-    if @patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50 || @patient_obj.age <= 5
+
       @tasks << {"name" => "Symptoms",
                  "link" =>"/encounters/new/female_symptoms?patient_id=#{@patient_obj.patient_id}",
                  'icon' => "symptoms-2.png",
                  'done' => @current_encounter_names.include?(symptom_encounter_name)}
-    end
+
 
     @tasks << {"name" => "Outcomes", "link" => "/encounters/new/update_outcomes?patient_id=#{@patient_obj.patient_id}",
                'icon' => "symptoms.png",
@@ -174,7 +178,6 @@ class PatientController < ApplicationController
     encounter.creator = session[:user_id]
     encounter.save
     params[:observations].each do |ob|
-
       concept_id = ConceptName.find_by_name(ob[:concept_name]).concept_id rescue (
       raise "Missing concept name : '#{ob[:concept_name]}', Please add it in the configurations files or call help desk line")
 

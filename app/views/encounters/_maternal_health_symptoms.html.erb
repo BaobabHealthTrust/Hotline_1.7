@@ -37,7 +37,7 @@
                    :allowFreeText => false
     %>
 
-    
+
     <%= hidden_field_tag("observations[][concept_name]", "Danger signs") %>
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@danger_signs , nil),
                    :helpText =>"Select additional danger signs",

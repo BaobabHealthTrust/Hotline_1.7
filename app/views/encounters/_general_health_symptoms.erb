@@ -1,0 +1,26 @@
+<script>
+    <% if params[:cancel_destination] == 'current_call' %>
+        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/current_call";
+    <% else %>
+        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+    <% end %>
+</script>
+
+<%= form_tag("/encounters/create", id: "general_symptoms", method: 'post', enctype: 'multipart/form-data') do %>
+    <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("HEALTH SYMPTOMS").id %>
+    <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+    <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+    <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+    <% @current_data = Encounter.current_data("HEALTH SYMPTOMS", @patient_obj.patient_id)%>
+    <%= hidden_field_tag("observations[][concept_name]", @symptom_concept) %>
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_symptoms , @current_data[@symptom_concept.upcase]),
+                   :helpText =>"Experiencing any of the following symptoms?",
+                   :multiple => true,
+                   :tt_onLoad => "showHelpButton();setListAttributes();$('keyboard').style.display = 'none'",
+                   :tt_BeforeUnLoad => "selectedInitialDangerSigns();",
+                   :tt_pageStyleClass => 'longSelectList',
+                   :id => "health_symptoms",
+                   :allowFreeText => false
+    %>
+<% end %>

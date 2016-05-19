@@ -210,8 +210,9 @@ class EncountersController < ApplicationController
           @health_symptoms = concept_set('Child health symptoms')
           @symptom_concept = "Child Health Symptoms"
           @info_concept = "Child Health Info"
-
-          #if adult
+        elsif (!((@patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50) || @patient_obj.age <= 5))
+          @health_symptoms = concept_set('General health symptoms')
+          @symptom_concept = "Health Symptom"
         elsif
           @health_info = concept_set('Maternal health info')
           @danger_signs = concept_set('Danger signs')
@@ -219,19 +220,24 @@ class EncountersController < ApplicationController
           @symptom_concept = "Maternal Health Symptoms"
           @info_concept = "Maternal Health Info"
         end
+
       when 'Update outcomes'
           @encounter_type = encounter_type
           @general_outcomes = concept_set('General outcome')
+
       when 'Reminders'
         @phone_types = concept_set('Phone Type')
         @message_types = concept_set('Message Type')
         @language_types = concept_set('Language Type')
         @content_types = concept_set('Type of message content') - [['Postnatal'], ['Observer'], ['Wcba']] + ['WCBA']
         @guardian = current_guardian(params[:guardian_id], @patient_obj.patient_id)
+
       when 'Purpose of call'
         @purpose_of_call_options = purpose_of_call_options
+
       when 'Confirm purpose of call'
         @confirm_call_options = call_options
+
       when 'Clinical assessment'
         @clinical_questions = clinical_questions#('Group 2')
         @danger_signs = ["", "Mouth sores, thrush or difficulty swallowing", "Not able to eat or drink",
@@ -241,6 +247,7 @@ class EncountersController < ApplicationController
         "Dry or flaking skin/extensive skin lesions", "None"]
         @breast_feeding_conditions = ["", "Blocked nose", "Cleft lip or palate", "Sick/recovering", "Thrush", "Other", "None"]
         @current_pregnancy_status = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)
+
       when 'Dietary assessment'
         @meal_types = ['', 'Breakfast', 'Lunch', 'Supper', 'Snack']
         @meal_types = {

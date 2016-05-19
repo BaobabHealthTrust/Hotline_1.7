@@ -80,6 +80,8 @@
 
     <% if @age <= 5 %>
         <%= render :partial => 'child_symptoms' %>
+    <% elsif (!((@patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50) || @patient_obj.age <= 5)) %>
+        <%= render :partial => 'general_health_symptoms' %>
     <% else %>
         <%= render :partial => 'maternal_health_symptoms' %>
     <% end %>

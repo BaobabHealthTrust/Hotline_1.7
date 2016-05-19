@@ -530,6 +530,35 @@ select_options = {
       ['Client delivered','Client delivered'],
       ['Client died','Client died'],
       ['Other','Other']
+  ],
+
+  'general_health_symptoms' => [
+      ["Weakness- General", ''],
+      ["Swelling- General", ''],
+      ["Stool/urine conditions", ''],
+      ["Stomach pain / Cyst, Lumps, Mass", ''],
+      ["Skin condition- Genital", ''],
+      ["Respiratory conditions", ''],
+      ["Puberty / Menstrual conditions", ''],
+      ["Physical injury, Swelling- General", ''],
+      ["None- General Health Concerns", ''],
+      ["Muscle pain", ''],
+      ["Menstrual conditions", ''],
+      ["Joint pain", ''],
+      ["Headache", ''],
+      ["Gastrointestinal distress", ''],
+      ["Fever", ''],
+      ["Eye (vision issues/pain)", ''],
+      ["Dizziness", ''],
+      ["Discharge- Genital (Vaginal or Penile)", ''],
+      ["Dental/oral conditions, Mouth, Throat", ''],
+      ["Cyst, Lumps, Mass", ''],
+      ["Convulsions", ''],
+      ["Chest pain", ''],
+      ["Bleeding", ''],
+      ["Behavioral changes/ Mental health", ''],
+      ["Appetite changes (loss/gain)", ''],
+      ["Weight change (loss/gain)", '']
   ]
 }
 

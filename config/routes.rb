@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   post 'home/next_article'
   post 'home/previous_article'
   get 'tag_concepts/:tag_id' => 'home#tag_concepts'
+  get 'concept_tags/:concept_id' => 'home#concept_tags'
+
   ######################### home end ############################################
 
 
@@ -163,7 +165,16 @@ Rails.application.routes.draw do
   post '/report/reports'
   get '/clinic' => 'home#index'
   get '/report/patient_demographics_report'
-
+  get '/report/patient_age_distribution_report'
+  get '/report/patient_health_issues_report'
+  get '/report/patient_activity_report'
+  get '/report/patient_referral_report'
+  get '/report/call_time_of_day'
+  get '/report/call_day_distribution'
+  get '/report/call_lengths'
+  get '/report/new_vs_repeat_callers'
+  get '/report/follow_up'
+  get '/report/report_filter_page'
   ######################## Reports end  ############################################
 
   # The priority is based upon order of creation: first created -> highest priority.
