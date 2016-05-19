@@ -59,10 +59,10 @@
               <% if @group.downcase == 'group 4'%>
                    <th> Number of Times Per Day</th>
               <% end %>
-              <th>Typically Eaten/Drunk</th>
+              <th>Typically Taken</th>
             </tr>
           </thead>
-              <% 8.times do |i|%>
+              <% 6.times do |i|%>
                   <tr class="row input-row">
 
                     <% if @group.downcase != 'group 4'%>
@@ -231,8 +231,8 @@
     jQuery('.ui-dropdownchecklist, .ui-dropdownchecklist-selector, .ui-dropdownchecklist-text').css(
             {
                 'width' : (0.33333*jQuery('.table').width()+'px'),
-                'font-size' : '1em',
-                'height' : '35px'
+                'font-size' : '1.05em',
+                'height' : '50px'
             }
     );
 
@@ -278,7 +278,6 @@
         for(var i = 0; i < fields.length; i++){
             var text = fields[i].parentNode.getElementsByClassName("ui-dropdownchecklist-text")[0];
             try{txt = text.innerHTML.replace(/&nbsp\;/g, '')}catch(e){};
-            console.log(txt);
             if(txt && txt.trim().length > 0){
                 validate(fields[i].className.split(" ")[0].trim());
             }

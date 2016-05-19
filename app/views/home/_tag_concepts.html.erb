@@ -16,16 +16,19 @@
 .min-table-cell {
   display: table-cell;
   padding-top: 10px;
-    border-left: 1px solid black;
 }
 
 .tags {
-  border-radius: 15px;
-  background: lightgrey; /*#73AD21;*/
+  border-radius:20px;
+  background: #f5f5f5;
+  border: 1px solid gray;
   padding: 5px;
-  height: 55px;
+  padding: 5px;
+  height: 45px;
   width: 100%;
   vertical-align: middle;
+  margin: -7px;
+  border: outset 2px white;
 }
 
 .selected_tag {
@@ -37,7 +40,7 @@
 
 .tags p {
   font-weight: bold;
-  font-size: 17px;
+  font-size: 20px;
 }
 
 .tags p small {
@@ -79,22 +82,36 @@
 
 <div class="min-table-container">
   <div class="min-table-row">
-   <div class="min-table-cell" style="position: absolute; width: 40%;height: 70vh !important;overflow-y: auto;">
+   <div class="min-table-cell" style="position: absolute; width: 40%;height: 70vh !important;overflow-y: auto;border-right: 1px solid gray;">
       <!-- ................................. -->
+     <% if params[:by_concepts]%>
+         <%(@concepts || []).each do|concept|%>
+             <div class="tags" id="<%=concept.concept_id%>" style="width: 90%; margin-left: 1%; padding-left: 20px;" onclick = "javascript:selectConcept(this)">
+               <p><%= concept.name %>&nbsp;<small><%#=tag.created_at.strftime('%H:%M:%S')%></small></p>
+             </div>
+             <br />
+         <%end
+     else %>
       <%(@tags || []).each do|tag|%>
           <div class="tags" id="<%=tag.id%>" style="width: 90%; margin-left: 1%; padding-left: 20px;" onclick = "javascript:selectTag(this)">
-            <p>#<%= tag.name %>&nbsp;<small><%#=tag.created_at.strftime('%H:%M:%S')%></small></p>
+            <p>#<%= tag.display_name %>&nbsp;<small><%#=tag.created_at.strftime('%H:%M:%S')%></small></p>
           </div>
         <br />
-      <%end%>
+      <%end
+      end
+      %>
       <!-- ................................. -->
 
     </div>
 
     <div class="min-table-cell selected_tag" style="width: 54%;">
-       <%if @tags.blank?%>
-          <span>No tags created</span>
+       <%if !params[:by_concepts] && @tags.blank?%>
+          <span>No tags available</span>
         <%end%>
+
+      <%if params[:by_concepts] && @concepts.blank?%>
+          <span>No concepts available</span>
+      <%end%>
       <table style="width: 55%;" id="selected_tag_table">
       </table>
     </div>
@@ -106,7 +123,7 @@
 function changeColor(e) {
   allDivs = document.getElementsByClassName('tags');
   for(var i = 0; i < allDivs.length; i++) {
-    allDivs[i].style.background = "lightgrey";
+    allDivs[i].style.background = "#f5f5f5";
   }
   e.style.background = "lightblue";
 }
@@ -131,9 +148,32 @@ function selectTag(e) {
     }                                                                           
     xmlhttp.open("GET","/tag_concepts/" + e.id, true);           
     xmlhttp.send();                                                             
-  } 
+  }
 
-  
+
+
+function selectConcept(e) {
+    changeColor(e);
+
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+    }else{// code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+            var results = xmlhttp.responseText;
+            if(results == 'undefined' || results == '' || results == '"not validate"') {
+                return;
+            }else{
+                addRows(results)
+            }
+        }
+    }
+    xmlhttp.open("GET","/concept_tags/" + e.id, true);
+    xmlhttp.send();
+}
+
 function addRows(data) {
   t = document.getElementById('selected_tag_table')
   var rowCount = t.rows.length;

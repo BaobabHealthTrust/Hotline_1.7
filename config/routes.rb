@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   post 'home/next_article'
   post 'home/previous_article'
   get 'tag_concepts/:tag_id' => 'home#tag_concepts'
+  get 'concept_tags/:concept_id' => 'home#concept_tags'
+
   ######################### home end ############################################
 
 

@@ -114,10 +114,13 @@ class EncountersController < ApplicationController
 
     # Go to the next task in the workflow (or dashboard)
     age = @patient_obj.age
+    #raise session[:end_call].inspect
     if (age <= 5 || age >= 13 && age <= 50 && @patient_obj.sex == 'F') && session[:automatic_flow] == true
       redirect_to next_task(@patient_obj)
     elsif params[:encounter_type] == 'Update outcomes' && session[:end_call] == true
       redirect_to '/' and return
+    elsif session[:end_call] == true
+        redirect_to "/encounters/new/update_outcomes?patient_id=#{@patient.id}" and return
     else
       redirect_to "/patient/dashboard/#{@patient.id}/tasks"
     end
@@ -207,8 +210,9 @@ class EncountersController < ApplicationController
           @health_symptoms = concept_set('Child health symptoms')
           @symptom_concept = "Child Health Symptoms"
           @info_concept = "Child Health Info"
-
-          #if adult
+        elsif (!((@patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50) || @patient_obj.age <= 5))
+          @health_symptoms = concept_set('General health symptoms')
+          @symptom_concept = "Health Symptom"
         elsif
           @health_info = concept_set('Maternal health info')
           @danger_signs = concept_set('Danger signs')
@@ -216,19 +220,24 @@ class EncountersController < ApplicationController
           @symptom_concept = "Maternal Health Symptoms"
           @info_concept = "Maternal Health Info"
         end
+
       when 'Update outcomes'
           @encounter_type = encounter_type
           @general_outcomes = concept_set('General outcome')
+
       when 'Reminders'
         @phone_types = concept_set('Phone Type')
         @message_types = concept_set('Message Type')
         @language_types = concept_set('Language Type')
         @content_types = concept_set('Type of message content') - [['Postnatal'], ['Observer'], ['Wcba']] + ['WCBA']
         @guardian = current_guardian(params[:guardian_id], @patient_obj.patient_id)
+
       when 'Purpose of call'
         @purpose_of_call_options = purpose_of_call_options
+
       when 'Confirm purpose of call'
         @confirm_call_options = call_options
+
       when 'Clinical assessment'
         @clinical_questions = clinical_questions#('Group 2')
         @danger_signs = ["", "Mouth sores, thrush or difficulty swallowing", "Not able to eat or drink",
@@ -238,6 +247,7 @@ class EncountersController < ApplicationController
         "Dry or flaking skin/extensive skin lesions", "None"]
         @breast_feeding_conditions = ["", "Blocked nose", "Cleft lip or palate", "Sick/recovering", "Thrush", "Other", "None"]
         @current_pregnancy_status = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)
+
       when 'Dietary assessment'
         @meal_types = ['', 'Breakfast', 'Lunch', 'Supper', 'Snack']
         @meal_types = {
@@ -255,17 +265,16 @@ class EncountersController < ApplicationController
             'Animal Foods' => '(meat, eggs, etc)',
             'Fruits' => '(citrus fruits,  etc.)',
             'Vegetables' => '(bonongwe, chisoso, etc)',
-            'Fats' => '(oils, etc.)',
-            'None' => ''
+            'Fats' => '(oils, etc.)'
         }
         @food_types = {
-            'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
-            'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
-            'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
+            'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
             'group 4' => ['Breastmilk', 'Foods', 'Other Liquids'],
-            'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
-            'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None'],
-            'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None']
+            'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats']
         }
 
         @consumption_method = ['', 'Yes', 'No']
@@ -483,13 +492,13 @@ class EncountersController < ApplicationController
     end
 
     @groups = {
-      'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
-      'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
-      'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
-      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids', 'None', 'Groups Cons.'],
-      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'None', 'Fats'],
-      'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.'],
-      'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'None', 'Groups Cons.']
+      'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids', 'Groups Cons.'],
+      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+      'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
     }
 
     @example_foods =  {'Staples' => [['Samples: Cereal grains e.g sorghum, maize, starchy fruits such
@@ -513,7 +522,6 @@ class EncountersController < ApplicationController
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
                        'Breastmilk' => [['Milk'], 'breastf.png'],
                        'Other Liquids' => [['Other liquids <br>(water, juice, dairy/goat milk, etc.)'], 'drink.jpg'],
-                       'None' => [['none'], 'none.png'],
                        'Groups Cons.' => [["<span style='font-weight: normal'>#{@comment}</span>"], '']
     }
     render :layout => false, :template => 'encounters/summary'

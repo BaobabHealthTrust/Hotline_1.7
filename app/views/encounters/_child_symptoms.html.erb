@@ -150,7 +150,8 @@
     <%= hidden_field_tag("observations[][concept_name]", "", :id => 'start_concept') %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Does the child have ",
-                   :tt_onLoad => "populateFirstQuestion(); $('nextButton').style.display = 'none'",
+                   :tt_onLoad => "populateFirstQuestion(); $('nextButton').style.display = 'none';
+                   showHelpButton(__$('start_concept').value);",
                    :tt_requireNextClick => false,
                    :id => "first_question"
     %>
@@ -169,8 +170,9 @@
                        :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value == 'Fever'",
                        :field_type => 'number',
                        :tt_requireNextClick => true,
-                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
-                       :id => "fever_days",
+                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
+                       showHelpButton('SEVERITY OF FEVER')",
+                       :id => "fever_id_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
 
@@ -180,8 +182,9 @@
                        :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value == 'Diarrhea'",
                        :field_type => 'number',
                        :tt_requireNextClick => true,
-                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
-                       :id => "diarrhea_days",
+                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
+                       showHelpButton('SEVERITY OF DIARRHEA')",
+                       :id => "diarrhea_id_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
 
@@ -191,8 +194,9 @@
                        :condition =>  "$('first_question').value.trim() == 'Yes' &&  $('start').value == 'Coughing'",
                        :field_type => 'number',
                        :tt_requireNextClick => true,
-                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
-                       :id => "cough_days",
+                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
+                       showHelpButton('SEVERITY OF COUGH')",
+                       :id => "coughing_id_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
 
@@ -202,7 +206,7 @@
                      :condition => "$('first_question').value.trim() == 'Yes' &&  $('start') == 'Not Eating'",
                      :helpText => "Is the child  eating anything?",
                      :tt_requireNextClick => false,
-                     :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+                     :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("NOT EATING OR DRINKING ANYTHING")' } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "VOMITING EVERYTHING") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
@@ -210,15 +214,16 @@
                      :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value.toUpperCase() == 'NOT EATING'",
                      :helpText => "Is the child vomiting everything he/she eats? ",
                      :tt_requireNextClick => false,
-                     :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+                     :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("VOMITING EVERYTHING")' } %>
 
 
     <%= hidden_field_tag("observations[][concept_name]", "SEVERITY OF RED EYE") %>
     <%= text_field_tag "observations[][value_numeric]", nil,
-                       { :id => "red_eye_days",
+                       { :id => "red_eye_id_days",
                          :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value.toUpperCase() == 'RED EYE'",
                          :field_type => 'number',
-                         :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
+                         :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
+                         showHelpButton('SEVERITY OF RED EYE')",
                          :tt_pageStyleClass => 'NumbersOnlyWithUnknown',
                          :helpText => "How many days has the child had red eyes?"
                        } %>
@@ -230,16 +235,15 @@
                      :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value.toUpperCase() == 'RED EYE'",
                      :helpText => "Is the child having visual problems?",
                      :tt_requireNextClick => false,
-                     :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+                     :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("VISUAL PROBLEMS")' } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "UNCONSCIOUS") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    { :id => "unconcious",
-                     :tt_onLoad => "$('keyboard').style.display = 'none';",
                      :condition => "$('first_question').value.trim() == 'Yes' &&  $('start').value.toUpperCase() == 'VERY SLEEPY OR UNCONSCIOUS' ",
                      :helpText => "Is it difficult or impossible to wake the child?",
                      :tt_requireNextClick => false,
-                     :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+                     :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton(UNCONSCIOUS)' } %>
 
 
 
@@ -253,7 +257,7 @@
                    :condition => "__$('start').value.toUpperCase() != 'FEVER'",
                    :id => "fever",
                    :tt_requireNextClick => false,
-                   :tt_onLoad => '$("nextButton").style.display = "none";'
+                   :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("FEVER")'
                     %>
 
     <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF FEVER' %>
@@ -262,7 +266,8 @@
                        :condition => "$('fever').value == 'Yes'",
                        :field_type => 'number',
                        :tt_requireNextClick => true,
-                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
+                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
+                       showHelpButton('SEVERITY OF FEVER')",
                        :id => "fever_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
@@ -276,7 +281,7 @@
                    :condition => "__$('start').value.toUpperCase() != 'DIARRHEA'",
                    :id => "diarrhea",
                    :tt_requireNextClick => false,
-                   :tt_onLoad => '$("nextButton").style.display = "none";'
+                   :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("DIARRHEA")'
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF DIARRHEA' %>
     <%= text_field_tag 'observations[][value_numeric]', nil,
@@ -284,7 +289,8 @@
                        :condition => "$('diarrhea').value == 'Yes'",
                        :field_type => 'number',
                        :tt_requireNextClick => true,
-                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
+                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
+                       showHelpButton('SEVERITY OF DIARRHEA')",
                        :id => "diarrhea_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
@@ -298,7 +304,7 @@
                    :condition => "__$('start').value.toUpperCase() != 'BLOOD IN STOOL' && $('diarrhea').value == 'Yes'",
                    :id => "blood_in_stool",
                    :tt_requireNextClick => false,
-                   :tt_onLoad => '$("nextButton").style.display = "none";'
+                   :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("BLOOD IN STOOL")'
     %>
 
 
@@ -308,7 +314,7 @@
                    :condition => "__$('start').value.toUpperCase() != 'COUGHING'",
                    :id => "cough",
                    :tt_requireNextClick => false,
-                   :tt_onLoad => '$("nextButton").style.display = "none";'
+                   :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("COUGH")'
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF COUGH' %>
     <%= text_field_tag 'observations[][value_numeric]', nil,
@@ -316,7 +322,8 @@
                        :condition => "$('cough').value == 'Yes'",
                        :field_type => 'number',
                        :tt_requireNextClick => true,
-                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
+                       :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
+                       showHelpButton('SEVERITY OF COUGH')",
                        :id => "cough_days",
                        :tt_pageStyleClass => 'NumbersOnlyWithUnknown'
     %>
@@ -330,7 +337,7 @@
                    :condition => "__$('start').value.toUpperCase() != 'CONVULSIONS'",
                    :id => "convulsions",
                    :tt_requireNextClick => false,
-                   :tt_onLoad => '$("nextButton").style.display = "none";'
+                   :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("CONVULSIONS")'
     %>
 
 
@@ -340,7 +347,7 @@
           :condition => "__$('start').value.toUpperCase() != 'NOT EATING'",
           :helpText => "Is the child having trouble eating and drinking?",
           :tt_requireNextClick => false,
-          :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+          :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("NOT EATING")' } %>
 
 
     <%= hidden_field_tag("observations[][concept_name]", "NOT EATING OR DRINKING ANYTHING") %>
@@ -349,7 +356,7 @@
         :condition => '$("not_eating").value == "Yes"',
         :helpText => "Is the child  eating anything?",
         :tt_requireNextClick => false,
-        :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+        :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("NOT EATING OR DRINKING ANYTHING")' } %>
 
 
     <%= hidden_field_tag("observations[][concept_name]", "VOMITING EVERYTHING") %>
@@ -358,7 +365,7 @@
                      :condition => '$("not_eating").value == "Yes"',
                      :helpText => "Is the child vomiting everything he/she eats? ",
                      :tt_requireNextClick => false,
-                     :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+                     :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("VOMITING EVERYTHING")' } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "RED EYE") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
@@ -366,14 +373,14 @@
                      :condition => "__$('start').value.toUpperCase() != 'RED EYE'",
                      :helpText => "Does the child have red eyes?",
                      :tt_requireNextClick => false,
-                     :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+                     :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("RED EYE")' } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "SEVERITY OF RED EYE") %>
     <%= text_field_tag "observations[][value_numeric]", nil,
                    { :id => "red_eye_days",
                      :condition => '$("red_eye").value == "Yes"',
                      :field_type => 'number',
-                     :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';",
+                     :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';showHelpButton('SEVERITY OF RED EYE')",
                      :tt_pageStyleClass => 'NumbersOnlyWithUnknown',
                      :helpText => "How many days has the child had red eyes?"
                    } %>
@@ -389,51 +396,48 @@
         :condition => '$("red_eye").value == "Yes"',
         :helpText => "Is the child having visual problems?",
         :tt_requireNextClick => false,
-        :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+        :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("VISUAL PROBLEMS")' } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "VERY SLEEPY OR UNCONSCIOUS") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         {:id => "sleepy_or_unconcious",
         :helpText => "Is the child sleepy or unconscious?",
         :tt_requireNextClick => false,
-        :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+        :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("VERY SLEEPY OR UNCONSCIOUS")' } %>
 
   <%#TODO Need to verify if the below concept name matches the Question i.e. helptext%>
     <%= hidden_field_tag("observations[][concept_name]", "UNCONSCIOUS") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         { :id => "unconcious",
-          :tt_onLoad => "$('keyboard').style.display = 'none';",
+          :tt_onLoad => "$('keyboard').style.display = 'none';showHelpButton('UNCONSCIOUS')",
         :condition => '$("sleepy_or_unconcious").value == "Yes"',
         :helpText => "Is it difficult or impossible to wake the child?",
-        :tt_requireNextClick => false,
-        :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+        :tt_requireNextClick => false } %>
 
     <%= hidden_field_tag("observations[][concept_name]", "GAINED OR LOST WEIGHT") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    { :id =>  "weight_change",
                      :helpText => "Has the child lost or gained lots of weight?",
                      :tt_requireNextClick => false,
-                     :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+                     :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("GAINED OR LOST WEIGHT");' } %>
 
   <%#TODO Need to verify if the below concept name matches the Question i.e. helptext%>
     <%= hidden_field_tag("observations[][concept_name]", "SWOLLEN HANDS OR FEET SIGN") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         { :id => "swollen_legs_or_face",
-          :tt_onLoad => "$('keyboard').style.display = 'none';",
         :condition => '$("weight_change").value == "Yes"',
         :helpText => "Does the child have swollen legs or swollen face?",
         :tt_requireNextClick => false,
-        :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+        :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("SWOLLEN HANDS OR FEET SIGN");' } %>
 
   <%#TODO Need to verify if the below concept name matches the Question i.e. helptext%>
     <%= hidden_field_tag("observations[][concept_name]", "FLAKY SKIN") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
         { :id => "dry_skin",
-          :tt_onLoad => "$('keyboard').style.display = 'none';",
+          :tt_onLoad => "$('keyboard').style.display = 'none';showHelpButton('FLAKY SKIN');",
         :condition => '$("weight_change").value == "Yes"',
         :helpText => "Has the child's skin become dry, loose, or patchy?",
-        :tt_requireNextClick => false,
-        :tt_onLoad => '$("nextButton").style.display = "none";' } %>
+        :tt_requireNextClick => false} %>
 
   <%#TODO Replace the OTHER concept below with an appropriate one
   TODO Define the ajaxUrl below in patientrs controller
@@ -456,16 +460,15 @@
 
   <label for='summary'>Symptom Confirmation</label>
   <%= text_field_tag :summary, nil, {
-                                     :tt_onLoad => "hideHelpButton();summary();$('keyboard').style.display = 'none';
+                                     :tt_onLoad => "summary();$('keyboard').style.display = 'none';
+                                     showHelpButton('Child Health Symptoms');
                                      __$('nextButton').style.display = 'block'; ",
-                                     :optional => "true",
-                                     :tt_pageStyleClass => "NoControls" } %>
+                                     :optional => "true"} %>
 
   <label for='dangerSigns'>Danger signs</label>
   <%= text_field_tag :dangerSigns, nil, {
-                                         :tt_onLoad => "hideHelpButton();loadDangerSigns();$('keyboard').style.display = 'none';",
-                                         :optional => "true",
-                                         :tt_pageStyleClass => "NoControls" } %>
+                                         :tt_onLoad => "loadDangerSigns();$('keyboard').style.display = 'none';showHelpButton('Danger Signs');",
+                                         :optional => "true" } %>
 
     <%= select_tag "child_health_info",options_for_select(@child_health_info, nil),
                    {:id          => "child_health_info_id",

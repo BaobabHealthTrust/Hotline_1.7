@@ -1,6 +1,6 @@
 var content = document.getElementById('content');
 
-function showHelpButton(){
+function showHelpButton(passedConcept){
     imgCircle = document.getElementById('img-circle');
     if (imgCircle) imgCircle.parentNode.removeChild(imgCircle);
 
@@ -15,7 +15,7 @@ function showHelpButton(){
     imgCircle.src = "/assets/icons/info-sign-disabled.png";
     imgCircle.style.boxShadow = '0 0 8px rgba(0, 0, 0, .8)';
     imgCircle.style.backgroundSize = "60px 60px";
-
+    imgCircle.setAttribute('passedConcept', passedConcept);
     wrapper = document.createElement("div");
     wrapper.id = 'img-wrapper';
     wrapper.className = "disabled";

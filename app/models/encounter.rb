@@ -58,8 +58,8 @@ class Encounter < ActiveRecord::Base
 
     (Encounter.find_by_sql(["SELECT * FROM encounter WHERE encounter_type = #{encounter_type_id}
                      AND DATE(encounter_datetime) = ? AND patient_id = #{patient_id}
-                     ", Date.today])
-    .last.observations rescue []).each do |observation|
+                     ORDER BY encounter_datetime DESC LIMIT 1", Date.today])
+    .first.observations rescue []).each do |observation|
       next if observation.concept_id.to_s != concept_id.to_s
       data << observation.answer_string
     end
