@@ -424,7 +424,7 @@
   <%#TODO Need to verify if the below concept name matches the Question i.e. helptext%>
     <%= hidden_field_tag("observations[][concept_name]", "SWOLLEN HANDS OR FEET SIGN") %>
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
-        { :id => "swollen_legs_or_face"
+        { :id => "swollen_legs_or_face",
         :condition => '$("weight_change").value == "Yes"',
         :helpText => "Does the child have swollen legs or swollen face?",
         :tt_requireNextClick => false,
