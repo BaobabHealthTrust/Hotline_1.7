@@ -7,9 +7,9 @@
     }
     #main-div fieldset{
       height: 500px;
-      border-radius: 1%;
-      border: 2px solid #000000;
-       font-family:serif;
+      border: 1px solid #000000;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+      font-family:serif;
     }
     #left{
       width: 55%;
@@ -22,12 +22,14 @@
       right: 2%;
       top :15%;
       width:35%;
+      margin-top: 2%;
       margin-right: 4%;
       background: #efefef;
       height: 300px;
       float:right;
       overflow-y :scroll;
-      border: 1px dotted #3b3a3a;
+     // border: 1px dotted #3b3a3a;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
     #filter_table td {
         padding: 2%;
@@ -114,7 +116,7 @@
                     return (nk=='Earl'); 
                   });
         }
-       __$(id).style.border = "2px solid #94cde0";
+       __$(id).style.border = "2px solid #b4c6cf";
        __$(id).value = text.replace("<a>", "").replace("</a>",""); 
       }
       function changeDiv(id){
