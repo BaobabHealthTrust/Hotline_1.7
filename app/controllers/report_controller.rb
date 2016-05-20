@@ -490,7 +490,7 @@ class ReportController < ApplicationController
     when 'women'
       @special_message = " -- (Please note that age is in <b> Years </b>)"
     when 'children'
-      @special_message = "-- (Please note that age is in <B> Months </B>)"
+      @special_message = "-- (Please note that age is in <b> Months </b>)"
     else
       @special_message = "-- (Please note that the Women age is in " +
                          "<b> Years </b> and that of Children is in " +
@@ -501,19 +501,6 @@ class ReportController < ApplicationController
     @report_name  = "Patient Age Distribution for #{params[:district]} district"
     @report       = Report.patient_age_distribution(@patient_type, @grouping,
                                                     @start_date, @end_date, district)
-
-    if params[:destination] == 'csv'
-      report_header = ["", "Count", "%age", "Min","Max","Avg","S.Dev"]
-      export_to_csv('patient_age_distribution_report', report_header, @report,
-                  @patient_type, @grouping)
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-    else
-      render :layout => false
-    end
   end
 
   def patient_health_issues_report
@@ -533,18 +520,6 @@ class ReportController < ApplicationController
     @report       = Report.patient_health_issues(@patient_type, @grouping, 
                                                   @health_task, @start_date,
                                                   @end_date, district)
-    if params[:destination] == 'csv'
-      report_header = ["", "#{@health_task.gsub(/_/, " ").capitalize}", "Count", "Percentage"]
-      export_to_csv('patient_health_issues_report', report_header , @report,
-                  @patient_type, @grouping)
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-    else
-      render :layout => false
-    end
 
   end
   def patient_activity_report
@@ -561,22 +536,6 @@ class ReportController < ApplicationController
     @report_name  = "Patient Activity for #{params[:district]} district"
     @report    = Report.patient_activity(@patient_type, @grouping,
                                          @start_date, @end_date, district)
-
-    if params[:destination] == 'csv'
-      report_header = ["", "Count","Health Symptoms Count", "Health Symptoms %age",
-                           "Danger Signs Count", "Danger Signs %age",
-                           "Info Request Count", "Info Request %age"]
-      export_to_csv('patient_activity_report', report_header, @report, @patient_type, @grouping)
-
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-      
-    else
-      render :layout => false
-    end
   end
  def patient_referral_report
     @start_date   = params[:start_date]
@@ -593,20 +552,6 @@ class ReportController < ApplicationController
     @report_name  = "Referral Followup for #{district} district"
     @report    = Report.patient_referral_followup(@patient_type, @grouping, @outcome,
                                          @start_date, @end_date, district)
-
-    if params[:destination] == 'csv'
-      report_header = ["Caller Name","Phone Number", "Call Summary" ]
-      export_to_csv('patient_referral_report', report_header, @report, @patient_type, @grouping)
-
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-      
-    else
-      render :layout => false
-    end
   end
   def call_time_of_day
     @start_date   = params[:start_date]

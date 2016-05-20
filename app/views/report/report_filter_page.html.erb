@@ -74,12 +74,19 @@
        border: 2px solid #d9d9d9;
        font-family: serif;
     }
+    #menu_filter{
+      
+      width: 50%;
+      margin-left: 2%;
+      margin-top: 2%;
+    }
 </style>
 <script type="text/javascript">
       function __$(id){
           return document.getElementById(id);
       }
       var date_ranges = <%= raw @report_date_range.to_json%>;
+      var districts = <%= raw @districts.to_json%>;
       var inputs = {}
       var UpdateInputHash = function(hash, newKey, newVal, fn, bind){
         var prevKey=null, prevVal=null, inserted=false, newhash={};
@@ -151,6 +158,16 @@
           }
           jQuery("#actions").append(form);
           form.submit();
+      }
+      function changeMenu(field){
+            console.log("Change");
+            var filtered  = [];
+            for(var i = 0 ; i < districts.length; i++){
+                if(districts[i].indexOf(field.value) > -1){
+                    filtered.push(districts[i]);
+                }
+            }
+            console.log(filtered);
       }
 </script>
 <div  id="main-div">
@@ -280,6 +297,7 @@
     </table>
   </div>
   <div id="district_div" class="right" >
+      <input id="menu_filter" name="menu_filter" onchange="changeMenu(this)">
       <ul>
         <% @districts.sort.each do |district| %>
               <li onclick="setInpt('currentdistrict','<%=district%>',this.innerHTML)"><a ><%= district %></a></li>

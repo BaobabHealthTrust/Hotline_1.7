@@ -4,7 +4,7 @@
       <legend>
         <%=@report_name%> - <i><%=@patient_type%></i>
       </legend>
-      <table cellspacing="0" width="100%">
+      <table cellspacing="0" width="100%" id="report_table">
         <tr>
           <%= "Filter Info: Grouping" %> - <%=@grouping.capitalize%><i><%=@special_message%></i>
         </tr>
@@ -244,10 +244,10 @@
     </fieldset>
       
      <div style="float:right; margin-top:0.5%;">
-        <button  class="button green" id="finish_button" onclick="window.location ='/reports_index?report_group=patient_analysis'">
+        <button  class="button green" onclick="window.location ='/reports_index?report_group=patient_analysis'">
            <span>Finish</span>
         </button>
-      <button class="button red"  id="back_button" onclick="goBack()"><span>Back</span></button>
+      <button class="button red" onclick="goBack()"><span>Back</span></button>
     </div>
     </div>
     <%= render :partial => 'footer' %>

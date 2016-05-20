@@ -1,17 +1,20 @@
 
 <%= render :partial => 'header' %>
+<style type="text/css">
+  
+</style>
 <div class="main-page-container">
     <fieldset id="main-fieldset">
         <legend class="" >
         <%=@report_name +" - " %> <i><%=@patient_type%></i>
       </legend>
-          <table cellspacing="0" width="100%">
+          <table cellspacing="0" width="100%" id="report_table">
         <tr>
           <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} "  %>
         </tr>
         <%@report.reverse.map do |data|%>
           <tr>
-            <td width="25%" colspan = 2 class="cellleft cellbottom main-table-cell" style="background-color:#f7f7f7; text-align:center;font-weight: bold; font-size: large; ">
+            <td width="25%" colspan = 2 class="cellleft cellbottom main-table-cell" style="background-color:#b6b3b3; text-align:center;font-weight: bold; font-size: large; ">
               <%= @grouping.humanize + " beginning "+ data[:start_date] + " ending " + data[:end_date]%>
             </td>
           </tr>
