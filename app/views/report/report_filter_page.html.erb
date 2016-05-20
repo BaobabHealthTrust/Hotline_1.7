@@ -7,10 +7,12 @@
     }
     #main-div fieldset{
       height: 500px;
-       border-radius: 1%;
+      border-radius: 1%;
+      border: 2px solid #000000;
+       font-family:serif;
     }
     #left{
-      width: 50%;
+      width: 55%;
       float:left;
       height: 100px;
     
@@ -19,18 +21,23 @@
       position: absolute;
       right: 2%;
       top :15%;
-      width:48%;
-      visibility: hidden;
+      width:35%;
+      margin-right: 4%;
+      background: #efefef;
       height: 300px;
       float:right;
       overflow-y :scroll;
+      border: 1px dotted #3b3a3a;
     }
     #filter_table td {
         padding: 2%;
         font-size: 20px;
-        width: 50%;
+        width: 70%;
         font-weight: bold;
 
+    }
+    #filter_table tr td:nth-child(1){
+        width: 30%;
     }
     ul {
       list-style: none;
@@ -42,7 +49,12 @@
       font-size: 20px;
       font-weight: bold;
       padding: 1%;
-      background: #e2dfdf;
+    }
+    li:nth-child(even){
+      background: #dcdcdc;
+    }
+    li:hover{
+      background: #b4c6cf;
     }
     li:hover{
       background: #b4c6cf;
@@ -52,12 +64,19 @@
     }
     input{
        width: 100%;
-       height:25px;
+       height:32px;
        font-size:20px;
-       border: 2px solid #e2dfdf;
+       font-weight: 4em;
+       background: #fbfafa;
+       border-radius: 2%;
+       border: 2px solid #d9d9d9;
+       font-family: serif;
     }
 </style>
 <script type="text/javascript">
+      function __$(id){
+          return document.getElementById(id);
+      }
       var date_ranges = <%= raw @report_date_range.to_json%>;
       var inputs = {}
       var UpdateInputHash = function(hash, newKey, newVal, fn, bind){
@@ -81,14 +100,13 @@
           var date_range;
           //quarter     = $(quarter).value;
           date_range  = date_ranges[quarter];
-          inputs = UpdateInputHash(inputs,'start_date',date_range[0], function(pk, pv, nk, nv){ 
-                    return (nk=='Earl'); 
-                  });
-          inputs = UpdateInputHash(inputs,'end_date',date_range[1], function(pk, pv, nk, nv){ 
-                    return (nk=='Earl'); 
-                  });
+          __$('start_date').value = date_range[0];
+          __$('end_date').value = date_range[1];
       }
       function setInpt(id,value,text){
+        if(id =="currentdistrict"){
+          __$("district").value = value
+        }
         if(id =="report_date_range"){
             setDateRange(value);
         }else{
@@ -96,21 +114,40 @@
                     return (nk=='Earl'); 
                   });
         }
-          document.getElementById(id).value = text.replace("<a>", "").replace("</a>",""); 
+       __$(id).style.border = "2px solid #94cde0";
+       __$(id).value = text.replace("<a>", "").replace("</a>",""); 
       }
       function changeDiv(id){
         jQuery(".right").css("visibility","hidden");
         jQuery("#"+id).css('visibility','visible');
       }
       function submitForm(){
+
+          var input_fields = jQuery('#filter_table input');
           var form = document.createElement("form");
-          form.setAttribute("method", "POST");
-          form.setAttribute("action", "reports");
-          var input = document.createElement("input");
-          input.setAttribute("type","hidden");
-          input.value = inputs['currentdistrict'];
-          form.appendChild(input);
-          document.getElementById("actions").appendChild(form);
+          form.setAttribute('action', '/report/reports');
+          form.setAttribute('method', 'POST');
+
+          for(var i = 0 ; i < input_fields.length; i++){
+
+              var input = document.createElement('input');
+              input.setAttribute('type','hidden');
+              if (input_fields[i].type=="hidden"){
+                   input.name = input_fields[i].name
+                   input.value = input_fields[i].value;
+              }else{
+                  console.log(input_fields[i].name);
+                  if(input_fields[i].value.length ==0){
+                      __$(input_fields[i].name).style.border = "2px solid #ee7979";
+                      return;
+                  }
+                  input.name = input_fields[i].name;
+                  input.value = inputs[input_fields[i].name];
+              }
+              form.appendChild(input);
+
+          }
+          jQuery("#actions").append(form);
           form.submit();
       }
 </script>
@@ -125,7 +162,7 @@
         <tr>
             <td>District</td>
             <td>
-                <input name="currentdistrict" id="currentdistrict" onfocus="changeDiv('district')">
+                <input name="currentdistrict" id="currentdistrict" onfocus="changeDiv('district_div')">
             </td>
         </tr>
         <% if not @query == "individual_current_enrollments" %>
@@ -233,9 +270,14 @@
                 {:helpText => "Select report destination"} %></td>
         </tr-->
       </tbody>
+        <%= hidden_field_tag :query, "#{@query}"%>
+        <%= hidden_field_tag :start_date, "", {:id => 'start_date'}%>
+        <%= hidden_field_tag :end_date,   "", {:id => 'end_date'}%>
+        <%= hidden_field_tag :district,   "", {:id => 'district'}%>
+        <%= hidden_field_tag :report_type, "#{@report_type}", {:id => 'report_type'}%>
     </table>
   </div>
-  <div id="district" class="right" style="visibility:hidden">
+  <div id="district_div" class="right" >
       <ul>
         <% @districts.sort.each do |district| %>
               <li onclick="setInpt('currentdistrict','<%=district%>',this.innerHTML)"><a ><%= district %></a></li>
@@ -243,7 +285,7 @@
       </ul>
   </div>
   <% if not @query == "individual_current_enrollments" %>
-                <div id="date_range" class="right">
+                <div id="date_range" class="right" style="visibility:hidden">
                     <ul>
                       <% @date_range_values.each do |range| %>
                             <li onclick="setInpt('report_date_range','<%=range[1]%>',this.innerHTML)"><a><%=range[0]%></a></li>
@@ -252,7 +294,7 @@
                 </div>
             <% if @report_type.downcase != 'tips' && @report_type.downcase != 'family_planning' %>
                 <%if @query != "new_vs_repeat_callers" && @query != "follow_up" %>
-                     <div id="p_type" class="right">
+                     <div id="p_type" class="right" style="visibility:hidden">
                         <ul>
                           <% @patient_type.each do |type| %>
                                <li onclick="setInpt('patient_type','<%=type%>',this.innerHTML)"><a><%=type%></a></li>
@@ -261,7 +303,7 @@
                     </div>
                 <%end%>
             <% end %>
-            <div id="group" class="right">
+            <div id="group" class="right" style="visibility:hidden">
                 <ul>
                   <% @grouping.each do |group| %>
                         <li onclick="setInpt('grouping','<%=group[1]%>',this.innerHTML)"><a><%=group[0]%></a></li>
@@ -269,7 +311,7 @@
                 </ul>
             </div>
              <%if @query == "health_issues"%>
-                <div id="tasks" class="right">
+                <div id="tasks" class="right" style="visibility:hidden">
                     <ul>
                       <% @health_task.each do |task| %>
                             <li onclick="setInpt('health_task','<%=task%>',this.innerHTML)"><a><%=task%></a></li>
@@ -279,7 +321,7 @@
             <%end%>
 
             <%if @query == "referral_followup"%>
-                <div id="outcom" class="right">
+                <div id="outcom" class="right" style="visibility:hidden">
                     <ul>
                       <% @outcomes.each do |outcome| %>
                             <li onclick="setInpt('outcome','<%=outcome%>',this.innerHTML)"><a><%=outcome%></a></li>
@@ -290,14 +332,14 @@
 
             <% if @report_type.downcase == 'call_analysis'%>
               <%if @query != "new_vs_repeat_callers" && @query != "follow_up" %>
-                <div id="staff" class="right">
+                <div id="staff" class="right" style="visibility:hidden">
                     <ul>
                       <% @staff.each do |staf| %>
                             <li onclick="setInpt('staff_member','<%=staf[1]%>',this.innerHTML)"><a><%=staf[0]%></a></li>
                       <%end %>
                     </ul>
                 </div>
-                <div id="c_type" class="right">
+                <div id="c_type" class="right" style="visibility:hidden">
                     <ul>
                       <% @call_type.each do |c_type| %>
                             <li onclick="setInpt('call_type','<%=c_type%>',this.innerHTML)"><a><%=c_type%></a></li>
@@ -324,5 +366,6 @@
 </div>
 <script type="text/javascript">
     jQuery('#currentdistrict').focus();
+
 </script>
 <%= render :partial => 'footer' %>
