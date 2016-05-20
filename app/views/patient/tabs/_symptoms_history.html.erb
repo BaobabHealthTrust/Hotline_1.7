@@ -185,7 +185,9 @@ function addRows(data) {
   observations = JSON.parse(data);
 
   for(var i = 0; i < observations.length; i++) {
-      console.log(observations[i][0]);
+    if( observations[i][0] == 'Maternal health info' ){
+        observations[i][0] = 'Additional info requested';
+    }
     tr = document.createElement('tr');       
     td = document.createElement('td');
     td.setAttribute('class','obs_title')

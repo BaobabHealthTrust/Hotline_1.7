@@ -730,7 +730,9 @@
             }
         }
         else if(year > current_year && year != 'Unknown') {
-            showMessage('Invalid input. Year can not be ahead of '+current_year,false,false);
+            if( get_edd != true ) {
+                showMessage('Invalid input. Year can not be ahead of ' + current_year, false, false);
+            }
         }
         else if( year == 'Unknown' || day == 'Unknown') {
             // Code to enter edd should come here and date unknown should be removed.
