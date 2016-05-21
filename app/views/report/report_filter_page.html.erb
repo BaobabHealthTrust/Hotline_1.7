@@ -1,4 +1,5 @@
 <%= render :partial => 'header' %>
+<script type="text/javascript" src="/assets/list.js"></script>
 <style type="text/css">
     #main-div{
       width: 98%;
@@ -9,6 +10,7 @@
       height: 500px;
       border: 1px solid #000000;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+      overflow-y :scroll;
       font-family:serif;
     }
     #left{
@@ -65,18 +67,20 @@
       background: #b4c6cf;
     }
     input{
-       width: 100%;
-       height:32px;
+       width: 90%;
+       height:40px;
        font-size:20px;
        font-weight: 4em;
        background: #fbfafa;
-       border-radius: 2%;
-       border: 2px solid #d9d9d9;
+       border-radius: 15px;
+       border: 2px solid #a7a7a8;
        font-family: serif;
     }
     #menu_filter{
       
       width: 50%;
+      height: 30px;
+      border-radius: 10px;
       margin-left: 2%;
       margin-top: 2%;
     }
@@ -124,7 +128,15 @@
                   });
         }
        __$(id).style.border = "2px solid #b4c6cf";
-       __$(id).value = text.replace("<a>", "").replace("</a>",""); 
+       __$(id).value = text.replace("<a>", "").replace("</a>","").replace('<span class="item">','').replace('</span>',''); 
+      }
+      function changeSortLabel(control){
+      		if(control.innerHTML=="Sort A - Z"){
+      			control.innerHTML="Sort Z - A";
+      		}
+      		else{
+      			control.innerHTML="Sort A - Z";
+      		}
       }
       function changeDiv(id){
         jQuery(".right").css("visibility","hidden");
@@ -147,6 +159,7 @@
               }else{
                   console.log(input_fields[i].name);
                   if(input_fields[i].value.length ==0){
+                  	  __$(input_fields[i].name).focus();
                       __$(input_fields[i].name).style.border = "2px solid #ee7979";
                       return;
                   }
@@ -297,10 +310,11 @@
     </table>
   </div>
   <div id="district_div" class="right" >
-      <input id="menu_filter" name="menu_filter" onchange="changeMenu(this)">
-      <ul>
+      <input id="menu_filter" name="menu_filter" class="search">
+      <font class="sort button" data-sort="item" style="margin-left:5%;padding:1.2%;background: #b4c6cf;height:30px;border:1px solid #a2a0a0; border-radius:10px; font-weight:bold" onclick="changeSortLabel(this)"> Sort A - Z</font>
+      <ul class="list">
         <% @districts.sort.each do |district| %>
-              <li onclick="setInpt('currentdistrict','<%=district%>',this.innerHTML)"><a ><%= district %></a></li>
+              <li  onclick="setInpt('currentdistrict','<%=district%>',this.innerHTML)"><a ><span class="item"><%= district %></span></a></li>
         <%end %>
       </ul>
   </div>
@@ -378,14 +392,24 @@
   </fieldset>
 </div>
 
-<div style="position:absolute;right:2%; bottom:8%" id="actions">
-        <button  class="button green" onclick="submitForm()">
+<div style="position:absolute;width:100%; bottom:8%" id="actions">
+		<button class="button red" style="float:left" id="actions"  onclick="window.location ='/report'"><span>Back</span></button>
+        <button  class="button green" onclick="submitForm()" style="float:right" >
            <span>Finish</span>
         </button>
-      <button class="button red"  onclick="window.location ='/report'"><span>Back</span></button>
+      
 </div>
 <script type="text/javascript">
     jQuery('#currentdistrict').focus();
+   	jQuery("#main-div fieldset").css("height",window.innerHeight * 0.62);
+    window.onresize = function(){
+        jQuery("#main-div fieldset").css("height",window.innerHeight * 0.62);
+    }
+    var options = {
+	  valueNames: [ 'item']
+	};
 
+	var userList = new List('district_div', options);
+	jQuery(".list").css({"border":"none","overflow-y":"visible","overflow-x":"visible"});
 </script>
 <%= render :partial => 'footer' %>
