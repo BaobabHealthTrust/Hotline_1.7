@@ -1,5 +1,7 @@
 <html>
 <head>
+  <script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
+  <script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
   <%= javascript_include_tag "/javascripts/jquery-1.6.1.min.js" %>
   <%= javascript_include_tag "/javascripts/jquery-ui-1.8.13.custom.min.js" %>
   <%= javascript_include_tag "/javascripts/ui.dropdownchecklist.js" %>
@@ -117,7 +119,7 @@
         <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
         <%= hidden_field_tag "patient_id", @patient_obj.patient_id %>
 
-        <input name="test" tt_onLoad="pageSetup();" tt_pageStyleClass = "NoKeyboard"/>
+        <input name="test" tt_onLoad="pageSetup();showHelpButton();$('keyboard').style.display='none';"/>
       </form>
     </div>
 

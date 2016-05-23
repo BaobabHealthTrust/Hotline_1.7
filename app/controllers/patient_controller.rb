@@ -360,12 +360,12 @@ class PatientController < ApplicationController
       elsif update_outcome_encounter == false
           redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
       else
-        if @patient_obj.age < 6
-          @guardian = @patient.current_guardian
-          if @guardian.blank?
-            redirect_to "/people/guardian_check?patient_id=#{@patient.patient_id}" and return
-          end
-        end
+        # if @patient_obj.age < 6
+        #   @guardian = @patient.current_guardian
+        #   if @guardian.blank?
+        #     redirect_to "/people/guardian_check?patient_id=#{@patient.patient_id}" and return
+        #   end
+        # end
 
         redirect_to '/' and return
       end
