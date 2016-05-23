@@ -174,6 +174,11 @@ Rails.application.routes.draw do
   get '/report/call_lengths'
   get '/report/new_vs_repeat_callers'
   get '/report/follow_up'
+  get '/report/family_planning_satisfaction'
+  get '/report/info_on_family_planning'
+  get '/report/tips_activity'
+  get '/report/current_enrollment_totals'
+  get '/report/individual_current_enrollments'
   get '/report/report_filter_page'
   ######################## Reports end  ############################################
 

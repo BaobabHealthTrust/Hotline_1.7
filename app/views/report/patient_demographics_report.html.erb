@@ -1,8 +1,8 @@
 
 <%= render :partial => 'header' %>
-<style type="text/css">
-  
-</style>
+<form id="tt_form">
+  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+</form>
 <div class="main-page-container">
     <fieldset id="main-fieldset">
         <legend class="" >
@@ -101,7 +101,6 @@
         <% end %>
       </table>
     </fieldset>
-    <%= render :partial => 'back_finish_buttons' %>
 </div>
 <script type="text/javascript">
   
@@ -110,4 +109,3 @@
         $("#main-fieldset").css("height",window.innerHeight * 0.62);
       }
 </script>
-<%= render :partial => 'footer' %>

@@ -1,4 +1,7 @@
 <%= render :partial => 'header' %>
+<form id="tt_form">
+  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+</form>
 <div class="main-page-container">
     <fieldset id="main-fieldset">
       <legend>
@@ -8,7 +11,7 @@
         <tr>
           <%= "Filter Info: Grouping" %> - <%=@grouping.capitalize%><i><%=@special_message%></i>
         </tr>
-        <tr>
+        <tr style="background:#b6b3b3;">
           <td width="60%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
             &nbsp;
           </td>
@@ -242,12 +245,5 @@
       </table>
 
     </fieldset>
-      
-     <div style="float:right; margin-top:0.5%;">
-        <button  class="button green" onclick="window.location ='/reports_index?report_group=patient_analysis'">
-           <span>Finish</span>
-        </button>
-      <button class="button red" onclick="goBack()"><span>Back</span></button>
-    </div>
-    </div>
-    <%= render :partial => 'footer' %>
+</div>
+

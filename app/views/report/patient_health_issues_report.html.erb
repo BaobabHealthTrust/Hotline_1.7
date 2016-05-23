@@ -1,11 +1,14 @@
 <%= render :partial => 'header' %>
+  <form id="tt_form">
+  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+</form>
   <div class="main-page-container">
     <fieldset id="main-fieldset">
       <legend>
         <%=@report_name %>  <i> <%= @patient_type%> </i>
       </legend>
       <table cellspacing="0" width="100%">
-          <tr>
+          <tr style="background:#b6b3b3;">
             <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
             <%= @health_task.humanize.titleize %>
             </td>
@@ -87,6 +90,4 @@
       </table>
 
     </fieldset>
-      <%= render :partial =>'back_finish_buttons' %>
     </div>
- <%= render :partial => 'footer' %>

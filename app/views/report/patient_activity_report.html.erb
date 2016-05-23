@@ -1,14 +1,17 @@
 <%= render :partial => 'header' %>
-    <div>
+  <form id="tt_form">
+  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+</form>
+    <div class="main-page-container">
     <fieldset class="main_fieldset">
       <legend >
         <%=@report_name %> - <i><%= @patient_type %></i>
       </legend>
-      <table cellspacing="0" width="100%">
+      <table id="report_table" cellspacing="0" width="100%">
         <tr>
           <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} "  %>
         </tr>
-        <tr>
+        <tr style="background:#b6b3b3;">
           <td width="48%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
               Total Calls
           </td>
@@ -88,12 +91,6 @@
       </table>
 
     </fieldset>
-    <div style="float:right; margin-top:0.5%;">
-        <button  class="button green" onclick="window.location ='/reports_index?report_group=patient_analysis'">
-           <span>Finish</span>
-        </button>
-      <button class="button red" onclick="goBack()"><span>Back</span></button>
-    </div>
     </div>
 
     <%= render :partial => 'footer' %>

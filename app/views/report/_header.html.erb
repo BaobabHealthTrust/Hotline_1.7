@@ -213,8 +213,6 @@
   
   <div class="cells" style="width:45%;">
     <span class="icons small-icons" style=" border-right: 0px solid #ccc; color: #999;font-size: 1.5em; font-style: italic;">
-    <%=GlobalProperty.current_health_center.name%>
-    </span>
   </div>
   
   <div class="cells" style="text-align: center; width: 3%;margin-right:5%;">
@@ -227,3 +225,17 @@
 
 
 </div>
+<script type="text/javascript">
+    function loadControlKeys(){
+        tt_cancel_destination = "javascript:history.go(-1)";
+        __$("keyboard").innerHTML = "";
+        __$("keyboard").parentNode.removeChild(__$("keyboard"));
+
+        var page = document.getElementsByClassName('inputPage')[0];
+        page.parentNode.removeChild(page);
+
+        __$("clearButton").style.display = "none";
+        __$("nextButton").removeAttribute('onmousedown');
+        __$("nextButton").setAttribute("onmousedown","window.location='/reports_index?report_group=<%=params[:report_type]%>'");
+    }
+</script>

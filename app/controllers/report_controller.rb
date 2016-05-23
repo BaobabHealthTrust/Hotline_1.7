@@ -33,19 +33,19 @@ class ReportController < ApplicationController
     ],
     "tips" => [
         {   "name" => "Tips Activity", "icon" => "icons/analysis-256.png",
-            "link" => "#"},
+            "link" => "/report/report_filter_page?report_type=tips&query=tips activity"},
         {   "name" => "Current Enrollment Totals", "icon" => "icons/analysis-256.png",
-            "link" => "#"},
+            "link" => "/report/report_filter_page?report_type=tips&query=current enrollment totals"},
         {   "name" => "Individual Current Enrollments", "icon" => "icons/analysis-256.png",
-            "link" => "#"},
+            "link" => "/report/report_filter_page?report_type=tips&query=individual current enrollments"},
         {   "name" => "Home", "icon" => "icons/gohome.png",
             "link" => "/"}
     ],
     "family_planning" => [
         {   "name" => "Family Planning Satisfaction", "icon" => "icons/analysis-256.png",
-            "link" => "#"},
+            "link" => "/report/report_filter_page?report_type=family_planning&query=family planning satisfaction"},
         {   "name" => "Info on Family Planning", "icon" => "icons/analysis-256.png",
-            "link" => "#"},
+            "link" => "/report/report_filter_page?report_type=family_planning&query=info on family planning"},
         {   "name" => "Home", "icon" => "icons/gohome.png",
             "link" => "/"}
     ]
@@ -488,13 +488,13 @@ class ReportController < ApplicationController
     
     case @patient_type.downcase
     when 'women'
-      @special_message = " -- (Please note that age is in <b> Years </b>)"
+      @special_message = " -- (Please note that age is in Years)"
     when 'children'
-      @special_message = "-- (Please note that age is in <b> Months </b>)"
+      @special_message = "-- (Please note that age is in Months)"
     else
       @special_message = "-- (Please note that the Women age is in " +
-                         "<b> Years </b> and that of Children is in " +
-                         "<b> Months </b>)"
+                         " Years and that of Children is in " +
+                         " Months )"
     end
 
 
@@ -579,22 +579,6 @@ class ReportController < ApplicationController
                                          @call_status, @staff_member,
                                          @start_date, @end_date, district) rescue []
 
-    if params[:destination] == 'csv'
-      report_header = ["","Count", "Morning Count", "Morning %age",
-                       "Midday Count", "Midday %age",
-                       "Afternoon Count", "Afternoon %age",
-                       "Evening Count", "Evening %age"]
-      export_to_csv('call_time_of_day', report_header, @report, @patient_type,
-                  @grouping)
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-    else
-      render :layout => false
-    end
-
   end
   def call_day_distribution
     @start_date   = params[:start_date]
@@ -621,25 +605,7 @@ class ReportController < ApplicationController
                                          @call_status, @staff_member,
                                          @start_date, @end_date, district) rescue []
 
-    if params[:destination] == 'csv'
-      report_header = ["","Count", "Monday Count", "Monday %age",
-                       "Tuesday Count", "Tuesday %age",
-                       "Wednesday Count", "Wednesday %age",
-                       "Thursday Count", "Thursday %age",
-                       "Friday Count", "Friday %age",
-                       "Saturday Count", "Saturday %age",
-                       "Sunday Count", "Sunday %age"]
-      export_to_csv('call_day_distribution', report_header, @report, @patient_type,
-                  @grouping)
-                
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-    else
-      render :layout => false
-    end
+    
   end
   def call_lengths
     @start_date   = params[:start_date]
@@ -668,23 +634,6 @@ class ReportController < ApplicationController
                                          @call_status, @staff_member,
                                          @start_date, @end_date, district) rescue []
 
-    if params[:destination] == 'csv'
-      report_header = ["","Count", "Morning Count", "Morning Avg", "Morning Min", "Morning SDev",
-                       "Midday Count", "Midday Avg", "Midday Min", "Midday SDev",
-                       "Afternoon Count", "Afternoon Avg", "Afternoon Min", "Afternoon SDev",
-                       "Evening Count", "Evening Avg", "Evening Min", "Evening SDev"]
-      export_to_csv('call_lengths', report_header, @report, @patient_type,
-                  @grouping)
-
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-      
-    else
-      render :layout => false
-    end
   end
   def new_vs_repeat_callers
     @start_date     = params[:start_date]
@@ -697,20 +646,7 @@ class ReportController < ApplicationController
     @report_name  = "New vs Repeat Callers for #{@district} District"
     @report = Report.new_vs_repeat_callers_report(@start_date, @end_date, @grouping, @district) rescue []
     #raise @report.to_yaml
-    if params[:destination] == 'csv'
-      report_header = ["Period", "Total calls", 
-                       "New Calls", "%age of New Calls", "Repeat Calls",
-                       "%age of Repeat Calls"
-                       ]
-      export_to_csv('new_vs_repeat_callers_report', report_header, @report,"", @grouping)
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-    else
-      render :layout => false
-    end
+    
   end
   def follow_up
     @start_date     = params[:start_date]
@@ -723,21 +659,99 @@ class ReportController < ApplicationController
     @report_name  = "Caller Follow Up Report for #{@district} District "
     @report = Report.follow_up_report(@start_date, @end_date, @grouping, @district) rescue []
 
-    if params[:destination] == 'csv'
-      report_header = ["Follow Up Result","Count","Percentage"
-                       ]
-      export_to_csv('caller_follow_up_report', report_header, @report,"", @grouping)
-      if @source == nil
-        redirect_to "/clinic"
-      else
-        render :text => "Done"
-      end
-    else
-      render :layout => false
-    end
+    
+  end
+  def family_planning_satisfaction
+    @start_date     = params[:start_date]
+    @end_date       = params[:end_date]
+    @grouping       = params[:grouping]
+    @query          = params[:query]
+    @district       = params[:district]
+    @report_type    = params[:report_type]
+    
+    @report_name  = "Family Planning Satisfaction for #{@district}"
+    @report = Report.family_planning_satisfaction(@start_date, @end_date, @grouping, @district) rescue []
+    
+  end
+  def info_on_family_planning
+    @start_date     = params[:start_date]
+    @end_date       = params[:end_date]
+    @grouping       = params[:grouping]
+    @query          = params[:query]
+    @district       = params[:district]
+    @report_type    = params[:report_type]
+    
+    @report_name  = "Info on Family Planning for #{@district}"
+    @report = Report.info_on_family_planning(@start_date, @end_date, @grouping, @district) rescue []
+    
+  end
+  def tips_activity
+    @start_date     = params[:start_date]
+    @end_date       = params[:end_date]
+    @report_type    = params[:report_type]
+    @query          = params[:query]
+    @grouping       = params[:grouping]
+    @content_type   = params[:content_type]
+    @language       = params[:language]
+    @query          = params[:query]
+    @phone_type     = params[:phone_type]
+    @delivery       = params[:delivery]
+    @number_prefix  = params[:number_prefix]
+    @source         = params[:source] rescue nil
+    district        = params[:district]
+
+    @special_message = ""
+
+    @report_name  = "Tips Activity for #{district} District"
+    @report    = Report.tips_activity(@start_date, @end_date, @grouping,
+                                      @content_type, @language, @phone_type,
+                                      @delivery, @number_prefix, district) rescue []
   end
 
-  
+  def current_enrollment_totals
+    @start_date     = params[:start_date]
+    @end_date       = params[:end_date]
+    @report_type    = params[:report_type]
+    @query          = params[:query]
+    @grouping       = params[:grouping]
+    @content_type   = params[:content_type]
+    @language       = params[:language]
+    @query          = params[:query]
+    @phone_type     = params[:phone_type]
+    @delivery       = params[:delivery]
+    @number_prefix  = params[:number_prefix]
+    @source         = params[:source] rescue nil
+    district        = params[:district]
+
+    @special_message = ""
+
+    @report_name  = "Current Enrollment Totals for #{district} District"
+    @report    = Report.current_enrollment_totals(@start_date, @end_date, @grouping,
+                                      @content_type, @language, @delivery, @number_prefix, district) rescue []
+  end
+  def individual_current_enrollments
+    @start_date     = Encounter.find(:first,
+                                   :order => "date_created ASC").date_created.strftime("%Y/%m/%d")
+    @end_date       = Encounter.find(:first,
+                                   :order => "date_created DESC").date_created.strftime("%Y/%m/%d")
+    @report_type    = params[:report_type]
+    @query          = params[:query]
+    @grouping       = "None"
+    @content_type   = "All"
+    @language       = "All"
+    @phone_type     = "All"
+    @delivery       = "All"
+    @number_prefix  = "All"
+    @source         = params[:source] rescue nil
+    district        = params[:district]
+
+    @special_message = ""
+
+    @report_name  = "Individual Current Enrollments for #{district} District"
+    @report    = Report.individual_current_enrollments(@start_date, @end_date, @grouping,
+                                      @content_type, @language, @phone_type,
+                                      @delivery, @number_prefix, district) rescue []
+  end
 end
 
 

@@ -7,11 +7,9 @@
       margin-top: 1%;
     }
     #main-div fieldset{
-      height: 500px;
+      height: auto;
       border: 1px solid #000000;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
-      overflow-y :scroll;
-      font-family:serif;
     }
     #left{
       width: 55%;
@@ -22,26 +20,29 @@
     .right{
       position: absolute;
       right: 2%;
-      top :15%;
-      width:35%;
+      top :18%;
+      width:30%;
       margin-top: 2%;
       margin-right: 4%;
       background: #efefef;
-      height: 300px;
+      height: 400px;
       float:right;
       overflow-y :scroll;
      // border: 1px dotted #3b3a3a;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
+    #filter_table{
+      width: 100%;
+    }
     #filter_table td {
-        padding: 2%;
+        padding: 1%;
         font-size: 20px;
-        width: 70%;
+       // width: 50%;
         font-weight: bold;
 
     }
     #filter_table tr td:nth-child(1){
-        width: 30%;
+        //width: 40%;
     }
     ul {
       list-style: none;
@@ -50,9 +51,9 @@
     li{
       text-indent: 2%;
       display: block;
-      font-size: 20px;
+      font-size: 23px;
       font-weight: bold;
-      padding: 1%;
+      padding: 2%;
     }
     li:nth-child(even){
       background: #dcdcdc;
@@ -68,7 +69,7 @@
     }
     input{
        width: 90%;
-       height:40px;
+       height:36px;
        font-size:20px;
        font-weight: 4em;
        background: #fbfafa;
@@ -169,7 +170,7 @@
               form.appendChild(input);
 
           }
-          jQuery("#actions").append(form);
+          jQuery("#tt_form").append(form);
           form.submit();
       }
       function changeMenu(field){
@@ -182,7 +183,22 @@
             }
             console.log(filtered);
       }
+      function loadControls(){
+	      tt_cancel_destination = "javascript:history.go(-1)";
+	      __$("keyboard").innerHTML = "";
+	      __$("keyboard").parentNode.removeChild(__$("keyboard"));
+
+	      var page = document.getElementsByClassName('inputPage')[0];
+	      page.parentNode.removeChild(page);
+
+	      __$("clearButton").style.display = "none";
+	      __$("nextButton").removeAttribute('onmousedown');
+	      __$("nextButton").setAttribute('onmousedown','submitForm()');
+	  }
 </script>
+<form id="tt_form">
+  <input name="test" type="text" id="hook" tt_onLoad="loadControls()"/>
+</form>
 <div  id="main-div">
   <fieldset>
   <legend>Report Filters</legend>
@@ -263,9 +279,9 @@
             <% elsif @report_type.downcase == 'tips' %>
                   <tr>
                     <td>Content to Report on</td>
-                       <input name="content_type" id="content_type" onfocus="changeDiv('content')">
+                       
                     <td>
-                      
+                      <input name="content_type" id="content_type" onfocus="changeDiv('cont_type')">
                     </td>
                   </tr>
                   <tr>
@@ -310,8 +326,8 @@
     </table>
   </div>
   <div id="district_div" class="right" >
-      <input id="menu_filter" name="menu_filter" class="search">
-      <font class="sort button" data-sort="item" style="margin-left:5%;padding:1.2%;background: #b4c6cf;height:30px;border:1px solid #a2a0a0; border-radius:10px; font-weight:bold" onclick="changeSortLabel(this)"> Sort A - Z</font>
+      <input id="menu_filter" type="hidden" name="menu_filter" class="search">
+      <!--font class="sort button" data-sort="item" style="margin-left:5%;padding:1.2%;background: #b4c6cf;height:30px;border:1px solid #a2a0a0; border-radius:10px; font-weight:bold" onclick="changeSortLabel(this)"> Sort A - Z</font-->
       <ul class="list">
         <% @districts.sort.each do |district| %>
               <li  onclick="setInpt('currentdistrict','<%=district%>',this.innerHTML)"><a ><span class="item"><%= district %></span></a></li>
@@ -382,28 +398,62 @@
                 </div>
               <%end%>
             <% elsif @report_type.downcase == 'tips' %>
-                  Content and Language
+                  
+                  <div id="cont_type" class="right" style="visibility:hidden">
+                      <ul>
+                        <%  @content_type.each do |cont_type| %>
+                              <li onclick="setInpt('content_type','<%=cont_type[1]%>',this.innerHTML)"><a><%=cont_type[0]%></a></li>
+                        <%end %>
+                      </ul>
+                  </div>
+                  <div id="lan" class="right" style="visibility:hidden">
+                      <ul>
+                        <%  @language.each do |lan| %>
+                              <li onclick="setInpt('language','<%=lan[1]%>',this.innerHTML)"><a><%=lan[0]%></a></li>
+                        <%end %>
+                      </ul>
+                  </div>
               <% if @query != 'current_enrollment_totals' %>
-                  Phone
+                  <div id="phone" class="right" style="visibility:hidden">
+                      <ul>
+                        <%  @phone_type.each do |phone| %>
+                              <li onclick="setInpt('phone_type','<%=phone[1]%>',this.innerHTML)"><a><%=phone[0]%></a></li>
+                        <%end %>
+                      </ul>
+                  </div>
               <% end %>
-                  Delivery and Prefix
+                  <div id="tips" class="right" style="visibility:hidden">
+                      <ul>
+                        <%  @delivery.each do |delivery| %>
+                              <li onclick="setInpt('delivery','<%=delivery[1]%>',this.innerHTML)"><a><%=delivery[0]%></a></li>
+                        <%end %>
+                      </ul>
+                  </div>
+                    <div id="network" class="right" style="visibility:hidden">
+                      <ul>
+                        <% @network_prefix.each do |prefix| %>
+                              <li onclick="setInpt('network_prefix','<%=prefix[1]%>',this.innerHTML)"><a><%=prefix[0]%></a></li>
+                        <%end %>
+                      </ul>
+                  </div>
             <% end %>
        <% end %>
   </fieldset>
 </div>
 
-<div style="position:absolute;width:100%; bottom:8%" id="actions">
+<!--div style="position:absolute;width:100%; bottom:8%" id="actions">
 		<button class="button red" style="float:left" id="actions"  onclick="window.location ='/report'"><span>Back</span></button>
         <button  class="button green" onclick="submitForm()" style="float:right" >
            <span>Finish</span>
         </button>
       
-</div>
+</div-->
 <script type="text/javascript">
+
     jQuery('#currentdistrict').focus();
-   	jQuery("#main-div fieldset").css("height",window.innerHeight * 0.60);
+   	jQuery("#main-div fieldset").css("height",window.innerHeight * 0.65);
     window.onresize = function(){
-        jQuery("#main-div fieldset").css("height",window.innerHeight * 0.60);
+        jQuery("#main-div fieldset").css("height",window.innerHeight * 0.65);
     }
     var options = {
 	  valueNames: [ 'item']
@@ -411,5 +461,5 @@
 
 	var userList = new List('district_div', options);
 	jQuery(".list").css({"border":"none","overflow-y":"visible","overflow-x":"visible"});
+	
 </script>
-<%= render :partial => 'footer' %>
