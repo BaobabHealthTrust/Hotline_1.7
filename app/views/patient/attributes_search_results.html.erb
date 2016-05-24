@@ -133,14 +133,6 @@ img {
       </div>
         <!-- btn ends .. -->
       <!-- btn starts .. -->
-      <div class="divbtn" onclick="javascript:addNew();" >
-        <span>
-          <%=image_tag("icons/add-person.png", class: 'search-icons')%>
-           <p>Add new <%= params[:action_type] == 'guardian' ? 'guardian' : 'client'%></p>
-        </span>
-      </div>
-        <!-- btn ends .. -->
-      <!-- btn starts .. -->
       <div class="divbtn" onclick="document.location='/start_call'" >
         <span>
           <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>

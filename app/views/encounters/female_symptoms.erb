@@ -40,9 +40,10 @@
 
     }
 
+    var dangerSigns = [];
     function getSelectedInitialDangerSigns() {
         //Rather preselect and not hide
-        var dangerSigns = selected_danger_signs;
+        dangerSigns = selected_danger_signs;
         var liElements = __$('page' + tstCurrentPage).getElementsByTagName("li");
 
         for (var i = 0; i<= dangerSigns.length - 1; i++){
@@ -60,7 +61,7 @@
     }
 
     function hideSelectedValues(){
-        //Rather preselect and not hide
+        // Definitely hide and not preselect
       var dangerSigns = selected_danger_signs;
       var liElements = __$('page' + tstCurrentPage).getElementsByTagName("li");
 
