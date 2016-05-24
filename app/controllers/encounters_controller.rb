@@ -28,7 +28,7 @@ class EncountersController < ApplicationController
       next if observation[:concept_name].blank?
 
       if observation[:value_coded_or_text] == 'Record purpose of call'
-        redirect_to "/encounters/new/purpose_of_call?patient_id=#{@patient.patient_id}" and return
+        redirect_to "/encounters/new/purpose_of_call?patient_id=#{@patient.patient_id}&confirm_purpose=true" and return
       end
 
       # Check to see if any values are part of this observation
@@ -112,15 +112,21 @@ class EncountersController < ApplicationController
       session[:end_call] = true
     end 
 
+    # if params[:confirm_purpose].present?
+    #   redirect_to '/' and return
+    # end
+
     # Go to the next task in the workflow (or dashboard)
     age = @patient_obj.age
     #raise session[:end_call].inspect
     if (age <= 5 || age >= 13 && age <= 50 && @patient_obj.sex == 'F') && session[:automatic_flow] == true
       redirect_to next_task(@patient_obj)
     elsif params[:encounter_type] == 'Update outcomes' && session[:end_call] == true
-      redirect_to '/' and return
+       redirect_to '/' and return
     elsif session[:end_call] == true
-        redirect_to "/encounters/new/update_outcomes?patient_id=#{@patient.id}" and return
+        redirect_to "/encounters/new/update_outcomes?patient_id=#{@patient.id}&confirm_purpose=#{params[:confirm_purpose]}" and return
+    elsif params[:confirm_purpose] == 'true'
+        redirect_to '/' and return
     else
       redirect_to "/patient/dashboard/#{@patient.id}/tasks"
     end
@@ -224,6 +230,7 @@ class EncountersController < ApplicationController
       when 'Update outcomes'
           @encounter_type = encounter_type
           @general_outcomes = concept_set('General outcome')
+          #raise params[:confirm_purpose].inspect
 
       when 'Reminders'
         @phone_types = concept_set('Phone Type')

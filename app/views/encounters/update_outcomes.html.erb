@@ -17,7 +17,7 @@
     var purpose_of_call
     function notify_reason() {
       <% @current_call_purpose_data = Encounter.current_data("PURPOSE OF CALL", @patient_obj.patient_id, true) %>
-      <% if (@current_call_purpose_data['PURPOSE OF CALL'] == ['Registration']) && params[:end_call] == 'true' %>
+      <% if (@current_call_purpose_data['PURPOSE OF CALL'] == ['Registration']) && session[:end_call] = 'true' %>
           purpose_of_call = 'Registration';
       <% end %>
         <% if params[:end_call] == 'true' %>
@@ -44,6 +44,10 @@
             <%= hidden_field_tag 'show_summary', 'true' %>
         <% end %>
 
+        <% if params[:confirm_purpose]%>
+            <%= hidden_field_tag 'confirm_purpose', 'true' %>
+        <% end %>
+        
         <%
             @current_data = Encounter.current_data("UPDATE OUTCOME", @patient_obj.patient_id, true)
             @symptom_data = Encounter.current_data("CHILD HEALTH SYMPTOMS", @patient_obj.patient_id, true).values.flatten.include?("Yes") rescue false
