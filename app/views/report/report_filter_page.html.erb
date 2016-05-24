@@ -14,14 +14,14 @@
     #left{
       width: 55%;
       float:left;
-      height: 100px;
+      height: auto;
     
     }
     .right{
       position: absolute;
       right: 2%;
       top :18%;
-      width:30%;
+      width:33%;
       margin-top: 2%;
       margin-right: 4%;
       background: #efefef;
@@ -36,9 +36,9 @@
     }
     #filter_table td {
         padding: 1%;
-        font-size: 20px;
+        font-size: 25px;
        // width: 50%;
-        font-weight: bold;
+        font-weight: 500;
 
     }
     #filter_table tr td:nth-child(1){
@@ -51,8 +51,8 @@
     li{
       text-indent: 2%;
       display: block;
-      font-size: 23px;
-      font-weight: bold;
+      font-size: 25px;
+      font-weight: 500;
       padding: 2%;
     }
     li:nth-child(even){
@@ -73,7 +73,7 @@
        font-size:20px;
        font-weight: 4em;
        background: #fbfafa;
-       border-radius: 15px;
+       border-radius: 12px;
        border: 2px solid #a7a7a8;
        font-family: serif;
     }
@@ -195,6 +195,13 @@
 	      __$("nextButton").removeAttribute('onmousedown');
 	      __$("nextButton").setAttribute('onmousedown','submitForm()');
 	  }
+    function checkFieldsetHieght(){
+          if(jQuery("#left").height() > jQuery("#main-div fieldset").height()){
+              var height = jQuery("#main-div fieldset").height() * 0.85;
+              jQuery("#left").css({"height":height,"overflow-y":"scroll"});
+              jQuery(".right").css({"height":height});
+          }
+    }
 </script>
 <form id="tt_form">
   <input name="test" type="text" id="hook" tt_onLoad="loadControls()"/>
@@ -449,10 +456,11 @@
       
 </div-->
 <script type="text/javascript">
-
+  checkFieldsetHieght()
     jQuery('#currentdistrict').focus();
    	jQuery("#main-div fieldset").css("height",window.innerHeight * 0.65);
     window.onresize = function(){
+      checkFieldsetHieght()
         jQuery("#main-div fieldset").css("height",window.innerHeight * 0.65);
     }
     var options = {
@@ -461,5 +469,7 @@
 
 	var userList = new List('district_div', options);
 	jQuery(".list").css({"border":"none","overflow-y":"visible","overflow-x":"visible"});
+  
+  
 	
 </script>
