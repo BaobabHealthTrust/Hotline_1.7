@@ -114,7 +114,7 @@ class HomeController < ApplicationController
     concept_names = []
     tag_concepts = TagConceptRelationship.where(tag_id: params[:tag_id])
     (tag_concepts || []).each  do |t|
-      concept_names << [ConceptName.where(concept_id: t.concept_id).last.name, t.created_at.strftime('%d.%b.%Y %H:%M:%S')]
+      concept_names << [ConceptName.where(concept_id: t.concept_id).last.name, t.created_at.strftime('%d.%b.%Y %H:%M:%S')] rescue next
     end
       
     render text: concept_names.to_json and return
@@ -124,7 +124,7 @@ class HomeController < ApplicationController
     tag_names = []
     tag_concepts = TagConceptRelationship.where(concept_id: params[:concept_id])
     (tag_concepts || []).each  do |t|
-      tag_names << [Publify.where(id: t.tag_id).last.name, t.created_at.strftime('%d.%b.%Y %H:%M:%S')]
+      tag_names << [Publify.where(id: t.tag_id).last.name, t.created_at.strftime('%d.%b.%Y %H:%M:%S')] rescue next
     end
 
     render text: tag_names.to_json and return
