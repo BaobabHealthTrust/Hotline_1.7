@@ -6,6 +6,9 @@
   width:100%
 }
 
+#data-capture {
+	z-index: 900;
+}
 body {
   -webkit-user-select: none;  /* Chrome all / Safari all */
   -moz-user-select: none;     /* Firefox all */
@@ -58,7 +61,21 @@ img {
 }*/
 /* .................................. header ends........................................................ */
 
-
+/* ......................................... PopUp CSS .................................................. */
+#popUp-container {
+	border: 2px solid tomato;
+	border-radius: 2px solid tomato;
+	background-color: tomato;
+     	visibility: hidden;
+     	position: absolute;
+     	left: 20%;
+     	top: 20%;
+     	width: 50%;
+     	height: 50%;
+     	text-align:center;
+     	z-index: 1000;
+}
+/* .......................................... PopUp end ................................................. */
 .btn-title {
   bottom: 30px;
   position: relative;
@@ -86,7 +103,7 @@ img {
 <!-- ..................................... Data capture starts .............................. -->
 
 
-<div class="table-container" style="height: 65%; border-width: 0px 0px 1px 0px;">
+<div id="data-capture" class="table-container" style="height: 65%; border-width: 0px 0px 1px 0px;">
   <div class="table-row">
     <div class="table-cell" style="width: 29%; vertical-align: top; text-align: center;">
       <%=render :partial => 'patient/birthdate/year'%>
@@ -104,6 +121,11 @@ img {
 
 <!-- ..................................... Data capture ends .............................. -->
 
+<!-- ..................................... Pop Up for Validate Message .................... -->
+<div id="popUp-container"></div>
+
+<!-- ......................................... Close Pop Up ............................... -->
+
 <%= render :partial => 'patient/birthdate/button_footer' %>
 
 
@@ -112,7 +134,7 @@ img {
   <input type = "hidden" name = "person[names][family_name]" value = "<%= @family_name %>" />
   <input type = "hidden" name = "person[gender]" value = "<%= @gender %>" />
   <input type = "hidden" name = "action_type" value = "<%= params[:action_type] %>" />
-  <% if params[:action_type] && params[:action_type] == 'guardian' %>
+  <% if params[:action_type] == 'guardian' %>
         <input type = "hidden" name = "patient_id" value = "<%= params[:patient_id] %>" />
   <% end %>
 
@@ -126,6 +148,15 @@ img {
 
 
 <script>
+
+function validateMessage(message) {
+	var pop_up_container = document.getElementById('popUp-container');
+	pop_up_container.style.visibility = 'visible';
+	pop_up_container.innerHTML = '<h1>'+message+'</h1>';
+	setTimeout(function(){
+		pop_up_container.style.visibility = 'hidden';
+	}, 3000);
+}
 
 function validateBirthdate() {
     // Set current Date variables ----
@@ -164,17 +195,17 @@ function validateBirthdate() {
     // Check if year is not known ------------
     else if (year != 'Unknown') {   
         if ( year.length != 4 ) {   
-            alert('Year can only have 4 digits.');
+            validateMessage('Year can only have 4 digits.');
             return; // with a flash message.
         }
         else if ( year.length == 4) {
             if ( year < year_range || year > current_year) { // chech if year is out of range ---------
-                alert('Year Out of Range. Should be between '+year_range+' and '+current_year);
+                validateMessage('Year Out of Range. Should be between '+year_range+' and '+current_year);
                 return; // with a flash message.
             }
         }
         if ( day.length > 2) {
-            alert('more than 2');
+            validateMessage('Day has more than 2 digits.');
             return; // with a flash message.
         }
         else if ( day.length > 0 && day.length <= 2 ) {
@@ -182,7 +213,7 @@ function validateBirthdate() {
                 // continue  processing ---------
             }
             else {
-                alert('Invalid day of the month.');
+                validateMessage('Invalid day of the month.');
                 return;
             }
         }
