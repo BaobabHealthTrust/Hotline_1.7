@@ -307,7 +307,9 @@
   .lower_buttons {
       font-size: 1.4em;
   }
+
 </style>
+
 
 
     <%= hidden_field_tag "person[birth_year]", nil, :id => 'selected_year' %>
@@ -324,15 +326,53 @@
   <%#= text_field_tag "person[birth_day]",  nil, :field_type => 'number', :helpText => 'Birth Day', :condition => '($("person_birth_year").value != "Unknown") && ($("person_birth_month").value != "Unknown")', :tt_onLoad => "getDayOfMonthPicker($('person_birth_year').value, $('person_birth_month').value)" ,:validationJS => "validateDOB()",:validationMessage => 'Please enter a valid date'%>
 
 <script>
+    function validateMessage(message) {
+        var inputPage = document.getElementById('page'+tstCurrentPage);
+        inputPage.style.zIndex = '900';
+        inputPage.style.visibility = 'hidden';
+//        var cover = document.getElementById('data-capture');
+//        cover.style.visibility = 'hidden';
+
+        var pop_up_container = document.createElement('div');
+        pop_up_container.id = 'popUp-container';
+        pop_up_container.style.border = '2px solid tomato';
+        pop_up_container.style.borderRadius = '23px';
+        pop_up_container.style.boxShadow = '24px 24px 10px';
+        pop_up_container.style.backgroundColor = 'tomato';
+        pop_up_container.style.visibility = 'hidden';
+        pop_up_container.style.position = 'absolute';
+        pop_up_container.style.left = '20%';
+        pop_up_container.style.top = '20%';
+        pop_up_container.style.width = '50%';
+        pop_up_container.style.height = '50%';
+        pop_up_container.style.textAlign = 'center';
+        pop_up_container.style.zIndex = '1000';
+        pop_up_container.style.visibility = 'visible';
+        pop_up_container.innerHTML = '<h1>Invalid Input!</h1><h1>'+message+'</h1>';
+        inputPage.appendChild(pop_up_container);
+        setTimeout(function(){
+            inputPage.style.visibility = 'visible';
+            pop_up_container.style.visibility = 'hidden';
+        }, 3000);
+    }
+
     function nextDate() {
         var next_button = document.getElementById('nextButton');
-        next_button.setAttribute('onmousedown','passDateValues(); gotoNextPage();');
+        next_button.setAttribute('onmousedown','passDateValues();');
     }
+
     function passDateValues() {
-        document.getElementById('selected_year').value = document.getElementById('tbInputYear').value;
-        document.getElementById('selected_month').value = document.getElementById('tbInputMonth').value;
-        document.getElementById('selected_day').value = document.getElementById('tbInputDay').value;
+        var year = document.getElementById('selected_year').value = document.getElementById('tbInputYear').value;
+        var month = document.getElementById('selected_month').value = document.getElementById('tbInputMonth').value;
+        var day = document.getElementById('selected_day').value = document.getElementById('tbInputDay').value;
+        if( day > 31) {
+            validateMessage('Invalid day for entered month.');
+        }
+        else {
+            gotoNextPage();
+        }
     }
+
     function inputDay(e) {
         var tbInput = document.getElementById('tbInputDay');
         if(tbInput.value == 'Unknown' && e.value != 'Unknown') {
@@ -602,6 +642,7 @@
     }
     function validateBirthdate() {
         // Set current Date variables ----
+
         date = new Date();
         current_year = date.getFullYear();
         current_day = date.getDate();
