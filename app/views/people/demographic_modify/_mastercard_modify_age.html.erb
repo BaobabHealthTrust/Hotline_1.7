@@ -366,7 +366,7 @@
         var month = document.getElementById('selected_month').value = document.getElementById('tbInputMonth').value;
         var day = document.getElementById('selected_day').value = document.getElementById('tbInputDay').value;
         if( day > 31) {
-            validateMessage('Invalid day for entered month.');
+            validateMessage('Day of the entered month is invalid.');
         }
         else {
             gotoNextPage();
