@@ -355,19 +355,16 @@ class PatientController < ApplicationController
                                                  encounter_datetime: (Date.today.strftime('%Y-%m-%d 00:00:00')) ..
                                                      (Date.today.strftime('%Y-%m-%d 23:59:59'))).last
 =end
-      if verify_purpose_encounter == false
-        redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
-      elsif update_outcome_encounter == false
-          redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
-      else
-        # if @patient_obj.age < 6
-        #   @guardian = @patient.current_guardian
-        #   if @guardian.blank?
-        #     redirect_to "/people/guardian_check?patient_id=#{@patient.patient_id}" and return
-        #   end
-        # end
+      purpose_of_call = Encounter.current_data('PURPOSE OF CALL', @patient_obj.patient_id)['PURPOSE OF CALL'].first rescue ''
 
-        redirect_to '/' and return
+      if verify_purpose_encounter == false 
+        redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
+      elsif purpose_of_call = "Registration"
+          redirect_to '/' and return
+      elsif update_outcome_encounter == false 
+          redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
+      else 
+          redirect_to '/' and return
       end
     end
 

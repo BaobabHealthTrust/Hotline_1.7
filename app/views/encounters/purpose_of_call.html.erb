@@ -13,6 +13,9 @@
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
     <% @current_data = Encounter.current_data("PURPOSE OF CALL", @patient_obj.patient_id, true)%>
+    <% if params[:confirm_purpose] == 'true' %>
+        <%= hidden_field_tag('confirm_purpose', params[:confirm_purpose]) %>
+    <% end %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Purpose of call") %>
     <%= select_tag 'observations[][value_coded_or_text]', options_for_select(@purpose_of_call_options, @current_data['PURPOSE OF CALL']), {
