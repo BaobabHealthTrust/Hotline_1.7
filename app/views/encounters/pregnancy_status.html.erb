@@ -475,13 +475,7 @@
         btnUnknown.setAttribute('type','button');
         btnUnknown.style.fontSize = '1.4em';
         btnUnknown.setAttribute('value','Unknown');
-        var pregnancy_status = document.getElementById('pregnancy_status').value;
-        if( pregnancy_status == 'Pregnant') {
-            btnUnknown.setAttribute('onclick','input(this);changeToEDD();');
-        }
-        else {
-            btnUnknown.setAttribute('onclick','input(this);');
-        }
+//        btnUnknown.setAttribute('onclick','input(this);');
         btnUnknown.className = 'btn-year';
         year_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
