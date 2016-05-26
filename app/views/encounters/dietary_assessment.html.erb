@@ -275,7 +275,7 @@
 
     function checkValidations(){
         var fields = document.getElementsByClassName("select");
-       messages = {};
+        messages = {};
         __$("alert").innerHTML = "";
         for(var i = 0; i < fields.length; i++){
             var text = fields[i].parentNode.getElementsByClassName("ui-dropdownchecklist-text")[0];
@@ -301,6 +301,40 @@
                 messages[classNum] = "Incomplete entries for row : <i style='color: blue'>" + (parseInt(classNum) + 1) + "</i>";
             }
         }
+    }
+
+    var preselect_options = JSON.parse('<%=raw(@preselect_options.to_json)%>');
+    function preselect(pos){
+        var data = preselect_options[pos];
+        var rowFields = document.getElementsByClassName(pos);
+        for(var i = 0; i < rowFields.length; i ++){
+            var text = rowFields[i].parentNode.getElementsByClassName("ui-dropdownchecklist-text")[0];
+            var key = "";
+            if(rowFields[i].className.match("meal-type")){
+                key = "meal_type";
+            }else if(rowFields[i].className.match("food-type")) {
+                key = "food_type";
+            }else if(rowFields[i].className.match("consumption-type")){
+                key = "typically_eaten";
+            }else if(rowFields[i].className.match("times-per-day")){
+                key = "number_of_times_per_day";
+            }
+
+            try {
+                var options = data[key];
+                var dropdown_options = rowFields[i].parentNode.getElementsByTagName("input");
+                for (var o in dropdown_options) {
+                    var value = dropdown_options[o].value;
+                    if (text.innerHTML.replace(/&nbsp\;/g, '').trim().length == 0 && options.indexOf(value) >= 0) {
+                        dropdown_options[o].parentNode.click();
+                    }
+                }
+            }catch(err){}
+        }
+    }
+
+    for(var n in preselect_options){
+        preselect(n);
     }
 
     setTimeout("checkValidations()", 500)

@@ -285,6 +285,8 @@ class EncountersController < ApplicationController
         }
 
         @consumption_method = ['', 'Yes', 'No']
+
+        @preselect_options = Encounter.formatted_dietary_assessment(@patient_obj.patient_id)
       when 'Summary'
         encounter_id = EncounterType.find_by_name('Clinical Assessment').encounter_type_id
         @observations = Observation.where(person_id: @patient_obj.patient_id, encounter_id: encounter_id)
