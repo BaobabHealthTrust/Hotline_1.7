@@ -38,7 +38,7 @@
     var display = "";
     var sympDisplay = "";
     var noSympDisplay = "";
-    var symptomIds = ["fever","diarrhea","cough","convulsions","not_eating","red_eye","sleepy_or_unconcious","weight_change"];
+    var symptomIds = ["first_question","fever","diarrhea","coughing","convulsions","not_eating","red_eye","sleepy_or_unconcious","weight_change"];
   
     sympDisplay += "<br /><div><span class='title' style='font-size:25px;'>Symptoms present</span></div>";
     sympDisplay += "<div><hr /><br />";
@@ -46,10 +46,40 @@
     noSympDisplay += "<br /><div><span class='title' style='font-size:25px;'>Symptoms not present</span></div>";
     noSympDisplay += "<div><hr /><br />";
 
+    
+
     for (var i=0 ; i < symptomIds.length; ++i){
       if ($(symptomIds[i]).value == "Yes") {
-        if (symptomIds[i] == "cough"){
+        if (symptomIds[i] == "coughing"){
           sympDisplay += "<span class='title' style='font-size:22px;'>Cough: " + $('cough_days').value + " days </span><br />";
+        } else if  (symptomIds[i] == "first_question"){
+          if ($('start').value == 'Diarrhea') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +": " + $('diarrhea_id_days').value + " days </span><br />";
+          } else if ($('start').value == 'Fever') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +": " + $('fever_id_days').value + " days </span><br />";
+          } else if ($('start').value == 'Coughing') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +": " + $('coughing_id_days').value + " days </span><br />";
+          } else if ($('start').value == 'Red eye') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +": " + $('red_eye_id_days').value + " days </span><br />";
+          } else if ($('start').value == 'Convulsions') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +" </span><br />";
+  
+          } else if ($('start').value == 'Skin conditions') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +" </span><br />";
+
+          } else if ($('start').value == 'Sleepy/unconscious') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +" </span><br />";
+
+          } else if ($('start').value == 'Swollen legs or face') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +" </span><br />";
+
+          }else if ($('start').value == 'Trouble eating/drinking') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +" </span><br />";
+
+          }else if ($('start').value == 'Weight loss/gain') {
+            sympDisplay += "<span class='title' style='font-size:22px;'>"+ $('start').value +" </span><br />";
+          }
+
         } else if  (symptomIds[i] == "diarrhea"){
           sympDisplay += "<span class='title' style='font-size:22px;'>Diarrhea: " + $('diarrhea_days').value + " days </span><br />";
         } else if  (symptomIds[i] == "fever"){
@@ -60,7 +90,9 @@
           sympDisplay += "<span class='title' style='font-size:22px;'>" + humanize(symptomIds[i]) + "</span><br />";
         }
       }else{
-        noSympDisplay += "<span class='title' style='font-size:22px;'>" + humanize(symptomIds[i]) +  "</span><br />";
+        if(humanize(symptomIds[i]) != humanize($('start').value) && (symptomIds[i] != 'first_question')) {
+          noSympDisplay += "<span class='title' style='font-size:22px;'>" + humanize(symptomIds[i]) +  "</span><br />";
+        }
       }
     }
       
@@ -312,14 +344,14 @@
     <%= select_tag "observations[][value_coded_or_text]", options_for_select(['' , 'Yes', 'No']),
                    :helpText => "Is the child coughing?",
                    :condition => "__$('start').value.toUpperCase() != 'COUGHING'",
-                   :id => "cough",
+                   :id => "coughing",
                    :tt_requireNextClick => false,
                    :tt_onLoad => '$("nextButton").style.display = "none";showHelpButton("COUGH")'
     %>
     <%= hidden_field_tag 'observations[][concept_name]', 'SEVERITY OF COUGH' %>
     <%= text_field_tag 'observations[][value_numeric]', nil,
                        :helpText => 'How many days has the child been coughing?',
-                       :condition => "$('cough').value == 'Yes'",
+                       :condition => "$('coughing').value == 'Yes'",
                        :field_type => 'number',
                        :tt_requireNextClick => true,
                        :tt_onLoad => "__$('decimal').style.display='none'; $('nextButton').style.display = 'block';
