@@ -323,9 +323,10 @@
             try {
                 var options = data[key];
                 var dropdown_options = rowFields[i].parentNode.getElementsByTagName("input");
+                var curValue = text.innerHTML.replace(/&nbsp\;/g, '').trim();
                 for (var o in dropdown_options) {
                     var value = dropdown_options[o].value;
-                    if (text.innerHTML.replace(/&nbsp\;/g, '').trim().length == 0 && options.indexOf(value) >= 0) {
+                    if (curValue.length == 0 && options.indexOf(value) >= 0) {
                         dropdown_options[o].parentNode.click();
                     }
                 }
