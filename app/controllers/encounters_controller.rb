@@ -503,7 +503,7 @@ class EncountersController < ApplicationController
       'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 4' => ['Breastmilk', 'Foods', 'Other Liquids', 'Groups Cons.'],
-      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
     }
@@ -517,13 +517,13 @@ class EncountersController < ApplicationController
                                         These provide important proteins, vitamins and minerals'],
                                           'animal.jpeg'],
                        'Fruits' => [['Samples: Citrus fruits e.g oranges, lemons, <i>baobab</i> and tangerines ; bananas, pineapples, pawpaws, mangoes.
-                                     Fruits provide the body with vitamins, minerals, water, energy and dietary fibre'],
+                                     Provide the body with vitamins, energy and dietary fibre'],
                                     'bananas.png'],
-                       'Vegetables' => [['Samples: Green leafy and yellow vegetables such as bonongwe, chisoso, khwanya,
-                                        nkhwani, kholowa, mpiru, carrots, tomatoes and mushrooms.
-                                        Vegetables contain vitamins, minerals, water and dietary fibre'],
+                       'Vegetables' => [['Samples: Green leaves and yellow vegetables such as bonongwe, chisoso, khwanya,
+                                        nkhwani, carrots, tomatoes and mushrooms.
+                                        Contain vitamins, minerals, water and dietary fibre'],
                                         'veg.jpg'],
-                       'Fats' => [['Healthy fats are found in vegetable oils, nuts, seeds, avocado pears and fatty fish(batala)
+                       'Fats' => [['Found in vegetable oils, nuts, seeds, avocado pears and fatty fish(batala)
                                     such as lake trout and tuna'],
                                   'beef.png'],
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
