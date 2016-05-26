@@ -203,6 +203,9 @@ function addRows(data) {
       if (observations[i][1] == 'Wcba') {
           observations[i][1] = 'WCBA';
       }
+      if( (observations[i][0] == 'maternal health info') || (observations[i][0] == 'Maternal health info') ){
+          observations[i][0] = 'Additional info requested';
+      }
       //----------------------------------------------------------------------
     tr = document.createElement('tr');
     td = document.createElement('td');
