@@ -17,6 +17,13 @@ class PatientController < ApplicationController
     @current_encounter_names = @current_encounters.collect{|e| e.type.name.upcase}
     @previous_encounters = Encounter.previous_encounters(@patient_obj.patient_id)
 
+
+    @calls = {}
+    @previous_encounters.each do |e|
+      @calls[e.comments.to_i] = [] if @calls[e.comments.to_i].blank?
+      @calls[e.comments.to_i] << e
+    end
+
     if(!(@patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50 || @patient_obj.age <= 5))
       symptom_encounter_name = "HEALTH SYMPTOMS"
     else

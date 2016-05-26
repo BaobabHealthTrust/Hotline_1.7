@@ -118,7 +118,7 @@ class Encounter < ActiveRecord::Base
 
   def self.previous_encounters(patient_id)
     Encounter.find_by_sql("
-      SELECT encounter.* FROM encounter
+      SELECT encounter.*, obs.comments FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
 
       INNER JOIN (
