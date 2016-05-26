@@ -14,7 +14,7 @@
     <tbody>
         <tr class="row" >
           <% @food_groups.each do |group|%>
-              <td valign="top" style="text-align: center; border: 1px solid lightblue; height: 30vh;font-size: 0.95em;padding-top: 20px;width:<%= 100/@food_groups.length%>%" class="odd">
+              <td valign="top" style="text-align: center;border: 1px solid lightblue; height: 30vh;font-size: 0.95em;width:<%= 100/@food_groups.length%>%" class="odd">
                 <% if ((@example_foods[group][1].present?) rescue false)%>
                     <div style="width: 100%;">
                       <%=image_tag("icons/#{@example_foods[group][1]}", class: 'food-icon')%>

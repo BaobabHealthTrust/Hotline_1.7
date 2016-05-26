@@ -63,9 +63,10 @@ img {
 
 /* ......................................... PopUp CSS .................................................. */
 #popUp-container {
-	border: 2px solid tomato;
-	border-radius: 2px solid tomato;
-	background-color: tomato;
+	    border: 2px solid tomato;
+        border-radius: 23px;
+        box-shadow: 24px 24px 10px;
+	    background-color: tomato;
      	visibility: hidden;
      	position: absolute;
      	left: 20%;
@@ -150,10 +151,14 @@ img {
 <script>
 
 function validateMessage(message) {
+    var cover = document.getElementById('data-capture');
+    cover.style.visibility = 'hidden';
+
 	var pop_up_container = document.getElementById('popUp-container');
 	pop_up_container.style.visibility = 'visible';
-	pop_up_container.innerHTML = '<h1>'+message+'</h1>';
+	pop_up_container.innerHTML = '<h1>Invalid Input!</h1><h1>'+message+'</h1>';
 	setTimeout(function(){
+        cover.style.visibility = 'visible';
 		pop_up_container.style.visibility = 'hidden';
 	}, 3000);
 }
@@ -213,7 +218,7 @@ function validateBirthdate() {
                 // continue  processing ---------
             }
             else {
-                validateMessage('Invalid day of the month.');
+                validateMessage('Day is invalid for entered month.');
                 return;
             }
         }

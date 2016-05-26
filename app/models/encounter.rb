@@ -51,6 +51,22 @@ class Encounter < ActiveRecord::Base
     data
   end
 
+  def self.formatted_dietary_assessment(patient_id)
+    encounter_type_id  = EncounterType.find_by_name("DIETARY ASSESSMENT").id
+    data = {}
+
+    (Encounter.find_by_sql(["SELECT * FROM encounter WHERE encounter_type = #{encounter_type_id}
+                     AND (DATE(encounter_datetime) BETWEEN  ? AND ?) AND patient_id = #{patient_id}
+                            ", (Date.today - 1.day), Date.today])
+    .last.observations rescue []).each do |observation|
+      data[observation.value_complex] = {} if data[observation.value_complex].blank?
+      data[observation.value_complex][observation.concept_name.name.downcase.strip.gsub(" ", "_")] = [] if data[observation.value_complex][observation.concept_name.name.downcase.strip.gsub(" ", "_")].blank?
+      data[observation.value_complex][observation.concept_name.name.downcase.strip.gsub(" ", "_")] << observation.answer_string
+    end
+
+    data
+  end
+
   def self.current_food_groups(name, patient_id)
     encounter_type_id  = EncounterType.find_by_name(name).id
     concept_id = ConceptName.find_by_name("Food Type").concept_id
@@ -102,7 +118,7 @@ class Encounter < ActiveRecord::Base
 
   def self.previous_encounters(patient_id)
     Encounter.find_by_sql("
-      SELECT encounter.* FROM encounter
+      SELECT encounter.*, obs.comments FROM encounter
       INNER JOIN obs ON obs.encounter_id = encounter.encounter_id
 
       INNER JOIN (
