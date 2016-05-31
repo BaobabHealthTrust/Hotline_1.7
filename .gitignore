@@ -40,8 +40,6 @@ nbproject
 log/*
 .idea/*
 .ruby-version
-#ignore below file unitl new touchsreen toolkit is complete.
-#public/touchscreentoolkit/*
 
 #ignore public/assets file
 public/assets/*
