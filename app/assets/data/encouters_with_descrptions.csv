@@ -8,7 +8,10 @@ CHILD HEALTH SYMPTOMS,Child health symptoms
 HEALTH SYMPTOMS,NON-MNCH health symptoms
 BABY DELIVERY,This encounter occurs when a mother delivers a baby
 PREGNANCY STATUS,MNCH pregnancy status encounter
-BIRTH PLAN,This encounter specificities where and when the baby
+BIRTH PLAN,This encounter specifies where and when the baby
 PURPOSE OF CALL,This specifies the reason the client is calling
 DIETARY ASSESSMENT,This assessment is for the diet of the client
 CLINICAL ASSESSMENT,This assessment is for the medical history of the client in groups
+ANC VISIT, Specifies the visits into ANC
+BIRTH DELIVERY, For delivery of birth
+BIRTH PLAN, states the birth plans
