@@ -54,8 +54,8 @@ function showLibPopup(){
     popupDiv.style.top = "-7vh";
     popupDiv.style.position = 'absolute';
     popupDiv.style.marginTop = '70px';
-    popupDiv.style.width = (0.85*screen.width) + "px";
-    popupDiv.style.width = (0.85*screen.width) + "px";
+    popupDiv.style.width = (0.88*screen.width) + "px";
+    popupDiv.style.width = (0.88*screen.width) + "px";
     popupDiv.style.marginLeft = (0.05*screen.width) + "px";
     popupDiv.style.zIndex = '1000';
     content.appendChild(popupDiv);
@@ -80,7 +80,7 @@ function showLibPopup(){
     popupData = document.createElement('div');
     popupData.className = 'popup-data';
     popupData.style.height = "81%";
-    popupData.style.minWidth = "96.5%";
+    popupData.style.minWidth = "92.5%";
     popupData.style.overflow = "auto";
     popupData.style.paddingLeft = "20px";
     popupData.style.paddingRight = "20px";
@@ -187,7 +187,7 @@ function showLibPopup(){
     cancelSpan.style.backgroundColor = '#EE6363';
     cancelSpan.style.borderColor = '#2e6da4';
     cancelSpan.style.color = '#fff';
-    cancelSpan.style.left = '90%';
+    cancelSpan.style.left = '85%';
     cancelSpan.onclick = function(){
         popupCover = document.getElementsByClassName("popup-cover")[0];
         popupDiv = document.getElementsByClassName("popup-div")[0];
