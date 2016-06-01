@@ -2,9 +2,9 @@
 <style>
 /* .......................... demographics css starts ................................. */
 .demographics {
-  position: absolute;
+  position: fixed;
   width: 99%;
-  top: 5px;
+  top: 0px;
   left: 5px;
   margin: auto;
   padding: 0px 1px 0px 1px;
@@ -118,7 +118,7 @@
     <div class="cells" style="width: <%= mnch ? 27 : 49%>%;" valign="top">
       <table class="attributes-table">
         <tr>
-          <th class="titl">AVR access ID:</th>
+          <th class="titl">AVR #:</th>
           <td class="value" ><%=@patient_obj.avr_access_number%></td>
         </tr>
 
@@ -136,7 +136,7 @@
         %>
             <tr>
 
-              <th class="titl" >Pregnancy status:</th>
+              <th class="titl" >Preg. Status:</th>
 
               <td class="value" style="text-align: left;"><%= preg_status_string%></td>
             </tr>
