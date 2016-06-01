@@ -510,20 +510,20 @@ class EncountersController < ApplicationController
       'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
     }
 
-    @example_foods =  {'Staples' => [['Samples: Cereal grains e.g sorghum, maize, starchy fruits such
-                                      plantains; starchy roots e.g cassava. They provide carbohydrates, proteins, fibre, vitamins and minerals'],
+    @example_foods =  {'Staples' => [['Cereals e.g maize, starchy fruits and
+                               starchy roots e.g cassava. Provide carbohydrates, proteins, fibre, vitamins and minerals'],
                                      'staple.png'],
-                       'Legumes & Nuts' => [['Samples: Groundnuts, soya beans, peas, Nzama, Bambara nuts. They provide protein, fibre and energy and healthy fats. '],
+                       'Legumes & Nuts' => [['Groundnuts, soya beans, peas, Nzama, Bambara nuts. They provide protein, fibre and energy and healthy fats. '],
                                             'leg.png'],
-                       'Animal Foods' => [['Samples: All foods of animal origin e.g meat, eggs, milk products, fish, insects(Ngumbi, bwanoni).
-                                        These provide important proteins, vitamins and minerals'],
+                       'Animal Foods' => [['All foods of animal origin e.g meat, eggs, milk products, fish, insects(Ngumbi, bwanoni).
+                                        Provide important proteins, vitamins and minerals'],
                                           'animal.jpeg'],
-                       'Fruits' => [['Samples: Citrus fruits e.g oranges, lemons, <i>baobab</i> and tangerines ; bananas, pineapples, pawpaws, mangoes.
+                       'Fruits' => [['Citrus fruits e.g oranges, lemons, <i>baobab</i>; bananas, pawpaws, mangoes.
                                      Provide the body with vitamins, energy and dietary fibre'],
                                     'bananas.png'],
-                       'Vegetables' => [['Samples: Green leaves and yellow vegetables such as bonongwe, chisoso, khwanya,
-                                        nkhwani, carrots, tomatoes and mushrooms.
-                                        Contain vitamins, minerals, water and dietary fibre'],
+                       'Vegetables' => [['Green leaves and yellow vegetables e.g bonongwe, khwanya,
+                              carrots, tomatoes and mushrooms.
+                                        Contain minerals, water and dietary fibre'],
                                         'veg.jpg'],
                        'Fats' => [['Found in vegetable oils, nuts, seeds, avocado pears and fatty fish(batala)
                                     such as lake trout and tuna'],
@@ -531,7 +531,7 @@ class EncountersController < ApplicationController
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
                        'Breastmilk' => [['Milk'], 'breastf.png'],
                        'Other Liquids' => [['Other liquids <br>(water, juice, dairy/goat milk, etc.)'], 'drink.jpg'],
-                       'Groups Cons.' => [["<span style='font-weight: normal'>#{@comment}</span>"], '']
+                       'Groups Cons.' => [["<span style='font-weight: normal;'>#{@comment}</span>"], '']
     }
     render :layout => false, :template => 'encounters/summary'
   end
