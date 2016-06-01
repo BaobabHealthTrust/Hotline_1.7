@@ -106,7 +106,7 @@
     <div class="cells" style="width: 27%;">
       <table class="attributes-table">
         <tr>
-          <th style="width:55px;">AVR access ID:</th>
+          <th style="width:55px;">AVR #:</th>
           <td class="value" ><%=@patient_obj.avr_access_number%></td>
         </tr>
         <tr>
@@ -164,7 +164,7 @@
             </tr>
             <% if @patient_obj.age >= 13 && @patient_obj.age <= 50%>
                 <tr>
-                  <th style="width:150px;">Pregnancy status:</th>
+                  <th style="width:150px;">Preg. Status:</th>
                   <td class="value" style="text-align: left;"><%=  Observation.by_concept_today(@patient_obj.patient_id,
                                                                                   'Pregnancy status', "PREGNANCY STATUS",
                                                                                   Date.today, 10.months.ago).join(' , ')%></td>
