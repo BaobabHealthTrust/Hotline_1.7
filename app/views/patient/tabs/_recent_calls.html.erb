@@ -33,8 +33,9 @@
 }
 
 .remove-icon {
-  height: 70px;
-  width: 70px;
+  height: 55px;
+  width: 55px;
+  padding-left: 0px !important;
 }
 
 .encounters {
@@ -73,7 +74,7 @@
 }
 .call p {
     font-weight: bold;
-    font-size: 17px;
+    font-size: 16px;
 }
 #selected_encounter_table td {
    border-style: solid;
@@ -125,8 +126,8 @@
               <div class="min-container-table-row">
                 <div class="min-container-table-cell call" id="<%=c%>"
                      style="width: 95%; padding-left: 10px;" onclick = "javascript:selectCall(<%=c%>, this)">
-                  <p><%= raw "<span style='background: whitesmoke !important; padding: 5px;padding-left: 10px; padding-right: 10px; border-radius: 50%; font-size: 1.4em' >#{c}</span>" +
-                                 "&nbsp;" + @calls[c][0].encounter_datetime.strftime('%d/%b/%Y  %H:%M:%S') + '</span>' %>&nbsp;</p>
+                  <p><%= raw "<span style='background: whitesmoke !important; padding: 0px;padding-left: 10px; padding-right: 10px; border-radius: 50%; font-size: 1.4em' >#{c}</span>" +
+                                 "&nbsp;" + @calls[c][0].encounter_datetime.strftime('%d/%b/%Y  <br /><span style="padding-left: 60px">%H:%M:%S</span>') + '</span>' %>&nbsp;</p>
                 </div>
               </div>
               <br />
@@ -136,7 +137,7 @@
     </div>
 
     <% (@calls.keys.sort.reverse || []).each do |c|%>
-        <div class="main-container-table-cell call-encounters call-encounters-<%=c%>" style="display:none;width: 36%;">
+        <div class="main-container-table-cell call-encounters call-encounters-<%=c%>" style="display:none;width: 33%;">
           <div class="scroll">
           <div class="min-container-table">
           <%tab_name = params[:tab_name]
@@ -147,7 +148,7 @@
               </div>
               <div class="min-container-table-cell encounters" id="<%=e.id%>"
               style="width: 88%; padding-left: 10px;" onclick = "javascript:selectEncounter(this)">
-                <p><%= e.type.name %>&nbsp;<small><%=e.encounter_datetime.strftime('%d/%b/%Y  %H:%M:%S')%></small></p>
+                <p><%= e.type.name %>&nbsp;<small><%=raw "<br />" + e.encounter_datetime.strftime('%d/%b/%Y  %H:%M:%S')%></small></p>
               </div>
             </div>
             <br />
