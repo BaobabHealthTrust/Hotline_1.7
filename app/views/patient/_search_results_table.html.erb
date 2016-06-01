@@ -2,6 +2,8 @@
 
 .table-results  {
   display: table;
+    border: 2px solid black;
+    border-radius: 5px;
   width: 98%;
   padding: 0px 1px 0px 1px;
 }
@@ -15,6 +17,7 @@
   padding: 0px 0px 5px 15px;
   border-style: solid;
   border-width: 1px;
+    padding: 5px;
 }
 
 .color_stripes {
@@ -22,7 +25,7 @@
 }
 
 .color_nostripes {
-  background-color: #fbfcfc;
+  background-color: #eaeafc;
 }
 
 .table-data th {
@@ -50,17 +53,14 @@
 
 
 <div class="table-results">
-
 <%
-row_counter = 0
-row_page = 1
-number_of_records = 0
-(@people || []).each_with_index do |person, i|
-  color = 'nostripes'
-  color = 'stripes' if i.odd?
-  
+    row_counter = 0
+    row_page = 1
+    number_of_records = 0
+    (@people || []).each_with_index do |person, i|
+      color = 'nostripes'
+      color = 'stripes' if i.odd?
 %>
-  
   <div class="table-results-row color_<%=color%> all-table-rows row_number_<%=row_page%>" id="person_<%=person.patient_id%>" onclick="selectRow(this);">
     <div class="table-results-cell">
       <table class="table-data">
@@ -89,19 +89,15 @@ number_of_records = 0
       </table>
     </div>
   </div>
-  <br>
-
-  <!-- div class="table-results-row">
-    <div class="table-results-cell" style="height: 2px; border-width: 0px;"></div>
-  </div-->
 <%
-if row_counter == 6
-  row_page += 1 if i < @people.length
-  row_counter = 0
-else
-  row_counter+= 1
-end
-end%>
+        if row_counter == 5
+          row_page += 1 if i < @people.length
+          row_counter = 0
+        else
+          row_counter+= 1
+        end
+    end
+%>
 
 </div>
 
@@ -112,8 +108,9 @@ var number_of_pages = <%=row_page%>;
 var set_page = 1;
 
 function goNext() {
-  if(number_of_pages == 1)
-    return;
+  if(number_of_pages == 1) {
+      return;
+  }
 
   if (set_page == number_of_pages){
     set_page = 1;
