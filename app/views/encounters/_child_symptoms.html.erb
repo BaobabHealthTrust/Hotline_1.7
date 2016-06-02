@@ -90,7 +90,11 @@
           sympDisplay += "<span class='title' style='font-size:22px;'>" + humanize(symptomIds[i]) + "</span><br />";
         }
       }else{
-        if(humanize(symptomIds[i]) != humanize($('start').value) && (symptomIds[i] != 'first_question')) {
+        if(symptomIds[i].toLowerCase() == 'first_question'){
+          noSympDisplay += "<span class='title' style='font-size:22px;'>" + $('start').value +  "</span><br />";
+          var no_first_symp = $('start').value.toLowerCase();
+        }
+        else if((no_first_symp != symptomIds[i].toLowerCase()) && (symptomIds[i].toLowerCase() != $('start').value.toLowerCase())) {
           noSympDisplay += "<span class='title' style='font-size:22px;'>" + humanize(symptomIds[i]) +  "</span><br />";
         }
       }
