@@ -210,17 +210,24 @@ end
 
 =end
 
+Rails.env = 'development' if Rails.env.blank?
+
+db_user = YAML::load_file('config/database.yml')[Rails.env]['username']
+db_password = YAML::load_file('config/database.yml')[Rails.env]['password']
+db_database = YAML::load_file('config/database.yml')[Rails.env]['database']
+
+r = `mysql -u #{db_user} -p#{db_password} #{db_database} < db/locations.sql -v`
+
 ###################################### Creating Global properties ##############################################################
 global_properties = [
   ['call.modes','New,Repeat'],
-  ['current.health.center',649]
+  ['current.health.center',1040]
 ]
 
 (global_properties || []).each do |description, property_value|
   GlobalProperty.create(property_value: property_value, description: description)
 end
 ###################################### Creating Global properties ends ##############################################################
-
 
 
 ###################################### Creating Patient Identifiers ends ##############################################################

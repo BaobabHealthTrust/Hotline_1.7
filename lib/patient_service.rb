@@ -67,7 +67,7 @@ module PatientService
 
     attr.each do |type, value|
 
-      attr_type = PersonAttributeType.where(:name => type).first.id
+      attr_type = PersonAttributeType.where(:name => type).first.id rescue (raise type.inspect)
       uuid =  ActiveRecord::Base.connection.select_one("SELECT UUID() as uuid")['uuid']
 
       patient_attribute = PersonAttribute.create(
