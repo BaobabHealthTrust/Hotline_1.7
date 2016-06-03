@@ -127,6 +127,7 @@ class PeopleController < ApplicationController
       update_addresses(patient_addresses) if params[:field] == 'location'
       update_attributes(patient_attributes) if params[:field] == 'phone_numbers'
 
+      redirect_to "/patient/dashboard/#{patient.person_id}/tasks?next_task=#{params[:next_task]}" and return if !params[:next_task].blank?
       redirect_to "/demographics/#{patient.person_id}"
     else
       @edit_page = params[:field]

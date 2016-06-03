@@ -3,13 +3,16 @@ class PatientController < ApplicationController
     @tab_name = params[:tab_name] 
     @tab_name = 'current_call' if @tab_name.blank?
     @patient_obj = PatientService.get_patient(params[:patient_id])
-
+    person = Person.find(@patient_obj.patient_id)
     if (request.referrer.match("/encounters\/new/") rescue false)
       session[:automatic_flow] = false
     end
 
+    redirect_to "/demographic_modify/age/#{@patient_obj.patient_id}?next_task=#{params[:next_task]}" and return if person.birthdate.to_date == "1700-01-01".to_date
+
     #Coming from dashboard, has to select purpose of call before everything
     redirect_to "/encounters/new/purpose_of_call?patient_id=#{@patient_obj.patient_id}" and return if params[:next_task] == "true"
+
 
     @infant_age = PatientService.get_infant_age(@patient_obj) if @patient_obj.age < 1
 

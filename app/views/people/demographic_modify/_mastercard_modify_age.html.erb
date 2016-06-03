@@ -315,6 +315,8 @@
     <%= hidden_field_tag "person[birth_year]", nil, :id => 'selected_year' %>
     <%= hidden_field_tag "person[birth_month]", nil, :id => 'selected_month' %>
     <%= hidden_field_tag "person[birth_day]", nil, :id => 'selected_day' %>
+    <%= hidden_field_tag "next_task", params[:next_task] %>
+
     <!--<input type = "hidden" id = "selected_year" name/>-->
     <input type = "hidden" id = "selected_month" />
     <input type = "hidden" id = "selected_day" />
@@ -715,4 +717,14 @@
         // submit form -------------------------
         //document.getElementById('pregnancy-status').submit();
     }
+
+setTimeout(function(){
+    <% if params[:next_task].to_s == 'true' %>
+        __$('cancelButton').onmousedown = function(){
+            window.location = "/";
+        };
+
+        showMessage("Patient has no real birthdate please enter birthdate!", false, false);
+    <% end %>
+}, 250)
 </script>
