@@ -12,7 +12,7 @@
     <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
     <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
 
-    <% @current_data = Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id)%>
+    <% @current_data = Encounter.current_data("MATERNAL HEALTH SYMPTOMS", @patient_obj.patient_id, true)%>
     <%= hidden_field_tag("observations[][concept_name]", @symptom_concept) %>
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_symptoms , @current_data[@symptom_concept.upcase]),
                    :helpText =>"Experiencing any of the following symptoms?",

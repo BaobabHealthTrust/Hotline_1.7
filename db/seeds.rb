@@ -251,7 +251,8 @@ attributes = [['Cell phone number','Person primary cell phone number'],
   ['Religion','Maternity required this field'],
   ['Civil Status','Marriage status of this person'],
   ['Race','Group of persons related by common descent or heredity'],
-  ['Health surveillance assistant','HSA: Health Surveillance Assistants provide a life-saving link between communities and the health care system']
+  ['Health surveillance assistant','HSA: Health Surveillance Assistants provide a life-saving link between communities and the health care system'],
+  ['Nearest Health Facility', 'Closet facility to seek health care services']
 ]
 
 (attributes || []).each do |name,desc|

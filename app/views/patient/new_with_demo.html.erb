@@ -87,8 +87,7 @@
     setTimeout('clearInput()', 150)",
     :helptext => "Home village"}  %>
 
-    <%= hidden_field_tag("observations[][concept_name]", "Nearest health facility") %>
-    <%= select_tag "observations[][value_text]", nil,
+    <%= select_tag "person[attributes][nearest health facility]", nil,
                            {:id => 'health_centre_name',
                             :field_type => 'alpha',
                             :helpText => 'Select Nearest health centre',

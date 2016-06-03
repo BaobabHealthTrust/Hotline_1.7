@@ -5,15 +5,10 @@ module PatientService
     person = Person.find(person_id)
     patient = person.patient
     names = PersonName.where(:person_id => person.id).first
-    attributes = PersonAttribute.where(:person_id => person.id).first
+    #attributes = PersonAttribute.where(:person_id => person.id).first
     addresses = PersonAddress.where(:person_id => person.id).first
-    nearest_facility = Observation.where(
-        :concept_id => ConceptName.where(:name => "Nearest Health Facility").last.concept_id,
-        :person_id => person_id
-    ).last
-
-    fac = ConceptName.find_by_concept_id(nearest_facility.value_coded).name rescue nil
-    nearest_facility = nearest_facility.blank? ? "" : (fac || nearest_facility.value_text)
+    nearest_facility =  PersonAttribute.where(:person_id => patient.patient_id,
+                                              :person_attribute_type_id => PersonAttributeType.find_by_name("Nearest Health Facility").id).first.value rescue nil
 
     patient_obj = PatientBean.new(patient)
     patient_obj.patient_id = patient.id
@@ -35,10 +30,10 @@ module PatientService
       patient_obj.township_division = addresses.township_division
     end
 
-    if attributes.present?
-      patient_obj.cell_phone_number = attributes.value
-      #patient_obj.phone_type = person.phone_type
-    end
+    patient_obj.cell_phone_number = PersonAttribute.where(:person_id => person.id,
+    :person_attribute_type => PersonAttributeType.find_by_name("Cell Phone Number").id).first.value rescue nil
+    #patient_obj.phone_type = person.phone_type
+
 
     return patient_obj
   end

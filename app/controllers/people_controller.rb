@@ -93,6 +93,9 @@ class PeopleController < ApplicationController
 
         #------- set attributes --------------------
         when 'phone_numbers'
+          patient_attributes = PersonAttribute.where(:person_id => patient.person_id,
+          :person_attribute_type_id => PersonAttributeType.find_by_name("Cell Phone Number").id).first_or_create
+
           patient_attributes.value = params[:person][:phone_numbers]
 
           params['observations'].each do |observation|
@@ -108,8 +111,14 @@ class PeopleController < ApplicationController
           end
 
         when 'district_of_residence'
+          patient_attributes = PersonAttribute.where(:person_id => patient.person_id,
+                                                     :person_attribute_type_id => PersonAttributeType.find_by_name("Nearest Health Facility").id).first_or_create
+          patient_attributes.value =  params['nearest_health_facility']
+          patient_attributes.save
+
           patient_addresses.township_division = params['district']
           patient_addresses.save
+=begin
           health_facility = Observation.where(
               :person_id => params[:patient_id],
               :concept_id => ConceptName.where(:name => "Nearest Health Facility").last.concept_id,
@@ -117,6 +126,7 @@ class PeopleController < ApplicationController
 
           health_facility.value_text = params['nearest_health_facility']
           health_facility.save
+=end
         when 'mothers_name'
           patient_names.family_name2 = params['person']['names']['family_name2']
       end
