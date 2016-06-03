@@ -86,6 +86,7 @@ end
 districts = {}
 location_tags = []
 
+=begin
 CSV.foreach("#{Rails.root}/app/assets/data/health_facilities.csv", :headers => true) do |row|
   district_name = row[0] ; facility_name = row[3]
   facility_code = row[2] ; district_code = row[1]
@@ -207,8 +208,7 @@ location_tag = LocationTag.find_by_name('Facility location')
 end
 ###################################### Creating locations ends ################################################################
 
-
-
+=end
 
 ###################################### Creating Global properties ##############################################################
 global_properties = [
