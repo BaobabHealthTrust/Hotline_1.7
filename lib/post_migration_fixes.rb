@@ -54,12 +54,12 @@ def load_name_codes
 end
 
 puts "Starting fixes for call ids: #{Time.now}"
-#call_fixes
+call_fixes
 puts "Done: #{Time.now}"
 puts ""
-puts "Skipping gender fixes: #{Time.now}"
+#puts "Skipping gender fixes: #{Time.now}"
 #gender_fixes
-puts "Done: #{Time.now}"
+#puts "Done: #{Time.now}"
 puts "Generating soundex codes: #{Time.now}"
 load_name_codes
 puts "Done: #{Time.now}"
