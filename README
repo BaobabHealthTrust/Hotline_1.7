@@ -1,0 +1,3 @@
+Run post migration scripts using the terminal command
+
+	bundle exec rails runner lib/post_migration_fixes.rb
