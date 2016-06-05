@@ -3,5 +3,5 @@
 </style>
 
 <p class="article-body">
-  <%= @article.body.html_safe %>
+  <%= @article.body.html_safe rescue "" %>
 </p>
