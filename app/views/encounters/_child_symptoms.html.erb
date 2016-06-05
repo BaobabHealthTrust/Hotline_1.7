@@ -484,7 +484,7 @@
     #:optional => true,
     #:allowFreeText => true,
     :tt_onLoad => "$('keyboard').style.display = 'none';",
-    :helpText => 'Is the caller reporting any other symptom?'} %>
+    :helpText => 'Is the client reporting any other symptom?'} %>
 
   <%#TODO May be there could be a better way to handle the below select?%>
 
@@ -513,7 +513,7 @@
                     :tt_onUnLoad => "setConceptNamesAndValues(child_health_values, 'child_health_info_id', 'child_health_info');hideHelpButton();$('keyboard').style.display = 'none'",
                     :tt_requireNextClick => true,
                     :tt_onLoad => 'showHelpButton();$("nextButton").style.display = "block";$("keyboard").style.display = "none"',
-                    :helptext    => "Does the caller want information on one of the following topics?" } %>
+                    :helptext    => "Does the client want information on one of the following topics?" } %>
 
     <% @child_health_info.each_with_index do |e, index| %>
         <%= hidden_field_tag("observations[][concept_name]",        "", {:id => "child_health_info#{index}_concept_name"}) %>

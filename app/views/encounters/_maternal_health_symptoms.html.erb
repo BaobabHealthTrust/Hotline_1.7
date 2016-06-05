@@ -52,7 +52,7 @@
 
     <%= hidden_field_tag("observations[][concept_name]", @info_concept) %>
     <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select(@health_info , @current_data[@info_concept.upcase]),
-                   :helpText =>"Does the caller want more information from below?",
+                   :helpText =>"Does the client want more information from below?",
                    :multiple => true,
                    :optional => false,
                    :tt_pageStyleClass => 'longSelectList',

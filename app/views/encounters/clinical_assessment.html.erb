@@ -94,7 +94,7 @@
     <%= hidden_field_tag('observations[][concept_name]', "Current complaints or symptoms") %>
     <%= select_tag 'observations[][value_coded_or_text_multiple]',
                    options_for_select(@clinical_questions[@group],  @current_data['Current complaints or symptoms'.upcase]),
-                   :helpText =>"Does the caller have any of the following conditions?",
+                   :helpText =>"Does the client have any of the following conditions?",
                    :tt_pageStyleClass => "longSelectList",
                    :tt_onLoad => "showHelpButton();$('keyboard').style.display = 'none';",
                    :multiple => true,

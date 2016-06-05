@@ -23,4 +23,12 @@
                    :id => "health_symptoms",
                    :allowFreeText => false
     %>
+    <%= hidden_field_tag("observations[][concept_name]", @symptom_concept) %>
+    <%= text_field_tag "observations[][value_coded_or_text]", nil,
+                   :helpText =>"Specify symptom",
+                   :field_type => "text",
+                   :tt_onLoad => "showHelpButton('#{@symptom_concept}'); __$('keyboard').style.display = 'inline'",
+                   :condition => "__$('health_symptoms').value == 'Other'; ",
+                   :id => "health_symptoms2"
+    %>
 <% end %>

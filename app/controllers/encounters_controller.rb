@@ -217,9 +217,9 @@ class EncountersController < ApplicationController
           @symptom_concept = "Child Health Symptoms"
           @info_concept = "Child Health Info"
         elsif (!((@patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50) || @patient_obj.age <= 5))
-          @health_symptoms = concept_set('General health symptoms')
+          @health_symptoms = concept_set('General health symptoms') + ["Other"]
           @symptom_concept = "Health Symptom"
-        elsif
+        else
           @health_info = concept_set('Maternal health info')
           @danger_signs = concept_set('Danger signs')
           @health_symptoms = concept_set('Maternal health symptoms')

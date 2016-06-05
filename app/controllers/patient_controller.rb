@@ -61,7 +61,8 @@ class PatientController < ApplicationController
                  'done' => @current_encounter_names.include?('APPOINTMENT')}
     end
 
-    if @patient_obj.sex.match('F')
+    if  ["CHILD HEALTH SYMPTOMS", "MATERNAL HEALTH SYMPTOMS"].include?(symptom_encounter_name)
+
       @tasks << {"name" => "Edit reminders",
                  "link" => "/encounters/new/reminders?patient_id=#{@patient_obj.patient_id}",
                  "icon" => "notification.png",
