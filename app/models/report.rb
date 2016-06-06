@@ -87,35 +87,10 @@ module Report
         delivered_status_concept = ConceptName.find_by_name("Delivered").id
         call_id = ConceptName.find_by_name("Call id").concept_id
 
-        extra_parameters = ", CASE pregnancy_status_table.value_coded " +
-            " WHEN #{delivered_status_concept} THEN 'Delivered' " +
-            " ELSE pregnancy_status_table.pregnancy_status " +
-            "END AS pregnancy_status_text "
-
-        extra_conditions = " AND pregnancy_status_table.person_id = p.patient_id " +
-            "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age} "
-
-        sub_query       = ", (SELECT  o.person_id AS person_id, o.value_coded AS value_coded, " +
-            "c.concept_id, cn.name AS name, o.value_text AS pregnancy_status " +
-            "FROM encounter e " +
-            "INNER JOIN obs o " +
-            "ON e.encounter_id = o.encounter_id AND o.concept_id = #{pregnancy_status_concept_id} " +
-            "INNER JOIN concept c " +
-            "ON c.concept_id = o.concept_id AND c.retired = 0 " +
-            "INNER JOIN concept_name cn " +
-            "ON cn.concept_id = c.concept_id " +
-            "INNER JOIN obs obs_call ON e.encounter_id = obs_call.encounter_id " +
-            "AND obs_call.concept_id = #{call_id} " +
-            "INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id " +
-            "AND cl.district = #{district_id} " +
-            "WHERE e.encounter_type = #{pregnancy_status_encounter_type_id} " +
-            "AND DATE(o.obs_datetime) >= '#{date_range.first}' " +
-            "AND DATE(o.obs_datetime) <= '#{date_range.last}' " +
-            "AND e.voided = 0 " +
-            "GROUP BY person_id " +
-            "ORDER BY o.person_id, o.date_created DESC) pregnancy_status_table "
-
-        extra_group_by = ", pregnancy_status_table.pregnancy_status "
+        extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS adult "
+        extra_conditions  = ""
+        sub_query         = ""
+        extra_group_by    = ", ps.person_id "
 
       when "children"
         extra_parameters  = ", ps.gender AS gender "
@@ -149,7 +124,6 @@ module Report
   end
 
   def self.patient_demographics(patient_type, grouping, start_date, end_date, district)
-
     district_id = Location.find_by_name(district).id
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
