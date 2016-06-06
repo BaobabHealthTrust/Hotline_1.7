@@ -1355,6 +1355,8 @@ module Report
           call_type_code = 2
         when 'dropped'
           call_type_code = 3
+        when 'Advice given, not registered'
+          call_type_code = 4
       end
       extra_conditions += " AND call_log.call_type = '#{call_type_code}' "
     end

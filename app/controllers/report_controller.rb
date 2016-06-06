@@ -124,7 +124,7 @@ class ReportController < ApplicationController
                 @staff               = [["",""]] + get_staff_members_list + [["All","All"]]
                 @call_type           = ["","Normal", #"Followup","Non-Patient Tips",
                                         #"Emergency",
-                                        "Irrelevant","Dropped", #,
+                                        "Irrelevant","Dropped","Advice given, not registered", #,
                                         #"All Patient Interaction",
                                         #"All Non-Patient",
                                         "All"]
@@ -231,7 +231,7 @@ class ReportController < ApplicationController
             @staff               = [["",""]] + get_staff_members_list + [["All","All"]]
             @call_type           = ["","Normal", #"Followup","Non-Patient Tips",
                                     #"Emergency",
-                                    "Irrelevant","Dropped", #,
+                                    "Irrelevant","Dropped","Advice given, not registered", #,
                                     #"All Patient Interaction",
                                     #"All Non-Patient",
                                     "All"]
