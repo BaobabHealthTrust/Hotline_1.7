@@ -82,15 +82,38 @@ module Report
 
     case patient_type.downcase
       when "women"
-        pregnancy_status_concept_id = ConceptName.find_by_name("PREGNANCY STATUS").id
-        pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
-        delivered_status_concept = ConceptName.find_by_name("Delivered").id
-        call_id = ConceptName.find_by_name("Call id").concept_id
 
-        extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS adult "
-        extra_conditions  = ""
-        sub_query         = ""
-        extra_group_by    = ", ps.person_id "
+        pregnancy_status_concept_id         = ConceptName.find_by_name("PREGNANCY STATUS").concept_id
+        pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
+        delivered_status_concept = ConceptName.find_by_name("Delivered").concept_id
+        call_id = ConceptName.find_by_name("CALL ID").concept_id
+
+        extra_parameters = ", CASE pregnancy_status_table.value_coded " +
+            " WHEN #{delivered_status_concept} THEN 'Delivered' " +
+            " ELSE pregnancy_status_table.pregnancy_status " +
+            "END AS pregnancy_status_text "
+
+        extra_conditions = " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age} "
+
+        district_name = Location.find(district_id).name
+
+        sub_query = "
+          INNER JOIN (SELECT o.person_id, o.value_coded, o.concept_id, cn.name, o.value_text AS pregnancy_status
+            FROM encounter e
+              INNER JOIN obs o ON o.encounter_id = e.encounter_id
+                 AND o.concept_id = #{pregnancy_status_concept_id}
+              INNER JOIN concept_name cn ON  cn.concept_id = o.concept_id
+              INNER JOIN person_address pa ON pa.person_id = o.person_id
+                AND pa.township_division = '#{district_name}'
+            WHERE e.voided = 0
+              AND e.encounter_type = #{pregnancy_status_encounter_type_id}
+              AND o.obs_datetime >= '#{date_range.first.to_datetime.strftime("%Y-%m-%d %H:%M:%S")}'
+              AND o.obs_datetime <= '#{date_range.last.to_datetime.strftime("%Y-%m-%d %H:%M:%S")}'
+            GROUP BY person_id
+            ORDER BY o.person_id, o.date_created DESC) pregnancy_status_table ON pregnancy_status_table.person_id = p.patient_id
+        "
+
+        extra_group_by = ", pregnancy_status_table.pregnancy_status "
 
       when "children"
         extra_parameters  = ", ps.gender AS gender "
@@ -119,7 +142,6 @@ module Report
         "AND pa.value IN (#{health_centers}) " +
         "GROUP BY pa.value " + extra_group_by +
         " ORDER BY p.date_created"
-
     return query
   end
 
