@@ -124,7 +124,7 @@ module Report
         extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS adult "
         extra_conditions  = ""
         sub_query         = ""
-        extra_group_by    = ", ps.person_id " #((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age})"
+        extra_group_by    = ", ps.gender " 
     end
     patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
         "FROM patient p " +
@@ -161,6 +161,8 @@ module Report
           new_patients_data = self.women_demographics(results, date_range, district_id)
         when "children"
           new_patients_data = self.children_demographics(results, date_range, district_id)
+        when 'non-mnch'
+          new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
         else
           new_patients_data = self.all_patients_demographics(results, date_range, district_id)
       end # end case
@@ -279,6 +281,44 @@ module Report
             new_patients_data[:pregnancy_status][non_pregnant][1] += number_of_patients if(pregnancy_status.to_s.upcase == "NOT PREGNANT")
             new_patients_data[:pregnancy_status][delivered][1]    += number_of_patients if(pregnancy_status.to_s.upcase == "DELIVERED")
             new_patients_data[:pregnancy_status][miscarried][1]    += number_of_patients if(pregnancy_status.to_s.upcase == "MISCARRIED")
+          end
+          i += 1
+        end
+      end
+    end
+    new_patients_data
+  end
+
+  def self.non_mnch_demographics(patients_data, date_range, district)
+    nearest_health_centers  = []
+
+    mnch_health_facilities_list = get_nearest_health_centers(district)
+    mnch_health_facilities_list.map do |facility|
+      nearest_health_centers.push([facility["name"].humanize, 0])
+    end
+
+    new_patients_data  = {:new_registrations  => 0,
+                          :catchment          => nearest_health_centers.sort,
+                          :start_date         => date_range.first,
+                          :end_date           => date_range.last}
+    female = 0
+    male   = 1
+    new_patients_data[:gender] = [["female", 0], ["male", 0]]
+
+    unless patients_data.blank?
+
+      patients_data.map do|data|
+        catchment           = data.attributes["nearest_health_center"]
+        number_of_patients  = data.attributes["number_of_patients"].to_i
+        gender              = data.attributes["gender"]
+
+        new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
+        i = 0
+        new_patients_data[:catchment].map do |c|
+          if(c.first == catchment.humanize)
+            new_patients_data[:catchment][i][1]   += number_of_patients
+            new_patients_data[:gender][female][1] += number_of_patients if(gender == "F")
+            new_patients_data[:gender][male][1]   += number_of_patients if(gender == "M")
           end
           i += 1
         end
