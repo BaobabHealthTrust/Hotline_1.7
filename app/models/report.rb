@@ -93,7 +93,8 @@ module Report
             " ELSE pregnancy_status_table.pregnancy_status " +
             "END AS pregnancy_status_text "
 
-        extra_conditions = " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age} "
+        extra_conditions = " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}
+                            AND (YEAR(p.date_created) - YEAR(ps.birthdate)) < 50 "
 
         district_name = Location.find(district_id).name
 
@@ -120,11 +121,19 @@ module Report
         extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
         sub_query         = ""
         extra_group_by    = ", ps.gender "
+      when 'non-mnch'
+        child_age = 5
+        extra_parameters  = ",(YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M' "
+        extra_conditions  = ""
+        sub_query         = ""
+        extra_group_by    = ", ps.gender "
       else
         extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS adult "
         extra_conditions  = ""
         sub_query         = ""
-        extra_group_by    = ", ps.gender " 
+        extra_group_by    = ", ps.gender "
     end
     patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
         "FROM patient p " +
