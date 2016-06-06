@@ -1,5 +1,14 @@
 module Report
 
+  def self.concept_set(concept_name)
+    concept = ConceptName.where(name: concept_name).first.concept
+    [''] + (concept.concept_sets || []).collect do |set|
+      name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
+      next if name.blank?
+      [name]
+    end.sort_by{|n| n}
+  end
+
   def self.generate_report_date_range(start_date, end_date)
     report_date_ranges  = {}
 
@@ -342,7 +351,7 @@ module Report
 
   def self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
     if health_task.humanize.downcase == "outcomes"
-      concepts_list       = ["OUTCOME","SECONDARY OUTCOME"]
+      concepts_list       = ["GENERAL OUTCOME","SECONDARY OUTCOME"]
       encounter_type_list = ["UPDATE OUTCOME"]
       outcomes            = ["REFERRED TO A HEALTH CENTRE",
                              "REFERRED TO NEAREST VILLAGE CLINIC",
@@ -350,6 +359,8 @@ module Report
                              "GIVEN ADVICE NO REFERRAL NEEDED",
                              "HOSPITAL",
                              "REGISTERED FOR TIPS AND REMINDERS"]
+
+      outcomes = self.concept_set('General outcome').flatten.uniq
 
       extra_parameters    = " obs.value_text AS concept_name, "
       extra_conditions    = " obs.value_text, DATE(obs.date_created), "
@@ -532,7 +543,7 @@ module Report
 
   def self.call_count(date_range, patient_type, district_id, count_type = nil)
     call_id = ConceptName.find_by_name("Call id").id
-    child_maximum_age = 9
+    child_maximum_age = 13
 
     if patient_type.humanize.downcase == "children"
       extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
@@ -664,7 +675,7 @@ module Report
   end
 
   def self.patient_health_issues(patient_type, grouping, health_task, start_date, end_date, district)
-     district_id = Location.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
     patients_data = []
 

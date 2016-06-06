@@ -520,8 +520,8 @@ class ReportController < ApplicationController
     @report       = Report.patient_health_issues(@patient_type, @grouping, 
                                                   @health_task, @start_date,
                                                   @end_date, district)
-
   end
+
   def patient_activity_report
     @start_date   = params[:start_date]
     @end_date     = params[:end_date]
