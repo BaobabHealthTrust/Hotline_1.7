@@ -273,7 +273,6 @@ class ReportController < ApplicationController
   end
 
   def reports
-    #raise params.to_yaml
     case  params[:query]
       when 'demographics'
         redirect_to :action       => "patient_demographics_report",
@@ -472,8 +471,6 @@ class ReportController < ApplicationController
                                                 @start_date, @end_date, district) rescue []
 
     @cumulative_total =  @report.inject(0){|total, item| total = total + item[:new_registrations].to_i}
-
-
   end
 
   def patient_age_distribution_report
