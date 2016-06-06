@@ -78,7 +78,7 @@ class EncountersController < ApplicationController
             :value => observation[:value_numeric] || observation[:value_text] || observation[:value_datetime] || observation[:value_coded_or_text]
         )
       end
-      if observation[:value_coded_or_text] == 'Irrelevant' || observation[:value_coded_or_text] == 'Dropped' 
+      if observation[:value_coded_or_text] == 'Advice given, not registered' || observation[:value_coded_or_text] == 'Irrelevant' || observation[:value_coded_or_text] == 'Dropped' 
         redirect_to "/" and return
       end
 
@@ -401,6 +401,7 @@ class EncountersController < ApplicationController
 
   def call_options
     options = ['Record purpose of call',
+               'Advice given, not registered',
                'Irrelevant',
                'Dropped']
   end
