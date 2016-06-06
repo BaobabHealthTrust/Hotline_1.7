@@ -79,7 +79,7 @@ class ReportController < ApplicationController
           when "patient_analysis"
             case @query
               when "demographics"
-                @patient_type       += ["Women", "Children", "All"]
+                @patient_type       += ["Women", "Non-MNCH", "Children", "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
                 @destination        = [["",""],["To CSV Format", "csv"], ["To Screen", "screen"]]
 
@@ -468,7 +468,7 @@ class ReportController < ApplicationController
 
     @report_name  = "Patient Demographics for #{params[:district]} district"
     @report       = Report.patient_demographics(@patient_type, @grouping,
-                                                @start_date, @end_date, district) rescue []
+                                                @start_date, @end_date, district) #rescue []
 
     @cumulative_total =  @report.inject(0){|total, item| total = total + item[:new_registrations].to_i}
   end
@@ -517,8 +517,8 @@ class ReportController < ApplicationController
     @report       = Report.patient_health_issues(@patient_type, @grouping, 
                                                   @health_task, @start_date,
                                                   @end_date, district)
-
   end
+
   def patient_activity_report
     @start_date   = params[:start_date]
     @end_date     = params[:end_date]

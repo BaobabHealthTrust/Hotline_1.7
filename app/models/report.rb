@@ -1,5 +1,14 @@
 module Report
 
+  def self.concept_set(concept_name)
+    concept = ConceptName.where(name: concept_name).first.concept
+    [''] + (concept.concept_sets || []).collect do |set|
+      name = ConceptName.find_by_concept_id(set.concept_set).name rescue nil
+      next if name.blank?
+      [name]
+    end.sort_by{|n| n}
+  end
+
   def self.generate_report_date_range(start_date, end_date)
     report_date_ranges  = {}
 
@@ -73,15 +82,38 @@ module Report
 
     case patient_type.downcase
       when "women"
-        pregnancy_status_concept_id = ConceptName.find_by_name("PREGNANCY STATUS").id
-        pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
-        delivered_status_concept = ConceptName.find_by_name("Delivered").id
-        call_id = ConceptName.find_by_name("Call id").concept_id
 
-        extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS adult "
-        extra_conditions  = ""
-        sub_query         = ""
-        extra_group_by    = ", ps.person_id "
+        pregnancy_status_concept_id         = ConceptName.find_by_name("PREGNANCY STATUS").concept_id
+        pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
+        delivered_status_concept = ConceptName.find_by_name("Delivered").concept_id
+        call_id = ConceptName.find_by_name("CALL ID").concept_id
+
+        extra_parameters = ", CASE pregnancy_status_table.value_coded " +
+            " WHEN #{delivered_status_concept} THEN 'Delivered' " +
+            " ELSE pregnancy_status_table.pregnancy_status " +
+            "END AS pregnancy_status_text "
+
+        extra_conditions = " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age} "
+
+        district_name = Location.find(district_id).name
+
+        sub_query = "
+          INNER JOIN (SELECT o.person_id, o.value_coded, o.concept_id, cn.name, o.value_text AS pregnancy_status
+            FROM encounter e
+              INNER JOIN obs o ON o.encounter_id = e.encounter_id
+                 AND o.concept_id = #{pregnancy_status_concept_id}
+              INNER JOIN concept_name cn ON  cn.concept_id = o.concept_id
+              INNER JOIN person_address pa ON pa.person_id = o.person_id
+                AND pa.township_division = '#{district_name}'
+            WHERE e.voided = 0
+              AND e.encounter_type = #{pregnancy_status_encounter_type_id}
+              AND o.obs_datetime >= '#{date_range.first.to_datetime.strftime("%Y-%m-%d %H:%M:%S")}'
+              AND o.obs_datetime <= '#{date_range.last.to_datetime.strftime("%Y-%m-%d %H:%M:%S")}'
+            GROUP BY person_id
+            ORDER BY o.person_id, o.date_created DESC) pregnancy_status_table ON pregnancy_status_table.person_id = p.patient_id
+        "
+
+        extra_group_by = ", pregnancy_status_table.pregnancy_status "
 
       when "children"
         extra_parameters  = ", ps.gender AS gender "
@@ -110,7 +142,6 @@ module Report
         "AND pa.value IN (#{health_centers}) " +
         "GROUP BY pa.value " + extra_group_by +
         " ORDER BY p.date_created"
-
     return query
   end
 
@@ -316,7 +347,7 @@ module Report
 
   def self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
     if health_task.humanize.downcase == "outcomes"
-      concepts_list       = ["OUTCOME","SECONDARY OUTCOME"]
+      concepts_list       = ["GENERAL OUTCOME","SECONDARY OUTCOME"]
       encounter_type_list = ["UPDATE OUTCOME"]
       outcomes            = ["REFERRED TO A HEALTH CENTRE",
                              "REFERRED TO NEAREST VILLAGE CLINIC",
@@ -324,6 +355,8 @@ module Report
                              "GIVEN ADVICE NO REFERRAL NEEDED",
                              "HOSPITAL",
                              "REGISTERED FOR TIPS AND REMINDERS"]
+
+      outcomes = self.concept_set('General outcome').flatten.uniq
 
       extra_parameters    = " obs.value_text AS concept_name, "
       extra_conditions    = " obs.value_text, DATE(obs.date_created), "
@@ -506,7 +539,7 @@ module Report
 
   def self.call_count(date_range, patient_type, district_id, count_type = nil)
     call_id = ConceptName.find_by_name("Call id").id
-    child_maximum_age = 9
+    child_maximum_age = 13
 
     if patient_type.humanize.downcase == "children"
       extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
@@ -638,7 +671,7 @@ module Report
   end
 
   def self.patient_health_issues(patient_type, grouping, health_task, start_date, end_date, district)
-     district_id = Location.find_by_name(district).id
+    district_id = Location.find_by_name(district).id
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
     patients_data = []
 
