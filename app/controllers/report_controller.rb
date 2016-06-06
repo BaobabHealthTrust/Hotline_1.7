@@ -79,7 +79,7 @@ class ReportController < ApplicationController
           when "patient_analysis"
             case @query
               when "demographics"
-                @patient_type       += ["Women", "Children", "All"]
+                @patient_type       += ["Women", "Non-MNCH", "Children", "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
                 @destination        = [["",""],["To CSV Format", "csv"], ["To Screen", "screen"]]
 
