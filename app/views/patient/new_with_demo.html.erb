@@ -24,7 +24,7 @@
 
     <% address = PersonAddress.where(:person_id => params[:patient_id]).last  %>
 
-    <%= text_field_tag "person[names][family_name2]", params[:family_name2], 
+    <%#= text_field_tag "person[names][family_name2]", params[:family_name2],
                         {:id => 'family_name2', 
                           :field_type => 'alpha', 
                           :helpText => 'Mother\'s Surname', 
