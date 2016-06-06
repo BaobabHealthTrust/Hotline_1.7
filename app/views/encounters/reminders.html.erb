@@ -80,7 +80,7 @@
                        :validationRule => "^0\\d{7,9}$|Unknown|Not Available|N\/A",
                        :validationMessage => "Not a valid phone number",
                        :helpText =>"Enter telephone number",
-                       :tt_pageStyleClass => "NumbersOnly",
+                       :tt_pageStyleClass => "NumbersWithUnknown",
                        :optional => true,
                        :condition => "__$('enroll').value == 'Yes' ",
                        :id => "telephone_number"
