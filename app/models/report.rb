@@ -131,12 +131,12 @@ module Report
         child_age = 5
         extra_parameters  = ",(YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
-                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M' AS non_mnch "
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M' "
         extra_conditions  = ""
         sub_query         = ""
         extra_group_by    = ", ps.gender "
       else
-        extra_parameters  = ""
+        extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS all_patient_type "
         extra_conditions  = ""
         sub_query         = ""
         extra_group_by    = ", ps.person_id "
@@ -207,7 +207,7 @@ module Report
       patients_data.map do|data|
         catchment           = data.attributes['nearest_health_center']
         number_of_patients  = data.attributes['number_of_patients'].to_i
-        adult               = data.attributes['adult'].to_i
+        all_patient_type               = data.attributes['all_patient_type'].to_i
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
@@ -215,9 +215,9 @@ module Report
 
           if(c.first == catchment.humanize)
             new_patients_data[:catchment][i][1]           += number_of_patients
-            new_patients_data[:patient_type][children][1] += number_of_patients if(adult == children)
-            new_patients_data[:patient_type][women][1]    += number_of_patients if(adult == women)
-            new_patients_data[:patient_type][non_mnch][1]    += number_of_patients if(adult == non_mnch)
+            new_patients_data[:patient_type][children][1] += number_of_patients if(all_patient_type == children)
+            new_patients_data[:patient_type][women][1]    += number_of_patients if(all_patient_type == women)
+            new_patients_data[:patient_type][non_mnch][1]    += number_of_patients if(all_patient_type == non_mnch)
           end
           i += 1
         end
