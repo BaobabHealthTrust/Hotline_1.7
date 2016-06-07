@@ -131,15 +131,15 @@ module Report
         child_age = 5
         extra_parameters  = ",(YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
-                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M' "
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M' AS non_mnch "
         extra_conditions  = ""
         sub_query         = ""
         extra_group_by    = ", ps.gender "
       else
-        extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS adult "
+        extra_parameters  = ""
         extra_conditions  = ""
         sub_query         = ""
-        extra_group_by    = ", ps.gender "
+        extra_group_by    = ", ps.person_id "
     end
     patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
         "FROM patient p " +
@@ -172,9 +172,9 @@ module Report
       results = Patient.find_by_sql(query)
 
       case patient_type.downcase
-        when "women"
+        when 'women'
           new_patients_data = self.women_demographics(results, date_range, district_id)
-        when "children"
+        when 'children'
           new_patients_data = self.children_demographics(results, date_range, district_id)
         when 'non-mnch'
           new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
@@ -200,13 +200,14 @@ module Report
                           :end_date           => date_range.last}
     children = 0
     women    = 1
-    new_patients_data[:patient_type] = [["children", 0], ["women", 0]]
+    non_mnch = 2
+    new_patients_data[:patient_type] = [['children', 0], ['women', 0], ['non_mnch', 0]]
 
     unless patients_data.blank?
       patients_data.map do|data|
-        catchment           = data.attributes["nearest_health_center"]
-        number_of_patients  = data.attributes["number_of_patients"].to_i
-        adult               = data.attributes["adult"].to_i
+        catchment           = data.attributes['nearest_health_center']
+        number_of_patients  = data.attributes['number_of_patients'].to_i
+        adult               = data.attributes['adult'].to_i
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
@@ -216,6 +217,7 @@ module Report
             new_patients_data[:catchment][i][1]           += number_of_patients
             new_patients_data[:patient_type][children][1] += number_of_patients if(adult == children)
             new_patients_data[:patient_type][women][1]    += number_of_patients if(adult == women)
+            new_patients_data[:patient_type][non_mnch][1]    += number_of_patients if(adult == non_mnch)
           end
           i += 1
         end
