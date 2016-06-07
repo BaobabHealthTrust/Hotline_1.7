@@ -125,13 +125,13 @@ module Report
 
       when "children"
         extra_parameters  = ", ps.gender AS gender "
-        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
+        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} "
         sub_query         = ""
         extra_group_by    = ", ps.gender "
       when 'non-mnch'
         extra_parameters  = ",(YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
-                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M' "
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M' as non_mnch "
         extra_conditions  = ""
         sub_query         = ""
         extra_group_by    = ", ps.gender "
@@ -142,7 +142,9 @@ module Report
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13 OR
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M'
                               )
-                              AS all_non_mnch "
+                              AS all_non_mnch,
+                              ps.gender = 'F' as all_women
+                            "
         extra_conditions  = ""
         sub_query         = ""
         extra_group_by    = ", ps.person_id "
@@ -337,6 +339,7 @@ module Report
         catchment           = data.attributes["nearest_health_center"]
         number_of_patients  = data.attributes["number_of_patients"].to_i
         gender              = data.attributes["gender"]
+        non_mnch              = data.attributes["non_mnch"].to_i
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
