@@ -89,7 +89,10 @@
                         <td class="<%= (i % 2 == 0 ? 'even' : 'odd')%>">
                           <select name="times_per_day[<%= i%>]" class="<%= i%> select times-per-day input" >
                             <option></option>
-                            <% (1 .. 12).each do |type|%>
+                            <% (1 .. 8).each do |type|%>
+                                <% if type == 8 %>
+                                    <% type = '8+' %>
+                                <% end %>
                                 <option><%= type %></option>
                             <% end %>
                           </select>
