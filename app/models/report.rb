@@ -86,10 +86,16 @@ module Report
         pregnancy_status_concept_id         = ConceptName.find_by_name("PREGNANCY STATUS").concept_id
         pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
         delivered_status_concept = ConceptName.find_by_name("Delivered").concept_id
+        pregnant_status_concept = ConceptName.find_by_name("Pregnant").concept_id
+        not_pregnant_status_concept = ConceptName.find_by_name("Not Pregnant").concept_id
+        miscarried_status_concept = ConceptName.find_by_name("Miscarried").concept_id
         call_id = ConceptName.find_by_name("CALL ID").concept_id
 
         extra_parameters = ", CASE pregnancy_status_table.value_coded " +
             " WHEN #{delivered_status_concept} THEN 'Delivered' " +
+            " WHEN #{pregnant_status_concept} THEN 'Pregnant' " +
+            " WHEN #{not_pregnant_status_concept} THEN 'Not Pregnant' " +
+            " WHEN #{miscarried_status_concept} THEN 'Miscarried' " +
             " ELSE pregnancy_status_table.pregnancy_status " +
             "END AS pregnancy_status_text "
 
