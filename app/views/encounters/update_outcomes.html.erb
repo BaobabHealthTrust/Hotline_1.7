@@ -70,7 +70,7 @@
         <%= select_tag "observations[][value_text]", nil,
                            {:id => 'health_centre_name',
                             :field_type => 'alpha',
-                            :condition => "__$('general_outcome').value.trim() == 'Hospital'  ||
+                            :condition => "__$('general_outcome').value.trim() == 'Referral to Hospital'  ||
                                 __$('general_outcome').value.trim() == 'Referred to a health centre' ",
                             :helpText => 'Select health centre name',
                             :ajaxURL => "/home/health_facilities?district=#{@patient_obj.township_division}&search_string=",

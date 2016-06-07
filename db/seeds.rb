@@ -474,8 +474,7 @@ select_options = {
   ],
   'child_danger_signs_greater_zero_outcome' => [
       ['Given advice', 'GIVEN ADVICE'],
-      ['Hospital', 'HOSPITAL'],
-      ['Nurse consultation', 'NURSE CONSULTATION'],
+      ['Referral to Hospital', 'REFERRAL TO HOSPITAL'],
       ['Referral to emergency transport','REFERRAL TO EMERGENCY TRANSPORT' ],
       ['Referred to a health centre', 'REFERRED TO A HEALTH CENTRE'],
       ['Referred to nearest village clinic', 'REFERRED TO NEAREST VILLAGE CLINIC'],
@@ -484,8 +483,7 @@ select_options = {
   ],
   'child_symptoms_greater_zero_outcome' => [
       ['Given advice', 'GIVEN ADVICE'],
-      ['Hospital', 'HOSPITAL'],
-      ['Nurse consultation', 'NURSE CONSULTATION'],
+      ['Referral to Hospital', 'REFERRAL TO HOSPITAL'],
       ['Referral to emergency transport','REFERRAL TO EMERGENCY TRANSPORT' ],
       ['Referred to a health centre', 'REFERRED TO A HEALTH CENTRE'],
       ['Referred to nearest village clinic', 'REFERRED TO NEAREST VILLAGE CLINIC'],
@@ -494,14 +492,13 @@ select_options = {
   ],
   'general_outcome' => [
       ['Given advice', 'GIVEN ADVICE'],
-      ['Hospital', 'HOSPITAL'],
-      ['Nurse consultation', 'NURSE CONSULTATION'],
+      ['Referral to Hospital', 'REFERRAL TO HOSPITAL'],
       ['Registration','REGISTRRATION' ], #'REGISTERED FOR TIPS AND REMINDERS'],
       ['Referral to CCPF doctor -  answered', 'REFERRAL TO CCPF DOCTOR - ANSWERED'],
       ['Referral to CCPF doctor - unanswered', 'REFERRAL TO CCPF DOCTOR - UNANSWERED'],
       ['Referral to emergency transport','REFERRAL TO EMERGENCY TRANSPORT'],
       ['Referral to health centre', 'REFERRAL TO HEALTH CENTRE'],
-      ['Referral to HSA for nutritional assessment', 'REFERRAL TO HSA FOR NUTRITIONAL ASSESSMENT'],
+      ['Referral for nutritional assessment', 'REFERRAL FOR NUTRITIONAL ASSESSMENT'],
       ['Referral to nurse consultant', 'REFERRAL TO NURSE CONSULTANT'],
       ['Referral to village clinic', 'REFERRAL TO VILLAGE CLINIC'],
       ['Other','OTHER' ]
