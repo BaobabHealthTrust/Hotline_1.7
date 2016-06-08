@@ -124,30 +124,30 @@ module Report
         extra_group_by = ", pregnancy_status_table.pregnancy_status "
 
       when "children"
-        extra_parameters  = ", ps.gender AS gender "
-        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} "
-        sub_query         = ""
-        extra_group_by    = ", ps.gender "
+        extra_parameters  = ', ps.gender AS gender '
+        extra_conditions  = 'AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} '
+        sub_query         = ''
+        extra_group_by    = ', ps.gender '
       when 'non-mnch'
-        extra_parameters  = ",(YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
+        extra_parameters  = ',(YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
-                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M' as non_mnch "
-        extra_conditions  = ""
-        sub_query         = ""
-        extra_group_by    = ", ps.gender "
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M" as non_mnch '
+        extra_conditions  = ''
+        sub_query         = ''
+        extra_group_by    = ', ps.gender '
       else
-        extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
+        extra_parameters  = ', ((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
                               (
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50 OR
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13 OR
-                               (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M'
+                               (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M"
                               )
                               AS all_non_mnch,
-                              ps.gender = 'F' as all_women
-                            "
-        extra_conditions  = ""
-        sub_query         = ""
-        extra_group_by    = ", ps.person_id "
+                              ps.gender = "F" as all_women
+                            '
+        extra_conditions  = ''
+        sub_query         = ''
+        extra_group_by    = ', ps.person_id '
     end
     patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
         "FROM patient p " +
@@ -336,18 +336,19 @@ module Report
     unless patients_data.blank?
 
       patients_data.map do|data|
-        catchment           = data.attributes["nearest_health_center"]
-        number_of_patients  = data.attributes["number_of_patients"].to_i
-        gender              = data.attributes["gender"]
-        non_mnch              = data.attributes["non_mnch"].to_i
+        catchment           = data.attributes['nearest_health_center']
+        number_of_patients  = data.attributes['number_of_patients'].to_i
+        #gender              = data.attributes['gender']
+        non_mnch_female     = data.attributes['non_mnch_female'].to_i
+        non_mnch_male       = data.attributes['non_mnch_male'].to_i
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
         new_patients_data[:catchment].map do |c|
           if(c.first == catchment.humanize)
             new_patients_data[:catchment][i][1]   += number_of_patients
-            new_patients_data[:gender][female][1] += number_of_patients if(gender == "F")
-            new_patients_data[:gender][male][1]   += number_of_patients if(gender == "M")
+            new_patients_data[:gender][female][1] += non_mnch_female
+            new_patients_data[:gender][male][1]   += non_mnch_male
           end
           i += 1
         end
