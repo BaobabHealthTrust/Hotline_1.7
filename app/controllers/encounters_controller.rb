@@ -278,8 +278,8 @@ class EncountersController < ApplicationController
             'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
             'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
             'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
-            'group 4' => ['Breastmilk', 'Foods', 'Other Liquids'],
-            'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
+            'group 4' => ['Breastmilk/Formula', 'Foods', 'Other Liquids'],
+            'group 5' => ['Breastmilk/Formula', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
             'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats'],
             'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats']
         }
@@ -505,8 +505,8 @@ class EncountersController < ApplicationController
       'group 1' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 2' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 3' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
-      'group 4' => ['Breastmilk', 'Foods', 'Other Liquids', 'Groups Cons.'],
-      'group 5' => ['Breastmilk', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
+      'group 4' => ['Breastmilk/Formula', 'Foods', 'Other Liquids', 'Groups Cons.'],
+      'group 5' => ['Breastmilk/Formula', 'Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 6' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.'],
       'group 7' => ['Staples', 'Legumes & Nuts', 'Animal Foods', 'Fruits', 'Vegetables', 'Fats', 'Groups Cons.']
     }
@@ -530,7 +530,7 @@ class EncountersController < ApplicationController
                                     such as lake trout and tuna'],
                                   'beef.png'],
                        'Foods' => [['Phala', 'Nsima'], 'staple.jpeg'],
-                       'Breastmilk' => [['Milk'], 'breastf.png'],
+                       'Breastmilk/Formula' => [['Milk'], 'breastf.png'],
                        'Other Liquids' => [['Other liquids <br>(water, juice, dairy/goat milk, etc.)'], 'drink.jpg'],
                        'Groups Cons.' => [["<span style='font-weight: normal;'>#{@comment}</span>"], '']
     }
