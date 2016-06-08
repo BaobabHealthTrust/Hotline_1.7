@@ -125,26 +125,26 @@ module Report
 
       when "children"
         extra_parameters  = ', ps.gender AS gender '
-        extra_conditions  = 'AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} '
+        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} "
         sub_query         = ''
         extra_group_by    = ', ps.gender '
       when 'non-mnch'
         extra_parameters  = ',(YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
-                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M" as non_mnch '
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M" AS non_mnch '
         extra_conditions  = ''
         sub_query         = ''
         extra_group_by    = ', ps.gender '
       else
-        extra_parameters  = ', ((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
+        extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
                               (
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50 OR
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13 OR
-                               (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M"
+                               (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M'
                               )
                               AS all_non_mnch,
-                              ps.gender = "F" as all_women
-                            '
+                              ps.gender = 'F'  as all_women
+                            "
         extra_conditions  = ''
         sub_query         = ''
         extra_group_by    = ', ps.person_id '
