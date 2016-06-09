@@ -666,38 +666,32 @@ module Report
   end
 
   def self.call_count_for_period(date_range, patient_type, district_id)
-    call_id = ConceptName.find_by_name("Call id").id
+    call_id = ConceptName.find_by_name('Call id').id
     child_maximum_age = 9
 
-    if patient_type.humanize.downcase == "children"
-      extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
-    elsif patient_type.humanize.downcase == "women"
-      extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} "
+    if patient_type.humanize.downcase == 'children'
+      extra_parameters = ' AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} '
+    elsif patient_type.humanize.downcase == 'women'
+      extra_parameters = ' AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} '
+    elsif patient_type.humanize.downcase == 'non-mnch'
+      extra_parameters = ' AND ((YEAR(o.date_created) - YEAR(p.birthdate)) >= 50
+                            OR (YEAR(o.date_created) - YEAR(p.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
+                            OR (YEAR(o.date_created) - YEAR(p.birthdate)) > 5 AND ps.gender = "M") AS non_mnch, ps.gender AS gender '
     else
-      extra_parameters = ""
+      extra_parameters = ''
     end
 
-    query   =  "SELECT distinct o.value_text " +
-        "FROM obs o " +
-        "LEFT JOIN person p ON o.person_id = p.person_id " +
-        "INNER JOIN call_log cl ON o.value_text = cl.call_log_id " +
+    query   =  'SELECT distinct o.value_text ' +
+        'FROM obs o ' +
+        'LEFT JOIN person p ON o.person_id = p.person_id ' +
+        'INNER JOIN call_log cl ON o.value_text = cl.call_log_id ' +
         "AND cl.district = #{district_id} " +
         "WHERE o.concept_id = #{call_id} " +
         "AND DATE(o.date_created) >= '#{date_range.first}' " +
         "AND DATE(o.date_created) <= '#{date_range.last}' " +
-        "AND o.voided = 0 " + extra_parameters +
-        "ORDER BY o.value_text"
+        'AND o.voided = 0 ' + extra_parameters +
+        'ORDER BY o.value_text'
 
-#raise query.to_s
-=begin    
-    query   =  "SELECT distinct obs.value_text " +
-               "FROM obs LEFT JOIN person ON obs.person_id = person.person_id " +
-               "WHERE obs.concept_id = #{call_id} " +
-                  "AND DATE(obs.date_created) >= '#{date_range.first}' " +
-                  "AND DATE(obs.date_created) <= '#{date_range.last}' " +
-                  "AND obs.voided = 0 " + extra_parameters +
-               "ORDER BY obs.value_text"
-=end
     Observation.find_by_sql(query)
     #Patient.find_by_sql(query)
   end
