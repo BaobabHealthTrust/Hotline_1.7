@@ -751,6 +751,7 @@ module Report
       query = self.patient_health_issues_query_builder(patient_type, health_task, date_range, essential_params, district_id)
       concept_map           = Marshal.load(Marshal.dump(essential_params[:concept_map]))
       results               = Patient.find_by_sql(query)
+      raise results.inspect
       total_call_count      = self.call_count(date_range, patient_type, district_id)
       total_calls_for_period = self.call_count_for_period(date_range, patient_type, district_id)
       total_number_of_calls = total_call_count.first.attributes["call_count"].to_i rescue 0
