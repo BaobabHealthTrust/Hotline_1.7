@@ -1212,6 +1212,35 @@ module Report
               patient_statistics[:info_pct] = (activity_data.first.number_of_patients.to_f / patient_statistics[:total].to_f * 100).round(1) if patient_statistics[:total].to_f != 0
             end
           end
+
+        when "non-mnch"
+          new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
+          total_patients = 0
+          new_patients_data[:gender].each do |status|
+            total_patients += status.last
+          end
+          patient_statistics[:total] = total_patients
+
+          activity_type.each do |type|
+            activity = 'health symptoms' if type == 'symptoms'
+            activity = 'danger warning signs' if type == 'danger'
+            activity = 'health information requested' if type == 'info'
+            essential_params  = self.prepopulate_concept_ids_and_extra_parameters(patient_type, activity)
+            data_query = self.patient_activity_query_builder(patient_type, activity, date_range, essential_params, district_id)
+
+            activity_data = Patient.find_by_sql(data_query)
+            if type == 'symptoms'
+              patient_statistics[:symptoms] = activity_data.first.number_of_patients.to_i
+              patient_statistics[:symptoms_pct] = (activity_data.first.number_of_patients.to_f / patient_statistics[:total].to_f * 100).round(1) if patient_statistics[:total].to_f != 0
+            elsif type == 'danger'
+              patient_statistics[:danger] = activity_data.first.number_of_patients.to_i
+              patient_statistics[:danger_pct] = (activity_data.first.number_of_patients.to_f / patient_statistics[:total].to_f * 100).round(1) if patient_statistics[:total].to_f != 0
+            elsif type == 'info'
+              patient_statistics[:info] = activity_data.first.number_of_patients.to_i
+              patient_statistics[:info_pct] = (activity_data.first.number_of_patients.to_f / patient_statistics[:total].to_f * 100).round(1) if patient_statistics[:total].to_f != 0
+            end
+          end
+
         else
           new_patients_data = self.all_patients_demographics(results, date_range, district_id)
           total_patients = 0
