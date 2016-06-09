@@ -129,12 +129,12 @@ module Report
         sub_query         = ''
         extra_group_by    = ', ps.gender '
       when 'non-mnch'
-        extra_parameters  = ',(YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
+        extra_parameters  = ',((YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
-                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M" AS non_mnch '
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M") AS non_mnch '
         extra_conditions  = ''
         sub_query         = ''
-        extra_group_by    = ', ps.gender '
+        extra_group_by    = ', ps.person_id '
       else
         extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
                               (
@@ -143,7 +143,7 @@ module Report
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M'
                               )
                               AS all_non_mnch,
-                              ps.gender = 'F'  as all_women
+                              (ps.gender = 'F' AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age})  as all_women
                             "
         extra_conditions  = ''
         sub_query         = ''
@@ -329,26 +329,18 @@ module Report
                           :catchment          => nearest_health_centers.sort,
                           :start_date         => date_range.first,
                           :end_date           => date_range.last}
-    female = 0
-    male   = 1
-    new_patients_data[:gender] = [["female", 0], ["male", 0]]
 
     unless patients_data.blank?
 
       patients_data.map do|data|
         catchment           = data.attributes['nearest_health_center']
-        number_of_patients  = data.attributes['number_of_patients'].to_i
-        #gender              = data.attributes['gender']
-        non_mnch_female     = data.attributes['non_mnch_female'].to_i
-        non_mnch_male       = data.attributes['non_mnch_male'].to_i
+        non_mnch  = data.attributes['non_mnch'].to_i
 
-        new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
+        new_patients_data[:new_registrations] += non_mnch if(non_mnch)
         i = 0
         new_patients_data[:catchment].map do |c|
           if(c.first == catchment.humanize)
-            new_patients_data[:catchment][i][1]   += number_of_patients
-            new_patients_data[:gender][female][1] += non_mnch_female
-            new_patients_data[:gender][male][1]   += non_mnch_male
+            new_patients_data[:catchment][i][1]   += non_mnch
           end
           i += 1
         end

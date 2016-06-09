@@ -62,7 +62,7 @@
             </tr>
             <% end %>
 
-        <%elsif(@patient_type.downcase == 'women')%>
+        <%elsif @patient_type.downcase == 'women' %>
             <tr>
               <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
                 Pregnancy Status
@@ -79,7 +79,7 @@
               </td>
             </tr>
             <% end %>
-        
+
         <%elsif(@patient_type.downcase == 'all')%>
             <tr>
               <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
