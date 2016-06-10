@@ -39,8 +39,61 @@
             <td width="100%" colspan = 7 class="cellleft cellbottom main-table-cell" style="background-color:ddd; text-align:left;font-weight: bold; font-size: large; font-style: italic;">
               <%= @grouping.humanize + " beginning "+ data[:patient_data][:start_date] + " ending " + data[:patient_data][:end_date]%>
             </td>
-          </tr>          
-          <%if(@patient_type.downcase == 'children')%>
+          </tr>
+          <%if @patient_type.downcase == 'children' %>
+                <tr>
+                  <td colspan = 7 class="cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    Gender
+                  </td>
+                </tr>
+                <% data[:patient_data][:gender].map do | gender |%>
+                    <tr>
+                      <td class="cellleft cellbottom cellright main-table-cell">
+                        <%= gender.first.humanize %>
+                      </td>
+
+                      <% if gender.first.downcase == 'female' %>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:female][:statistical_info][:total] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:female][:statistical_info][:percentage] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:female][:statistical_info][:min] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:female][:statistical_info][:max] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:female][:statistical_info][:average] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom cellright main-table-cell">
+                            <%= data[:statistical_data][:female][:statistical_info][:sdev] rescue 0 %>
+                          </td>
+                      <% elsif gender.first.downcase == 'male' %>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:male][:statistical_info][:total] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:male][:statistical_info][:percentage] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:male][:statistical_info][:min] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:male][:statistical_info][:max] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom main-table-cell">
+                            <%= data[:statistical_data][:male][:statistical_info][:average] rescue 0 %>
+                          </td>
+                          <td class="cellleft cellbottom cellright main-table-cell">
+                            <%= data[:statistical_data][:male][:statistical_info][:sdev] rescue 0 %>
+                          </td>
+                      <% end %>
+                <%  end %>
+                    </tr>
+          <% elsif @patient_type.downcase == 'non-mnch' %>
             <tr>
               <td colspan = 7 class="cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
                 Gender
@@ -236,6 +289,25 @@
                 <td class="cellleft cellbottom cellright main-table-cell">
                   <%= data[:statistical_data][:child][:statistical_info][:sdev] rescue 0 %>
                 </td>
+              <% elsif patient_type.first.downcase == 'non_mnch' %>
+                  <td class="cellleft cellbottom main-table-cell">
+                    <%= data[:statistical_data][:child][:statistical_info][:total] rescue 0 %>
+                  </td>
+                  <td class="cellleft cellbottom main-table-cell">
+                    <%= data[:statistical_data][:child][:statistical_info][:percentage] rescue 0 %>
+                  </td>
+                  <td class="cellleft cellbottom main-table-cell">
+                    <%= data[:statistical_data][:child][:statistical_info][:min] rescue 0 %>
+                  </td>
+                  <td class="cellleft cellbottom main-table-cell">
+                    <%= data[:statistical_data][:child][:statistical_info][:max] rescue 0 %>
+                  </td>
+                  <td class="cellleft cellbottom main-table-cell">
+                    <%= data[:statistical_data][:child][:statistical_info][:average] rescue 0 %>
+                  </td>
+                  <td class="cellleft cellbottom cellright main-table-cell">
+                    <%= data[:statistical_data][:child][:statistical_info][:sdev] rescue 0 %>
+                  </td>
               <%  end %>
 
             </tr>

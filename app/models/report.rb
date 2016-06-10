@@ -819,7 +819,7 @@ module Report
 
       data_for_patients = {:patient_data => {}, :statistical_data => {}}
       case patient_type.downcase
-        when "women"
+        when 'women'
           new_patients_data = self.women_demographics(results, date_range, district_id)
           statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
           patient_statistics = self.create_patient_statistics(patient_type,
@@ -828,8 +828,18 @@ module Report
           data_for_patients[:patient_data] = new_patients_data
           data_for_patients[:statistical_data] = patient_statistics rescue ''
 
-        when "children"
+        when 'children'
           new_patients_data = self.children_demographics(results, date_range, district_id)
+          statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
+
+          patient_statistics = self.create_patient_statistics(patient_type,
+                                                              statistical_data) unless statistical_data.empty?
+
+          data_for_patients[:patient_data] = new_patients_data
+          data_for_patients[:statistical_data] = patient_statistics rescue ''
+
+        when 'non-mnch'
+          new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
           statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
           patient_statistics = self.create_patient_statistics(patient_type,
                                                               statistical_data) unless statistical_data.empty?
@@ -840,12 +850,13 @@ module Report
           new_patients_data = self.all_patients_demographics(results, date_range, district_id)
 
           statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
+
           patient_statistics = self.create_patient_statistics(patient_type,
                                                               statistical_data) unless statistical_data.empty?
 
           data_for_patients[:patient_data] = new_patients_data
           data_for_patients[:statistical_data] = patient_statistics rescue ''
-
+          #raise patient_statistics.inspect
       end # end case
       patients_data.push(data_for_patients)
     end
@@ -855,7 +866,7 @@ module Report
 
   def self.get_age_statistics(patient_type, date_range, district_id)
 
-    child_maximum_age     = 9 # see definition of a female adult above
+    child_maximum_age     = 5 # see definition of a female adult above
     #nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id
     nearest_health_center = ConceptName.find_by_name("Nearest health facility").id
 
@@ -864,13 +875,13 @@ module Report
 
     case patient_type.downcase
 
-      when "women"
+      when 'women'
         pregnancy_status_concept_id         = ConceptName.find_by_name("PREGNANCY STATUS").id
         pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
         delivered_status_concept = ConceptName.find_by_name("Delivered").id
 
-        extra_parameters = "SELECT (YEAR(p.date_created) - YEAR(ps.birthdate)) AS Age,
-                            pregnancy_status_table.pregnancy_status AS pregnancy_status_text "
+        extra_parameters = 'SELECT (YEAR(p.date_created) - YEAR(ps.birthdate)) AS Age,
+                            pregnancy_status_table.pregnancy_status AS pregnancy_status_text '
 
         extra_conditions = " AND pregnancy_status_table.person_id = p.patient_id " +
             "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age} "
@@ -900,23 +911,22 @@ module Report
 
         extra_group_by = ", pregnancy_status_table.pregnancy_status "
 
-      when "children"
-        extra_parameters  = "SELECT PERIOD_DIFF(CONCAT(YEAR(p.date_created), 
-                              IF(MONTH(p.date_created)<10,'0',''),
-                              MONTH(p.date_created)),
-                              CONCAT(YEAR(ps.birthdate), 
-                              IF(MONTH(ps.birthdate)<10,'0',''), 
-                              MONTH(ps.birthdate))) AS Age, ps.gender AS gender "
+      when 'children'
+        extra_parameters  = "ps.gender AS gender "
         extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
         sub_query         = ""
         extra_group_by    = ", ps.gender "
+
+      when 'non-mnch'
+        extra_parameters  = ',((YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M") AS non_mnch, ps.gender AS gender '
+        extra_conditions  = ''
+        sub_query         = ''
+        extra_group_by    = ', ps.gender '
+
       else
-        extra_parameters  = "SELECT PERIOD_DIFF(CONCAT(YEAR(p.date_created),
-                              IF(MONTH(p.date_created)<10,'0',''), 
-                              MONTH(p.date_created)), 
-                              CONCAT(YEAR(ps.birthdate), 
-                              IF(MONTH(ps.birthdate)<10,'0',''), 
-                              MONTH(ps.birthdate))) AS age_in_months, 
+        extra_parameters  = "SELECT COUNT(ps.person_id) AS number_of_patients,
                           (YEAR(p.date_created) - YEAR(ps.birthdate)) as age_in_years, 
                           ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS adult "
         extra_conditions  = ""
@@ -927,13 +937,18 @@ module Report
     patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
         "FROM patient p " +
         "  INNER JOIN encounter e ON p.patient_id = e.patient_id " +
+        "WHERE DATE(e.encounter_datetime) >= '#{date_range.first}' " +
+        "AND DATE(e.encounter_datetime) <= '#{date_range.last}') patients "
+=begin
+    patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
+        "FROM patient p " +
+        "  INNER JOIN encounter e ON p.patient_id = e.patient_id " +
         "  INNER JOIN obs obs_call on e.encounter_id = obs_call.encounter_id " +
         "     AND obs_call.concept_id = #{call_id} " +
         "  INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id " +
         "AND cl.district = #{district_id} " +
         "WHERE DATE(e.encounter_datetime) >= '#{date_range.first}' " +
         "AND DATE(e.encounter_datetime) <= '#{date_range.last}') patients "
-
 
     query = extra_parameters +
         "FROM person_attribute pa LEFT JOIN patient p ON pa.person_id = p.patient_id " +
@@ -942,6 +957,16 @@ module Report
         "WHERE pa.person_attribute_type_id = #{nearest_health_center} " + extra_conditions +
         "GROUP BY pa.value, ps.person_id" + extra_group_by +
         " ORDER BY p.date_created"
+=end
+
+    query = "SELECT COUNT(ps.person_id) AS all_clients
+            FROM person ps
+            INNER JOIN person_attribute pa
+              ON pa.person_attribute_id = ps.person_id
+            INNER JOIN patient p
+              ON p.patient_id = ps.person_id
+            WHERE pa.person_attribute_type_id = #{nearest_health_center}
+    "
 
     return query
   end
@@ -1066,15 +1091,17 @@ module Report
 
         return_data = child_grouping
       else
-        all_grouping = {:women=> {}, :child => {}}
+        all_grouping = {:women=> {}, :child => {}, :non_mnch => {}}
 
         child_data = []
         women_data = []
+        non_mnch = []
 
         unless patient_data.empty?
           patient_data.each do |value|
             women_data << value[:age_in_years].to_i if value[:adult].to_i == 1
             child_data << value[:age_in_months].to_i if value[:adult].to_i == 0
+            non_mnch << value[:age_in_months].to_i if value[:adult].to_i == 2
           end
         end
 

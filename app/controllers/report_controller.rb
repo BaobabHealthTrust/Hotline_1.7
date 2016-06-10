@@ -482,14 +482,16 @@ class ReportController < ApplicationController
     @grouping     = params[:grouping]
     @source       = params[:source] rescue nil
     district = params[:district]
-    
+
     case @patient_type.downcase
     when 'women'
       @special_message = " -- (Please note that age is in Years)"
     when 'children'
-      @special_message = "-- (Please note that age is in Months)"
+      @special_message = " -- (Please note that age is in Months)"
+    when 'non-mnch'
+      @special_message = " -- (Please note that age is in Months)"
     else
-      @special_message = "-- (Please note that the Women age is in " +
+      @special_message = " -- (Please note that the Women age is in " +
                          " Years and that of Children is in " +
                          " Months )"
     end
