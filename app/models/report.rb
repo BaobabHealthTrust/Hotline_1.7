@@ -859,17 +859,38 @@ module Report
       when 'all'
         total = Patient.count('patient_id', :distinct => true)
         #----- women_calculations
-        women_count = Patient.joins(person: :patient).where('person.gender = "F" AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13 AND person.date_created BETWEEN ? AND ?', date_range[0], date_range[1]).count('patient_id', :distinct => true)
+        women_count = Patient.joins(person: :patient)
+                          .where('person.gender = "F"
+                          AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
+                          AND person.date_created BETWEEN ? AND ?',
+                                 date_range[0],
+                                 date_range[1]
+                          )
+                          .count('patient_id', :distinct => true)
         women_percentage = self.get_percentage(total, women_count)
         women_average = self.get_average(total, women_count)
         #----- children_calculations
-        children_count = Patient.joins(person: :patient).where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5 AND person.date_created BETWEEN ? AND ?', date_range[0], date_range[1]).count('patient_id', :distinct => true)
+        children_count = Patient.joins(person: :patient)
+                             .where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
+                             AND person.date_created BETWEEN ? AND ?',
+                                    date_range[0],
+                                    date_range[1]
+                             )
+                             .count('patient_id', :distinct => true)
         children_percentage = self.get_percentage(total, children_count)
         children_average = self.get_average(total, children_count)
         #----- non_mnch_calculations
-        non_mnch_count = Patient.joins(person: :patient).where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
-                                                               OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5 AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
-                                                               OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5 AND person.gender = "M") AND person.date_created BETWEEN ? AND ?', date_range[0], date_range[1]).count('patient_id', :distinct => true)
+        non_mnch_count = Patient.joins(person: :patient)
+                             .where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
+                             OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+                                AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
+                             OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+                                AND person.gender = "M")
+                             AND person.date_created BETWEEN ? AND ?',
+                                    date_range[0],
+                                    date_range[1]
+                             )
+                             .count('patient_id', :distinct => true)
         non_mnch_percentage = self.get_percentage(total, non_mnch_count)
         non_mnch_average  = self.get_average(total,non_mnch_count)
 
@@ -896,10 +917,14 @@ module Report
                 average: non_mnch_average
             }
         }
-        #where('person.date_created' => date_range )
-      #raise date_range[1].inspect
+
       when 'children'
-        children = Patient.joins(person: :patient).where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5 AND person.date_created BETWEEN ? AND ?', date_range[0], date_range[1])
+        children = Patient.joins(person: :patient)
+                       .where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
+                       AND person.date_created BETWEEN ? AND ?',
+                              date_range[0],
+                              date_range[1]
+                       )
         total = children.count('patient_id', :distinct => true)
         #------- Female child calculations
         female_count = children.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
@@ -927,6 +952,16 @@ module Report
             },
         }
       when 'non-mnch'
+        non_mnch = Patient.joins(person: :patient)
+                       .where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
+                              OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+                                  AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
+                              OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+                                  AND person.gender = "M") AND person.date_created BETWEEN ? AND ?',
+                              date_range[0],
+                              date_range[1]
+                       )
+        total = non_mnch.count('patient.patient_id', :distinct => true)
       when 'women'
 
     end
