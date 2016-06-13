@@ -81,16 +81,16 @@ class HomeController < ApplicationController
   def health_facilities
     search_string = params[:search_string] || ''
 
-    if !params[:tag].blank?
-      location_tag    = LocationTag.find_by_name(params[:tag].gsub(/City/i, '').strip)
-      names  = Location.where("m.location_tag_id = #{location_tag.id} AND name LIKE '%#{search_string}%' ").joins("INNER JOIN location_tag_map m
-                          ON m.location_id = location.location_id").select(' distinct name ').limit(30).map(&:name).sort
-    else
+    #if !params[:tag].blank?
+      #location_tag    = LocationTag.find_by_name(params[:tag].gsub(/City/i, '').strip)
+      #names  = Location.where("m.location_tag_id = #{location_tag.id} AND name LIKE '%#{search_string}%' ").joins("INNER JOIN location_tag_map m
+                          #ON m.location_id = location.location_id").select(' distinct name ').limit(30).map(&:name).sort
+    #if params[:tag].present?
       location_tags   = LocationTag.where(" name IN ('Health Centre', 'District Hospital', 'Clinic',
      'Rural/Community Hospital', 'Dispensary', 'Central Hospital', 'Maternity', 'Other Hospital', 'Health Post')").collect{|l| l.id}
       names  = Location.where("m.location_tag_id IN (#{location_tags.join(', ')}) AND name LIKE '%#{search_string}%' ").joins("INNER JOIN location_tag_map m
                           ON m.location_id = location.location_id").select(' distinct name ').limit(30).map(&:name).sort
-    end
+    #end
 
     render :text => "<li>" + names.map{|n| n } .join("</li><li>") + "</li>"
   end
