@@ -821,22 +821,12 @@ module Report
       case patient_type.downcase
         when 'women'
           new_patients_data = self.women_demographics(results, date_range, district_id)
-          statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
-          patient_statistics = self.create_patient_statistics(patient_type,
-                                                              statistical_data) unless statistical_data.empty?
 
           data_for_patients[:patient_data] = new_patients_data
           data_for_patients[:statistical_data] = patient_statistics rescue ''
 
         when 'children'
           new_patients_data = self.children_demographics(results, date_range, district_id)
-          statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
-
-          patient_statistics = self.create_patient_statistics(patient_type,
-                                                              statistical_data) unless statistical_data.empty?
-
-          data_for_patients[:patient_data] = new_patients_data
-          data_for_patients[:statistical_data] = patient_statistics rescue ''
 
         when 'non-mnch'
           new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
@@ -870,11 +860,11 @@ module Report
         #raise age.inspect
         total = Patient.count('patient_id', :distinct => true)
         #----- women_calculations
-        women_count = Patient.joins(person: :patient).where('person.gender' => 'F').count('patient_id', :distinct => true)
+        women_count = Patient.joins(person: :patient).where('person.gender = "F" AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5 ').count('patient_id', :distinct => true)
         women_percentage = self.get_percentage(total, women_count)
         women_average = self.get_average(total, women_count)
         #----- children_calculations
-        children_count = Patient.joins(person: :patient).where((('patient.date_created').to_s.to_i - ('person.birthdate').to_s.to_i) <= 5).count('patient_id', :distinct => true)
+        children_count = Patient.joins(person: :patient).where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5').count('patient_id', :distinct => true)
         children_percentage = self.get_percentage(total, children_count)
         children_average = self.get_average(total, children_count)
         #----- non_mnch_calculations
@@ -912,7 +902,6 @@ module Report
     end
 
     data_for_patients[:patient_type][:statistical_data] = patient_statistics rescue ''
-    #raise data_for_patients[:patient_type][:patient].inspect
     return data_for_patients
   end
 
