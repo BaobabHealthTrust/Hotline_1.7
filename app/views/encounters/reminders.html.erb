@@ -103,11 +103,13 @@
     %>
 
     <%= hidden_field_tag("observations[][concept_name]", "Type of message content") %>
-    <%= select_tag "observations[][value_coded_or_text]", options_for_select([''] + @content_types, @current_data['TYPE OF MESSAGE CONTENT']),
+    <%= select_tag "observations[][value_coded_or_text_multiple]", options_for_select([''] + @content_types, @current_data['TYPE OF MESSAGE CONTENT']),
                    :helpText =>"Type of message content",
                    :condition => "__$('enroll').value == 'Yes' ",
+                   :multiple => true,
                    :id => "message_content",
                    :tt_onLoad => "$('keyboard').style.display = 'none'"
     %>
+
 
 <% end %>
