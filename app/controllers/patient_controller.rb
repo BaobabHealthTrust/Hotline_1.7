@@ -84,6 +84,10 @@ class PatientController < ApplicationController
                "icon" => "nutrition_summary.png",
                'done' => @current_encounter_names.include?('DIETARY ASSESSMENT') || @current_encounter_names.include?('CLINICAL ASSESSMENT')}
 
+    @tasks << {"name" => "Follow-Up",
+               "link" => "/encounters/new/follow_up?patient_id=#{@patient_obj.patient_id}",
+               "icon" => "nutrition_summary.png",
+               'done' => @current_encounter_names.include?('FOLLOW-UP') || @current_encounter_names.include?('FOLLOW-UP')}
 
     @tasks << {"name" => "Edit demographics",
                "link" => "/demographics/#{@patient_obj.patient_id}",

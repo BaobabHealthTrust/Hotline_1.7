@@ -568,7 +568,7 @@ select_options = {
 }
 
 (select_options || {}).each do |concept_name, concept_sets|
-  concept_name = concept_name.gsub('_',' ').strip
+  concept_name = concept_name.gsub('_',' ').stripfa
   concept_names = ConceptName.where(name: concept_name).first 
   if concept_names.blank?
     concept = Concept.create(datatype_id: concept_datatype.concept_datatype_id, class_id: concept_class.concept_class_id)

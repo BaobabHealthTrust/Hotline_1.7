@@ -226,7 +226,17 @@ class EncountersController < ApplicationController
           @symptom_concept = "Maternal Health Symptoms"
           @info_concept = "Maternal Health Info"
         end
-
+      when 'Follow up'
+          @follow_up_outcomes = [ "",
+            "Client cannot be reached",
+            "Condition improved",
+            "Condition worsened",
+            "Client deceased",
+            "Client followed-up with referral",
+            "Client did not follow up with referral",
+            "Client followed advice given",
+            "Client did not follow advice given"
+          ]
       when 'Update outcomes'
           @encounter_type = encounter_type
           @general_outcomes = concept_set('General outcome')
