@@ -54,38 +54,38 @@
 
                       <% if gender.first.downcase == 'female' %>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:female][:statistical_info][:total] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:count] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:female][:statistical_info][:percentage] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:percentage] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:female][:statistical_info][:min] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:min] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:female][:statistical_info][:max] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:max] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:female][:statistical_info][:average] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:average] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom cellright main-table-cell">
                             <%= data[:statistical_data][:female][:statistical_info][:sdev] rescue 0 %>
                           </td>
                       <% elsif gender.first.downcase == 'male' %>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:male][:statistical_info][:total] rescue 0 %>
+                            <%= data[:patient_type][:patient][:male][:count] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:male][:statistical_info][:percentage] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:percentage] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:male][:statistical_info][:min] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:min] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:male][:statistical_info][:max] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:max] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom main-table-cell">
-                            <%= data[:statistical_data][:male][:statistical_info][:average] rescue 0 %>
+                            <%= data[:patient_type][:patient][:female][:average] rescue 0 %>
                           </td>
                           <td class="cellleft cellbottom cellright main-table-cell">
                             <%= data[:statistical_data][:male][:statistical_info][:sdev] rescue 0 %>
@@ -253,60 +253,60 @@
               
               <% if patient_type.first.downcase == 'women' %>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:women][:statistical_info][:total] rescue 0 %>
+                  <%= data[:patient_type][:patient][:women][:count] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:women][:statistical_info][:percentage] rescue 0 %>
+                  <%= data[:patient_type][:patient][:women][:percentage] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:women][:statistical_info][:min] rescue 0 %>
+                  <%= data[:patient_type][:patient][:women][:min] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:women][:statistical_info][:max] rescue 0 %>
+                  <%= data[:patient_type][:patient][:women][:max] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:women][:statistical_info][:average] rescue 0 %>
+                  <%= data[:patient_type][:patient][:women][:average] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom cellright main-table-cell">
                   <%= data[:statistical_data][:women][:statistical_info][:sdev] rescue 0 %>
                 </td>
               <% elsif patient_type.first.downcase == 'children' %>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:child][:statistical_info][:total] rescue 0 %>
+                  <%= data[:patient_type][:patient][:children][:count] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:child][:statistical_info][:percentage] rescue 0 %>
+                  <%= data[:patient_type][:patient][:children][:percentage] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:child][:statistical_info][:min] rescue 0 %>
+                  <%= data[:patient_type][:patient][:children][:min] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:child][:statistical_info][:max] rescue 0 %>
+                  <%= data[:patient_type][:patient][:children][:max] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:child][:statistical_info][:average] rescue 0 %>
+                  <%= data[:patient_type][:patient][:children][:average] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom cellright main-table-cell">
                   <%= data[:statistical_data][:child][:statistical_info][:sdev] rescue 0 %>
                 </td>
               <% elsif patient_type.first.downcase == 'non_mnch' %>
                   <td class="cellleft cellbottom main-table-cell">
-                    <%= data[:statistical_data][:child][:statistical_info][:total] rescue 0 %>
+                    <%= data[:patient_type][:patient][:non_mnch][:count] rescue 0 %>
                   </td>
                   <td class="cellleft cellbottom main-table-cell">
-                    <%= data[:statistical_data][:child][:statistical_info][:percentage] rescue 0 %>
+                    <%= data[:patient_type][:patient][:non_mnch][:percentage] rescue 0 %>
                   </td>
                   <td class="cellleft cellbottom main-table-cell">
-                    <%= data[:statistical_data][:child][:statistical_info][:min] rescue 0 %>
+                    <%= data[:patient_type][:patient][:non_mnch][:min] rescue 0 %>
                   </td>
                   <td class="cellleft cellbottom main-table-cell">
-                    <%= data[:statistical_data][:child][:statistical_info][:max] rescue 0 %>
+                    <%= data[:patient_type][:patient][:non_mnch][:max] rescue 0 %>
                   </td>
                   <td class="cellleft cellbottom main-table-cell">
-                    <%= data[:statistical_data][:child][:statistical_info][:average] rescue 0 %>
+                    <%= data[:patient_type][:patient][:non_mnch][:average] rescue 0 %>
                   </td>
                   <td class="cellleft cellbottom cellright main-table-cell">
-                    <%= data[:statistical_data][:child][:statistical_info][:sdev] rescue 0 %>
+                    <%= data[:statistical_data][:non_mnch][:statistical_info][:sdev] rescue 0 %>
                   </td>
               <%  end %>
 

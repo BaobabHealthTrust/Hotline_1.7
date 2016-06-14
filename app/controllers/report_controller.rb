@@ -489,7 +489,7 @@ class ReportController < ApplicationController
     when 'children'
       @special_message = " -- (Please note that age is in Months)"
     when 'non-mnch'
-      @special_message = " -- (Please note that age is in Months)"
+      @special_message = " -- (Please note that Non-MNCH might be a child or adult, and any gender.)"
     else
       @special_message = " -- (Please note that the Women age is in " +
                          " Years and that of Children is in " +
@@ -500,6 +500,7 @@ class ReportController < ApplicationController
     @report_name  = "Patient Age Distribution for #{params[:district]} district"
     @report       = Report.patient_age_distribution(@patient_type, @grouping,
                                                     @start_date, @end_date, district)
+    #raise @report.inspect
   end
 
   def patient_health_issues_report

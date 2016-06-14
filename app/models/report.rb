@@ -821,47 +821,161 @@ module Report
       case patient_type.downcase
         when 'women'
           new_patients_data = self.women_demographics(results, date_range, district_id)
-          statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
-          patient_statistics = self.create_patient_statistics(patient_type,
-                                                              statistical_data) unless statistical_data.empty?
 
           data_for_patients[:patient_data] = new_patients_data
           data_for_patients[:statistical_data] = patient_statistics rescue ''
 
         when 'children'
           new_patients_data = self.children_demographics(results, date_range, district_id)
-          statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
-
-          patient_statistics = self.create_patient_statistics(patient_type,
-                                                              statistical_data) unless statistical_data.empty?
-
-          data_for_patients[:patient_data] = new_patients_data
-          data_for_patients[:statistical_data] = patient_statistics rescue ''
 
         when 'non-mnch'
           new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
-          statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
-          patient_statistics = self.create_patient_statistics(patient_type,
-                                                              statistical_data) unless statistical_data.empty?
-
-          data_for_patients[:patient_data] = new_patients_data
-          data_for_patients[:statistical_data] = patient_statistics rescue ''
         else
           new_patients_data = self.all_patients_demographics(results, date_range, district_id)
-
-          statistical_data = Patient.find_by_sql(self.get_age_statistics(patient_type, date_range, district_id))
-
-          patient_statistics = self.create_patient_statistics(patient_type,
-                                                              statistical_data) unless statistical_data.empty?
-
-          data_for_patients[:patient_data] = new_patients_data
-          data_for_patients[:statistical_data] = patient_statistics rescue ''
-          #raise patient_statistics.inspect
       end # end case
+      data_for_patients = self.get_statistics(patient_type, data_for_patients, new_patients_data, date_range, district)
       patients_data.push(data_for_patients)
     end
-    #raise patients_data.to_yaml
     patients_data
+  end
+
+  def self.get_statistics(patient_type, data_for_patients, new_patients_data, date_range, district)
+    patient_statistics = {
+        total: '',
+        women: '',
+        percentage: '',
+        min: '',
+        max: '',
+        average: '',
+        sdev: ''
+    }
+    data_for_patients[:patient_data] = new_patients_data
+    data_for_patients[:patient_type] = {
+        patient_type: '',
+        statistical_data: ''
+    }
+
+    case patient_type.downcase
+      when 'all'
+        total = Patient.count('patient_id', :distinct => true)
+        #----- women_calculations
+        women_count = Patient.joins(person: :patient)
+                          .where('person.gender = "F"
+                          AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
+                          AND person.date_created BETWEEN ? AND ?',
+                                 date_range[0],
+                                 date_range[1]
+                          )
+                          .count('patient_id', :distinct => true)
+        women_percentage = self.get_percentage(total, women_count)
+        women_average = self.get_average(total, women_count)
+        #----- children_calculations
+        children_count = Patient.joins(person: :patient)
+                             .where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
+                             AND person.date_created BETWEEN ? AND ?',
+                                    date_range[0],
+                                    date_range[1]
+                             )
+                             .count('patient_id', :distinct => true)
+        children_percentage = self.get_percentage(total, children_count)
+        children_average = self.get_average(total, children_count)
+        #----- non_mnch_calculations
+        non_mnch_count = Patient.joins(person: :patient)
+                             .where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
+                             OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+                                AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
+                             OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+                                AND person.gender = "M")
+                             AND person.date_created BETWEEN ? AND ?',
+                                    date_range[0],
+                                    date_range[1]
+                             )
+                             .count('patient_id', :distinct => true)
+        non_mnch_percentage = self.get_percentage(total, non_mnch_count)
+        non_mnch_average  = self.get_average(total,non_mnch_count)
+
+        data_for_patients[:patient_type][:patient] = {
+            women: {
+                count: women_count,
+                percentage: '%.2f' % women_percentage,
+                min: [total, women_count].min,
+                max: [total, women_count].max,
+                average: women_average
+            },
+            children: {
+                count: children_count,
+                percentage: '%.2f' % children_percentage,
+                min: [total, children_count].min,
+                max: [total, children_count].max,
+                average: children_average
+            },
+            non_mnch: {
+                count: non_mnch_count,
+                percentage: '%.2f' % non_mnch_percentage,
+                min: [total, non_mnch_count].min,
+                max: [total, non_mnch_count].max,
+                average: non_mnch_average
+            }
+        }
+
+      when 'children'
+        children = Patient.joins(person: :patient)
+                       .where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
+                       AND person.date_created BETWEEN ? AND ?',
+                              date_range[0],
+                              date_range[1]
+                       )
+        total = children.count('patient_id', :distinct => true)
+        #------- Female child calculations
+        female_count = children.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
+        female_percentage = self.get_percentage(total, female_count)
+        female_average = self.get_average(total, female_count)
+        #------- Male child calculations
+        male_count = children.where('person.gender' => 'M').count('patient.patient_id', :distinct => true)
+        male_percentage = self.get_percentage(total, male_count)
+        male_average = self.get_average(total, male_count)
+
+        data_for_patients[:patient_type][:patient] = {
+            female: {
+                count: female_count,
+                percentage: '%.2f' % female_percentage,
+                min: [total, female_count].min,
+                max: [total, female_count].max,
+                average: female_average
+            },
+            male: {
+                count: male_count,
+                percentage: '%.2f' % male_percentage,
+                min: [total, male_count].min,
+                max: [total, male_count].max,
+                average: male_average
+            },
+        }
+      when 'non-mnch'
+        non_mnch = Patient.joins(person: :patient)
+                       .where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
+                              OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+                                  AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
+                              OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+                                  AND person.gender = "M") AND person.date_created BETWEEN ? AND ?',
+                              date_range[0],
+                              date_range[1]
+                       )
+        total = non_mnch.count('patient.patient_id', :distinct => true)
+      when 'women'
+
+    end
+
+    data_for_patients[:patient_type][:statistical_data] = patient_statistics rescue ''
+    return data_for_patients
+  end
+
+  def self.get_percentage(total, count)
+    percentage = count/total.to_f*100
+  end
+
+  def self.get_average(total, count)
+    average = (total+count)/2
   end
 
   def self.get_age_statistics(patient_type, date_range, district_id)
@@ -937,12 +1051,6 @@ module Report
     patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
         "FROM patient p " +
         "  INNER JOIN encounter e ON p.patient_id = e.patient_id " +
-        "WHERE DATE(e.encounter_datetime) >= '#{date_range.first}' " +
-        "AND DATE(e.encounter_datetime) <= '#{date_range.last}') patients "
-=begin
-    patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
-        "FROM patient p " +
-        "  INNER JOIN encounter e ON p.patient_id = e.patient_id " +
         "  INNER JOIN obs obs_call on e.encounter_id = obs_call.encounter_id " +
         "     AND obs_call.concept_id = #{call_id} " +
         "  INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id " +
@@ -957,16 +1065,6 @@ module Report
         "WHERE pa.person_attribute_type_id = #{nearest_health_center} " + extra_conditions +
         "GROUP BY pa.value, ps.person_id" + extra_group_by +
         " ORDER BY p.date_created"
-=end
-
-    query = "SELECT COUNT(ps.person_id) AS all_clients
-            FROM person ps
-            INNER JOIN person_attribute pa
-              ON pa.person_attribute_id = ps.person_id
-            INNER JOIN patient p
-              ON p.patient_id = ps.person_id
-            WHERE pa.person_attribute_type_id = #{nearest_health_center}
-    "
 
     return query
   end
