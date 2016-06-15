@@ -992,11 +992,19 @@ module Report
     end
 
     def self.get_percentage(total, count)
-        percentage = count/total.to_f*100
+		if total == 0
+			percentage = 0.00
+		else
+            percentage = count/total.to_f*100
+		end
     end
 
     def self.get_average(total, count)
-        average = (total+count)/2
+		if count == 0
+			average = 0.00
+		else
+            average = (total+count)/2
+		end
     end
 
   def self.get_age_statistics(patient_type, date_range, district_id)
