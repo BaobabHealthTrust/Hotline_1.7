@@ -852,7 +852,13 @@ module Report
         }
         case patient_type.downcase
             when 'all'
-                all_clients = Patient.joins(person: {person_addresses: :person}).where('person_address.township_division' => district)
+                all_clients = Patient.joins(person: {person_addresses: :person})
+	                                .where('person_address.township_division = ?
+									AND person.date_created BETWEEN ? AND ?',
+	                                       district,
+	                                       date_range[0],
+	                                       date_range[1]
+	                                )
                 total = all_clients.count('patient_id', :distinct => true)
                 #----- women_calculations
                 women_count = all_clients.where('person.gender = "F"
