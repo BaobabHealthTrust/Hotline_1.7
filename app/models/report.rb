@@ -78,7 +78,7 @@ module Report
     health_centers = '"' + get_nearest_health_centers(district_id).map(&:name).join('","') + '"'
 
     child_maximum_age     = 13 # see definition of a female adult above
-    nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id rescue 1
+    nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id #rescue 1
     child_age = 5
 
     case patient_type.downcase
@@ -141,8 +141,7 @@ module Report
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50 OR
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13 OR
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M'
-                              )
-                              AS all_non_mnch,
+                              ) AS all_non_mnch,
                               (ps.gender = 'F' AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age})  as all_women
                             "
         extra_conditions  = ''
@@ -173,7 +172,6 @@ module Report
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
     patients_data = []
-
     date_ranges.map do |date_range|
       query   = self.patient_demographics_query_builder(patient_type, date_range, district_id)
 
@@ -197,7 +195,6 @@ module Report
 
   def self.all_patients_demographics(patients_data, date_range, district)
     nearest_health_centers  = []
-
     mnch_health_facilities_list = get_nearest_health_centers(district)
     mnch_health_facilities_list.map do |facility|
       nearest_health_centers.push([facility["name"].humanize, 0])
@@ -215,7 +212,6 @@ module Report
       patients_data.map do|data|
         catchment           = data.attributes['nearest_health_center']
         number_of_patients  = data.attributes['number_of_patients'].to_i
-        all_patient_type    = data.attributes['all_patient_type'].to_i
         all_non_mnch        = data.attributes['all_non_mnch'].to_i
         all_children        = data.attributes['all_children'].to_i
         all_women           = data.attributes['all_women'].to_i
