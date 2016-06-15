@@ -499,7 +499,6 @@ class ReportController < ApplicationController
     @report_name  = "Patient Age Distribution for #{params[:district]} district"
     @report       = Report.patient_age_distribution(@patient_type, @grouping,
                                                     @start_date, @end_date, district)
-    #raise @report.inspect
   end
 
   def patient_health_issues_report
