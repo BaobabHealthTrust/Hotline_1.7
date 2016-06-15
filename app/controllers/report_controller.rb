@@ -657,7 +657,7 @@ class ReportController < ApplicationController
     @report_type    = params[:report_type]
     
     @report_name  = "Caller Follow Up Report for #{@district} District "
-    @report = Report.follow_up_report(@start_date, @end_date, @grouping, @district) rescue []
+    @report = Report.follow_up_report(@start_date, @end_date, @grouping, @district) #rescue []
 
     
   end
