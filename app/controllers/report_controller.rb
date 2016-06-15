@@ -469,7 +469,6 @@ class ReportController < ApplicationController
     @report_name  = "Patient Demographics for #{params[:district]} district"
     @report       = Report.patient_demographics(@patient_type, @grouping,
                                                 @start_date, @end_date, district) #rescue []
-
     @cumulative_total =  @report.inject(0){|total, item| total = total + item[:new_registrations].to_i}
   end
 

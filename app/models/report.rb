@@ -78,7 +78,7 @@ module Report
     health_centers = '"' + get_nearest_health_centers(district_id).map(&:name).join('","') + '"'
 
     child_maximum_age     = 13 # see definition of a female adult above
-    nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id rescue 1
+    nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id #rescue 1
     child_age = 5
 
     case patient_type.downcase
@@ -141,8 +141,7 @@ module Report
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50 OR
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13 OR
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M'
-                              )
-                              AS all_non_mnch,
+                              ) AS all_non_mnch,
                               (ps.gender = 'F' AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age})  as all_women
                             "
         extra_conditions  = ''
@@ -173,7 +172,6 @@ module Report
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
     patients_data = []
-
     date_ranges.map do |date_range|
       query   = self.patient_demographics_query_builder(patient_type, date_range, district_id)
 
@@ -197,7 +195,6 @@ module Report
 
   def self.all_patients_demographics(patients_data, date_range, district)
     nearest_health_centers  = []
-
     mnch_health_facilities_list = get_nearest_health_centers(district)
     mnch_health_facilities_list.map do |facility|
       nearest_health_centers.push([facility["name"].humanize, 0])
@@ -215,7 +212,6 @@ module Report
       patients_data.map do|data|
         catchment           = data.attributes['nearest_health_center']
         number_of_patients  = data.attributes['number_of_patients'].to_i
-        all_patient_type    = data.attributes['all_patient_type'].to_i
         all_non_mnch        = data.attributes['all_non_mnch'].to_i
         all_children        = data.attributes['all_children'].to_i
         all_women           = data.attributes['all_women'].to_i
@@ -745,7 +741,6 @@ module Report
       query = self.patient_health_issues_query_builder(patient_type, health_task, date_range, essential_params, district_id)
       concept_map           = Marshal.load(Marshal.dump(essential_params[:concept_map]))
       results               = Patient.find_by_sql(query)
-      raise results.inspect
       total_call_count      = self.call_count(date_range, patient_type, district_id)
       total_calls_for_period = self.call_count_for_period(date_range, patient_type, district_id)
       total_number_of_calls = total_call_count.first.attributes["call_count"].to_i rescue 0
@@ -856,7 +851,13 @@ module Report
         }
         case patient_type.downcase
             when 'all'
-                all_clients = Patient.joins(person: {person_addresses: :person}).where('person_address.township_division' => district)
+                all_clients = Patient.joins(person: {person_addresses: :person})
+	                                .where('person_address.township_division = ?
+									AND person.date_created BETWEEN ? AND ?',
+	                                       district,
+	                                       date_range[0],
+	                                       date_range[1]
+	                                )
                 total = all_clients.count('patient_id', :distinct => true)
                 #----- women_calculations
                 women_count = all_clients.where('person.gender = "F"
@@ -996,11 +997,19 @@ module Report
     end
 
     def self.get_percentage(total, count)
-        percentage = count/total.to_f*100
+		if total == 0
+			percentage = 0.00
+		else
+            percentage = count/total.to_f*100
+		end
     end
 
     def self.get_average(total, count)
-        average = (total+count)/2
+		if count == 0
+			average = 0.00
+		else
+            average = (total+count)/2
+		end
     end
 
   def self.get_age_statistics(patient_type, date_range, district_id)
