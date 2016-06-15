@@ -1,0 +1,40 @@
+<script type="text/javascript" type="text/javascript" src="/assets/jquery.js"></script>
+<script type="text/javascript" type="text/javascript" src="/assets/top-icon.js"></script>
+
+<script type="text/javascript">
+
+    <% if params[:cancel_destination] == 'current_call' %>
+        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/current_call";
+    <% else %>
+        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+    <% end %>
+
+</script>
+
+<style>
+    #num{
+        display: none;
+    }
+</style>
+
+<body>
+    <%= form_tag("/encounters/create", method: 'post', enctype: 'multipart/form-data') do %>
+        <%= hidden_field_tag "encounter[encounter_type]", EncounterType.find_by_name("Follow-Up").id %>
+        <%= hidden_field_tag "encounter[patient_id]", @patient_obj.patient_id %>
+        <%= hidden_field_tag "encounter[encounter_datetime]", (session_date || DateTime.now()).to_s(:db) %>
+        <%= hidden_field_tag "encounter[provider_id]", session[:user_id] %>
+
+        <%
+            @current_data = Encounter.current_data("FOLLOW-UP", @patient_obj.patient_id, true)
+        %>
+
+        <%= hidden_field_tag("observations[][concept_name]", "Outcome") %>
+        <%= select_tag "observations[][value_coded_or_text]", options_for_select(@follow_up_outcomes, @current_data['OUTCOME']),
+                       :helpText =>"Select Follow-up Outcome",
+                       :tt_onLoad => "showHelpButton();__$('keyboard').style.display='none';",
+                       :tt_pageStyleClass => 'longSelectList',
+                       :id => "outcome"
+        %>
+
+    <% end %>
+</body>
