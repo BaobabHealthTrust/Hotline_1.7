@@ -499,7 +499,6 @@ class ReportController < ApplicationController
     @report_name  = "Patient Age Distribution for #{params[:district]} district"
     @report       = Report.patient_age_distribution(@patient_type, @grouping,
                                                     @start_date, @end_date, district)
-    #raise @report.inspect
   end
 
   def patient_health_issues_report
@@ -656,7 +655,7 @@ class ReportController < ApplicationController
     @report_type    = params[:report_type]
     
     @report_name  = "Caller Follow Up Report for #{@district} District "
-    @report = Report.follow_up_report(@start_date, @end_date, @grouping, @district) rescue []
+    @report = Report.follow_up_report(@start_date, @end_date, @grouping, @district) #rescue []
 
     
   end
