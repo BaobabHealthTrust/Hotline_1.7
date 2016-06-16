@@ -88,7 +88,7 @@ class HomeController < ApplicationController
                           ON m.location_id = location.location_id").select(' distinct name ').limit(30).map(&:name).sort
     #end
 
-    render :text => "<li>" + names.map{|n| n } .join("</li><li>") + "</li>" + "<li>" 'Unknown' "</li>"
+    render :text => "<li>" + names.map{|n| n } .join("</li><li>") + "</li>" + "<li>" 'Other' "</li>" + "<li>" 'Unknown' "</li>"
   end
 
   def quick_summary
