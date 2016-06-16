@@ -82,6 +82,7 @@
     {:id => "home_village",
     :tt_requireNextClick => true,
     :ajaxURL => "",
+    :condition => "__$('home_ta').value != 'Other'",
     :tt_onLoad => "$('nextButton').style.display = 'block';
     set_ajaxURL_for_suggestions('/patient/village?district=' + __$('home_district').value + '&filter_value=' , __$('home_ta').value);
     setTimeout('clearInput()', 150)",
