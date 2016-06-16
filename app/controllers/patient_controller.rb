@@ -295,7 +295,7 @@ class PatientController < ApplicationController
     data = @ta.collect { |l | l.name }
 
     unless data.blank?
-      render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
+      render text: "<li>" + (data.sort.map{|n| n } + ['Other']) .join("</li><li>") + "</li>" and return
     else
       #render text: [].to_json and return
       render text: "<li></li>" and return
@@ -312,7 +312,7 @@ class PatientController < ApplicationController
     data = @villages.collect { |l | l.name }
 
     unless data.blank?
-      render text: "<li>" + data.sort.map{|n| n } .join("</li><li>") + "</li>" and return
+      render text: "<li>" + (data.sort.map{|n| n }  + ['Other']) .join("</li><li>") + "</li>" and return
     else
       #render text: [].to_json and return
       render text: "<li></li>" and return
