@@ -2394,7 +2394,7 @@ module Report
     district_id = district
     hc_conditions  = ["district = ?", district_id]
     location_tag = LocationTag.find_by_name(Location.find(district_id).name.gsub(/City/i, '').strip)
-    health_centers = Location.where("m.location_tag_id = #{location_tag.id} ").joins("INNER JOIN location_tag_map m
+    health_centers = Location.joins("INNER JOIN location_tag_map m
                           ON m.location_id = location.location_id")
     #health_centers  = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id")
 
