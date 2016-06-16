@@ -210,6 +210,8 @@ class EncountersController < ApplicationController
 
       when 'Female symptoms'
           #if child
+          @current_pregnancy_status = Encounter.current_data("PREGNANCY STATUS", @patient_obj.patient_id)
+          #raise @current_pregnancy_status['PREGNANCY STATUS'].inspect
         if @patient_obj.age <= 5
           @health_info = concept_set('Child health info')
           @danger_signs = concept_set('Child danger signs greater zero outcome')
@@ -219,12 +221,24 @@ class EncountersController < ApplicationController
         elsif (!((@patient_obj.sex.match('F') && @patient_obj.age > 13 && @patient_obj.age < 50) || @patient_obj.age <= 5))
           @health_symptoms = concept_set('General health symptoms') + ["Other"]
           @symptom_concept = "Health Symptom"
-        else
+        else 
           @health_info = concept_set('Maternal health info')
           @danger_signs = concept_set('Danger signs')
           @health_symptoms = concept_set('Maternal health symptoms')
+          if @current_pregnancy_status['PREGNANCY STATUS'] == ['Pregnant']
+            @health_symptoms = concept_set('Maternal health symptoms') - [['Vaginal bleeding (not during pregnancy)'], ['Postnatal bleeding'], ['Postnatal bleeding'], ['Postnatal fever']]
+          elsif @current_pregnancy_status['PREGNANCY STATUS'] == ['Delivered']
+            @health_symptoms = concept_set('Maternal health symptoms') - [['Fever during pregnancy'], ['No fetal movements'], ['Vaginal bleeding during pregnancy'], ['Water breaks']]
+          elsif @current_pregnancy_status['PREGNANCY STATUS'] == ['Not Pregnant']
+            @health_symptoms = concept_set('Maternal health symptoms') - [['Fever during pregnancy'], ['No fetal movements'], ['Postnatal bleeding'], ['Postnatal discharge - bad smell'], ['Postnatal fever'], ['Vaginal bleeding during pregnancy'], ['Water breaks']]
+          elsif @current_pregnancy_status['PREGNANCY STATUS'] == ['Miscarried']
+            @health_symptoms = concept_set('Maternal health symptoms') - [['Fever during pregnancy'], ['No fetal movements'], ['Vaginal bleeding during pregnancy'], ['Water breaks']]
+          else
+            #raise @health_symptoms.inspect
+          end
           @symptom_concept = "Maternal Health Symptoms"
           @info_concept = "Maternal Health Info"
+           #raise @health_symptoms.inspect
         end
       when 'Follow up'
           @follow_up_outcomes = [ "",
