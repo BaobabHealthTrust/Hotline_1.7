@@ -194,12 +194,15 @@ module Report
 
   def self.all_patients_demographics(patients_data, date_range, district)
     nearest_health_centers  = []
-    mnch_health_facilities_list = get_nearest_health_centers(district)
-    mnch_health_facilities_list.map do |facility|
-      nearest_health_centers.push([facility["name"].humanize, 0])
+    
+    unless patients_data.blank?
+        patients_data.map do |catchments_only|
+	        nearest_health_centers << [catchments_only.attributes['nearest_health_center'].humanize, 0]
+        end
     end
+    
     new_patients_data  = {:new_registrations  => 0,
-                          :catchment          => nearest_health_centers.sort,
+                          :catchment          => nearest_health_centers.uniq.sort,
                           :start_date         => date_range.first,
                           :end_date           => date_range.last}
     children = 0
@@ -208,6 +211,7 @@ module Report
     new_patients_data[:patient_type] = [['children', 0], ['women', 0], ['non_mnch', 0]]
 
     unless patients_data.blank?
+
       patients_data.map do|data|
         catchment           = data.attributes['nearest_health_center']
         number_of_patients  = data.attributes['number_of_patients'].to_i
@@ -217,9 +221,9 @@ module Report
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
-        new_patients_data[:catchment].map do |c|
+        new_patients_data[:catchment].uniq.map do |c|
 
-          if(c.first == catchment.humanize)
+          if c.first.titleize == catchment.titleize
             new_patients_data[:catchment][i][1]           += number_of_patients
             new_patients_data[:patient_type][children][1] += all_children
             new_patients_data[:patient_type][women][1]    += all_women
@@ -233,15 +237,16 @@ module Report
   end
 
   def self.children_demographics(patients_data, date_range, district)
-    nearest_health_centers  = []
+	  nearest_health_centers  = []
 
-    mnch_health_facilities_list = get_nearest_health_centers(district)
-    mnch_health_facilities_list.map do |facility|
-      nearest_health_centers.push([facility["name"].humanize, 0])
-    end
+	  unless patients_data.blank?
+		  patients_data.map do |catchments_only|
+			  nearest_health_centers << [catchments_only.attributes['nearest_health_center'].humanize, 0]
+		  end
+	  end
 
-    new_patients_data  = {:new_registrations  => 0,
-                          :catchment          => nearest_health_centers.sort,
+	  new_patients_data  = {:new_registrations  => 0,
+	                        :catchment          => nearest_health_centers.uniq.sort,
                           :start_date         => date_range.first,
                           :end_date           => date_range.last}
     female = 0
@@ -271,15 +276,16 @@ module Report
   end
 
   def self.women_demographics(patients_data, date_range, district)
-    nearest_health_centers  = []
+	  nearest_health_centers  = []
 
-    mnch_health_facilities_list = get_nearest_health_centers(district)
-    mnch_health_facilities_list.map do |facility|
-      nearest_health_centers.push([facility["name"].humanize, 0])
-    end
+	  unless patients_data.blank?
+		  patients_data.map do |catchments_only|
+			  nearest_health_centers << [catchments_only.attributes['nearest_health_center'].humanize, 0]
+		  end
+	  end
 
-    new_patients_data  = {:new_registrations  => 0,
-                          :catchment          => nearest_health_centers.sort,
+	  new_patients_data  = {:new_registrations  => 0,
+	                        :catchment          => nearest_health_centers.uniq.sort,
                           :start_date         => date_range.first,
                           :end_date           => date_range.last}
     pregnant      = 0
@@ -313,15 +319,16 @@ module Report
   end
 
   def self.non_mnch_demographics(patients_data, date_range, district)
-    nearest_health_centers  = []
+	  nearest_health_centers  = []
 
-    mnch_health_facilities_list = get_nearest_health_centers(district)
-    mnch_health_facilities_list.map do |facility|
-      nearest_health_centers.push([facility["name"].humanize, 0])
-    end
+	  unless patients_data.blank?
+		  patients_data.map do |catchments_only|
+			  nearest_health_centers << [catchments_only.attributes['nearest_health_center'].humanize, 0]
+		  end
+	  end
 
-    new_patients_data  = {:new_registrations  => 0,
-                          :catchment          => nearest_health_centers.sort,
+	  new_patients_data  = {:new_registrations  => 0,
+	                        :catchment          => nearest_health_centers.uniq.sort,
                           :start_date         => date_range.first,
                           :end_date           => date_range.last}
 
