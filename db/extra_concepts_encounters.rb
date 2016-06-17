@@ -37,10 +37,10 @@
  CSV.foreach("#{Rails.root}/app/assets/data/extra_person_attributes.csv", :headers => true).with_index do |row, i|
 
     name = row[0].strip rescue next
-
+		desc = row[1]
 		attr_name =  PersonAttributeType.where(name: name).first
 		next if !attr_name.blank?
-     PersonAttributeType.create(name: name)
+     PersonAttributeType.create(name: name, description: desc)
     puts "Additional person attribute: ---- #{name}"
   end
 
