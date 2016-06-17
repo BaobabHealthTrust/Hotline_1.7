@@ -22,5 +22,25 @@
     puts "Additional concept: ---- #{concept_name}"
   end
 
+###################################### Renamed Concepts Starts ##############################################################
+  CSV.foreach("#{Rails.root}/app/assets/data/renamed_concepts.csv", :headers => true).with_index do |row, i|
+    name = row[0].strip ; new_name = row[1]
+		concept_name =  ConceptName.where(name: name).first
+		next if concept_name.blank?
+    concept_name.name = new_name
+		concept_name.save
+    puts "#{name} to: #{new_name}"
+  end
 
+###################################### PersonAttributes Start ##############################################################
+
+ CSV.foreach("#{Rails.root}/app/assets/data/extra_person_attributes.csv", :headers => true).with_index do |row, i|
+
+    name = row[0].strip rescue next
+		desc = row[1]
+		attr_name =  PersonAttributeType.where(name: name).first
+		next if !attr_name.blank?
+     PersonAttributeType.create(name: name, description: desc)
+    puts "Additional person attribute: ---- #{name}"
+  end
 
