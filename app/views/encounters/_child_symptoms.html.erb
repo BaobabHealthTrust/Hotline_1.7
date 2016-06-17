@@ -35,11 +35,56 @@
 
   function summary() {
 
+    var dangerSignDisplay = "";
     var display = "";
     var sympDisplay = "";
     var noSympDisplay = "";
+    var dangerSignIds = ["cough_days","diarrhea_days","fever_days","red_eye_days","not_eating_anything","blood_in_stool",
+      "convulsions","vomiting_everything","visual_problems","unconcious","swollen_legs_or_face","dry_skin"];
+
+    dangerSignDisplay += "<br /><div><span class='title' style='font-size:25px;'>Danger Signs</span></div>";
+    dangerSignDisplay += "<div><hr /><br />";
+
+    
+    var display = "<div><br />";
+    display += dangerSignDisplay;
+
+    for (var i=0 ; i < dangerSignIds.length; ++i){
+     
+      if ((dangerSignIds[i] == "cough_days") && ($(dangerSignIds[i]).value >= 21)) {
+        $("cough_21_days").value = "Yes";
+        display += "<span class='title' style='font-size:22px;'>Cough >= 21 days </span><br />";
+      } else if  ((dangerSignIds[i] == "diarrhea_days") && ($(dangerSignIds[i]).value >= 14)) {
+        $("diarrhea_14_days").value = "Yes";
+        display += "<span class='title' style='font-size:22px;'>Diarrhea >= 14 days </span><br />";
+      } else if  ((dangerSignIds[i] == "fever_days") && ($(dangerSignIds[i]).value >= 7)) {
+        $("fever_7_days").value = "Yes";
+        display += "<span class='title' style='font-size:22px;'>Fever >= 7 days </span><br />";
+      } else if  ((dangerSignIds[i] == "red_eye_days") && ($(dangerSignIds[i]).value >= 4)) {
+        $("red_eye_4_days").value = "Yes";
+        display += "<span class='title' style='font-size:22px;'>Red_eye >= 4 days </span><br />";
+      }else if  ((dangerSignIds[i] == "not_eating_anything") && ($(dangerSignIds[i]).value == "NO")){
+        display += "<span class='title' style='font-size:22px;'>" + humanize(dangerSignIds[i]) + "</span><br />";
+      }else if ($(dangerSignIds[i]).value == "Yes"){
+        display += "<span class='title' style='font-size:22px;'>" + humanize(dangerSignIds[i]) + "</span><br />";
+      }
+    }
+
+    if (display == "<div><br />"){
+      display += "<span class='title' style='font-size:22px;'>No danger signs </span><br />";
+
+    }
+
+
+    display += "</div>";
+
+    dangerSignDisplay += "</div>";
+   
+
     var symptomIds = ["first_question","fever","diarrhea","coughing","convulsions","not_eating","red_eye","sleepy_or_unconcious","weight_change"];
   
+
+
     sympDisplay += "<br /><div><span class='title' style='font-size:25px;'>Symptoms present</span></div>";
     sympDisplay += "<div><hr /><br />";
 
@@ -99,6 +144,7 @@
         }
       }
     }
+    
       
     sympDisplay += "</div>";
     noSympDisplay += "</div>";
@@ -112,46 +158,6 @@
     //                                                                                         
   }
 
-  function loadDangerSigns() {
-
-    var dangerSignIds = ["cough_days","diarrhea_days","fever_days","red_eye_days","not_eating_anything","blood_in_stool",
-      "convulsions","vomiting_everything","visual_problems","unconcious","swollen_legs_or_face","dry_skin"]
-    var display = "<div><br />";
-
-    for (var i=0 ; i < dangerSignIds.length; ++i){
-     
-      if ((dangerSignIds[i] == "cough_days") && ($(dangerSignIds[i]).value >= 21)) {
-        $("cough_21_days").value = "Yes";
-        display += "<span class='title' style='font-size:22px;'>Cough >= 21 days </span><br />";
-      } else if  ((dangerSignIds[i] == "diarrhea_days") && ($(dangerSignIds[i]).value >= 14)) {
-        $("diarrhea_14_days").value = "Yes";
-        display += "<span class='title' style='font-size:22px;'>Diarrhea >= 14 days </span><br />";
-      } else if  ((dangerSignIds[i] == "fever_days") && ($(dangerSignIds[i]).value >= 7)) {
-        $("fever_7_days").value = "Yes";
-        display += "<span class='title' style='font-size:22px;'>Fever >= 7 days </span><br />";
-      } else if  ((dangerSignIds[i] == "red_eye_days") && ($(dangerSignIds[i]).value >= 4)) {
-        $("red_eye_4_days").value = "Yes";
-        display += "<span class='title' style='font-size:22px;'>Red_eye >= 4 days </span><br />";
-      }else if  ((dangerSignIds[i] == "not_eating_anything") && ($(dangerSignIds[i]).value == "NO")){
-        display += "<span class='title' style='font-size:22px;'>" + humanize(dangerSignIds[i]) + "</span><br />";
-      }else if ($(dangerSignIds[i]).value == "Yes"){
-        display += "<span class='title' style='font-size:22px;'>" + humanize(dangerSignIds[i]) + "</span><br />";
-      }
-    }
-
-    if (display == "<div><br />"){
-      display += "<span class='title' style='font-size:22px;'>No danger signs </span><br />";
-
-    }
-
-    display += "</div>";
-   
-    //Display
-    $('inputFrame'+tstCurrentPage).innerHTML = '<div id="dangerSigns" style="height: 520px;">' + display + '</div>' ;
-    $("clearButton").style.display = "none";
-    //$('tt_staticControls').style.cssText = "height:670px !important";
-    //
-  }
 
     function populateFirstQuestion(){
         var selected = __$('start').value;
@@ -497,12 +503,12 @@
   <label for='summary'>Symptom Confirmation</label>
   <%= text_field_tag :summary, nil, {
                                      :tt_onLoad => "summary();$('keyboard').style.display = 'none';
-                                     showHelpButton('Child Health Symptoms');
+                                     showHelpButton('Child Health Symptoms' | 'Danger Signs');
                                      __$('nextButton').style.display = 'block'; ",
                                      :optional => "true"} %>
 
-  <label for='dangerSigns'>Danger signs</label>
-  <%= text_field_tag :dangerSigns, nil, {
+  <!-- <label for='dangerSigns'>Danger signs</label> -->
+  <%#= text_field_tag :dangerSigns, nil, {
                                          :tt_onLoad => "loadDangerSigns();$('keyboard').style.display = 'none';showHelpButton('Danger Signs');",
                                          :optional => "true" } %>
 
