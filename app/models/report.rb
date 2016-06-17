@@ -370,7 +370,7 @@ module Report
     #                                   :select => "concept_name_tag_id",
     #                                    :conditions => ["tag IN ('DANGER SIGN', 'HEALTH INFORMATION', 'HEALTH SYMPTOM')"]
     #).map(&:concept_name_tag_id).join(', ')
-
+    district = Location.find(district_id).name
     query = "SELECT encounter_type.name AS encounter_type_name, " +
         "COUNT(obs.person_id) AS number_of_patients," + extra_parameters +
         "obs.concept_id AS concept_id, DATE(encounter.date_created) AS start_date " +
@@ -379,15 +379,14 @@ module Report
         "LEFT JOIN patient ON encounter.patient_id = patient.patient_id " +
         "LEFT JOIN person ON patient.patient_id = person.person_id " +
         "LEFT JOIN concept_name on obs.concept_id = concept_name.concept_id " +
-        "INNER JOIN obs obs_call ON encounter.encounter_id = obs_call.encounter_id " +
-        "AND obs_call.concept_id = #{call_id} " +
-        "INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id " +
-        "AND cl.district = #{district_id} " +
+        "LEFT JOIN person_address ad ON ad.person_id = obs.person_id AND ad.voided = 0 " +
+        "AND ad.township_division = '#{district}' " +
         "WHERE encounter_type.encounter_type_id IN (#{encounter_type_ids}) " +
         "AND obs.concept_id IN (#{concept_ids}) " +
         "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
         "AND DATE(obs.date_created) >= '#{date_range.first}' " +
-        "AND DATE(obs.date_created) <= '#{date_range.last}' "
+        "AND DATE(obs.date_created) <= '#{date_range.last}'"
+
 
     if patient_type.to_s.upcase == "CHILDREN"
       query = query + "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= #{child_maximum_age} "
@@ -413,7 +412,7 @@ module Report
 
   def self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
     if health_task.humanize.downcase == "outcomes"
-      concepts_list       = ["GENERAL OUTCOME","SECONDARY OUTCOME"]
+      concepts_list       = ["GENERAL OUTCOME", "SECONDARY OUTCOME"]
       encounter_type_list = ["UPDATE OUTCOME"]
       outcomes            = ["REFERRED TO A HEALTH CENTRE",
                              "REFERRED TO NEAREST VILLAGE CLINIC",
@@ -422,9 +421,8 @@ module Report
                              "HOSPITAL",
                              "REGISTERED FOR TIPS AND REMINDERS"]
 
-      outcomes = self.concept_set('General outcome').flatten.uniq
-
-      extra_parameters    = " obs.value_text AS concept_name, "
+      outcomes = self.concept_set('General outcome').flatten.delete_if{|c| c.blank?}.uniq
+      extra_parameters    = " COALESCE((SELECT name FROM concept_name WHERE concept_id = obs.value_coded), obs.value_text) AS concept_name, "
       extra_conditions    = " obs.value_text, DATE(obs.date_created), "
     else
       extra_conditions = " DATE(obs.date_created), "
@@ -569,12 +567,14 @@ module Report
       next if concept_id.nil?
 
       concept_ids += concept_id.to_s + ", "
-      if concept_name == "OUTCOME"
+      next if concept_name == "SECONDARY OUTCOME"
+      if concept_name == "GENERAL OUTCOME"
         outcomes.each do |concept_name|
           mapping = {:concept_name  => concept_name,  :concept_id       => concept_id,
                      :call_count    => call_count,    :call_percentage  => call_percentage}
 
           concept_map.push(mapping)
+          concept_map.uniq!
         end
       else
         mapping = {:concept_name  => concept_name,  :concept_id       => concept_id,
@@ -583,7 +583,6 @@ module Report
         concept_map.push(mapping)
       end
     end
-
     encounter_type_ids = ""
     encounter_type_list.each do |encounter_type|
       encounter_type_id = EncounterType.find_by_name("#{encounter_type}").id rescue nil
