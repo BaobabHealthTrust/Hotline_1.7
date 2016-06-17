@@ -969,12 +969,51 @@ module Report
 					                 date_range[1]
 					          )
 				total = women.count('patient.patient_id', :distinct => true)
+				pregnancy_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").id
+				pregnancy_status = Encounter.find_by_sql(
+					    "SELECT * FROM encounter e
+						INNER JOIN obs o ON e.encounter_id = o.encounter_id
+						WHERE e.encounter_type = #{pregnancy_encounter_type_id}"
+				).count
+				raise pregnancy_status.inspect
+				data = {}
+
 				#----------------- for pregnant women
 				pregnant_women = Encounter.joins(patient: :person).where('encounter.patient_id' => 'person.person_id')
-				#raise pregnant_women.inspect
+
 				#----------------- for not pregnant women
 				#----------------- for delivered women
 				#----------------- for miscarried women
+				data_for_patients[:patient_type][:patient] = {
+					  pregnant: {
+							count: female_count,
+							percentage: '%.2f' % female_percentage,
+							min: [total, female_count].min,
+							max: [total, female_count].max,
+							average: female_average
+					  },
+					  not_pregnant: {
+							count: male_count,
+							percentage: '%.2f' % male_percentage,
+							min: [total, male_count].min,
+							max: [total, male_count].max,
+							average: male_average
+					  },
+					  delivered: {
+						    count: female_count,
+						    percentage: '%.2f' % female_percentage,
+						    min: [total, female_count].min,
+						    max: [total, female_count].max,
+						    average: female_average
+					  },
+					  miscarried: {
+						    count: male_count,
+						    percentage: '%.2f' % male_percentage,
+						    min: [total, male_count].min,
+						    max: [total, male_count].max,
+						    average: male_average
+					  },
+				}
 
         end
 
