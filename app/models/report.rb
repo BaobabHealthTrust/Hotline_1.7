@@ -102,7 +102,6 @@ module Report
 
         extra_conditions = " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}
                             AND (YEAR(p.date_created) - YEAR(ps.birthdate)) < 50 "
-
         district_name = Location.find(district_id).name
 
         sub_query = "
@@ -399,10 +398,10 @@ module Report
       query = query + "AND obs.value_coded = " + value_coded_indicator.to_s
     end
 
-#    query = query + " AND concept_name.concept_name_id = concept_name_tag_map.concept_name_id " 
+#    query = query + " AND concept_name.concept_name_id = concept_name_tag_map.concept_name_id "
 
     if health_task.to_s.upcase != "OUTCOMES"
-      query = query + " AND concept_name.name IN (#{concept_names}) " #" AND concept_name_tag_map.concept_name_tag_id IN (" + required_tags + ") " 
+      query = query + " AND concept_name.name IN (#{concept_names}) " #" AND concept_name_tag_map.concept_name_tag_id IN (" + required_tags + ") "
     end
 
     query = query + " GROUP BY encounter_type.encounter_type_id, " + extra_conditions + "obs.concept_id " +
@@ -651,7 +650,7 @@ module Report
                   "AND encounter.encounter_id = obs.encounter_id " +
                   "AND DATE(obs.date_created) >= '#{date_range.first}' " +
                   "AND DATE(obs.date_created) <= '#{date_range.last}' " +
-                  "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " + 
+                  "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
                   " #{extra_parameters}" +
                 "GROUP BY obs.concept_id " +
                 "ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
@@ -1075,7 +1074,7 @@ module Report
 
       else
         extra_parameters  = "SELECT COUNT(ps.person_id) AS number_of_patients,
-                          (YEAR(p.date_created) - YEAR(ps.birthdate)) as age_in_years, 
+                          (YEAR(p.date_created) - YEAR(ps.birthdate)) as age_in_years,
                           ((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}) AS adult "
         extra_conditions  = ""
         sub_query         = ""
@@ -1292,9 +1291,9 @@ module Report
   def self.patient_activity(patient_type, grouping, start_date, end_date, district)
     district_id = Location.find_by_name(district).id
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
-  
+
     patients_data = []
-    
+
 
     date_ranges.map do |date_range|
 
@@ -1519,14 +1518,14 @@ module Report
                              outcome]
 
       end
-      
+
       o_encounters = Encounter.joins("INNER JOIN obs ON encounter.encounter_id = obs.encounter_id
                              INNER JOIN person ON patient_id = person.person_id
                              INNER JOIN obs obs_call ON obs_call.encounter_id = obs.encounter_id
                               AND obs_call.concept_id = #{call_id}
-                              INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id 
+                              INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id
                                 AND cl.district = #{district_id}").where(condition_options)
-     
+
       #raise o_encounters.to_yaml
       o_encounters.each do |a_encounter|
 
@@ -1652,7 +1651,7 @@ module Report
    elsif call_status = 'Yes'
      extra_conditions +=
    else
-   
+
    end
 =end
 
@@ -1743,7 +1742,7 @@ module Report
 
       query   = self.call_analysis_query_builder(patient_type,
                                                  date_range, staff_member, call_type, call_status, district_id)
-#raise query.to_s 
+#raise query.to_s
       results = CallLog.find_by_sql(query)
 
       call_statistics = {
@@ -1974,7 +1973,7 @@ module Report
                             cl.start_time.strftime('%A') as day_of_week,
                             cl.start_time as call_start_time,
                             cl.end_time as call_end_time")
-   
+
 =end
 
   def self.current_enrollment_totals(start_date, end_date, grouping, content_type, language,
@@ -2289,19 +2288,19 @@ module Report
   end
 
   def self.create_family_planning_query(start_date, end_date, district)
-#TODO - Remove the hard coding of the ids  
+#TODO - Remove the hard coding of the ids
     query = "select e.patient_id AS patient_id, obc.value_text AS call_id,
-           ofplan.value_coded_name_id AS family_planning_method_vcni, 
+           ofplan.value_coded_name_id AS family_planning_method_vcni,
            ofplan.value_coded AS family_planning_method_vc,
-           obmethod.value_coded_name_id AS birth_method_vcni, 
+           obmethod.value_coded_name_id AS birth_method_vcni,
            obmethod.value_coded AS birth_method_vc,
            obmethod.value_text AS birth_method_vt,
-           ofsatisfied.value_coded_name_id AS family_planning_satisfied_vcni, 
+           ofsatisfied.value_coded_name_id AS family_planning_satisfied_vcni,
            ofsatisfied.value_coded AS family_planning_satisfied_vc,
-           ofinfo.value_coded_name_id AS family_planning_info_vcni, 
+           ofinfo.value_coded_name_id AS family_planning_info_vcni,
            ofinfo.value_coded AS family_planning_info_vc
         from encounter e
-            inner join obs ob on e.encounter_id = ob.encounter_id 
+            inner join obs ob on e.encounter_id = ob.encounter_id
                     and ob.concept_id = 5272 and ob.value_text = 'Not pregnant'
             inner join obs obc on e.encounter_id = obc.encounter_id and obc.concept_id = 8304
             inner join call_log cl on obc.value_text = cl.call_log_id and district = #{district}
@@ -2313,7 +2312,7 @@ module Report
             inner join obs ofsatisfied on ofsatisfied.encounter_id = ofs.encounter_id and ofsatisfied.concept_id = 9159
             inner join obs ofinfo on ofinfo.encounter_id = ofs.encounter_id and ofinfo.concept_id = 9160
             where
-                e.encounter_type = 111 
+                e.encounter_type = 111
                 and e.voided = 0
                 and e.encounter_datetime >= '#{start_date}' and e.encounter_datetime <= '#{end_date}'"
 
@@ -2323,12 +2322,12 @@ module Report
   def self.get_total_nonpregnant_callers(start_date, end_date, district)
     query = "select e.patient_id
               from encounter e
-                inner join obs ob on e.encounter_id = ob.encounter_id 
+                inner join obs ob on e.encounter_id = ob.encounter_id
                         and ob.concept_id = 5272 and ob.value_text = 'Not pregnant'
                 inner join obs obc on e.encounter_id = obc.encounter_id and obc.concept_id = 8304
                 inner join call_log cl on obc.value_text = cl.call_log_id and district = #{district}
               where
-                  e.encounter_type = 111 
+                  e.encounter_type = 111
                   and e.voided = 0
                   and e.encounter_datetime >= '#{start_date}' and e.encounter_datetime <= '#{end_date}'"
     result = Patient.find_by_sql(query)
@@ -2368,12 +2367,12 @@ module Report
 
   def self.create_family_planning_info_query(start_date, end_date, district)
     query = "select e.patient_id AS patient_id, obc.value_text AS call_id,
-           ofplan.value_coded_name_id AS family_planning_method_vcni, 
+           ofplan.value_coded_name_id AS family_planning_method_vcni,
            ofplan.value_coded AS family_planning_method_vc,
-           ofinfo.value_coded_name_id AS family_planning_info_vcni, 
+           ofinfo.value_coded_name_id AS family_planning_info_vcni,
            ofinfo.value_coded AS family_planning_info_vc
         from encounter e
-            inner join obs ob on e.encounter_id = ob.encounter_id 
+            inner join obs ob on e.encounter_id = ob.encounter_id
                     and ob.concept_id = 5272 and ob.value_text = 'Not pregnant'
             inner join obs obc on e.encounter_id = obc.encounter_id and obc.concept_id = 8304
             inner join call_log cl on obc.value_text = cl.call_log_id and district = #{district}
@@ -2383,7 +2382,7 @@ module Report
             inner join obs ofplan on ofplan.encounter_id = ofs.encounter_id and ofplan.concept_id = 1717
             inner join obs ofinfo on ofinfo.encounter_id = ofs.encounter_id and ofinfo.concept_id = 9160
             where
-                e.encounter_type = 111 
+                e.encounter_type = 111
                 and e.voided = 0
                 and e.encounter_datetime >= '#{start_date}' and e.encounter_datetime <= '#{end_date}'"
 
@@ -2394,9 +2393,12 @@ module Report
     district_id = district
     hc_conditions  = ["district = ?", district_id]
     location_tag = LocationTag.find_by_name(Location.find(district_id).name.gsub(/City/i, '').strip)
-    health_centers = Location.joins("INNER JOIN location_tag_map m
-                          ON m.location_id = location.location_id")
-    #health_centers  = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id")
+    location_tags   = LocationTag.where(" name IN ('Health Centre', 'District Hospital', 'Clinic',
+     'Rural/Community Hospital', 'Dispensary', 'Central Hospital', 'Maternity', 'Other Hospital', 'Health Post')"
+    ).collect{|l| l.id}
+    health_centers  = Location.where("m.location_tag_id IN (#{location_tags.join(', ')}) "
+    ).joins("INNER JOIN location_tag_map m
+                          ON m.location_id = location.location_id")#.select(' distinct name ').map(&:name).sort
 
     return health_centers
 
