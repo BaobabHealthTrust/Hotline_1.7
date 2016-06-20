@@ -168,11 +168,31 @@ function validateBirthdate() {
     date = new Date();
     current_year = date.getFullYear();
     current_day = date.getDate();
+    current_month = date.getMonth();
+
+     //var d = new Date();
+    var months = new Array();
+    months[0] = "January";
+    months[1] = "February";
+    months[2] = "March";
+    months[3] = "April";
+    months[4] = "May";
+    months[5] = "June";
+    months[6] = "July";
+    months[7] = "August";
+    months[8] = "September";
+    months[9] = "October";
+    months[10] = "November";
+    months[11] = "December";
+    //alert(month.indexOf('January'));
+    //var n = month[d.getMonth()]; 
+
 
     // Get entered date variables -----
     year = document.getElementById('tbInputYear').value;
     month = document.getElementById('tbInputMonth').value;
     day = document.getElementById('tbInputDay').value;
+
 
     // get valid year and day range variables ---
     year_range = current_year - 150;
@@ -196,6 +216,7 @@ function validateBirthdate() {
         popUp();
         return;
     }
+ 
 
     // Check if year is not known ------------
     else if (year != 'Unknown') {   
@@ -209,6 +230,13 @@ function validateBirthdate() {
                 return; // with a flash message.
             }
         }
+
+                   //console.log(month);
+      if (( year >= current_year) && (months.indexOf(month) > current_month)){
+        validateMessage('The month selected is greater than the current month.');
+        return;
+      }
+
         if ( day.length > 2) {
             validateMessage('Day has more than 2 digits.');
             return; // with a flash message.
