@@ -161,79 +161,79 @@
               
               <% if pregnancy_status.first.downcase == 'pregnant' %>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:pregnant][:statistical_info][:total] rescue 0 %>
+                  <%= data[:patient_type][:patient][:pregnant][:count] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:pregnant][:statistical_info][:percentage] rescue 0 %>
+                  <%= data[:patient_type][:patient][:pregnant][:percentage] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:pregnant][:statistical_info][:min] rescue 0 %>
+                  <%= data[:patient_type][:patient][:pregnant][:min] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:pregnant][:statistical_info][:max] rescue 0 %>
+                  <%= data[:patient_type][:patient][:pregnant][:max] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:pregnant][:statistical_info][:average] rescue 0 %>
+                  <%= data[:patient_type][:patient][:pregnant][:average] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom cellright main-table-cell">
-                  <%= data[:statistical_data][:pregnant][:statistical_info][:sdev] rescue 0 %>
+                  <%= data[:patient_type][:patient][:pregnant][:sdev] rescue 0 %>
                 </td>
               <% elsif pregnancy_status.first.downcase == 'non_pregnant' %>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:nonpregnant][:statistical_info][:total] rescue 0 %>
+                  <%= data[:patient_type][:patient][:not_pregnant][:count] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:nonpregnant][:statistical_info][:percentage] rescue 0 %>
+                  <%= data[:patient_type][:patient][:not_pregnant][:percentage] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:nonpregnant][:statistical_info][:min] rescue 0 %>
+                  <%= data[:patient_type][:patient][:not_pregnant][:min] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:nonpregnant][:statistical_info][:max] rescue 0 %>
+                  <%= data[:patient_type][:patient][:not_pregnant][:max] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:nonpregnant][:statistical_info][:average] rescue 0 %>
+                  <%= data[:patient_type][:patient][:not_pregnant][:average] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom cellright main-table-cell">
-                  <%= data[:statistical_data][:delivered][:statistical_info][:sdev] rescue 0 %>
+                  <%= data[:patient_type][:patient][:not_pregnant][:sdev] rescue 0 %>
                 </td>
               <% elsif pregnancy_status.first.downcase == 'delivered' %>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:nonpregnant][:statistical_info][:total] rescue 0 %>
+                  <%= data[:patient_type][:patient][:delivered][:count] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:delivered][:statistical_info][:percentage] rescue 0 %>
+                  <%= data[:patient_type][:patient][:delivered][:percentage] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:delivered][:statistical_info][:min] rescue 0 %>
+                  <%= data[:patient_type][:patient][:delivered][:min] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:delivered][:statistical_info][:max] rescue 0 %>
+                  <%= data[:patient_type][:patient][:delivered][:max] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:delivered][:statistical_info][:average] rescue 0 %>
+                  <%= data[:patient_type][:patient][:delivered][:average] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom cellright main-table-cell">
-                  <%= data[:statistical_data][:delivered][:statistical_info][:sdev] rescue 0 %>
+                  <%= data[:patient_type][:patient][:delivered][:sdev] rescue 0 %>
                 </td>
                <% elsif pregnancy_status.first.downcase == 'miscarried' %>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:miscarried][:statistical_info][:total] rescue 0 %>
+                  <%= data[:patient_type][:patient][:miscarried][:count] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:miscarried][:statistical_info][:percentage] rescue 0 %>
+                  <%= data[:patient_type][:patient][:miscarried][:percentage] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:miscarried][:statistical_info][:min] rescue 0 %>
+                  <%= data[:patient_type][:patient][:miscarried][:min] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:miscarried][:statistical_info][:max] rescue 0 %>
+                  <%= data[:patient_type][:patient][:miscarried][:max] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom main-table-cell">
-                  <%= data[:statistical_data][:miscarried][:statistical_info][:average] rescue 0 %>
+                  <%= data[:patient_type][:patient][:miscarried][:average] rescue 0 %>
                 </td>
                 <td class="cellleft cellbottom cellright main-table-cell">
-                  <%= data[:statistical_data][:miscarried][:statistical_info][:sdev] rescue 0 %>
+                  <%= data[:patient_type][:patient][:miscarried][:sdev] rescue 0 %>
                 </td>
               <% end %>
             </tr>

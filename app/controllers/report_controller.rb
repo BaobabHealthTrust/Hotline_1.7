@@ -484,9 +484,9 @@ class ReportController < ApplicationController
 
     case @patient_type.downcase
     when 'women'
-      @special_message = " -- (Please note that age is in Years)"
+      @special_message = " -- (Please note that women is any female over 13 years old)"
     when 'children'
-      @special_message = " -- (Please note that age is in Months)"
+      @special_message = " -- (Plese note that children is anyone under 6 years old)"
     when 'non-mnch'
       @special_message = " -- (Please note that Non-MNCH might be a child or adult, and any gender.)"
     else

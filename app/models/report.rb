@@ -81,6 +81,8 @@ module Report
     nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id #rescue 1
     child_age = 5
 
+    district_name = Location.find(district_id).name
+
     case patient_type.downcase
       when "women"
 
@@ -102,7 +104,7 @@ module Report
 
         extra_conditions = " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}
                             AND (YEAR(p.date_created) - YEAR(ps.birthdate)) < 50 "
-        district_name = Location.find(district_id).name
+
 
         sub_query = "
           INNER JOIN (SELECT o.person_id, o.value_coded, o.concept_id, cn.name, o.value_text AS pregnancy_status
@@ -124,15 +126,15 @@ module Report
 
       when "children"
         extra_parameters  = ', ps.gender AS gender '
-        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} "
-        sub_query         = ''
+        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} AND p_ad.township_division = '#{district_name}'  "
+        sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
         extra_group_by    = ', ps.gender '
       when 'non-mnch'
         extra_parameters  = ',((YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M") AS non_mnch, ps.gender AS gender '
-        extra_conditions  = ''
-        sub_query         = ''
+        extra_conditions  = " AND p_ad.township_division = '#{district_name}' "
+        sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
         extra_group_by    = ', ps.gender '
       else
         extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
@@ -143,8 +145,8 @@ module Report
                               ) AS all_non_mnch,
                               (ps.gender = 'F' AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age})  as all_women
                             "
-        extra_conditions  = ''
-        sub_query         = ''
+        extra_conditions  = " AND p_ad.township_division = '#{district_name}' "
+        sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
         extra_group_by    = ', ps.person_id '
     end
     patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
@@ -964,54 +966,132 @@ module Report
 				women = Patient.joins(person: :patient)
 					          .where('person.gender = "F"
 								AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
-								AND person.date_created BETWEEN ? AND ?',
+								AND person.date_created BETWEEN ? AND ?
+								AND person_address.township_division = ?',
 					                 date_range[0],
-					                 date_range[1]
+					                 date_range[1],
+					                 district
 					          )
-				total = women.count('patient.patient_id', :distinct => true)
-				pregnancy_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").id
-				pregnancy_status = Encounter.find_by_sql(
-					    "SELECT * FROM encounter e
-						INNER JOIN obs o ON e.encounter_id = o.encounter_id
-						WHERE e.encounter_type = #{pregnancy_encounter_type_id}"
+
+
+				#total = women.count('patient.patient_id', :distinct => true)
+				pregnancy_encounter_type_id  = ConceptName.find_by_name("PREGNANCY STATUS").id
+				delivered_concept_id = ConceptName.find_by_name('Delivered').id
+				pregnant_concept_id = ConceptName.find_by_name('Pregnant').id
+				miscarried_concept_id = ConceptName.find_by_name('Miscarried').id
+				not_pregnant_concept_id = ConceptName.find_by_name('Not Pregnant').id
+
+				total = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						INNER JOIN person ps ON ps.person_id = o.person_id
+						INNER JOIN person_address pa ON pa.person_id = ps.person_id
+						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
+						AND pa.township_division = '#{district}'
+						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
+							BETWEEN '#{date_range[0]}'
+							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
+					  "
 				).count
-				raise pregnancy_status.inspect
-				data = {}
+
+
+				#----------------- for delivered women
+				delivered_count = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						INNER JOIN person ps ON ps.person_id = o.person_id
+						INNER JOIN person_address pa ON pa.person_id = ps.person_id
+						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
+						AND o.value_coded = '#{delivered_concept_id}'
+						AND pa.township_division = '#{district}'
+						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
+							BETWEEN '#{date_range[0]}'
+							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
+					  "
+				).count
+				#raise delivered_count.inspect
+				delivered_percentage = self.get_percentage(total, delivered_count)
+				delivered_average = self.get_average(total, delivered_count)
 
 				#----------------- for pregnant women
-				pregnant_women = Encounter.joins(patient: :person).where('encounter.patient_id' => 'person.person_id')
+				pregnant_count = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						INNER JOIN person ps ON ps.person_id = o.person_id
+						INNER JOIN person_address pa ON pa.person_id = ps.person_id
+						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
+						AND o.value_coded = '#{pregnant_concept_id}'
+						AND pa.township_division = '#{district}'
+						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
+							BETWEEN '#{date_range[0]}'
+							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
+					  "
+				).count
+
+				pregnant_percentage = self.get_percentage(total, pregnant_count)
+				pregnant_average = self.get_average(total, pregnant_count)
+
+				#----------------- for miscarried women
+				miscarried_count = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						INNER JOIN person ps ON ps.person_id = o.person_id
+						INNER JOIN person_address pa ON pa.person_id = ps.person_id
+						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
+						AND o.value_coded = '#{miscarried_concept_id}'
+						AND pa.township_division = '#{district}'
+						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
+							BETWEEN '#{date_range[0]}'
+							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
+					  "
+				).count
+				miscarried_percentage = self.get_percentage(total, miscarried_count)
+				miscarried_average = self.get_average(total, miscarried_count)
 
 				#----------------- for not pregnant women
-				#----------------- for delivered women
-				#----------------- for miscarried women
+				not_pregnant_count = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						INNER JOIN person ps ON ps.person_id = o.person_id
+						INNER JOIN person_address pa ON pa.person_id = ps.person_id
+						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
+						AND o.value_coded = '#{not_pregnant_concept_id}'
+						AND pa.township_division = '#{district}'
+						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
+							BETWEEN '#{date_range[0]}'
+							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
+					  "
+				).count
+				not_pregnant_percentage = self.get_percentage(total, not_pregnant_count)
+				not_pregnant_average = self.get_average(total, not_pregnant_count)
 				data_for_patients[:patient_type][:patient] = {
 					  pregnant: {
-							count: female_count,
-							percentage: '%.2f' % female_percentage,
-							min: [total, female_count].min,
-							max: [total, female_count].max,
-							average: female_average
+							count: pregnant_count,
+							percentage: '%.2f' % pregnant_percentage,
+							min: [total, pregnant_count].min,
+							max: [total, pregnant_count].max,
+							average: pregnant_average
 					  },
 					  not_pregnant: {
-							count: male_count,
-							percentage: '%.2f' % male_percentage,
-							min: [total, male_count].min,
-							max: [total, male_count].max,
-							average: male_average
+							count: not_pregnant_count,
+							percentage: '%.2f' % not_pregnant_percentage,
+							min: [total, not_pregnant_count].min,
+							max: [total, not_pregnant_count].max,
+							average: not_pregnant_average
 					  },
 					  delivered: {
-						    count: female_count,
-						    percentage: '%.2f' % female_percentage,
-						    min: [total, female_count].min,
-						    max: [total, female_count].max,
-						    average: female_average
+						    count: delivered_count,
+						    percentage: '%.2f' % delivered_percentage,
+						    min: [total, delivered_count].min,
+						    max: [total, delivered_count].max,
+						    average: delivered_average
 					  },
 					  miscarried: {
-						    count: male_count,
-						    percentage: '%.2f' % male_percentage,
-						    min: [total, male_count].min,
-						    max: [total, male_count].max,
-						    average: male_average
+						    count: miscarried_count,
+						    percentage: '%.2f' % miscarried_percentage,
+						    min: [total, miscarried_count].min,
+						    max: [total, miscarried_count].max,
+						    average: miscarried_average
 					  },
 				}
 
