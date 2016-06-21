@@ -301,7 +301,6 @@ module Report
 
   def self.women_demographics(patients_data, date_range, district)
 	  nearest_health_centers  = []
-
 	  unless patients_data.blank?
 		  patients_data.map do |catchments_only|
 			  nearest_health_centers << [catchments_only.attributes['nearest_health_center'].humanize, 0]
@@ -346,14 +345,10 @@ module Report
 	          new_patients_data[:pregnancy_status][miscarried][1]   += number_of_patients if(
                                                                         pregnancy_status.to_s.upcase == "MISCARRIED")
 			  new_patients_data[:all_age]                           << age
-			  new_patients_data[:pregnant_age]                      << age if(
-			                                                            pregnancy_status.to_s.upcase  == "PREGNANT")
-	          new_patients_data[:not_pregnant_age]                      << age if(
-	                                                                    pregnancy_status.to_s.upcase  == "NOT PREGNANT")
-	          new_patients_data[:miscarried_age]                      << age if(
-	                                                                    pregnancy_status.to_s.upcase  == "MISCARRIED")
-	          new_patients_data[:delivered_age]                      << age if(
-	                                                                    pregnancy_status.to_s.upcase  == "DELIVERED")
+			  new_patients_data[:pregnant_age]                  << age if(pregnancy_status.to_s.upcase  == "PREGNANT")
+	          new_patients_data[:not_pregnant_age]              << age if(pregnancy_status.to_s.upcase  == "NOT PREGNANT")
+	          new_patients_data[:miscarried_age]                << age if(pregnancy_status.to_s.upcase  == "MISCARRIED")
+	          new_patients_data[:delivered_age]                 << age if(pregnancy_status.to_s.upcase  == "DELIVERED")
           end
           i += 1
         end
@@ -872,13 +867,8 @@ module Report
       case patient_type.downcase
         when 'women'
           new_patients_data = self.women_demographics(results, date_range, district_id)
-
-          data_for_patients[:patient_data] = new_patients_data
-          data_for_patients[:statistical_data] = patient_statistics rescue ''
-
         when 'children'
           new_patients_data = self.children_demographics(results, date_range, district_id)
-
         when 'non-mnch'
           new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
         else
@@ -1030,6 +1020,7 @@ module Report
 				delivered_age       = new_patients_data[:delivered_age]
 				miscarried_age      = new_patients_data[:miscarried_age]
 				not_pregnant_age    = new_patients_data[:not_pregnant_age]
+
 				women = Patient.joins(person: :patient)
 					          .where('person.gender = "F"
 								AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
