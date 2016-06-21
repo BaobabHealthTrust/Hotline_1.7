@@ -231,25 +231,34 @@ function validateBirthdate() {
             }
         }
 
-                   //console.log(month);
-      if (( year >= current_year) && (months.indexOf(month) > current_month)){
-        validateMessage('The month selected is greater than the current month.');
-        return;
-      }
+      //console.log(month);
+        if (( year >= current_year) && (months.indexOf(month) > current_month)){
+          validateMessage('The month selected is greater than the current month.');
+          return;
+        }
 
-        if ( day.length > 2) {
+        if (day.length == 0){
+            validateMessage('Day of month can not be blank');
+            return; // with a flash message.
+        }else if ( day.length > 2 && day != 'Unknown') {
             validateMessage('Day has more than 2 digits.');
             return; // with a flash message.
         }
         else if ( day.length > 0 && day.length <= 2 ) {
+            
             if ( valid_month_day ) {
                 // continue  processing ---------
+                if (( year >= current_year) && (months.indexOf(month) >= current_month) && ( day > current_day)) {
+                validateMessage('The date entered is greater than the current date.');
+                return;
+              }
             }
             else {
-                validateMessage('Day is invalid for entered month.');
-                return;
+                //validateMessage('Day is invalid for entered month.');
+                //return;
             }
         }
+
 
         // set values to the form year, month, and day ---------------
         document.getElementById('selected_year').value = year;
