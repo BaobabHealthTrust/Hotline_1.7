@@ -231,13 +231,13 @@ function validateBirthdate() {
             }
         }
 
-      //selected month should not be greater than current month
+      //console.log(month);
         if (( year >= current_year) && (months.indexOf(month) > current_month)){
           validateMessage('The month selected is greater than the current month.');
           return;
         }
 
-        if ( day.length > 2 && day != 'Unknown') {
+        if ( day.length > 2) {
             validateMessage('Day has more than 2 digits.');
             return; // with a flash message.
         }
@@ -245,12 +245,11 @@ function validateBirthdate() {
             
             if ( valid_month_day ) {
                 // continue  processing ---------
-              }
-                if (( year >= current_year) && (months.indexOf(month) >= current_month) && (day > current_day)) {
+                if (( year >= current_year) && (months.indexOf(month) >= current_month) && ( day > current_day)) {
                 validateMessage('The date entered is greater than the current date.');
                 return;
               }
-            
+            }
             else {
                 validateMessage('Day is invalid for entered month.');
                 return;
