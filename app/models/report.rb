@@ -94,7 +94,7 @@ module Report
         miscarried_status_concept = ConceptName.find_by_name("Miscarried").concept_id
         call_id = ConceptName.find_by_name("CALL ID").concept_id
 
-        extra_parameters = ", CASE pregnancy_status_table.value_coded " +
+        extra_parameters = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age, CASE pregnancy_status_table.value_coded " +
             " WHEN #{delivered_status_concept} THEN 'Delivered' " +
             " WHEN #{pregnant_status_concept} THEN 'Pregnant' " +
             " WHEN #{not_pregnant_status_concept} THEN 'Not Pregnant' " +
@@ -125,23 +125,24 @@ module Report
         extra_group_by = ", pregnancy_status_table.pregnancy_status "
 
       when "children"
-        extra_parameters  = ', ps.gender AS gender '
+        extra_parameters  = ', YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ps.gender AS gender '
         extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} AND p_ad.township_division = '#{district_name}'  "
         sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
         extra_group_by    = ', ps.gender '
       when 'non-mnch'
-        extra_parameters  = ',((YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
-                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
-                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = "M") AS non_mnch, ps.gender AS gender '
+        extra_parameters  = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ((YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
+                            OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND ps.gender = 'M') AS non_mnch, ps.gender AS gender "
         extra_conditions  = " AND p_ad.township_division = '#{district_name}' "
         sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
         extra_group_by    = ', ps.gender '
       else
-        extra_parameters  = ", ((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
+        extra_parameters  = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age,
+								((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
                               (
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50 OR
-                               (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13 OR
-                               (YEAR(p.date_created) - YEAR(ps.birthdate)) > 5 AND ps.gender = 'M'
+                               (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13 OR
+                               (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND ps.gender = 'M'
                               ) AS all_non_mnch,
                               (ps.gender = 'F' AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age})  as all_women
                             "
@@ -157,6 +158,7 @@ module Report
 
     query = "SELECT pa.value AS nearest_health_center, "+
         "COUNT(p.patient_id) AS number_of_patients, " +
+        "ps.gender AS gender, " +
         "DATE(p.date_created) AS start_date " + extra_parameters +
         "FROM person_attribute pa LEFT JOIN patient p ON pa.person_id = p.patient_id " +
         "LEFT JOIN person ps ON pa.person_id = ps.person_id " +
@@ -206,6 +208,10 @@ module Report
     new_patients_data  = {:new_registrations  => 0,
                           :catchment          => nearest_health_centers.uniq.sort,
                           :start_date         => date_range.first,
+                          :all_age            => [],
+                          :child_age          => [],
+                          :women_age          => [],
+                          :non_mnch_age       => [],
                           :end_date           => date_range.last}
     children = 0
     women    = 1
@@ -220,16 +226,24 @@ module Report
         all_non_mnch        = data.attributes['all_non_mnch'].to_i
         all_children        = data.attributes['all_children'].to_i
         all_women           = data.attributes['all_women'].to_i
+        age                 = data.attributes['age'].to_i
+        gender              = data.attributes['gender']
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
         new_patients_data[:catchment].uniq.map do |c|
 
           if c.first.titleize == catchment.titleize
-            new_patients_data[:catchment][i][1]           += number_of_patients
-            new_patients_data[:patient_type][children][1] += all_children
-            new_patients_data[:patient_type][women][1]    += all_women
-            new_patients_data[:patient_type][non_mnch][1]    += all_non_mnch
+	          new_patients_data[:catchment][i][1]               += number_of_patients
+	          new_patients_data[:patient_type][children][1]     += all_children
+	          new_patients_data[:patient_type][women][1]        += all_women
+	          new_patients_data[:patient_type][non_mnch][1]     += all_non_mnch
+	          new_patients_data[:all_age]                       << age
+	          new_patients_data[:child_age]                     << age if age <= 5
+	          new_patients_data[:women_age]                     << age if age > 13 && gender == 'F'
+			  new_patients_data[:non_mnch_age]                  << age if (age>=50 ||
+				                                                            (age>5 && age<=13) ||
+				                                                            (age>5 && gender == 'M'))
           end
           i += 1
         end
@@ -249,8 +263,12 @@ module Report
 
 	  new_patients_data  = {:new_registrations  => 0,
 	                        :catchment          => nearest_health_centers.uniq.sort,
-                          :start_date         => date_range.first,
-                          :end_date           => date_range.last}
+                            :start_date         => date_range.first,
+                            :all_age            => [],
+                            :male_age           => [],
+                            :female_age         => [],
+                            :end_date           => date_range.last}
+
     female = 0
     male   = 1
     new_patients_data[:gender] = [["female", 0], ["male", 0]]
@@ -261,14 +279,18 @@ module Report
         catchment           = data.attributes["nearest_health_center"]
         number_of_patients  = data.attributes["number_of_patients"].to_i
         gender              = data.attributes["gender"]
+        age                 = data.attributes['age']
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
         new_patients_data[:catchment].map do |c|
           if(c.first == catchment.humanize)
-            new_patients_data[:catchment][i][1]   += number_of_patients
-            new_patients_data[:gender][female][1] += number_of_patients if(gender == "F")
-            new_patients_data[:gender][male][1]   += number_of_patients if(gender == "M")
+	          new_patients_data[:catchment][i][1]   += number_of_patients
+	          new_patients_data[:gender][female][1] += number_of_patients if(gender == "F")
+	          new_patients_data[:gender][male][1]   += number_of_patients if(gender == "M")
+			  new_patients_data[:all_age]           << age
+			  new_patients_data[:male_age]          << age if gender == 'M'
+			  new_patients_data[:female_age]        << age if gender == 'F'
           end
           i += 1
         end
@@ -286,10 +308,16 @@ module Report
 		  end
 	  end
 
+
 	  new_patients_data  = {:new_registrations  => 0,
 	                        :catchment          => nearest_health_centers.uniq.sort,
-                          :start_date         => date_range.first,
-                          :end_date           => date_range.last}
+	                        :all_age            => [],
+	                        :pregnant_age       => [],
+	                        :delivered_age      => [],
+	                        :miscarried_age     => [],
+	                        :not_pregnant_age   => [],
+                            :start_date         => date_range.first,
+                            :end_date           => date_range.last}
     pregnant      = 0
     non_pregnant  = 1
     delivered     = 2
@@ -302,16 +330,30 @@ module Report
         catchment           = data.attributes["nearest_health_center"]
         number_of_patients  = data.attributes["number_of_patients"].to_i
         pregnancy_status    = data.attributes["pregnancy_status_text"]
+        age                 = data.attributes['age']
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
         new_patients_data[:catchment].map do |c|
           if(c.first == catchment.humanize)
-            new_patients_data[:catchment][i][1]                   += number_of_patients
-            new_patients_data[:pregnancy_status][pregnant][1]     += number_of_patients if(pregnancy_status.to_s.upcase  == "PREGNANT")
-            new_patients_data[:pregnancy_status][non_pregnant][1] += number_of_patients if(pregnancy_status.to_s.upcase == "NOT PREGNANT")
-            new_patients_data[:pregnancy_status][delivered][1]    += number_of_patients if(pregnancy_status.to_s.upcase == "DELIVERED")
-            new_patients_data[:pregnancy_status][miscarried][1]    += number_of_patients if(pregnancy_status.to_s.upcase == "MISCARRIED")
+	          new_patients_data[:catchment][i][1]                   += number_of_patients
+	          new_patients_data[:pregnancy_status][pregnant][1]     += number_of_patients if(
+                                                                        pregnancy_status.to_s.upcase  == "PREGNANT")
+	          new_patients_data[:pregnancy_status][non_pregnant][1] += number_of_patients if(
+                                                                        pregnancy_status.to_s.upcase == "NOT PREGNANT")
+	          new_patients_data[:pregnancy_status][delivered][1]    += number_of_patients if(
+                                                                        pregnancy_status.to_s.upcase == "DELIVERED")
+	          new_patients_data[:pregnancy_status][miscarried][1]   += number_of_patients if(
+                                                                        pregnancy_status.to_s.upcase == "MISCARRIED")
+			  new_patients_data[:all_age]                           << age
+			  new_patients_data[:pregnant_age]                      << age if(
+			                                                            pregnancy_status.to_s.upcase  == "PREGNANT")
+	          new_patients_data[:not_pregnant_age]                      << age if(
+	                                                                    pregnancy_status.to_s.upcase  == "NOT PREGNANT")
+	          new_patients_data[:miscarried_age]                      << age if(
+	                                                                    pregnancy_status.to_s.upcase  == "MISCARRIED")
+	          new_patients_data[:delivered_age]                      << age if(
+	                                                                    pregnancy_status.to_s.upcase  == "DELIVERED")
           end
           i += 1
         end
@@ -331,8 +373,11 @@ module Report
 
 	  new_patients_data  = {:new_registrations  => 0,
 	                        :catchment          => nearest_health_centers.uniq.sort,
-                          :start_date         => date_range.first,
-                          :end_date           => date_range.last}
+	                        :all_age            => [],
+	                        :female_age         => [],
+	                        :male_age           => [],
+                            :start_date         => date_range.first,
+                            :end_date           => date_range.last}
 
     female = 0
     male = 1
@@ -343,16 +388,20 @@ module Report
 
       patients_data.map do|data|
         catchment           = data.attributes['nearest_health_center']
-        non_mnch  = data.attributes['non_mnch'].to_i
-        gender = data.attributes['gender']
+        non_mnch            = data.attributes['non_mnch'].to_i
+        gender              = data.attributes['gender']
+		age                 = data.attributes['age']
 
-        new_patients_data[:new_registrations] += non_mnch if(non_mnch)
+        new_patients_data[:new_registrations] += non_mnch if non_mnch
         i = 0
         new_patients_data[:catchment].map do |c|
           if(c.first == catchment.humanize)
-            new_patients_data[:catchment][i][1]   += non_mnch
-            new_patients_data[:gender][female][1] += non_mnch if(gender == 'F')
-            new_patients_data[:gender][male][1] += non_mnch if(gender == 'M')
+	          new_patients_data[:catchment][i][1]   += non_mnch
+	          new_patients_data[:gender][female][1] += non_mnch if gender == 'F'
+	          new_patients_data[:gender][male][1]   += non_mnch if gender == 'M'
+			  new_patients_data[:all_age]           << age
+			  new_patients_data[:female_age]        << age if gender == 'F'
+			  new_patients_data[:male_age]          << age if gender == 'M'
           end
           i += 1
         end
@@ -857,7 +906,12 @@ module Report
             statistical_data: ''
         }
         case patient_type.downcase
-            when 'all'
+	        when 'all'
+		        all_age = new_patients_data[:all_age]
+		        child_age = new_patients_data[:child_age]
+				women_age = new_patients_data[:women_age]
+		        non_mnch_age = new_patients_data[:non_mnch_age]
+
                 all_clients = Patient.joins(person: {person_addresses: :person})
 	                                .where('person_address.township_division = ?
 									AND person.date_created BETWEEN ? AND ?',
@@ -875,7 +929,7 @@ module Report
                                     ).count('patient_id', :distinct => true)
                 #raise women_count.inspect
                 women_percentage = self.get_percentage(total, women_count)
-                women_average = self.get_average(total, women_count)
+                women_average = self.get_average(women_age.sum, women_age.count)
                 #----- children_calculations
                 children_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
                                         AND person.date_created BETWEEN ? AND ?',
@@ -884,7 +938,7 @@ module Report
                                         )
                                         .count('patient_id', :distinct => true)
                 children_percentage = self.get_percentage(total, children_count)
-                children_average = self.get_average(total, children_count)
+                children_average = self.get_average(child_age.sum, child_age.count)
                 #----- non_mnch_calculations
                 non_mnch_count = all_clients.where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
                                         OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
@@ -897,33 +951,37 @@ module Report
                                         )
                                         .count('patient_id', :distinct => true)
                 non_mnch_percentage = self.get_percentage(total, non_mnch_count)
-                non_mnch_average  = self.get_average(total,non_mnch_count)
+                non_mnch_average  = self.get_average(non_mnch_age.sum, non_mnch_age.count)
 
                 data_for_patients[:patient_type][:patient] = {
                     women: {
                         count: women_count,
                         percentage: '%.2f' % women_percentage,
-                        min: [total, women_count].min,
-                        max: [total, women_count].max,
+                        min: women_age.min,
+                        max: women_age.max,
                         average: women_average
                     },
                     children: {
                         count: children_count,
                         percentage: '%.2f' % children_percentage,
-                        min: [total, children_count].min,
-                        max: [total, children_count].max,
+                        min: child_age.min,
+                        max: child_age.max,
                         average: children_average
                     },
                     non_mnch: {
                         count: non_mnch_count,
                         percentage: '%.2f' % non_mnch_percentage,
-                        min: [total, non_mnch_count].min,
-                        max: [total, non_mnch_count].max,
+                        min: non_mnch_age.min,
+                        max: non_mnch_age.max,
                         average: non_mnch_average
                     }
                 }
 
-            when 'children'
+	        when 'children'
+				all_age     = new_patients_data[:all_age]
+				male_age    = new_patients_data[:male_age]
+				female_age  = new_patients_data[:female_age]
+
                 children = Patient.joins(person: {person_addresses: :person})
                                 .where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
                                 AND person.date_created BETWEEN ? AND ? AND person_address.township_division = ?',
@@ -935,13 +993,17 @@ module Report
                 #------- Female child calculations
                 female_count = children.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
                 female_percentage = self.get_percentage(total, female_count)
-                female_average = self.get_average(total, female_count)
+                female_average = self.get_average(female_age.sum, female_age.count)
                 #------- Male child calculations
                 male_count = children.where('person.gender' => 'M').count('patient.patient_id', :distinct => true)
                 male_percentage = self.get_percentage(total, male_count)
-                male_average = self.get_average(total, male_count)
+                male_average = self.get_average(male_age.sum, male_age.count)
 
-            when 'non-mnch'
+	        when 'non-mnch'
+				all_age     = new_patients_data[:all_age]
+				male_age    = new_patients_data[:male_age]
+				female_age  = new_patients_data[:female_age]
+
                 non_mnch = Patient.joins(person: {person_addresses: :person})
                                 .where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
                                 OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
@@ -957,12 +1019,17 @@ module Report
                 #---------------- female non_mnch regardlesss of age
                 female_count = non_mnch.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
                 female_percentage = self.get_percentage(total, female_count)
-                female_average = self.get_average(total, female_count)
+                female_average = self.get_average(female_age.sum, female_age.count)
 				#---------------- male non_mnch regardless of age
                 male_count = non_mnch.where('person.gender' => 'M').count('patient.patient_id', :distinct => true)
                 male_percentage = self.get_percentage(total, male_count)
-                male_average = self.get_average(total, male_count)
+                male_average = self.get_average(male_age.sum, male_age.count)
 	        when 'women'
+				all_age             = new_patients_data[:all_age]
+				pregnant_age        = new_patients_data[:pregnant_age]
+				delivered_age       = new_patients_data[:delivered_age]
+				miscarried_age      = new_patients_data[:miscarried_age]
+				not_pregnant_age    = new_patients_data[:not_pregnant_age]
 				women = Patient.joins(person: :patient)
 					          .where('person.gender = "F"
 								AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
@@ -1011,7 +1078,7 @@ module Report
 				).count
 				#raise delivered_count.inspect
 				delivered_percentage = self.get_percentage(total, delivered_count)
-				delivered_average = self.get_average(total, delivered_count)
+				delivered_average = self.get_average(delivered_age.sum, delivered_age.count)
 
 				#----------------- for pregnant women
 				pregnant_count = Observation.find_by_sql(
@@ -1027,9 +1094,8 @@ module Report
 							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
 					  "
 				).count
-
 				pregnant_percentage = self.get_percentage(total, pregnant_count)
-				pregnant_average = self.get_average(total, pregnant_count)
+				pregnant_average = self.get_average(pregnant_age.sum, pregnant_age.count)
 
 				#----------------- for miscarried women
 				miscarried_count = Observation.find_by_sql(
@@ -1046,7 +1112,7 @@ module Report
 					  "
 				).count
 				miscarried_percentage = self.get_percentage(total, miscarried_count)
-				miscarried_average = self.get_average(total, miscarried_count)
+				miscarried_average = self.get_average(miscarried_age.sum, miscarried_age.count)
 
 				#----------------- for not pregnant women
 				not_pregnant_count = Observation.find_by_sql(
@@ -1063,34 +1129,34 @@ module Report
 					  "
 				).count
 				not_pregnant_percentage = self.get_percentage(total, not_pregnant_count)
-				not_pregnant_average = self.get_average(total, not_pregnant_count)
+				not_pregnant_average = self.get_average(not_pregnant_age.sum, not_pregnant_age.count)
 				data_for_patients[:patient_type][:patient] = {
 					  pregnant: {
 							count: pregnant_count,
 							percentage: '%.2f' % pregnant_percentage,
-							min: [total, pregnant_count].min,
-							max: [total, pregnant_count].max,
+							min: pregnant_age.min,
+							max: pregnant_age.max,
 							average: pregnant_average
 					  },
 					  not_pregnant: {
 							count: not_pregnant_count,
 							percentage: '%.2f' % not_pregnant_percentage,
-							min: [total, not_pregnant_count].min,
-							max: [total, not_pregnant_count].max,
+							min: not_pregnant_age.min,
+							max: not_pregnant_age.max,
 							average: not_pregnant_average
 					  },
 					  delivered: {
 						    count: delivered_count,
 						    percentage: '%.2f' % delivered_percentage,
-						    min: [total, delivered_count].min,
-						    max: [total, delivered_count].max,
+						    min: delivered_age.min,
+						    max: delivered_age.max,
 						    average: delivered_average
 					  },
 					  miscarried: {
 						    count: miscarried_count,
 						    percentage: '%.2f' % miscarried_percentage,
-						    min: [total, miscarried_count].min,
-						    max: [total, miscarried_count].max,
+						    min: miscarried_age.min,
+						    max: miscarried_age.max,
 						    average: miscarried_average
 					  },
 				}
@@ -1102,15 +1168,15 @@ module Report
 		          female: {
 				        count: female_count,
 				        percentage: '%.2f' % female_percentage,
-				        min: [total, female_count].min,
-				        max: [total, female_count].max,
+				        min: female_age.min,
+				        max: female_age.max,
 				        average: female_average
 		          },
 		          male: {
 				        count: male_count,
 				        percentage: '%.2f' % male_percentage,
-				        min: [total, male_count].min,
-				        max: [total, male_count].max,
+				        min: male_age.min,
+				        max: male_age.max,
 				        average: male_average
 		          },
 	        }
@@ -1132,7 +1198,7 @@ module Report
 		if count == 0
 			average = 0.00
 		else
-            average = (total+count)/2
+            average = total/count
 		end
     end
 
