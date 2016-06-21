@@ -237,7 +237,10 @@ function validateBirthdate() {
           return;
         }
 
-        if ( day.length > 2 && day != 'Unknown') {
+        if (day.length == 0){
+            validateMessage('Day of month can not be blank');
+            return; // with a flash message.
+        }else if ( day.length > 2 && day != 'Unknown') {
             validateMessage('Day has more than 2 digits.');
             return; // with a flash message.
         }
@@ -252,8 +255,8 @@ function validateBirthdate() {
               }
             
             else {
-                validateMessage('Day is invalid for entered month.');
-                return;
+                //validateMessage('Day is invalid for entered month.');
+               // return;
             }
         }
 
