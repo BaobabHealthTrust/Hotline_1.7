@@ -910,6 +910,7 @@ module Report
 	                                       date_range[1]
 	                                )
                 total = all_clients.count('patient_id', :distinct => true)
+
                 #----- women_calculations
                 women_count = all_clients.where('person.gender = "F"
                                     AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
@@ -917,9 +918,10 @@ module Report
                                     date_range[0],
                                     date_range[1]
                                     ).count('patient_id', :distinct => true)
-                #raise women_count.inspect
-                women_percentage = self.get_percentage(total, women_count)
-                women_average = self.get_average(women_age.sum, women_age.count)
+                women_percentage    = self.get_percentage(total, women_count)
+                women_average       = self.calculate_average(women_age)
+		        women_sdev          = self.calculate_sdev(women_age)
+
                 #----- children_calculations
                 children_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
                                         AND person.date_created BETWEEN ? AND ?',
@@ -928,7 +930,9 @@ module Report
                                         )
                                         .count('patient_id', :distinct => true)
                 children_percentage = self.get_percentage(total, children_count)
-                children_average = self.get_average(child_age.sum, child_age.count)
+                children_average    = self.calculate_average(child_age)
+		        children_sdev       = self.calculate_sdev(child_age)
+
                 #----- non_mnch_calculations
                 non_mnch_count = all_clients.where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
                                         OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
@@ -941,29 +945,33 @@ module Report
                                         )
                                         .count('patient_id', :distinct => true)
                 non_mnch_percentage = self.get_percentage(total, non_mnch_count)
-                non_mnch_average  = self.get_average(non_mnch_age.sum, non_mnch_age.count)
+                non_mnch_average    = self.calculate_average(non_mnch_age)
+		        non_mnch_sdev       = self.calculate_sdev(non_mnch_age)
 
                 data_for_patients[:patient_type][:patient] = {
                     women: {
-                        count: women_count,
+                        count: women_age.count,
                         percentage: '%.2f' % women_percentage,
                         min: women_age.min,
                         max: women_age.max,
-                        average: women_average
+                        average: women_average,
+                        sdev:   women_sdev
                     },
                     children: {
                         count: children_count,
                         percentage: '%.2f' % children_percentage,
                         min: child_age.min,
                         max: child_age.max,
-                        average: children_average
+                        average: children_average,
+                        sdev:   children_sdev
                     },
                     non_mnch: {
                         count: non_mnch_count,
                         percentage: '%.2f' % non_mnch_percentage,
                         min: non_mnch_age.min,
                         max: non_mnch_age.max,
-                        average: non_mnch_average
+                        average: non_mnch_average,
+                        sdev:   non_mnch_sdev
                     }
                 }
 
@@ -983,11 +991,14 @@ module Report
                 #------- Female child calculations
                 female_count = children.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
                 female_percentage = self.get_percentage(total, female_count)
-                female_average = self.get_average(female_age.sum, female_age.count)
+                female_average = self.calculate_average(female_age)
+				female_sdev     = self.calculate_sdev(female_age)
+
                 #------- Male child calculations
                 male_count = children.where('person.gender' => 'M').count('patient.patient_id', :distinct => true)
                 male_percentage = self.get_percentage(total, male_count)
-                male_average = self.get_average(male_age.sum, male_age.count)
+                male_average = self.calculate_average(male_age)
+				male_sdev       = self.calculate_sdev(male_age)
 
 	        when 'non-mnch'
 				all_age     = new_patients_data[:all_age]
@@ -1007,13 +1018,17 @@ module Report
                                 )
                 total = non_mnch.count('patient.patient_id', :distinct => true)
                 #---------------- female non_mnch regardlesss of age
-                female_count = non_mnch.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
-                female_percentage = self.get_percentage(total, female_count)
-                female_average = self.get_average(female_age.sum, female_age.count)
+                female_count        =   non_mnch.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
+                female_percentage   =   self.get_percentage(total, female_count)
+                female_average      =   self.calculate_average(female_age)
+				female_sdev         =   self.calculate_sdev(female_age)
+
 				#---------------- male non_mnch regardless of age
                 male_count = non_mnch.where('person.gender' => 'M').count('patient.patient_id', :distinct => true)
                 male_percentage = self.get_percentage(total, male_count)
-                male_average = self.get_average(male_age.sum, male_age.count)
+                male_average = self.calculate_average(male_age)
+				male_sdev       =   self.calculate_sdev(male_age)
+
 	        when 'women'
 				all_age             = new_patients_data[:all_age]
 				pregnant_age        = new_patients_data[:pregnant_age]
@@ -1031,8 +1046,6 @@ module Report
 					                 district
 					          )
 
-
-				#total = women.count('patient.patient_id', :distinct => true)
 				pregnancy_encounter_type_id  = ConceptName.find_by_name("PREGNANCY STATUS").id
 				delivered_concept_id = ConceptName.find_by_name('Delivered').id
 				pregnant_concept_id = ConceptName.find_by_name('Pregnant').id
@@ -1067,9 +1080,9 @@ module Report
 							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
 					  "
 				).count
-				#raise delivered_count.inspect
-				delivered_percentage = self.get_percentage(total, delivered_count)
-				delivered_average = self.get_average(delivered_age.sum, delivered_age.count)
+				delivered_percentage    = self.get_percentage(total, delivered_count)
+				delivered_average       = self.calculate_average(delivered_age)
+				delivered_sdev          = self.calculate_sdev(delivered_age)
 
 				#----------------- for pregnant women
 				pregnant_count = Observation.find_by_sql(
@@ -1086,7 +1099,8 @@ module Report
 					  "
 				).count
 				pregnant_percentage = self.get_percentage(total, pregnant_count)
-				pregnant_average = self.get_average(pregnant_age.sum, pregnant_age.count)
+				pregnant_average    = self.calculate_average(pregnant_age) #self.get_average(pregnant_age.sum, pregnant_age.count)
+				pregnant_sdev       = self.calculate_sdev(pregnant_age)
 
 				#----------------- for miscarried women
 				miscarried_count = Observation.find_by_sql(
@@ -1103,7 +1117,8 @@ module Report
 					  "
 				).count
 				miscarried_percentage = self.get_percentage(total, miscarried_count)
-				miscarried_average = self.get_average(miscarried_age.sum, miscarried_age.count)
+				miscarried_average = self.calculate_average(miscarried_age)
+				miscarried_sdev     = self.calculate_sdev(miscarried_age)
 
 				#----------------- for not pregnant women
 				not_pregnant_count = Observation.find_by_sql(
@@ -1120,35 +1135,41 @@ module Report
 					  "
 				).count
 				not_pregnant_percentage = self.get_percentage(total, not_pregnant_count)
-				not_pregnant_average = self.get_average(not_pregnant_age.sum, not_pregnant_age.count)
+				not_pregnant_average = self.calculate_average(not_pregnant_age)
+				not_pregnant_sdev       = self.calculate_sdev(not_pregnant_age)
+
 				data_for_patients[:patient_type][:patient] = {
 					  pregnant: {
 							count: pregnant_count,
 							percentage: '%.2f' % pregnant_percentage,
 							min: pregnant_age.min,
 							max: pregnant_age.max,
-							average: pregnant_average
+							average: pregnant_average,
+					        sdev: pregnant_sdev
 					  },
 					  not_pregnant: {
 							count: not_pregnant_count,
 							percentage: '%.2f' % not_pregnant_percentage,
 							min: not_pregnant_age.min,
 							max: not_pregnant_age.max,
-							average: not_pregnant_average
+							average: not_pregnant_average,
+					        sdev:   not_pregnant_sdev
 					  },
 					  delivered: {
 						    count: delivered_count,
 						    percentage: '%.2f' % delivered_percentage,
 						    min: delivered_age.min,
 						    max: delivered_age.max,
-						    average: delivered_average
+						    average: delivered_average,
+					        sdev: delivered_sdev
 					  },
 					  miscarried: {
 						    count: miscarried_count,
 						    percentage: '%.2f' % miscarried_percentage,
 						    min: miscarried_age.min,
 						    max: miscarried_age.max,
-						    average: miscarried_average
+						    average: miscarried_average,
+					        sdev: miscarried_sdev
 					  },
 				}
 
@@ -1161,14 +1182,16 @@ module Report
 				        percentage: '%.2f' % female_percentage,
 				        min: female_age.min,
 				        max: female_age.max,
-				        average: female_average
+				        average: female_average,
+		                sdev: female_sdev
 		          },
 		          male: {
 				        count: male_count,
 				        percentage: '%.2f' % male_percentage,
 				        min: male_age.min,
 				        max: male_age.max,
-				        average: male_average
+				        average: male_average,
+		                sdev: male_sdev
 		          },
 	        }
         end
@@ -1452,13 +1475,14 @@ module Report
   end
 
   def self.calculate_average(data)
-    return  (data.inject{ |sum, el| sum + el }.to_f / data.size).round(1)
+	  return 0 if data.length == 0
+	  return  (data.inject{ |sum, el| sum + el }.to_f / data.size).round(1)
   end
 
   def self.calculate_sdev(data)
     return 0 if data.size == 1
 
-    mean = data.sum / data.length
+    mean = data.sum / data.length rescue 0
     new_data = []
 
     data.each do |el|
