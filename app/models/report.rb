@@ -2623,6 +2623,16 @@ module Report
     district_id = Location.find_by_name(district).id
     patients_data = []
     #follow_up_reasons = self.create_follow_up_structure
+    reasons = [
+        "Client cannot be reached",
+        "Condition improved",
+        "Condition worsened",
+        "Client deceased",
+        "Client followed-up with referral",
+        "Client did not follow up with referral",
+        "Client followed advice given",
+        "Client did not follow advice given"
+    ]
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
     date_ranges.map do |date_range|
@@ -2648,7 +2658,7 @@ module Report
       )
 
       new_follow_up_data                 = {}
-      new_follow_up_data[:reasons] = follow_ups.collect{|f| {reason: f['result'], call_count: 0, call_percentage: 0}}.uniq
+      new_follow_up_data[:reasons] = reasons.collect{|f| {reason: f, call_count: 0, call_percentage: 0}}.uniq
       new_follow_up_data[:start_date]    = date_range.first
       new_follow_up_data[:end_date]      = date_range.last
       new_follow_up_data[:total_calls]   = follow_ups.count
