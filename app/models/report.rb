@@ -969,49 +969,84 @@ module Report
 					                 date_range[1]
 					          )
 				total = women.count('patient.patient_id', :distinct => true)
-				pregnancy_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").id
-				pregnancy_status = Encounter.find_by_sql(
-					    "SELECT * FROM encounter e
-						INNER JOIN obs o ON e.encounter_id = o.encounter_id
-						WHERE e.encounter_type = #{pregnancy_encounter_type_id}"
+
+				pregnancy_encounter_type_id  = ConceptName.find_by_name("PREGNANCY STATUS").id
+				delivered_concept_id = ConceptName.find_by_name('Delivered').id
+				pregnant_concept_id = ConceptName.find_by_name('Pregnant').id
+				miscarried_concept_id = ConceptName.find_by_name('Miscarried').id
+				not_pregnant_concept_id = ConceptName.find_by_name('Not Pregnant').id
+
+				#----------------- for delivered women
+				delivered_count = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						WHERE o.concept_id = #{pregnancy_encounter_type_id}
+						AND o.value_coded = #{delivered_concept_id}
+					  "
 				).count
-				raise pregnancy_status.inspect
-				data = {}
+				delivered_percentage = self.get_percentage(total, delivered_count)
+				delivered_average = self.get_average(total, delivered_count)
 
 				#----------------- for pregnant women
-				pregnant_women = Encounter.joins(patient: :person).where('encounter.patient_id' => 'person.person_id')
+				pregnant_count = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						WHERE o.concept_id = #{pregnancy_encounter_type_id}
+						AND o.value_coded = #{pregnant_concept_id}
+					  "
+				).count
+				pregnant_percentage = self.get_percentage(total, pregnant_count)
+				pregnant_average = self.get_average(total, pregnant_count)
+
+				#----------------- for miscarried women
+				miscarried_count = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						WHERE o.concept_id = #{pregnancy_encounter_type_id}
+						AND o.value_coded = #{miscarried_concept_id}
+					  "
+				).count
+				miscarried_percentage = self.get_percentage(total, miscarried_count)
+				miscarried_average = self.get_average(total, miscarried_count)
 
 				#----------------- for not pregnant women
-				#----------------- for delivered women
-				#----------------- for miscarried women
+				not_pregnant_count = Observation.find_by_sql(
+					  "SELECT o.value_coded as pregnancy_status FROM obs o
+						INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+						WHERE o.concept_id = #{pregnancy_encounter_type_id}
+						AND o.value_coded = #{not_pregnant_concept_id}
+					  "
+				).count
+				not_pregnant_percentage = self.get_percentage(total, not_pregnant_count)
+				not_pregnant_average = self.get_average(total, not_pregnant_count)
 				data_for_patients[:patient_type][:patient] = {
 					  pregnant: {
-							count: female_count,
-							percentage: '%.2f' % female_percentage,
-							min: [total, female_count].min,
-							max: [total, female_count].max,
-							average: female_average
+							count: pregnant_count,
+							percentage: '%.2f' % pregnant_percentage,
+							min: [total, pregnant_count].min,
+							max: [total, pregnant_count].max,
+							average: pregnant_average
 					  },
 					  not_pregnant: {
-							count: male_count,
-							percentage: '%.2f' % male_percentage,
-							min: [total, male_count].min,
-							max: [total, male_count].max,
-							average: male_average
+							count: not_pregnant_count,
+							percentage: '%.2f' % not_pregnant_percentage,
+							min: [total, not_pregnant_count].min,
+							max: [total, not_pregnant_count].max,
+							average: not_pregnant_average
 					  },
 					  delivered: {
-						    count: female_count,
-						    percentage: '%.2f' % female_percentage,
-						    min: [total, female_count].min,
-						    max: [total, female_count].max,
-						    average: female_average
+						    count: delivered_count,
+						    percentage: '%.2f' % delivered_percentage,
+						    min: [total, delivered_count].min,
+						    max: [total, delivered_count].max,
+						    average: delivered_average
 					  },
 					  miscarried: {
-						    count: male_count,
-						    percentage: '%.2f' % male_percentage,
-						    min: [total, male_count].min,
-						    max: [total, male_count].max,
-						    average: male_average
+						    count: miscarried_count,
+						    percentage: '%.2f' % miscarried_percentage,
+						    min: [total, miscarried_count].min,
+						    max: [total, miscarried_count].max,
+						    average: miscarried_average
 					  },
 				}
 
