@@ -345,10 +345,10 @@ module Report
 	          new_patients_data[:pregnancy_status][miscarried][1]   += number_of_patients if(
                                                                         pregnancy_status.to_s.upcase == "MISCARRIED")
 			  new_patients_data[:all_age]                           << age
-			  new_patients_data[:pregnant_age]                  << age if(pregnancy_status.to_s.upcase  == "PREGNANT")
-	          new_patients_data[:not_pregnant_age]              << age if(pregnancy_status.to_s.upcase  == "NOT PREGNANT")
-	          new_patients_data[:miscarried_age]                << age if(pregnancy_status.to_s.upcase  == "MISCARRIED")
-	          new_patients_data[:delivered_age]                 << age if(pregnancy_status.to_s.upcase  == "DELIVERED")
+			  new_patients_data[:pregnant_age]                  << age if pregnancy_status.to_s.upcase  == "PREGNANT"
+	          new_patients_data[:not_pregnant_age]              << age if pregnancy_status.to_s.upcase  == "NOT PREGNANT"
+	          new_patients_data[:miscarried_age]                << age if pregnancy_status.to_s.upcase  == "MISCARRIED"
+	          new_patients_data[:delivered_age]                 << age if pregnancy_status.to_s.upcase  == "DELIVERED"
           end
           i += 1
         end
