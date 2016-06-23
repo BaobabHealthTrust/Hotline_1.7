@@ -52,14 +52,20 @@ class ReportController < ApplicationController
     }
   end
   def report_filter_page
-      location_tag = LocationTag.find_by_name("District")
-       @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
-     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
-       @districts = [""] + @districts.collect { |location_id, location_name| location_name}
-       @report_date_range  = [""]
-    @patient_type       = [""]
-    @grouping           = [""]
-    @outcome            = [""]
+	  location_tag = LocationTag.find_by_name("District")
+	  @districts = Location.where("m.location_tag_id = #{location_tag.id}")
+	                      .joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id")
+	                      .collect{|l |
+	                            [l.id, l.name]
+                          }
+	  @districts = ["",'All'] + @districts.collect {
+	         |location_id, location_name|
+	       location_name
+        }
+	  @report_date_range  = [""]
+	  @patient_type       = [""]
+	  @grouping           = [""]
+	  @outcome            = [""]
 
     @report_type        = params[:report_type]
     @query              = params[:query].gsub(" ", "_")

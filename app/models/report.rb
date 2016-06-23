@@ -75,13 +75,17 @@ module Report
 
   def self.patient_demographics_query_builder(patient_type, date_range, district_id)
     # Get a list of health centers for the particular district
+	if district_id == 0
+		district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+	else
+		district_name = Location.find(district_id).name
+	end
+
     health_centers = '"' + get_nearest_health_centers(district_id).map(&:name).join('","') + '"'
 
     child_maximum_age     = 13 # see definition of a female adult above
     nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id #rescue 1
     child_age = 5
-
-    district_name = Location.find(district_id).name
 
     case patient_type.downcase
       when "women"
@@ -113,7 +117,7 @@ module Report
                  AND o.concept_id = #{pregnancy_status_concept_id}
               INNER JOIN concept_name cn ON  cn.concept_id = o.concept_id
               INNER JOIN person_address pa ON pa.person_id = o.person_id
-                AND pa.township_division = '#{district_name}'
+                #{self.get_extra_conditions(district_name,district_names,patient_type)}
             WHERE e.voided = 0
               AND e.encounter_type = #{pregnancy_status_encounter_type_id}
               AND o.obs_datetime >= '#{date_range.first.to_datetime.strftime("%Y-%m-%d %H:%M:%S")}'
@@ -126,14 +130,15 @@ module Report
 
       when "children"
         extra_parameters  = ', YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ps.gender AS gender '
-        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} AND p_ad.township_division = '#{district_name}'  "
+        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} "
+        extra_conditions  += self.get_extra_conditions(district_name,district_names)
         sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
         extra_group_by    = ', ps.gender '
       when 'non-mnch'
         extra_parameters  = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ((YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND ps.gender = 'M') AS non_mnch, ps.gender AS gender "
-        extra_conditions  = " AND p_ad.township_division = '#{district_name}' "
+        extra_conditions  = self.get_extra_conditions(district_name,district_names)
         sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
         extra_group_by    = ', ps.gender '
       else
@@ -146,7 +151,7 @@ module Report
                               ) AS all_non_mnch,
                               (ps.gender = 'F' AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age})  as all_women
                             "
-        extra_conditions  = " AND p_ad.township_division = '#{district_name}' "
+        extra_conditions  = self.get_extra_conditions(district_name,district_names)
         sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
         extra_group_by    = ', ps.person_id '
     end
@@ -170,8 +175,25 @@ module Report
     return query
   end
 
+  def self.get_extra_conditions(district_name,district_names,patient_type='')
+	  if district_names.nil?
+		  (patient_type.downcase == 'women')?
+			    " AND pa.township_division = '#{district_name}'":
+			    " AND p_ad.township_division = '#{district_name}'"
+	  else
+		  (patient_type.downcase == 'women')?
+			    " AND pa.township_division IN (#{district_names})":
+			    " AND p_ad.township_division IN (#{district_names}) "
+	  end
+  end
+
   def self.patient_demographics(patient_type, grouping, start_date, end_date, district)
-    district_id = Location.find_by_name(district).id
+    if district == 'All'
+		district_id = 0
+    else
+        district_id = Location.find_by_name(district).id
+    end
+
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
     patients_data = []
@@ -855,7 +877,11 @@ module Report
 
   def self.patient_age_distribution(patient_type, grouping, start_date, end_date, district)
 
-    district_id = Location.find_by_name(district).id
+	  if district == 'All'
+		  district_id = 0
+	  else
+		  district_id = Location.find_by_name(district).id
+	  end
     date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
     patients_data = []
 
@@ -881,6 +907,16 @@ module Report
   end
 
     def self.get_statistics(patient_type, data_for_patients, new_patients_data, date_range, district)
+
+	    if district == 'All'
+			districts = "'" + Location.where('description = "Malawian district"').map(&:name).split.join("','") + "'"
+			township_division = "AND person_address.township_division IN (#{districts}) "
+			township_division = "AND pa.township_division IN (#{districts}) " if patient_type.downcase == 'women'
+	    else
+			township_division = "AND person_address.township_division = '#{district}' "
+			township_division = "AND pa.township_division = '#{district}' " if patient_type.downcase == 'women'
+	    end
+
         patient_statistics = {
             total: '',
             women: '',
@@ -903,9 +939,7 @@ module Report
 		        non_mnch_age = new_patients_data[:non_mnch_age]
 
                 all_clients = Patient.joins(person: {person_addresses: :person})
-	                                .where('person_address.township_division = ?
-									AND person.date_created BETWEEN ? AND ?',
-	                                       district,
+	                                .where("person.date_created BETWEEN ? AND ? #{township_division}",
 	                                       date_range[0],
 	                                       date_range[1]
 	                                )
@@ -918,7 +952,8 @@ module Report
                                     date_range[0],
                                     date_range[1]
                                     ).count('patient_id', :distinct => true)
-                women_percentage    = self.get_percentage(total, women_count)
+
+                women_percentage    = self.get_percentage(all_age.count, women_count)
                 women_average       = self.calculate_average(women_age)
 		        women_sdev          = self.calculate_sdev(women_age)
 				women_min           = self.calculate_min(women_age)
@@ -964,7 +999,7 @@ module Report
                         sdev:   women_sdev
                     },
                     children: {
-                        count: children_count,
+                        count: child_age.count,
                         percentage: '%.2f' % children_percentage,
                         min: children_min,
                         max: children_max,
@@ -972,7 +1007,7 @@ module Report
                         sdev:   children_sdev
                     },
                     non_mnch: {
-                        count: non_mnch_count,
+                        count: non_mnch_age.count,
                         percentage: '%.2f' % non_mnch_percentage,
                         min: non_mnch_min,
                         max: non_mnch_max,
@@ -987,11 +1022,11 @@ module Report
 				female_age  = new_patients_data[:female_age]
 
                 children = Patient.joins(person: {person_addresses: :person})
-                                .where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
-                                AND person.date_created BETWEEN ? AND ? AND person_address.township_division = ?',
+                                .where("(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
+                                AND person.date_created BETWEEN ? AND ?
+								#{township_division} ",
                                 date_range[0],
                                 date_range[1],
-                                district
                        )
                 total = children.count('patient_id', :distinct => true)
                 #------- Female child calculations
@@ -1016,15 +1051,14 @@ module Report
 				female_age  = new_patients_data[:female_age]
 
                 non_mnch = Patient.joins(person: {person_addresses: :person})
-                                .where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
+                                .where("((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
                                 OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
                                     AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
                                 OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
-                                    AND person.gender = "M") AND person.date_created BETWEEN ? AND ?
-								AND person_address.township_division = ?',
+                                    AND person.gender = 'M') AND person.date_created BETWEEN ? AND ?
+								#{township_division}",
                                 date_range[0],
-                                date_range[1],
-                                district
+                                date_range[1]
                                 )
                 total = non_mnch.count('patient.patient_id', :distinct => true)
                 #---------------- female non_mnch regardlesss of age
@@ -1051,13 +1085,12 @@ module Report
 				not_pregnant_age    = new_patients_data[:not_pregnant_age]
 
 				women = Patient.joins(person: :patient)
-					          .where('person.gender = "F"
+					          .where("person.gender = 'F'
 								AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
 								AND person.date_created BETWEEN ? AND ?
-								AND person_address.township_division = ?',
+								#{township_division}",
 					                 date_range[0],
-					                 date_range[1],
-					                 district
+					                 date_range[1]
 					          )
 
 				pregnancy_encounter_type_id  = ConceptName.find_by_name("PREGNANCY STATUS").id
@@ -1072,7 +1105,7 @@ module Report
 						INNER JOIN person ps ON ps.person_id = o.person_id
 						INNER JOIN person_address pa ON pa.person_id = ps.person_id
 						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
-						AND pa.township_division = '#{district}'
+					    #{township_division}
 						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
 							BETWEEN '#{date_range[0]}'
 							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
@@ -1088,7 +1121,7 @@ module Report
 						INNER JOIN person_address pa ON pa.person_id = ps.person_id
 						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
 						AND o.value_coded = '#{delivered_concept_id}'
-						AND pa.township_division = '#{district}'
+						#{township_division}
 						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
 							BETWEEN '#{date_range[0]}'
 							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
@@ -1108,7 +1141,7 @@ module Report
 						INNER JOIN person_address pa ON pa.person_id = ps.person_id
 						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
 						AND o.value_coded = '#{pregnant_concept_id}'
-						AND pa.township_division = '#{district}'
+						#{township_division}
 						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
 							BETWEEN '#{date_range[0]}'
 							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
@@ -1128,7 +1161,7 @@ module Report
 						INNER JOIN person_address pa ON pa.person_id = ps.person_id
 						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
 						AND o.value_coded = '#{miscarried_concept_id}'
-						AND pa.township_division = '#{district}'
+						#{township_division}
 						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
 							BETWEEN '#{date_range[0]}'
 							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
@@ -1148,7 +1181,7 @@ module Report
 						INNER JOIN person_address pa ON pa.person_id = ps.person_id
 						WHERE o.concept_id = '#{pregnancy_encounter_type_id}'
 						AND o.value_coded = '#{not_pregnant_concept_id}'
-						AND pa.township_division = '#{district}'
+						#{township_division}
 						AND DATE_FORMAT(o.date_created, '%Y-%m-%d')
 							BETWEEN '#{date_range[0]}'
 							AND DATE_FORMAT('#{date_range[1]}', '%Y-%m-%d')
@@ -1226,8 +1259,9 @@ module Report
 		if total == 0
 			percentage = 0.00
 		else
-            percentage = count/total.to_f*100
+            percentage = (count.to_f/total.to_f*100)
 		end
+		return percentage.round(1)
     end
 
     def self.get_average(total, count)
@@ -2629,8 +2663,8 @@ module Report
 
   def self.get_nearest_health_centers(district)
     district_id = district
-    hc_conditions  = ["district = ?", district_id]
-    location_tag = LocationTag.find_by_name(Location.find(district_id).name.gsub(/City/i, '').strip)
+    #hc_conditions  = ["district = ?", district_id]
+    #location_tag = LocationTag.find_by_name(Location.find(district_id).name.gsub(/City/i, '').strip)
     location_tags   = LocationTag.where(" name IN ('Health Centre', 'District Hospital', 'Clinic',
      'Rural/Community Hospital', 'Dispensary', 'Central Hospital', 'Maternity', 'Other Hospital', 'Health Post')"
     ).collect{|l| l.id}
