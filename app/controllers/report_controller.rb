@@ -503,32 +503,32 @@ class ReportController < ApplicationController
   end
 
   def patient_age_distribution_report
-    @start_date   = params[:start_date]
-    @end_date     = params[:end_date]
-    @patient_type = params[:patient_type]
-    @report_type  = params[:report_type]
-    @query        = params[:query]
-    @grouping     = params[:grouping]
-    @source       = params[:source] rescue nil
-    district = params[:district]
+	  @start_date   = params[:start_date]
+	  @end_date     = params[:end_date]
+	  @patient_type = params[:patient_type]
+	  @report_type  = params[:report_type]
+	  @query        = params[:query]
+	  @grouping     = params[:grouping]
+	  @source       = params[:source] rescue nil
+	  district = params[:district]
 
-    case @patient_type.downcase
-    when 'women'
-      @special_message = " -- (Please note that women is any female over 13 years old)"
-    when 'children'
-      @special_message = " -- (Plese note that children is anyone under 6 years old)"
-    when 'non-mnch'
-      @special_message = " -- (Please note that Non-MNCH might be a child or adult, and any gender.)"
-    else
-      @special_message = " -- (Please note that the Women age is in " +
-                         " Years and that of Children is in " +
-                         " Months )"
-    end
+	  case @patient_type.downcase
+		  when 'women'
+			  @special_message = ' -- (Please note that women is any female over 13 years old.)'
+		  when 'children'
+			  @special_message = ' -- (Plese note that children is anyone of 5 years of age and below.)'
+		  when 'school aged children'
+			  @special_message = ' -- (Plese note that school aged children is anyone between the age of 6 and 13 years.)'
+		  when 'non-mnch'
+			  @special_message = ' -- (Please note that Non-MNCH might be a child or adult, and any gender.)'
+		  else
+			  @special_message = ' -- (Please note that age shows for Women, Children, School aged children & Non-MNCH)'
+	  end
 
 
-    @report_name  = "Patient Age Distribution for #{params[:district]} district"
-    @report       = Report.patient_age_distribution(@patient_type, @grouping,
-                                                    @start_date, @end_date, district)
+	  @report_name  = "Patient Age Distribution for #{params[:district]} district"
+	  @report       = Report.patient_age_distribution(@patient_type, @grouping,
+	                                                  @start_date, @end_date, district)
   end
 
   def patient_health_issues_report

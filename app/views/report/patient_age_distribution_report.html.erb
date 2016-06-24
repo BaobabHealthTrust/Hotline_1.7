@@ -40,7 +40,7 @@
               <%= @grouping.humanize + " beginning "+ data[:patient_data][:start_date] + " ending " + data[:patient_data][:end_date]%>
             </td>
           </tr>
-          <%if @patient_type.downcase == 'children' %>
+          <%if @patient_type.downcase == 'children' || @patient_type.downcase == 'school aged children' %>
                 <tr>
                   <td colspan = 7 class="cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
                     Gender
