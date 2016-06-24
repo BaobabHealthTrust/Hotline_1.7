@@ -253,7 +253,8 @@ module Report
     children = 0
     women    = 1
     non_mnch = 2
-    new_patients_data[:patient_type] = [['children', 0], ['women', 0], ['non_mnch', 0]]
+    school_aged_children = 3
+    new_patients_data[:patient_type] = [['children', 0], ['women', 0], ['non_mnch', 0], ['school_aged_children', 0]]
 
     unless patients_data.blank?
 
@@ -272,17 +273,18 @@ module Report
         new_patients_data[:catchment].uniq.map do |c|
 
           if c.first.titleize == catchment.titleize
-	          new_patients_data[:catchment][i][1]               += number_of_patients
-	          new_patients_data[:patient_type][children][1]     += all_children
-	          new_patients_data[:patient_type][women][1]        += all_women
-	          new_patients_data[:patient_type][non_mnch][1]     += all_non_mnch
-	          new_patients_data[:all_age]                       << age
-	          new_patients_data[:child_age]                     << age if age <= 5
-	          new_patients_data[:school_aged_child]             << age if age > 5 && age <= 13
-	          new_patients_data[:women_age]                     << age if age > 13 && gender == 'F'
-			  new_patients_data[:non_mnch_age]                  << age if (age>=50 ||
-				                                                            (age>5 && age<=13) ||
-				                                                            (age>5 && gender == 'M'))
+	          new_patients_data[:catchment][i][1]                       += number_of_patients
+	          new_patients_data[:patient_type][children][1]             += all_children
+	          new_patients_data[:patient_type][women][1]                += all_women
+	          new_patients_data[:patient_type][non_mnch][1]             += all_non_mnch
+	          new_patients_data[:patient_type][school_aged_children][1] += all_school_aged_children
+	          new_patients_data[:all_age]                               << age
+	          new_patients_data[:child_age]                             << age if age <= 5
+	          new_patients_data[:school_aged_child]                     << age if age > 5 && age <= 13
+	          new_patients_data[:women_age]                             << age if age > 13 && gender == 'F'
+			  new_patients_data[:non_mnch_age]                          << age if (age>=50 ||
+				                                                                (age>5 && age<=13) ||
+				                                                                (age>5 && gender == 'M'))
           end
           i += 1
         end
@@ -1037,7 +1039,7 @@ module Report
 				children_min        = self.calculate_min(child_age)
 		        children_max        = self.calculate_max(child_age)
 
-                #----- scchool_aged_children_calculations
+                #----- school_aged_children_calculations
 		        school_aged_children_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate))>5
 										AND (YEAR(patient.date_created) - YEAR(person.birthdate)) >= 13
                                         AND person.date_created BETWEEN ? AND ?',
@@ -1086,7 +1088,7 @@ module Report
                     },
                     school_aged_children: {
 	                      count: school_aged_child.count,
-	                      percentage: '%.2f' % children_percentage,
+	                      percentage: '%.2f' % school_aged_children_percentage,
 	                      min: school_aged_children_min,
 	                      max: school_aged_children_max,
 	                      average: school_aged_children_average,
