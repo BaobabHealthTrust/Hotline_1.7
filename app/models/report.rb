@@ -504,7 +504,7 @@ module Report
 		extra_conditions    = essential_params[:extra_conditions]
 		extra_parameters    = essential_params[:extra_parameters]
 
-		# TODO find a better way of getting concpet_names that are not tagged concept_name_tag_map as danger,
+		# TODO find a better way of getting concept_names that are not tagged concept_name_tag_map as danger,
 		# health_symptom or health info
 
 		concept_names =  "'" + essential_params[:concept_map].inject([]) {|result, concept|
@@ -521,6 +521,7 @@ module Report
 		#                                   :select => "concept_name_tag_id",
 		#                                    :conditions => ["tag IN ('DANGER SIGN', 'HEALTH INFORMATION', 'HEALTH SYMPTOM')"]
 		#).map(&:concept_name_tag_id).join(', ')
+
 		if district_id == 0
 			districts = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
 			township_division = "AND ad.township_division IN (#{districts}) "
@@ -547,28 +548,28 @@ module Report
 
 
 		if patient_type.to_s.upcase == "CHILDREN"
-			query = query + "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= #{child_age} "
+			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= #{child_age} "
 		elsif patient_type.to_s.upcase == 'SCHOOL AGED CHILDREN'
-			query = query + "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_age}
+			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_age}
 				AND (YEAR(patient.date_created) - YEAR(person.birthdate)) < #{child_maximum_age} "
 		else
-			query = query + "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_maximum_age} "
+			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_maximum_age} "
 		end
 
 		if health_task.to_s.upcase != "OUTCOMES"
-			query = query + "AND obs.value_coded = " + value_coded_indicator.to_s
+			query += "AND obs.value_coded = " + value_coded_indicator.to_s
 		end
 
 		#    query = query + " AND concept_name.concept_name_id = concept_name_tag_map.concept_name_id "
 
 		if health_task.to_s.upcase != "OUTCOMES"
-			query = query + " AND concept_name.name IN (#{concept_names}) " #" AND concept_name_tag_map.concept_name_tag_id IN (" + required_tags + ") "
+			query += " AND concept_name.name IN (#{concept_names}) " #" AND concept_name_tag_map.concept_name_tag_id IN (" + required_tags + ") "
 		end
 
-		query = query + " GROUP BY encounter_type.encounter_type_id, " + extra_conditions + "obs.concept_id " +
+		query += " GROUP BY encounter_type.encounter_type_id, " + extra_conditions + "obs.concept_id " +
 			  " ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
-		#raise query.to_s
-		query
+
+		return query
 	end
 
 	def self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
@@ -764,39 +765,44 @@ module Report
 	end
 
 	def self.call_count(date_range, patient_type, district_id, count_type = nil)
-		call_id = ConceptName.find_by_name("Call id").id
-		child_maximum_age = 13
 
-		if patient_type.humanize.downcase == "children"
-			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
-		elsif patient_type.humanize.downcase == "women"
+		call_id             = ConceptName.find_by_name('Call id').id
+		child_age           = 5
+		child_maximum_age   = 13
+
+		if patient_type.humanize.downcase == 'children'
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
+		elsif patient_type.humanize.downcase == 'school aged children'
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
+								AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
+		elsif patient_type.humanize.downcase == 'women'
 			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} "
 		else
-			extra_parameters = ""
+			extra_parameters = ''
 		end
 
 		if count_type.to_s.downcase == 'all'
-			select_part = "SELECT o.person_id AS call_count, "
+			select_part = 'SELECT o.person_id AS call_count, '
 		else
-			select_part = "SELECT COUNT(DISTINCT o.person_id) AS call_count, "
+			select_part = 'SELECT COUNT(DISTINCT o.person_id) AS call_count, '
 		end
 
 		query   =  "#{select_part}" +
-			  "cn.name AS concept_name, " +
-			  "DATE(e.date_created) AS start_date " +
-			  "FROM encounter e " +
-			  "INNER JOIN obs o ON o.encounter_id = e.encounter_id " +
+			  'cn.name AS concept_name, ' +
+			  'DATE(e.date_created) AS start_date ' +
+			  'FROM encounter e ' +
+			  'INNER JOIN obs o ON o.encounter_id = e.encounter_id ' +
 			  "AND o.concept_id = #{call_id} " +
-			  "INNER JOIN call_log cl ON cl.call_log_id = o.value_text " +
+			  'INNER JOIN call_log cl ON cl.call_log_id = o.value_text ' +
 			  "AND cl.district = #{district_id} " +
-			  "INNER JOIN person p ON o.person_id = p.person_id " +
-			  "INNER JOIN concept_name cn ON o.concept_id = cn.concept_id " +
+			  'INNER JOIN person p ON o.person_id = p.person_id ' +
+			  'INNER JOIN concept_name cn ON o.concept_id = cn.concept_id ' +
 			  "WHERE DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
-			  "AND e.voided = 0 AND o.voided = 0 AND cn.voided = 0 " +
+			  'AND e.voided = 0 AND o.voided = 0 AND cn.voided = 0 ' +
 			  " #{extra_parameters} " +
-			  "GROUP BY o.concept_id " +
-			  "ORDER BY DATE(o.date_created), o.concept_id"
+			  'GROUP BY o.concept_id ' +
+			  'ORDER BY DATE(o.date_created), o.concept_id'
 
 =begin
     query   =  "#{select_part}" +
@@ -817,7 +823,6 @@ module Report
                 "ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
 =end
 
-		#raise query.to_s
 		Patient.find_by_sql(query)
 	end
 
@@ -826,9 +831,9 @@ module Report
 		child_maximum_age = 9
 
 		if patient_type.humanize.downcase == 'children'
-			extra_parameters = ' AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} '
+			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == 'women'
-			extra_parameters = ' AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} '
+			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == 'non-mnch'
 			extra_parameters = ' AND ((YEAR(o.date_created) - YEAR(p.birthdate)) >= 50
                             OR (YEAR(o.date_created) - YEAR(p.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
@@ -891,6 +896,7 @@ module Report
 	end
 
 	def self.patient_health_issues(patient_type, grouping, health_task, start_date, end_date, district)
+
 		if district == 'All'
 			district_id = 0
 		else
@@ -899,16 +905,19 @@ module Report
 
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 		patients_data = []
-
 		essential_params  = self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
 
 		date_ranges.map do |date_range|
-			query = self.patient_health_issues_query_builder(patient_type, health_task, date_range, essential_params, district_id)
-			concept_map           = Marshal.load(Marshal.dump(essential_params[:concept_map]))
-			results               = Patient.find_by_sql(query)
-			total_call_count      = self.call_count(date_range, patient_type, district_id)
-			total_calls_for_period = self.call_count_for_period(date_range, patient_type, district_id)
-			total_number_of_calls = total_call_count.first.attributes["call_count"].to_i rescue 0
+			query                       = self.patient_health_issues_query_builder(patient_type,
+			                                                                       health_task,
+			                                                                       date_range,
+			                                                                       essential_params,
+			                                                                       district_id)
+			concept_map                 = Marshal.load(Marshal.dump(essential_params[:concept_map]))
+			results                     = Patient.find_by_sql(query)
+			total_call_count            = self.call_count(date_range, patient_type, district_id)
+			total_calls_for_period      = self.call_count_for_period(date_range, patient_type, district_id)
+			total_number_of_calls       = total_call_count.first.attributes['call_count'].to_i rescue 0
 			total_callers_with_symptoms = self.get_callers(date_range, essential_params, patient_type, district_id, health_task).count
 
 			new_patients_data                 = {}
