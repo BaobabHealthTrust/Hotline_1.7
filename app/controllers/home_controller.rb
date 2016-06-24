@@ -68,13 +68,14 @@ class HomeController < ApplicationController
 
   def list
     #----- Consider putting this in an array to get patients using the get_patient method from Patient Service library. ------------------
-    patient_ids = Encounter.find_by_sql("SELECT * FROM encounter e INNER JOIN obs o ON e.encounter_id = o.encounter_id
-              WHERE e.voided = 0  AND COALESCE(o.comments, '') = ''
+    patient_ids = Encounter.find_by_sql("
+              SELECT patient_id FROM encounter e INNER JOIN obs o ON e.encounter_id = o.encounter_id
+              WHERE e.voided = 0  AND COALESCE(o.comments, '') = '' limit 1000
       ").map(&:patient_id) + [-1] #should always exist
+
     @people = Patient.joins(:person => [:person_names, :person_addresses]).select('patient.*, person.*, person_name.*, person_address.*').where(
         "patient.patient_id IN (#{patient_ids.join(', ')})"
     )
-    #raise @people.inspect
     render :layout => false
   end 
 

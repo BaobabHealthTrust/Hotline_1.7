@@ -34,9 +34,16 @@ class Encounter < ActiveRecord::Base
                         ORDER BY encounter_datetime DESC LIMIT 1", Date.today])
               .first.observations rescue []
     else
+
+      if name.upcase == "PREGNANCY STATUS"
+        start_date = 10.months.ago
+      else
+        start_date = Date.today
+      end
+
       encs = Encounter.find_by_sql(["SELECT * FROM encounter WHERE encounter_type = #{encounter_type_id}
-                       AND DATE(encounter_datetime) = ? AND patient_id = #{patient_id}
-                        ORDER BY encounter_datetime DESC LIMIT 1    ", Date.today])
+                       AND (DATE(encounter_datetime) BETWEEN ? AND ?) AND patient_id = #{patient_id}
+                        ORDER BY encounter_datetime DESC LIMIT 1    ", start_date, Date.today])
       .first.observations rescue []
     end
 

@@ -66,7 +66,7 @@
       <table class="table-data">
         <tr>
           <th>National ID:</th>
-          <td><%= %></td>
+          <td><%= person.national_id rescue nil%></td>
           <th>AVR access ID:</th>
           <td><%= person.avr_access_number %></td>
           <th>TA:</th>
