@@ -44,7 +44,7 @@
           </tr>
           <% end %>
           
-          <%if @patient_type.downcase == 'children' || @patient_type.downcase == 'non-mnch' #To be placed if gender required for non_mnch)%>
+          <%if @patient_type.downcase == 'children' || @patient_type.downcase == 'school aged children' || @patient_type.downcase == 'non-mnch' %>
             <tr>
               <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
                 Gender

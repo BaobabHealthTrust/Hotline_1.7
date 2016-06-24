@@ -87,7 +87,7 @@ class ReportController < ApplicationController
               when "demographics"
                 @patient_type       += ["Women",
                                         "Non-MNCH",
-                                        ["Children"],
+                                        "Children",
                                         "School Aged Children",
                                         "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
@@ -96,7 +96,7 @@ class ReportController < ApplicationController
               when "health_issues"
                 @patient_type       += ["Women",
                                         "Non-MNCH",
-                                        ["Children"],
+                                        "Children",
                                         "School Aged Children",
                                         "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
@@ -107,7 +107,7 @@ class ReportController < ApplicationController
               when "ages_distribution"
                 @patient_type       += ["Women",
                                         "Non-MNCH",
-                                        ["Children"],
+                                        "Children",
                                         "School Aged Children",
                                         "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
@@ -116,7 +116,7 @@ class ReportController < ApplicationController
               when "patient_activity"
                 @patient_type       += ["Women",
                                         "Non-MNCH",
-                                        ["Children"],
+                                        "Children",
                                         "School Aged Children",
                                         "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
@@ -125,7 +125,7 @@ class ReportController < ApplicationController
               when "referral_followup"
                 @patient_type       += ["Women",
                                         "Non-MNCH",
-                                        ["Children"],
+                                        "Children",
                                         "School Aged Children",
                                         "All"]
                 @outcomes            = ["","REFERRED TO A HEALTH CENTRE",
@@ -147,7 +147,7 @@ class ReportController < ApplicationController
               else
                 @patient_type       += ["Women",
                                         "Non-MNCH",
-                                        ["Children"],
+                                        "Children",
                                         "School Aged Children",
                                         "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]

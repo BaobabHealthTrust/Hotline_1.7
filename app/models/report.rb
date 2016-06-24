@@ -74,43 +74,43 @@ module Report
   end
 
   def self.patient_demographics_query_builder(patient_type, date_range, district_id)
-    # Get a list of health centers for the particular district
-	if district_id == 0
-		district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
-	else
-		district_name = Location.find(district_id).name
-	end
+	  # Get a list of health centers for the particular district
+	  if district_id == 0
+		  district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+	  else
+		  district_name = Location.find(district_id).name
+	  end
 
-    health_centers = '"' + get_nearest_health_centers(district_id).map(&:name).join('","') + '"'
+	  health_centers = '"' + get_nearest_health_centers(district_id).map(&:name).join('","') + '"'
 
-    child_maximum_age     = 13 # see definition of a female adult above
-    nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id #rescue 1
-    child_age = 5
+	  child_maximum_age     = 13 # see definition of a female adult above
+	  nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id #rescue 1
+	  child_age = 5
 
-    case patient_type.downcase
-      when "women"
+	  case patient_type.downcase
+		  when "women"
 
-        pregnancy_status_concept_id         = ConceptName.find_by_name("PREGNANCY STATUS").concept_id
-        pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
-        delivered_status_concept = ConceptName.find_by_name("Delivered").concept_id
-        pregnant_status_concept = ConceptName.find_by_name("Pregnant").concept_id
-        not_pregnant_status_concept = ConceptName.find_by_name("Not Pregnant").concept_id
-        miscarried_status_concept = ConceptName.find_by_name("Miscarried").concept_id
-        call_id = ConceptName.find_by_name("CALL ID").concept_id
+			  pregnancy_status_concept_id         = ConceptName.find_by_name("PREGNANCY STATUS").concept_id
+			  pregnancy_status_encounter_type_id  = EncounterType.find_by_name("PREGNANCY STATUS").encounter_type_id
+			  delivered_status_concept = ConceptName.find_by_name("Delivered").concept_id
+			  pregnant_status_concept = ConceptName.find_by_name("Pregnant").concept_id
+			  not_pregnant_status_concept = ConceptName.find_by_name("Not Pregnant").concept_id
+			  miscarried_status_concept = ConceptName.find_by_name("Miscarried").concept_id
+			  call_id = ConceptName.find_by_name("CALL ID").concept_id
 
-        extra_parameters = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age, CASE pregnancy_status_table.value_coded " +
-            " WHEN #{delivered_status_concept} THEN 'Delivered' " +
-            " WHEN #{pregnant_status_concept} THEN 'Pregnant' " +
-            " WHEN #{not_pregnant_status_concept} THEN 'Not Pregnant' " +
-            " WHEN #{miscarried_status_concept} THEN 'Miscarried' " +
-            " ELSE pregnancy_status_table.pregnancy_status " +
-            "END AS pregnancy_status_text "
+			  extra_parameters = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age, CASE pregnancy_status_table.value_coded " +
+				    " WHEN #{delivered_status_concept} THEN 'Delivered' " +
+				    " WHEN #{pregnant_status_concept} THEN 'Pregnant' " +
+				    " WHEN #{not_pregnant_status_concept} THEN 'Not Pregnant' " +
+				    " WHEN #{miscarried_status_concept} THEN 'Miscarried' " +
+				    " ELSE pregnancy_status_table.pregnancy_status " +
+				    "END AS pregnancy_status_text "
 
-        extra_conditions = " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}
+			  extra_conditions = " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}
                             AND (YEAR(p.date_created) - YEAR(ps.birthdate)) < 50 "
 
 
-        sub_query = "
+			  sub_query = "
           INNER JOIN (SELECT o.person_id, o.value_coded, o.concept_id, cn.name, o.value_text AS pregnancy_status
             FROM encounter e
               INNER JOIN obs o ON o.encounter_id = e.encounter_id
@@ -126,24 +126,36 @@ module Report
             ORDER BY o.person_id, o.date_created DESC) pregnancy_status_table ON pregnancy_status_table.person_id = p.patient_id
         "
 
-        extra_group_by = ", pregnancy_status_table.pregnancy_status "
+			  extra_group_by = ", pregnancy_status_table.pregnancy_status "
 
-      when "children"
-        extra_parameters  = ', YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ps.gender AS gender '
-        extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} "
-        extra_conditions  += self.get_extra_conditions(district_name,district_names)
-        sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
-        extra_group_by    = ', ps.gender '
-      when 'non-mnch'
-        extra_parameters  = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ((YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
+		  when "children"
+			  extra_parameters  = ', YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ps.gender AS gender '
+			  extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} "
+			  extra_conditions  += self.get_extra_conditions(district_name,district_names)
+			  sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
+			  extra_group_by    = ', ps.gender '
+
+		  when "school aged children"
+			  extra_parameters  = ', YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ps.gender AS gender '
+			  extra_conditions  = "AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age}
+									AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
+			  extra_conditions  += self.get_extra_conditions(district_name,district_names)
+			  sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
+			  extra_group_by    = ', ps.gender '
+
+		  when 'non-mnch'
+			  extra_parameters  = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age, ((YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
                             OR (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND ps.gender = 'M') AS non_mnch, ps.gender AS gender "
-        extra_conditions  = self.get_extra_conditions(district_name,district_names)
-        sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
-        extra_group_by    = ', ps.gender '
-      else
-        extra_parameters  = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age,
+			  extra_conditions  = self.get_extra_conditions(district_name,district_names)
+			  sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
+			  extra_group_by    = ', ps.gender '
+		  else
+			  extra_parameters  = ", YEAR(p.date_created) - YEAR(ps.birthdate) AS age,
 								((YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age}) AS all_children,
+								((YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age}
+									AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age})
+									AS all_school_aged_children,
                               (
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) >= 50 OR
                                (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age} AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13 OR
@@ -151,28 +163,28 @@ module Report
                               ) AS all_non_mnch,
                               (ps.gender = 'F' AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age})  as all_women
                             "
-        extra_conditions  = self.get_extra_conditions(district_name,district_names)
-        sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
-        extra_group_by    = ', ps.person_id '
-    end
-    patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
-        "FROM patient p " +
-        "  INNER JOIN encounter e ON p.patient_id = e.patient_id " +
-        "WHERE DATE(e.encounter_datetime) >= '#{date_range.first}' " +
-        "AND DATE(e.encounter_datetime) <= '#{date_range.last}') patients "
+			  extra_conditions  = self.get_extra_conditions(district_name,district_names)
+			  sub_query         = 'INNER JOIN person_address p_ad ON p_ad.person_id = ps.person_id '
+			  extra_group_by    = ', ps.person_id '
+	  end
+	  patients_with_encounter = " (SELECT DISTINCT e.patient_id " +
+		    "FROM patient p " +
+		    "  INNER JOIN encounter e ON p.patient_id = e.patient_id " +
+		    "WHERE DATE(e.encounter_datetime) >= '#{date_range.first}' " +
+		    "AND DATE(e.encounter_datetime) <= '#{date_range.last}') patients "
 
-    query = "SELECT pa.value AS nearest_health_center, "+
-        "COUNT(p.patient_id) AS number_of_patients, " +
-        "ps.gender AS gender, " +
-        "DATE(p.date_created) AS start_date " + extra_parameters +
-        "FROM person_attribute pa LEFT JOIN patient p ON pa.person_id = p.patient_id " +
-        "LEFT JOIN person ps ON pa.person_id = ps.person_id " +
-        "INNER JOIN #{patients_with_encounter} ON pa.person_id = patients.patient_id " + sub_query +
-        "WHERE pa.person_attribute_type_id = #{nearest_health_center} " + extra_conditions +
-        "AND pa.value IN (#{health_centers}) " +
-        "GROUP BY pa.value " + extra_group_by +
-        " ORDER BY p.date_created"
-    return query
+	  query = "SELECT pa.value AS nearest_health_center, "+
+		    "COUNT(p.patient_id) AS number_of_patients, " +
+		    "ps.gender AS gender, " +
+		    "DATE(p.date_created) AS start_date " + extra_parameters +
+		    "FROM person_attribute pa LEFT JOIN patient p ON pa.person_id = p.patient_id " +
+		    "LEFT JOIN person ps ON pa.person_id = ps.person_id " +
+		    "INNER JOIN #{patients_with_encounter} ON pa.person_id = patients.patient_id " + sub_query +
+		    "WHERE pa.person_attribute_type_id = #{nearest_health_center} " + extra_conditions +
+		    "AND pa.value IN (#{health_centers}) " +
+		    "GROUP BY pa.value " + extra_group_by +
+		    " ORDER BY p.date_created"
+	  return query
   end
 
   def self.get_extra_conditions(district_name,district_names,patient_type='')
@@ -188,34 +200,36 @@ module Report
   end
 
   def self.patient_demographics(patient_type, grouping, start_date, end_date, district)
-    if district == 'All'
-		district_id = 0
-    else
-        district_id = Location.find_by_name(district).id
-    end
+	  if district == 'All'
+		  district_id = 0
+	  else
+		  district_id = Location.find_by_name(district).id
+	  end
 
-    date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
+	  date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
-    patients_data = []
-    date_ranges.map do |date_range|
-      query   = self.patient_demographics_query_builder(patient_type, date_range, district_id)
+	  patients_data = []
+	  date_ranges.map do |date_range|
+		  query   = self.patient_demographics_query_builder(patient_type, date_range, district_id)
 
-      results = Patient.find_by_sql(query)
+		  results = Patient.find_by_sql(query)
 
-      case patient_type.downcase
-        when 'women'
-          new_patients_data = self.women_demographics(results, date_range, district_id)
-        when 'children'
-          new_patients_data = self.children_demographics(results, date_range, district_id)
-        when 'non-mnch'
-          new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
-        else
-          new_patients_data = self.all_patients_demographics(results, date_range, district_id)
-      end # end case
-      patients_data.push(new_patients_data)
-    end
+		  case patient_type.downcase
+			  when 'women'
+				  new_patients_data = self.women_demographics(results, date_range, district_id)
+			  when 'children'
+				  new_patients_data = self.children_demographics(results, date_range, district_id)
+			  when 'school aged children'
+				  new_patients_data = self.school_aged_children_demographics(results, date_range, district_id)
+			  when 'non-mnch'
+				  new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
+			  else
+		      new_patients_data = self.all_patients_demographics(results, date_range, district_id)
+		  end # end case
+		  patients_data.push(new_patients_data)
+	  end
 
-    patients_data
+	  patients_data
   end
 
   def self.all_patients_demographics(patients_data, date_range, district)
@@ -227,14 +241,15 @@ module Report
         end
     end
     
-    new_patients_data  = {:new_registrations  => 0,
-                          :catchment          => nearest_health_centers.uniq.sort,
-                          :start_date         => date_range.first,
-                          :all_age            => [],
-                          :child_age          => [],
-                          :women_age          => [],
-                          :non_mnch_age       => [],
-                          :end_date           => date_range.last}
+    new_patients_data  = {:new_registrations    => 0,
+                          :catchment            => nearest_health_centers.uniq.sort,
+                          :start_date           => date_range.first,
+                          :all_age              => [],
+                          :child_age            => [],
+                          :school_aged_child    => [],
+                          :women_age            => [],
+                          :non_mnch_age         => [],
+                          :end_date             => date_range.last}
     children = 0
     women    = 1
     non_mnch = 2
@@ -243,13 +258,14 @@ module Report
     unless patients_data.blank?
 
       patients_data.map do|data|
-        catchment           = data.attributes['nearest_health_center']
-        number_of_patients  = data.attributes['number_of_patients'].to_i
-        all_non_mnch        = data.attributes['all_non_mnch'].to_i
-        all_children        = data.attributes['all_children'].to_i
-        all_women           = data.attributes['all_women'].to_i
-        age                 = data.attributes['age'].to_i
-        gender              = data.attributes['gender']
+        catchment                   = data.attributes['nearest_health_center']
+        number_of_patients          = data.attributes['number_of_patients'].to_i
+        all_non_mnch                = data.attributes['all_non_mnch'].to_i
+        all_children                = data.attributes['all_children'].to_i
+        all_school_aged_children    = data.attributes['all_school_aged_children'].to_i
+        all_women                   = data.attributes['all_women'].to_i
+        age                         = data.attributes['age'].to_i
+        gender                      = data.attributes['gender']
 
         new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
         i = 0
@@ -262,6 +278,7 @@ module Report
 	          new_patients_data[:patient_type][non_mnch][1]     += all_non_mnch
 	          new_patients_data[:all_age]                       << age
 	          new_patients_data[:child_age]                     << age if age <= 5
+	          new_patients_data[:school_aged_child]             << age if age > 5 && age <= 13
 	          new_patients_data[:women_age]                     << age if age > 13 && gender == 'F'
 			  new_patients_data[:non_mnch_age]                  << age if (age>=50 ||
 				                                                            (age>5 && age<=13) ||
@@ -285,40 +302,87 @@ module Report
 
 	  new_patients_data  = {:new_registrations  => 0,
 	                        :catchment          => nearest_health_centers.uniq.sort,
-                            :start_date         => date_range.first,
-                            :all_age            => [],
-                            :male_age           => [],
-                            :female_age         => [],
-                            :end_date           => date_range.last}
+	                        :start_date         => date_range.first,
+	                        :all_age            => [],
+	                        :male_age           => [],
+	                        :female_age         => [],
+	                        :end_date           => date_range.last}
 
-    female = 0
-    male   = 1
-    new_patients_data[:gender] = [["female", 0], ["male", 0]]
+	  female = 0
+	  male   = 1
+	  new_patients_data[:gender] = [["female", 0], ["male", 0]]
 
-    unless patients_data.blank?
+	  unless patients_data.blank?
 
-      patients_data.map do|data|
-        catchment           = data.attributes["nearest_health_center"]
-        number_of_patients  = data.attributes["number_of_patients"].to_i
-        gender              = data.attributes["gender"]
-        age                 = data.attributes['age']
+		  patients_data.map do|data|
+			  catchment           = data.attributes["nearest_health_center"]
+			  number_of_patients  = data.attributes["number_of_patients"].to_i
+			  gender              = data.attributes["gender"]
+			  age                 = data.attributes['age']
 
-        new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
-        i = 0
-        new_patients_data[:catchment].map do |c|
-          if(c.first == catchment.humanize)
-	          new_patients_data[:catchment][i][1]   += number_of_patients
-	          new_patients_data[:gender][female][1] += number_of_patients if(gender == "F")
-	          new_patients_data[:gender][male][1]   += number_of_patients if(gender == "M")
-			  new_patients_data[:all_age]           << age
-			  new_patients_data[:male_age]          << age if gender == 'M'
-			  new_patients_data[:female_age]        << age if gender == 'F'
-          end
-          i += 1
-        end
-      end
-    end
-    new_patients_data
+			  new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
+			  i = 0
+			  new_patients_data[:catchment].map do |c|
+				  if(c.first == catchment.humanize)
+					  new_patients_data[:catchment][i][1]   += number_of_patients
+					  new_patients_data[:gender][female][1] += number_of_patients if(gender == "F")
+					  new_patients_data[:gender][male][1]   += number_of_patients if(gender == "M")
+					  new_patients_data[:all_age]           << age
+					  new_patients_data[:male_age]          << age if gender == 'M'
+					  new_patients_data[:female_age]        << age if gender == 'F'
+				  end
+				  i += 1
+			  end
+		  end
+	  end
+	  new_patients_data
+  end
+
+  def self.school_aged_children_demographics(patients_data, date_range, district)
+	  nearest_health_centers  = []
+
+	  unless patients_data.blank?
+		  patients_data.map do |catchments_only|
+			  nearest_health_centers << [catchments_only.attributes['nearest_health_center'].humanize, 0]
+		  end
+	  end
+
+	  new_patients_data  = {:new_registrations  => 0,
+	                        :catchment          => nearest_health_centers.uniq.sort,
+	                        :start_date         => date_range.first,
+	                        :all_age            => [],
+	                        :male_age           => [],
+	                        :female_age         => [],
+	                        :end_date           => date_range.last}
+
+	  female = 0
+	  male   = 1
+	  new_patients_data[:gender] = [["female", 0], ["male", 0]]
+
+	  unless patients_data.blank?
+
+		  patients_data.map do|data|
+			  catchment           = data.attributes["nearest_health_center"]
+			  number_of_patients  = data.attributes["number_of_patients"].to_i
+			  gender              = data.attributes["gender"]
+			  age                 = data.attributes['age']
+
+			  new_patients_data[:new_registrations] += number_of_patients if(number_of_patients)
+			  i = 0
+			  new_patients_data[:catchment].map do |c|
+				  if(c.first == catchment.humanize)
+					  new_patients_data[:catchment][i][1]   += number_of_patients
+					  new_patients_data[:gender][female][1] += number_of_patients if(gender == "F")
+					  new_patients_data[:gender][male][1]   += number_of_patients if(gender == "M")
+					  new_patients_data[:all_age]           << age
+					  new_patients_data[:male_age]          << age if gender == 'M'
+					  new_patients_data[:female_age]        << age if gender == 'F'
+				  end
+				  i += 1
+			  end
+		  end
+	  end
+	  new_patients_data
   end
 
   def self.women_demographics(patients_data, date_range, district)
