@@ -298,7 +298,7 @@ class PatientController < ApplicationController
       render text: "<li>" + (data.sort.map{|n| n } + ['Other']) .join("</li><li>") + "</li>" and return
     else
       #render text: [].to_json and return
-      render text: "<li></li>" and return
+      render text: "<li>Other</li>" and return
     end
   end
 
@@ -315,7 +315,7 @@ class PatientController < ApplicationController
       render text: "<li>" + (data.sort.map{|n| n }  + ['Other']) .join("</li><li>") + "</li>" and return
     else
       #render text: [].to_json and return
-      render text: "<li></li>" and return
+      render text: "<li>Other</li>" and return
     end
   end
 

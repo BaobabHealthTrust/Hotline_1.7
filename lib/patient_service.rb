@@ -18,6 +18,7 @@ module PatientService
     patient_obj.birthdate_estimated = person.birthdate_estimated
     patient_obj.name = "#{patient_obj.first_name} #{patient_obj.last_name}"
     patient_obj.avr_access_number = self.get_identifier(patient, 'IVR access code')
+    patient_obj.national_id = self.get_identifier(patient, 'National Id')
     patient_obj.age = self.age(person) rescue -1
     patient_obj.sex = person.gender || "F" #previously all clients were females and gender was not saved
     patient_obj.facility_name = nearest_facility

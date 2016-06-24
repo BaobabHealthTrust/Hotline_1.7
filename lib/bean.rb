@@ -8,7 +8,7 @@ class PatientBean
    :last_name, :phone_type, :cell_phone_number, :office_phone_number, :home_phone_number, :facility_name, :old_identification_number, :birthdate, :current_ta
 
  attr_accessor :patient_id,:arv_number, :national_id ,:name ,:age ,:sex, :init_wt, :init_ht ,
-   :init_bmi ,:transfer_in ,:address, :address2, :landmark, :occupation, :guardian, :agrees_to_followup,:avr_access_number,
+   :init_bmi ,:transfer_in ,:address, :address2, :landmark, :occupation, :guardian, :agrees_to_followup,:avr_access_number, :national_id,
    :hiv_test_location, :hiv_test_date, :reason_for_art_eligibility, :date_of_first_line_regimen ,
    :tb_within_last_two_yrs, :eptb ,:ks,:pulmonary_tb, :first_line_drugs, :alt_first_line_drugs,
    :second_line_drugs, :date_of_first_alt_line_regimen, :date_of_second_line_regimen, :transfer_in_date,
