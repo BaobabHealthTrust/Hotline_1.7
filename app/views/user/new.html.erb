@@ -36,12 +36,14 @@
  <%= password_field_tag "user[password]", params[:password],
                      {:id => 'password', :field_type => 'alpha',
                       :helpText => 'Password',
+                      :textCase => 'lower',
                       :ajaxURL => '/person_names/given_names?search_string=',
                       :allowFreeText => true }%>
 
   <%= password_field_tag "user[confirm password]", params[:confirm_password],
                      {:id => 'confirm_password', :field_type => 'alpha',
                       :helpText => 'Confirm Password',
+                      :textCase => 'lower',
                       :ajaxURL => '/person_names/given_names?search_string=',
                       :allowFreeText => true }%>
 
