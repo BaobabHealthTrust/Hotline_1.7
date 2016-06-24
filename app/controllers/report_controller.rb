@@ -52,14 +52,20 @@ class ReportController < ApplicationController
     }
   end
   def report_filter_page
-      location_tag = LocationTag.find_by_name("District")
-       @districts = Location.where("m.location_tag_id = #{location_tag.id}").joins("INNER JOIN location_tag_map m
-     ON m.location_id = location.location_id").collect{|l | [l.id, l.name]}
-       @districts = [""] + @districts.collect { |location_id, location_name| location_name}
-       @report_date_range  = [""]
-    @patient_type       = [""]
-    @grouping           = [""]
-    @outcome            = [""]
+	  location_tag = LocationTag.find_by_name("District")
+	  @districts = Location.where("m.location_tag_id = #{location_tag.id}")
+	                      .joins("INNER JOIN location_tag_map m ON m.location_id = location.location_id")
+	                      .collect{|l |
+	                            [l.id, l.name]
+                          }
+	  @districts = ["",'All'] + @districts.collect {
+	         |location_id, location_name|
+	       location_name
+        }
+	  @report_date_range  = [""]
+	  @patient_type       = [""]
+	  @grouping           = [""]
+	  @outcome            = [""]
 
     @report_type        = params[:report_type]
     @query              = params[:query].gsub(" ", "_")
@@ -79,29 +85,49 @@ class ReportController < ApplicationController
           when "patient_analysis"
             case @query
               when "demographics"
-                @patient_type       += ["Women", "Non-MNCH", "Children", "All"]
+                @patient_type       += ["Women",
+                                        "Non-MNCH",
+                                        "Children",
+                                        "School Aged Children",
+                                        "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
                 @destination        = [["",""],["To CSV Format", "csv"], ["To Screen", "screen"]]
 
               when "health_issues"
-                @patient_type       += ["Women", "Non-MNCH", "Children", "All"]
+                @patient_type       += ["Women",
+                                        "Non-MNCH",
+                                        "Children",
+                                        "School Aged Children",
+                                        "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
                 @health_task         = ["", "Health Symptoms", "Danger Warning Signs",
                                         "Health Information Requested", "Outcomes"]
                 @destination        = [["",""],["To CSV Format", "csv"], ["To Screen", "screen"]]
 
               when "ages_distribution"
-                @patient_type       += ["Women", "Non-MNCH", "Children", "All"]
+                @patient_type       += ["Women",
+                                        "Non-MNCH",
+                                        "Children",
+                                        "School Aged Children",
+                                        "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
                 @destination        = [["",""],["To CSV Format", "csv"], ["To Screen", "screen"]]
 
               when "patient_activity"
-                @patient_type       += ["Women", "Non-MNCH", "Children", "All"]
+                @patient_type       += ["Women",
+                                        "Non-MNCH",
+                                        "Children",
+                                        "School Aged Children",
+                                        "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
                 @destination        = [["",""],["To CSV Format", "csv"], ["To Screen", "screen"]]
 
               when "referral_followup"
-                @patient_type       += ["Women", "Non-MNCH", "Children", "All"]
+                @patient_type       += ["Women",
+                                        "Non-MNCH",
+                                        "Children",
+                                        "School Aged Children",
+                                        "All"]
                 @outcomes            = ["","REFERRED TO A HEALTH CENTRE",
                                         "REFERRED TO NEAREST VILLAGE CLINIC",
                                         "PATIENT TRIAGED TO NURSE SUPERVISOR",
@@ -119,7 +145,11 @@ class ReportController < ApplicationController
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
                 @destination         = [["",""],["To CSV Format", "csv"], ["To Screen", "screen"]]
               else
-                @patient_type       += ["Women", "Children", "All"]
+                @patient_type       += ["Women",
+                                        "Non-MNCH",
+                                        "Children",
+                                        "School Aged Children",
+                                        "All"]
                 @grouping           += [["By Week", "week"], ["By Month", "month"]]
                 @staff               = [["",""]] + get_staff_members_list + [["All","All"]]
                 @call_type           = ["","Normal", #"Followup","Non-Patient Tips",
