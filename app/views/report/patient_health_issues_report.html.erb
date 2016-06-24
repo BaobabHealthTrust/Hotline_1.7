@@ -1,93 +1,93 @@
 <%= render :partial => 'header' %>
-  <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+<form id="tt_form">
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
-  <div class="main-page-container">
+<div class="main-page-container">
     <fieldset id="main-fieldset">
-      <legend>
-        <%=@report_name %>  <i> <%= @patient_type%> </i>
-      </legend>
-      <table cellspacing="0" width="100%">
-          <tr style="background:#b6b3b3;">
-            <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-            <%= @health_task.humanize.titleize %>
-            </td>
-            
-            <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-            </td>
-            
-            <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              Percentage
-            </td>
-          </tr>
-          
-        <%@report.reverse.map do |data|%>
-          <tr>
-            <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell" style="background-color:#f7f7f7; text-align:center;font-weight: bold; font-size: large; font-style: italic;">
-              <%= @grouping.humanize + " beginning "+ data[:start_date] + " ending " + data[:end_date]%>
-            </td>
-          </tr>
-          <tr>
-            <td  class="cellleft cellbottom main-table-cell">
-                Total  <%= @patient_type %> Callers
-            </td>
-            <td  class="cellleft cellbottom main-table-cell">
-              <%= data[:total_calls] %>
-            </td>
-            <td  class="cellleft cellbottom cellright main-table-cell"> 
-              na
-            </td>
-          </tr>
-          <tr>
-            <td  class="cellleft cellbottom main-table-cell">
-                Total <%= @patient_type %> Callers with <%= @health_task.humanize.titleize %>
-            </td>
-            <td  class="cellleft cellbottom main-table-cell">
-              <%= data[:total_number_of_calls] %>
-            </td>
-            <td  class="cellleft cellbottom cellright main-table-cell">
-              na
-            </td>
-          </tr>
-          <tr>
-            <td  class="cellleft cellbottom main-table-cell">
-                Total Calls for period
-            </td>
-            <td  class="cellleft cellbottom main-table-cell">
-              <%= data[:total_number_of_calls_for_period]%>
-            </td>
-            <td  class="cellleft cellbottom cellright main-table-cell">
-              na
-            </td>
-          </tr>
-          <tr>
-            <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell" style="background-color:#f7f7f7; text-align:center;font-weight: bold; font-size: large; font-style: italic;">
-              Below are the <%=  @health_task.gsub(/_/, " ").capitalize %>
-            </td>
-          </tr>
-          
-          <% data[:health_issues].map do | health_issue|%>
-          <tr>
-            <td class="cellleft cellbottom main-table-cell">
-            <% concept = health_issue[:concept_name].to_s.sub("SIGN", "")%>
-            <% concept.sub("SYMPTOM","") %>
-            <% concept = concept == "GAINED OR LOST WEIGHT" ? "WEIGHT CHANGE" : concept %>
-            <% concept = concept == "ACUTE ABDOMINAL PAIN" ? "SEVERE ABDOMINAL PAIN" : concept %>
-            <%=concept.to_s.titleize %>
-            </td>
-            
-            <td class="cellleft cellbottom main-table-cell">
-            <%= health_issue[:call_count] %>
-            </td>
-            
-            <td class="cellleft cellbottom cellright main-table-cell">
-            <%= health_issue[:call_percentage] %>
-            </td>
-          </tr>
-          <% end %>
-        <% end %>
-      </table>
+        <legend>
+            <%=@report_name %>  <i> <%= @patient_type%> </i>
+        </legend>
+        <table cellspacing="0" width="100%">
+            <tr style="background:#b6b3b3;">
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    <%= @health_task.humanize.titleize %>
+                </td>
+
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    Percentage
+                </td>
+            </tr>
+
+            <%@report.reverse.map do |data|%>
+                <tr>
+                    <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell" style="background-color:#f7f7f7; text-align:center;font-weight: bold; font-size: large; font-style: italic;">
+                        <%= @grouping.humanize + " beginning "+ data[:start_date] + " ending " + data[:end_date]%>
+                    </td>
+                </tr>
+                <tr>
+                    <td  class="cellleft cellbottom main-table-cell">
+                        Total  <%= @patient_type %> Callers
+                    </td>
+                    <td  class="cellleft cellbottom main-table-cell">
+                        <%= data[:total_calls] %>
+                    </td>
+                    <td  class="cellleft cellbottom cellright main-table-cell">
+                        na
+                    </td>
+                </tr>
+                <tr>
+                    <td  class="cellleft cellbottom main-table-cell">
+                        Total <%= @patient_type %> Callers with <%= @health_task.humanize.titleize %>
+                    </td>
+                    <td  class="cellleft cellbottom main-table-cell">
+                        <%= data[:total_number_of_calls] %>
+                    </td>
+                    <td  class="cellleft cellbottom cellright main-table-cell">
+                        na
+                    </td>
+                </tr>
+                <tr>
+                    <td  class="cellleft cellbottom main-table-cell">
+                        Total Calls for period
+                    </td>
+                    <td  class="cellleft cellbottom main-table-cell">
+                        <%= data[:total_number_of_calls_for_period]%>
+                    </td>
+                    <td  class="cellleft cellbottom cellright main-table-cell">
+                        na
+                    </td>
+                </tr>
+                <tr>
+                    <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell" style="background-color:#f7f7f7; text-align:center;font-weight: bold; font-size: large; font-style: italic;">
+                        Below are the <%=  @health_task.gsub(/_/, " ").capitalize %>
+                    </td>
+                </tr>
+
+                <% data[:health_issues].map do | health_issue|%>
+                    <tr>
+                        <td class="cellleft cellbottom main-table-cell">
+                            <% concept = health_issue[:concept_name].to_s.sub("SIGN", "")%>
+                            <% concept.sub("SYMPTOM","") %>
+                            <% concept = concept == "GAINED OR LOST WEIGHT" ? "WEIGHT CHANGE" : concept %>
+                            <% concept = concept == "ACUTE ABDOMINAL PAIN" ? "SEVERE ABDOMINAL PAIN" : concept %>
+                            <%=concept.to_s.titleize %>
+                        </td>
+
+                        <td class="cellleft cellbottom main-table-cell">
+                            <%= health_issue[:call_count] %>
+                        </td>
+
+                        <td class="cellleft cellbottom cellright main-table-cell">
+                            <%= health_issue[:call_percentage] %>
+                        </td>
+                    </tr>
+                <% end %>
+            <% end %>
+        </table>
 
     </fieldset>
-    </div>
+</div>
