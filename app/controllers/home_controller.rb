@@ -94,9 +94,13 @@ class HomeController < ApplicationController
   def quick_summary
     @stats = Hash.new(0)
     @stats['Total clients registered'] = Patient.count
-    @stats['Total clients registered (Women)'] = Patient.where("p.gender = 'F' OR p.gender = 'Female'").joins("INNER JOIN person p ON p.person_id=patient.patient_id").count
-    @stats['Total clients registered (Men)'] = Patient.where("p.gender = 'M' OR p.gender = 'Male'").joins("INNER JOIN person p ON p.person_id=patient.patient_id").count
-
+    @stats['Total clients registered (Women)'] = Patient.joins(person: :patient).where('person.gender = "F"  
+                            AND (YEAR(person.date_created)-YEAR(person.birthdate)) > 14').count
+    @stats['Total clients registered (Men)'] = Patient.joins(person: :patient).where('person.gender = "M" 
+                            AND (YEAR(person.date_created)-YEAR(person.birthdate)) > 14').count
+    @stats['Total clients registered (Aged 6 to 14)'] = Patient.joins(person: :patient).where('(YEAR(person.date_created)-YEAR(person.birthdate)) >= 6 AND (YEAR(person.date_created)-YEAR(person.birthdate)) <= 14').count
+    @stats['Total clients registered (Children under 5)'] = Patient.joins(person: :patient).where('(YEAR(person.date_created)-YEAR(person.birthdate)) <= 5').count
+    
     render :layout => false
   end
 
