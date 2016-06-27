@@ -14,18 +14,21 @@
         color: white;
         font-size: 1.7em;
         line-height: 57px;
-        min-width: 120px;
+        min-width: 80px;
         font-weight: bold;
-        min-height: 100px;
+        min-height: 80px;
     }
 
     .btn-red {
         display: inline;
         margin: 5px 2px 2px;
         text-align: center;
-        background-color: red;
+        background-color: darkred;
+        border: solid #477EEB 1px;
+        border-radius: 7px;
+        box-shadow: 5px 5px 15px lightblue inset;
         color: white;
-        font-size: 1.3em;
+        font-size: 1.7em;
         line-height: 57px;
         min-width: 120px;
         font-weight: bold;
@@ -36,9 +39,12 @@
         display: inline;
         margin: 5px 2px 2px;
         text-align: center;
-        background-color: green;
+        background-color: darkgreen;
+        border: solid #477EEB 1px;
+        border-radius: 7px;
+        box-shadow: 5px 5px 15px lightblue inset;
         color: white;
-        font-size: 1.3em;
+        font-size: 1.7em;
         line-height: 57px;
         min-width: 120px;
         font-weight: bold;
@@ -115,7 +121,7 @@
         top: 0%;
         left: 0%;
         position: absolute;
-        margin-top: 100px;
+        margin-top: 5px;
         width: 560px;
         margin-left: 430px;
         z-index: 991;
@@ -259,11 +265,6 @@
     .confirm .village-reach-icon {
         border-width: 0px;
     }
-    /*
-    .confirm .table-cell {
-      position: absolute;
-      bottom: 7%;
-    }*/
     /* .................................. header ends........................................................ */
 
     /* ......................................... PopUp CSS .................................................. */
@@ -331,17 +332,8 @@
 <%= hidden_field_tag "person[age_estimate]", nil, :id => 'age_estimate' %>
 <%= hidden_field_tag "next_task", params[:next_task] %>
 
-<!--<input type = "hidden" id = "selected_year" name/>-->
-<!--<input type = "hidden" id = "selected_month" />-->
-<!--<input type = "hidden" id = "selected_day" />-->
-
 <%= text_field_tag "", nil, {:helpText => 'Birthdate',
                              :tt_onLoad => 'load(); dateLayout(); nextDate();'}  %>
-
-<%#= select_tag "person[birth_month]", month_name_options, {:helpText => 'Month of Birth', :condition => '$("person_birth_year").value.toLowerCase() != "unknown"',:validationJS => "validateDOB();",:validationMessage => 'Please enter a valid date'}%>
-<%#= text_field_tag "person[birth_day]",  nil, :field_type => 'number', :helpText => 'Birth Day', :condition => '($("person_birth_year").value != "Unknown") && ($("person_birth_month").value != "Unknown")', :tt_onLoad => "getDayOfMonthPicker($('person_birth_year').value, $('person_birth_month').value)" ,:validationJS => "validateDOB()",:validationMessage => 'Please enter a valid date'%>
-
-
 
 <script>
     function popUp() {
