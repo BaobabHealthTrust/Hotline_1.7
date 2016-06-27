@@ -171,10 +171,15 @@
         __$("cancelButton").style.display = "none";
     }
 </script>
-
+<% if User.current.system_id == 'admin' %>
 <form action="/configurations">
   <input name="test" type="text" id="hook" tt_onLoad="loadControls()"/>
 </form>
+<% else %>
+<form action="/">
+  <input name="test" type="text" id="hook" tt_onLoad="loadControls()"/>
+</form>
+<% end %>
 <!-- .................................................. results .......................................... -->
 <div id="keypad">
   <span class="keypad">
