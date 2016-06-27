@@ -1,3 +1,4 @@
+
 <script>
     var tt_cancel_destination = "/demographics/" + "<%=params[:patient_id]%>"
 
@@ -9,56 +10,102 @@
 
 
 
-<%= form_tag "/demographic_modify", method: "post" do %>
-  <% if @edit_page == "name" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_name"  %>
-  <% end %>
+<%= form_tag "/demographic_modify", id: 'modify_form', method: "post" do %>
+    <% if @edit_page == "name" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_name"  %>
+    <% end %>
 
-  <% if @edit_page == "mothers_name" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_mothers_name"  %>
-  <% end %>
+    <% if @edit_page == "mothers_name" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_mothers_name"  %>
+    <% end %>
 
-  <% if @edit_page == "age" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_age"  %>
-  <% end %>
+    <% if @edit_page == "age" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_age"  %>
+    <% end %>
 
-  <% if @edit_page == "sex" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_sex"  %>
-  <% end %>
+    <% if @edit_page == "sex" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_sex"  %>
+    <% end %>
 
-  <% if @edit_page == "district_of_residence" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_district_of_residence"  %>
-  <% end %>
+    <% if @edit_page == "district_of_residence" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_district_of_residence"  %>
+    <% end %>
 
-  <% if @edit_page == "location" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_location"  %>
-  <% end %>
+    <% if @edit_page == "location" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_location"  %>
+    <% end %>
 
-  <% if @edit_page == "occupation" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_occupation"  %>
-  <% end %>
+    <% if @edit_page == "occupation" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_occupation"  %>
+    <% end %>
 
-  <% if @edit_page == "region" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_region"  %>
-  <% end %>
+    <% if @edit_page == "region" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_region"  %>
+    <% end %>
 
-  <% if @edit_page == "address" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_address"  %>
-  <% end %>
+    <% if @edit_page == "address" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_address"  %>
+    <% end %>
 
-  <% if @edit_page == "ta" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_ta"  %>
-  <% end %>
+    <% if @edit_page == "ta" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_ta"  %>
+    <% end %>
 
-  <% if @edit_page == "home_district" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_home_district" %>
-  <% end %>
+    <% if @edit_page == "home_district" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_home_district" %>
+    <% end %>
 
-  <%# if @edit_page.match(/_phone_number/i) %>
-  <% if @edit_page == "phone_numbers" %>
-    <%= render :partial => "people/demographic_modify/mastercard_modify_phone_numbers" %>
-  <% end %>
+    <% if @edit_page == "phone_numbers" %>
+        <%= render :partial => "people/demographic_modify/mastercard_modify_phone_numbers" %>
+    <% end %>
 
-  <%= hidden_field_tag "patient_id", params[:patient_id] %>
-  <%= hidden_field_tag "field", @edit_page %>
+    <%= hidden_field_tag "patient_id", params[:patient_id] %>
+    <%= hidden_field_tag "field", @edit_page %>
 <% end %>
+
+<!-- ================================================== PopUp ================================================= -->
+<div id="popup-div">
+    <div id="popup-header">
+        <center>
+            <div id="flash" style="display: none;"></div>
+            Birth Year unknown.
+            <br>
+            Estimate Age
+        </center>
+    <span id="no" onclick="clearInputAge(); hidePopup();" class="exit_button" >
+        <strong>
+            X
+        </strong>
+    </span>
+    </div>
+    <br />
+    <div id="popup-content">
+    <span style="font-size: 16pt;">
+      <center>
+          <input id="tbInputAge" type="text" maxlength = "2" />
+
+          <div id="year" class="virtual-keypad">
+              <input id="btn1" type="button" onclick="inputAge(this);" value="1"  class="btn-year" />
+              <input id="btn2" type="button" onclick="inputAge(this);" value="2"  class="btn-year" />
+              <input id="btn3" type="button" onclick="inputAge(this);" value="3"  class="btn-year" />
+              <br />
+              <input id="btn4" type="button" onclick="inputAge(this);" value="4"  class="btn-year" />
+              <input id="btn5" type="button" onclick="inputAge(this);" value="5"  class="btn-year" />
+              <input id="btn6" type="button" onclick="inputAge(this);" value="6"  class="btn-year" />
+              <br />
+              <input id="btn7" type="button" onclick="inputAge(this);" value="7"  class="btn-year" />
+              <input id="btn8" type="button" onclick="inputAge(this);" value="8"  class="btn-year" />
+              <input id="btn9" type="button" onclick="inputAge(this);" value="9"  class="btn-year" />
+              <br />
+              <input id="btnCancel" type="button" value="Clear" onclick="clearInputAge();" class="btn-red lower_buttons" />
+              <input id="btn0" type="button" onclick="inputAge(this)" value="0"  class="btn-year lower_buttons" />
+              <input id="btnCl" type="button" value="OK" onclick="saveByAge();" class="btn-green lower_buttons" />
+          </div>
+          <br />
+      </center>
+    </span>
+    </div>
+</div>
+<div id="cover"></div>
+
+<!-- ============================================================================================================= -->
