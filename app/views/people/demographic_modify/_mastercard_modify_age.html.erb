@@ -389,6 +389,14 @@
         if( day > 31) {
             validateMessage('Day of the entered month is invalid.');
         }
+        else if( year == <%= Date.today.year %> ) {
+                if( month == '<%= Date::MONTHNAMES[Date.today.month] %>' && day > <%= Date.today.day %> ) {
+                    validateMessage('Day of Birth is ahead.');
+                }
+        }
+        else if( year > <%= Date.today.year %>) {
+            validateMessage('Year of Birth is ahead.');
+        }
         else {
             gotoNextPage();
         }
@@ -664,7 +672,6 @@
     }
     function validateBirthdate() {
         // Set current Date variables ----
-
         date = new Date();
         current_year = date.getFullYear();
         current_day = date.getDate();
@@ -734,8 +741,7 @@
             document.getElementById('age_estimate').value = estimated_age;
         }
 
-        // submit form -------------------------
-        //document.getElementById('pregnancy-status').submit();
+
     }
 
     function clearInputAge() {
