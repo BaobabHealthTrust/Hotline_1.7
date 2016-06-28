@@ -623,7 +623,6 @@
     }
 
     function validate_edd() {
-
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
@@ -651,6 +650,9 @@
         var year_diff = parseInt(current_year) - parseInt(year);
 
         if((year > current_year || year == current_year) && parseInt(year) < parseInt(current_year)+2) {
+            if( month == nil) {
+                showMessage('Month is blank');
+            }
             summary(year,month,day,current_month,current_year,months);
         }
         else if(year < current_year) {
@@ -693,11 +695,18 @@
         var current_year = new Date().getFullYear();
         var current_month = new Date().getMonth();
         var year_diff = parseInt(current_year) - parseInt(year);
+
         if(year < current_year && year_diff >= 0 && year_diff <= 1 && year != 'Unknown'){
             // We expect month to be of index greater than current and plus 4 ---
             if(parseInt(months.indexOf(month)) >= parseInt(current_month)) {
                 if( day > 31 || ( day>=29 && (month == 'February') && (parseInt(year)%4 == 0)) ){
                     showMessage('Invalid input of day.',false,false);
+                }
+                else if(month == '') {
+                    showMessage('Invalid input. Month can not be blank.',false, false);
+                }
+                else if( day == '') {
+                    showMessage('Ask client if it was early, middle or late '+month,false,false);
                 }
                 else {
                     summary(year,month,day,current_month,current_year,months);
@@ -713,6 +722,12 @@
                 if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
                     if( day > 31 || ( day>=29 && (month == 'February') && (parseInt(year)%4 == 0)) ){
                         showMessage('Invalid input of day.',false,false);
+                    }
+                    else if(month == '') {
+                        showMessage('Invalid input. Month can not be blank.',false, false);
+                    }
+                    else if( day == '') {
+                        showMessage('Ask client if it was early, middle or late '+month,false,false);
                     }
                     else {
                         summary(year,month,day,current_month,current_year,months);
@@ -1053,8 +1068,10 @@
         var finish = document.getElementById('nextButton');
         finish.setAttribute('onmousedown','validateBirthdate();');
     }
+
     function validateBirthdate() {
         // submit form -------------------------
         document.getElementById('pregnancy-status').submit();
     }
+
 </script>
