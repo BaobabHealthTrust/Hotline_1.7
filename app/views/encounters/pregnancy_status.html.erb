@@ -674,10 +674,6 @@
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
 
-        if (day == 'Unknown') {
-            day = 1;
-        }
-
         var months = [
             'January',
             'February',
@@ -706,7 +702,10 @@
                     showMessage('Invalid input. Month can not be blank.',false, false);
                 }
                 else if( day == '') {
-                    showMessage('Ask client if it was early, middle or late '+month,false,false);
+                    showMessage('Day can not be blank.',false,false);
+                }
+                else if( day == 'Unknown') {
+                    showMessage('Please ask if it was early, middle, or late '+month,false,false)
                 }
                 else {
                     summary(year,month,day,current_month,current_year,months);
@@ -727,7 +726,10 @@
                         showMessage('Invalid input. Month can not be blank.',false, false);
                     }
                     else if( day == '') {
-                        showMessage('Ask client if it was early, middle or late '+month,false,false);
+                        showMessage('Day can not be blank.',false,false);
+                    }
+                    else if( day == 'Unknown') {
+                        showMessage('Please ask if it was early, middle, or late '+month,false,false)
                     }
                     else {
                         summary(year,month,day,current_month,current_year,months);
