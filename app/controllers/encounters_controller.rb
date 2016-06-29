@@ -226,7 +226,7 @@ class EncountersController < ApplicationController
           @danger_signs = concept_set('Danger signs')
           @health_symptoms = concept_set('Maternal health symptoms')
           if @current_pregnancy_status['PREGNANCY STATUS'] == ['Pregnant']
-            @health_symptoms = concept_set('Maternal health symptoms') - [['Vaginal bleeding (not during pregnancy)'], ['Postnatal bleeding'], ['Postnatal bleeding'], ['Postnatal fever']]
+            @health_symptoms = concept_set('Maternal health symptoms') - [['Vaginal bleeding (not during pregnancy)'], ['Postnatal bleeding'], ['Postnatal bleeding'], ['Postnatal discharge - bad smell'], ['Postnatal fever']]
           elsif @current_pregnancy_status['PREGNANCY STATUS'] == ['Delivered']
             @health_symptoms = concept_set('Maternal health symptoms') - [['Fever during pregnancy'], ['No fetal movements'], ['Vaginal bleeding during pregnancy'], ['Water breaks']]
           elsif @current_pregnancy_status['PREGNANCY STATUS'] == ['Not Pregnant']
