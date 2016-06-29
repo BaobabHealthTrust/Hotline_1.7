@@ -49,21 +49,30 @@
         display: inline;
         margin: 5px 2px 2px;
         text-align: center;
-        background-color: red;
+        background-color: darkred;
+        border: solid #477EEB 1px;
+        border-radius: 7px;
+        box-shadow: 5px 5px 15px lightblue inset;
         color: white;
-        font-size: 1.3em;
+        font-size: 1.7em;
+        float: left;
         line-height: 57px;
         min-width: 120px;
         font-weight: bold;
         min-height: 100px;
     }
+
     .btn-green {
         display: inline;
         margin: 5px 2px 2px;
         text-align: center;
-        background-color: green;
+        background-color: darkgreen;
+        border: solid #477EEB 1px;
+        border-radius: 7px;
+        box-shadow: 5px 5px 15px lightblue inset;
         color: white;
-        font-size: 1.3em;
+        font-size: 1.7em;
+        float: right;
         line-height: 57px;
         min-width: 120px;
         font-weight: bold;
@@ -79,6 +88,17 @@
         font-size: 2.2em;
         padding-left: 5px;
         width: 99%;
+        text-align: center;
+    }
+    #tbInputAge {
+        margin-top: 0px;
+        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+        border-color: -moz-use-text-color -moz-use-text-color silver;
+        border-style: none none solid;
+        border-width: medium medium 1px;
+        font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+        font-size: 2.2em;
+        padding-left: 5px;
         text-align: center;
     }
     /* --------------------- popUp For Alert -----------------------*/
@@ -102,6 +122,18 @@
         color: #fff;
         float: right;
         margin-top: -5px;
+    }
+    .pop-up-btn {
+        text-align: center;
+        font-size: 2em;
+        font-weight: bold;
+        padding: 10px;
+    }
+    .odd {
+        background-color: #d3d3d3;
+    }
+    .even {
+        background-color: darkgrey;
     }
     .exit_button {
         -moz-user-select: none;
@@ -276,9 +308,9 @@
 <!-- ======================================================================================== -->
 <script>
     <% if params[:cancel_destination] == 'current_call' %>
-        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/current_call";
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/current_call";
     <% else %>
-        var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
+    var tt_cancel_destination = "/patient/dashboard/<%= @patient_obj.patient_id %>/tasks";
     <% end %>
 </script>
 
@@ -347,7 +379,59 @@
     <%end%>
 <% end %>
 
+<!-- ================================================== PopUp ================================================= -->
+<div id="popup-div">
+    <div id="popup-header">
+        <center>
+            <div id="flash" style="display: none;"></div>
+            LMP Day unknown.
+            <br>
+            Estimate range.
+        </center>
+    </div>
+    <br />
+    <div id="popup-content">
+    <span style="font-size: 16pt;">
+          <!--<input id="tbInputAge" type="text" maxlength = "2" placeholder="Early" />-->
+          <div class="pop-up-btn odd" onmouseover="showFocus(this);" onmouseout="removeFocus(this);">
+              Early
+          </div>
+          <div class="pop-up-btn even" onmouseover="showFocus(this);" onmouseout="removeFocus(this);">
+              Mid
+          </div>
+          <div class="pop-up-btn odd" onmouseover="showFocus(this);" onmouseout="removeFocus(this);">
+              Late
+          </div>
+          <div id="year" class="virtual-keypad">
+              <input id="btnCancel" type="button" value="Cancel" onclick="hidePopup();" class="btn-red lower_buttons" />
+              <input id="btnCl" type="button" value="OK" onclick="saveByRange();" class="btn-green lower_buttons" />
+          </div>
+          <br />
+    </span>
+    </div>
+</div>
+<div id="cover"></div>
+
+<!-- ============================================================================================================= -->
+
 <script>
+    function showFocus(e) {
+        e.style.backgroundColor = 'lightblue';
+    }
+    function removeFocus(e) {
+        e.style.backgroundColor = '';
+    }
+    function popUp() {
+        document.getElementById("popup-div").style.display = 'inline';
+        document.getElementById("cover").style.display = 'inline';
+    }
+
+    function hidePopup(){
+        //clearInput();
+        document.getElementById("popup-div").style.display = 'none';
+        document.getElementById("cover").style.display = 'none';
+    }
+
     function nextDate() {
         var next_button = document.getElementById('nextButton');
         next_button.setAttribute('onmousedown','passDateValues(); validate_lmp();');
@@ -591,7 +675,7 @@
         btnUnknown.setAttribute('type','button');
         btnUnknown.setAttribute('value','Unknown');
         btnUnknown.style.fontSize = '1.4em';
-        btnUnknown.setAttribute('onclick','inputDay(this);');
+        btnUnknown.setAttribute('onclick','inputDay(this);popUp();');
         btnUnknown.className = 'btn-day';
         day_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
@@ -623,14 +707,9 @@
     }
 
     function validate_edd() {
-
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
-
-        if (day == 'Unknown') {
-            day = 1;
-        }
 
         var months = [
             'January',
@@ -651,6 +730,9 @@
         var year_diff = parseInt(current_year) - parseInt(year);
 
         if((year > current_year || year == current_year) && parseInt(year) < parseInt(current_year)+2) {
+            if( month == nil) {
+                showMessage('Month is blank');
+            }
             summary(year,month,day,current_month,current_year,months);
         }
         else if(year < current_year) {
@@ -672,10 +754,6 @@
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
 
-        if (day == 'Unknown') {
-            day = 1;
-        }
-
         var months = [
             'January',
             'February',
@@ -693,11 +771,22 @@
         var current_year = new Date().getFullYear();
         var current_month = new Date().getMonth();
         var year_diff = parseInt(current_year) - parseInt(year);
+
         if(year < current_year && year_diff >= 0 && year_diff <= 1 && year != 'Unknown'){
             // We expect month to be of index greater than current and plus 4 ---
             if(parseInt(months.indexOf(month)) >= parseInt(current_month)) {
                 if( day > 31 || ( day>=29 && (month == 'February') && (parseInt(year)%4 == 0)) ){
                     showMessage('Invalid input of day.',false,false);
+                }
+                else if(month == '') {
+                    showMessage('Invalid input. Month can not be blank.',false, false);
+                }
+                else if( day == '') {
+                    showMessage('Day can not be blank.',false,false);
+                }
+                else if( day == 'Unknown') {
+                    popUp();
+                    //showMessage('Please ask if it was early, middle, or late '+month,false,false)
                 }
                 else {
                     summary(year,month,day,current_month,current_year,months);
@@ -713,6 +802,16 @@
                 if(parseInt(months.indexOf(month)) <= parseInt(current_month)) {
                     if( day > 31 || ( day>=29 && (month == 'February') && (parseInt(year)%4 == 0)) ){
                         showMessage('Invalid input of day.',false,false);
+                    }
+                    else if(month == '') {
+                        showMessage('Invalid input. Month can not be blank.',false, false);
+                    }
+                    else if( day == '') {
+                        showMessage('Day can not be blank.',false,false);
+                    }
+                    else if( day == 'Unknown') {
+                        popUp();
+                        //showMessage('Please ask if it was early, middle, or late '+month,false,false)
                     }
                     else {
                         summary(year,month,day,current_month,current_year,months);
@@ -1053,8 +1152,10 @@
         var finish = document.getElementById('nextButton');
         finish.setAttribute('onmousedown','validateBirthdate();');
     }
+
     function validateBirthdate() {
         // submit form -------------------------
         document.getElementById('pregnancy-status').submit();
     }
+
 </script>
