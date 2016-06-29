@@ -391,7 +391,7 @@
     </div>
     <br />
     <div id="popup-content">
-    <span style="font-size: 16pt;">
+    <span>
           <!--<input id="tbInputAge" type="text" maxlength = "2" placeholder="Early" />-->
           <div class="pop-up-btn odd" onmouseover="showFocus(this);" onmouseout="removeFocus(this);" onclick="selectElement(this);">
               Early
@@ -403,8 +403,8 @@
               Late
           </div>
           <div id="year" class="virtual-keypad">
-              <input id="btnCancel" type="button" value="Cancel" onclick="hidePopup();clearInputDay();" class="btn-red lower_buttons" />
-              <input id="btnCl" type="button" value="OK" onclick="saveByRange();" class="btn-green lower_buttons" />
+              <button class="red" style="float: left;" onclick="hidePopup();clearInputDay();"><span>Cancel</span></button>
+              <button class="green" style="float: right;" onclick='saveByRange();'><span>OK</span></button>
           </div>
           <br />
     </span>
@@ -418,17 +418,27 @@
     var clicked = '';
 
     function selectElement(element) {
-        clicked = element;
-        element.style.backgroundColor = 'lightblue';
+        if(clicked != element) {
+            clicked = element;
+            element.style.backgroundColor = '#7d9ec0';
+        }
+        else {
+            clicked.style.backgroundColor = '';
+        }
     }
+
     function showFocus(element) {
-        element.style.backgroundColor = 'lightblue';
+        if(clicked != element) {
+            element.style.backgroundColor = 'lightblue';
+        }
     }
+
     function removeFocus(element) {
         if(clicked != element) {
             element.style.backgroundColor = '';
         }
     }
+
     function popUp() {
         document.getElementById("popup-div").style.display = 'inline';
         document.getElementById("cover").style.display = 'inline';
