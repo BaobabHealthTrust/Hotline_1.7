@@ -391,20 +391,20 @@
     </div>
     <br />
     <div id="popup-content">
-    <span>
+    <span style="font-size: 16pt;">
           <!--<input id="tbInputAge" type="text" maxlength = "2" placeholder="Early" />-->
-          <div class="pop-up-btn odd" onmouseover="showFocus(this);" onmouseout="removeFocus(this);" onclick="selectElement(this);">
+          <div class="pop-up-btn odd" onmouseover="showFocus(this);" onmouseout="removeFocus(this);">
               Early
           </div>
-          <div class="pop-up-btn even" onmouseover="showFocus(this);" onmouseout="removeFocus(this);" onclick="selectElement(this);">
+          <div class="pop-up-btn even" onmouseover="showFocus(this);" onmouseout="removeFocus(this);">
               Mid
           </div>
-          <div class="pop-up-btn odd" onmouseover="showFocus(this);" onmouseout="removeFocus(this);" onclick="selectElement(this);">
+          <div class="pop-up-btn odd" onmouseover="showFocus(this);" onmouseout="removeFocus(this);">
               Late
           </div>
           <div id="year" class="virtual-keypad">
-              <button class="red" style="float: left;" onclick="hidePopup();clearInputDay();"><span>Cancel</span></button>
-              <button class="green" style="float: right;" onclick='saveByRange();'><span>OK</span></button>
+              <input id="btnCancel" type="button" value="Cancel" onclick="hidePopup();" class="btn-red lower_buttons" />
+              <input id="btnCl" type="button" value="OK" onclick="saveByRange();" class="btn-green lower_buttons" />
           </div>
           <br />
     </span>
@@ -415,30 +415,12 @@
 <!-- ============================================================================================================= -->
 
 <script>
-    var clicked = '';
-
-    function selectElement(element) {
-        if(clicked != element) {
-            clicked = element;
-            element.style.backgroundColor = '#7d9ec0';
-        }
-        else {
-            clicked.style.backgroundColor = '';
-        }
+    function showFocus(e) {
+        e.style.backgroundColor = 'lightblue';
     }
-
-    function showFocus(element) {
-        if(clicked != element) {
-            element.style.backgroundColor = 'lightblue';
-        }
+    function removeFocus(e) {
+        e.style.backgroundColor = '';
     }
-
-    function removeFocus(element) {
-        if(clicked != element) {
-            element.style.backgroundColor = '';
-        }
-    }
-
     function popUp() {
         document.getElementById("popup-div").style.display = 'inline';
         document.getElementById("cover").style.display = 'inline';
@@ -446,7 +428,6 @@
 
     function hidePopup(){
         //clearInput();
-        clicked = '';
         document.getElementById("popup-div").style.display = 'none';
         document.getElementById("cover").style.display = 'none';
     }
@@ -573,14 +554,14 @@
                 year_div.appendChild(line_break);
             }
         }
-        var btnUnknown = document.createElement('input');
-        btnUnknown.setAttribute('id','btnUnknow');
-        btnUnknown.setAttribute('type','button');
-        btnUnknown.style.fontSize = '1.4em';
-        btnUnknown.setAttribute('value','Unknown');
+        //var btnUnknown = document.createElement('input');
+        //btnUnknown.setAttribute('id','btnUnknow');
+        //btnUnknown.setAttribute('type','button');
+        //btnUnknown.style.fontSize = '1.4em';
+        //btnUnknown.setAttribute('value','Unknown');
 //        btnUnknown.setAttribute('onclick','input(this);');
-        btnUnknown.className = 'btn-year';
-        year_div.appendChild(btnUnknown);
+        //btnUnknown.className = 'btn-year';
+        //year_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
         btn0.setAttribute('id','btn0');
         btn0.style.fontSize = '1.4em';
@@ -1176,9 +1157,5 @@
         // submit form -------------------------
         document.getElementById('pregnancy-status').submit();
     }
-
-        function saveByRange() {
-
-        }
 
 </script>
