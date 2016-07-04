@@ -51,20 +51,20 @@
 
     for (var i=0 ; i < dangerSignIds.length; ++i){  
       if ((dangerSignIds[i] == "cough_days") && ($(dangerSignIds[i]).value >= 21)) {
-        $("cough_21_days").value = "Yes";
+        $("cough_21_days").value == "Yes";
         display += "<span class='title' style='font-size:22px;'>Cough >= 21 days </span><br />";
       } else if (dangerSignIds[i] == "first_question"){
-        if($('start').value == 'Diarrhea') {
+        if($('start').value == 'Diarrhea' && $('first_question').value == "Yes" && $("diarrhea_id_days").value >= 14){
           display += "<span class='title' style='font-size:22px;'>Diarrhea >= 14 days </span><br />";
-        } else if ($('start').value == 'Fever'){
+        } else if ($('start').value == 'Fever' && $('first_question').value == "Yes" && $("fever_id_days").value >= 7){
           display += "<span class='title' style='font-size:22px;'>Fever >= 7 days </span><br />";
-        } else if ($('start').value == 'Red eye'){
+        } else if ($('start').value == 'Red eye' && $('first_question').value == "Yes" && $("red_eye_id_days").value >= 4){
           display += "<span class='title' style='font-size:22px;'>Red eye >= 4 days </span><br />";
-        } else if ($('start').value == 'Coughing'){
+        } else if ($('start').value == 'Coughing' && $('first_question').value == "Yes" && $("coughing_id_days").value >= 21){
           display += "<span class='title' style='font-size:22px;'>Cough >= 21 days </span><br />";
-        } else if ($('start').value == 'Convulsions'){
+        } else if ($('start').value == 'Convulsions' && $('first_question').value == "Yes") {
           display += "<span class='title' style='font-size:22px;'>Convulsions </span><br />";
-        } else if ($('start').value == 'Swollen legs or face'){
+        } else if ($('start').value == 'Swollen legs or face' && $('first_question').value == "Yes") {
           display += "<span class='title' style='font-size:22px;'>Swollen legs or face </span><br />";
         }
 
