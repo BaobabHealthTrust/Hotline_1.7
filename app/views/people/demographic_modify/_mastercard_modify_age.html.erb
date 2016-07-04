@@ -336,6 +336,20 @@
                              :tt_onLoad => 'load(); dateLayout(); nextDate();'}  %>
 
 <script>
+    var js_months = ['January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+    ]
+
     function popUp() {
         document.getElementById("popup-div").style.display = 'inline';
         document.getElementById("cover").style.display = 'inline';
@@ -389,10 +403,8 @@
         if( day > 31) {
             validateMessage('Day of the entered month is invalid.');
         }
-        else if( year == <%= Date.today.year %> ) {
-                if( month == '<%= Date::MONTHNAMES[Date.today.month] %>' && day > <%= Date.today.day %> ) {
-                    validateMessage('Day of Birth is ahead.');
-                }
+        else if( year == <%= Date.today.year %> && js_months.indexOf(month)+1 > <%= Date.today.month %> ) {
+            validateMessage('Date of Birth is ahead.');
         }
         else if( year > <%= Date.today.year %>) {
             validateMessage('Year of Birth is ahead.');
