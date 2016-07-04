@@ -675,7 +675,7 @@
         btnUnknown.setAttribute('type','button');
         btnUnknown.setAttribute('value','Unknown');
         btnUnknown.style.fontSize = '1.4em';
-        btnUnknown.setAttribute('onclick','inputDay(this);popUp();');
+        btnUnknown.setAttribute('onclick','inputDay(this);');
         btnUnknown.className = 'btn-day';
         day_div.appendChild(btnUnknown);
         var btn0 = document.createElement('input');
@@ -730,7 +730,7 @@
         var year_diff = parseInt(current_year) - parseInt(year);
 
         if((year > current_year || year == current_year) && parseInt(year) < parseInt(current_year)+2) {
-            if( month == nil) {
+            if( month == null ) {
                 showMessage('Month is blank');
             }
             summary(year,month,day,current_month,current_year,months);
@@ -753,6 +753,10 @@
         var year = document.getElementById('selected_year').value;
         var month = document.getElementById('selected_month').value;
         var day = document.getElementById('selected_day').value;
+
+        if(day == 'Unknown') {
+            day = 1;
+        }
 
         var months = [
             'January',
@@ -784,10 +788,6 @@
                 else if( day == '') {
                     showMessage('Day can not be blank.',false,false);
                 }
-                else if( day == 'Unknown') {
-                    popUp();
-                    //showMessage('Please ask if it was early, middle, or late '+month,false,false)
-                }
                 else {
                     summary(year,month,day,current_month,current_year,months);
                 }
@@ -809,10 +809,6 @@
                     else if( day == '') {
                         showMessage('Day can not be blank.',false,false);
                     }
-                    else if( day == 'Unknown') {
-                        popUp();
-                        //showMessage('Please ask if it was early, middle, or late '+month,false,false)
-                    }
                     else {
                         summary(year,month,day,current_month,current_year,months);
                     }
@@ -826,10 +822,6 @@
             if( get_edd != true ) {
                 showMessage('Invalid input. Year can not be ahead of ' + current_year, false, false);
             }
-        }
-        else if( year == 'Unknown' || day == 'Unknown') {
-            // Code to enter edd should come here and date unknown should be removed.
-            // showMessage('LMP Year unknown.',false,false);
         }
         else {
             showMessage('Invalid input. Entry should be within 12 months.',false,false);
