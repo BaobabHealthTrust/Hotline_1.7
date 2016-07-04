@@ -485,6 +485,8 @@ class EncountersController < ApplicationController
     @patient_obj = PatientService.get_patient(params[:patient_id])
     @client = Patient.find(params[:patient_id])
     @clinical_data = Encounter.current_data('CLINICAL ASSESSMENT', @patient_obj.patient_id)
+    infant_age = PatientService.get_infant_age(@patient_obj)
+
     @clinical_encounter = (@clinical_data['CURRENT COMPLAINTS OR SYMPTOMS'] - ['None'] || []) rescue []
     @danger_signs = (@clinical_data['DANGER SIGNS'] || []) rescue []
     @medicines = (@clinical_data['Medicines/supplements in current pregnancy'.upcase] - ['None'] || []) rescue []
@@ -509,18 +511,27 @@ class EncountersController < ApplicationController
     @symptoms_not_available = clinical_questions[@group] - @clinical_encounter - ['None']
 
     @consumed_groups = Encounter.current_food_groups('DIETARY ASSESSMENT', @patient_obj.patient_id).uniq
+    
+    if !infant_age.blank? && infant_age > 6 && @patient_obj.age <=2
+      @consumed_groups_count = @consumed_groups-['Breastmilk/Formula']
+    elsif infant_age.nil? && @patient_obj.age <=2
+      @consumed_groups_count = @consumed_groups-['Breastmilk/Formula']
+    else
+      @consumed_groups_count = @consumed_groups
+    end 
 
-    count = @consumed_groups.count
+
+
+    @count = @consumed_groups_count.count
     @comment = ""
-    if count.between?(0, 2)
+    if @count.between?(0, 2)
       @comment = "<span style='color: red;'>No diversity</span>"
-    elsif count.between?(3, 4)
+    elsif @count.between?(3, 4)
       @comment = "Inadequate <br /> diversification"
-    elsif count >= 5
+    elsif @count >= 5
       @comment = "<span style='color: green'>Adequate <br /> diversification</span>"
     end
 
-    infant_age = PatientService.get_infant_age(@patient_obj)
     if !infant_age.blank? && infant_age <= 6
       @comment = "Children under 6 months should be exclusively breastfed"
     end
