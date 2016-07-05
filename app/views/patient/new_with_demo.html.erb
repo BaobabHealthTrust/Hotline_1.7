@@ -4,6 +4,12 @@
         $('touchscreenInput'+tstCurrentPage).setAttribute('ajaxURL', url + filter_value + "&search_string=");
         listSuggestions(tstCurrentPage);
     }
+    function showIVR(){
+       <% if @patient_obj.avr_access_number.present? %>
+            showMessage('Generated IVR Number: <%=@patient_obj.avr_access_number%>', false, false)
+          <% end %> 
+    }
+
 </script>
 
 <style>
@@ -43,7 +49,7 @@
                                :tt_pageStyleClass => "nota",
                                :id => 'cell_phone_number',
                                :tt_requireNextClick => true, 
-                               :tt_onLoad => "$('nextButton').style.display = 'block';"
+                               :tt_onLoad => "$('nextButton').style.display = 'block';showIVR();"
                        }
     %>
 
