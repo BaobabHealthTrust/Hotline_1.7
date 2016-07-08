@@ -271,8 +271,7 @@
                showMessage("Incomplete entries for " + Object.keys(messages).length + " row" + (Object.keys(messages).length > 1 ? "s" : ''));
            }
         }
-        __$('clearButton').onmousedown = function(){
-        }
+        __$('clearButton').style.display = 'none';
     }
 
     var messages = {};
