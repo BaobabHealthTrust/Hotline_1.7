@@ -171,11 +171,15 @@
           <table class="attributes-table" valign="top">
             <tr>
               <th style="width:150px;" class="titl">Symptoms:</th>
-              <td class="value"  ><%= symp %></td>
+              <%# unless session['seen_clients'].include?(126)%>
+              <td class="value"  ><%= symp if session[:call] == 'symptoms_done' %></td>
+              <%# end %>
             </tr>
             <tr>
               <th style="width:150px;" class="titl">Danger signs:</th>
-              <td class="value" style="text-align: left;"><%= dang%></td>
+              <%# unless session['seen_clients'].include?(126)%>
+              <td class="value" style="text-align: left;"><%= dang if session[:call] == 'symptoms_done' %></td>
+              <%# end %>
             </tr>
           </table>
         </div>

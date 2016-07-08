@@ -1,5 +1,6 @@
 class PatientController < ApplicationController
 	def dashboard
+		session[:call] = 'started' if session[:call].blank? || session[:call].nil?
 		@tab_name = params[:tab_name]
 		@tab_name = 'current_call' if @tab_name.blank?
 		@patient_obj = PatientService.get_patient(params[:patient_id])
@@ -324,7 +325,11 @@ class PatientController < ApplicationController
 
 
 		if !params[:end_call].blank?
+			#raise params[:patient_id].inspect
+			#session['seen_clients'] = [] if session['seen_clients'].blank?
+			#session['seen_clients'] << 126
 			session[:end_call] = true
+			session[:call] = 'ended'
 		end
 
 		if params[:param] == 'verify_purpose'

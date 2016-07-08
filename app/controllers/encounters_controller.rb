@@ -2,7 +2,7 @@ class EncountersController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def create
-
+    
     @patient = Patient.find(params[:encounter][:patient_id])
     @patient_obj = PatientService.get_patient(@patient.patient_id)
 
@@ -14,7 +14,12 @@ class EncountersController < ApplicationController
     encounter.save
 
     # Observation handling
-
+    ###################
+     #raise @patient.patient_id.inspect
+    if encounter.type.name.downcase == "maternal health symptoms" || encounter.type.name.downcase == "child health symptoms" || encounter.type.name.downcase == "general health symptoms"
+      session[:call] = 'symptoms_done'
+    end
+    ##################
     if (encounter.type.name.downcase rescue false) == "dietary assessment"
       create_dietary_assess_obs(encounter, params)
       redirect_to  "/encounters/nutrition_summary?patient_id=#{@patient.id}&auto_flow=true" and return
@@ -240,6 +245,7 @@ class EncountersController < ApplicationController
           @info_concept = "Maternal Health Info"
            #raise @health_symptoms.inspect
         end
+        
       when 'Follow up'
           @follow_up_outcomes = [ "",
             "Client cannot be reached",
