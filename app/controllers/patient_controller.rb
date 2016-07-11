@@ -379,7 +379,7 @@ class PatientController < ApplicationController
 
 			if verify_purpose_encounter == false
 				redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
-			elsif purpose_of_call = "Registration"
+			elsif purpose_of_call == "Registration"
 				redirect_to '/' and return
 			elsif update_outcome_encounter == false
 				redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
