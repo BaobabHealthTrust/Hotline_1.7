@@ -1,25 +1,25 @@
 <%= select_tag "person[addresses][region_of_origin]", options_for_select([["", ""], ["Northern Region", "Northern"],
-                                                                        ["Central Region", "Central"], ["Southern Region", "Southern"]]),
+                                                                        ["Central Region", "Central"], ["Southern Region", "Southern"]], @patient_obj.region),
                {:id => "region_of_origin",
                 :tt_requireNextClick => false,
                 :tt_onLoad => "$('nextButton').style.display = 'none';",
                 :helptext => "Current region"}  %>
 
-<%= text_field_tag "person[addresses][home_district]", nil,
+<%= text_field_tag "person[addresses][home_district]", @patient_obj.address2,
                    {:id => "home_district",
                     :tt_requireNextClick => false,
                     :ajaxURL => "",
                     :tt_onLoad => "set_ajaxURL_for_suggestions('/patient/district?filter_value=', __$('region_of_origin').value); ",
                     :helptext => "Current district"}  %>
 
-<%= text_field_tag "person[addresses][home_ta]", nil,
+<%= text_field_tag "person[addresses][home_ta]", @patient_obj.county_district,
                    {:id => "home_ta",
                     :tt_requireNextClick => false,
                     :ajaxURL => "",
                     :tt_onLoad => "$('nextButton').style.display = 'none'; set_ajaxURL_for_suggestions('/patient/ta?filter_value=', __$('home_district').value);",
                     :helptext => "Current TA"}  %>
 
-<%= text_field_tag "person[addresses][home_village]", nil,
+<%= text_field_tag "person[addresses][home_village]", @patient_obj.neighborhood_cell,
                    {:id => "home_village",
                     :tt_requireNextClick => true,
                     :ajaxURL => "",
