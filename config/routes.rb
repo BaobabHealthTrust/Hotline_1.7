@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get '/set_session' => 'home#set_session'
   get 'report/patient_analysis'
 
   ######################### home start ############################################
