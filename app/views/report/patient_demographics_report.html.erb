@@ -1,111 +1,116 @@
-
 <%= render :partial => 'header' %>
 <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
 <div class="main-page-container">
     <fieldset id="main-fieldset">
         <legend class="" >
-        <%=@report_name +" - " %> <i><%=@patient_type%></i>
-      </legend>
-          <table cellspacing="0" width="100%" id="report_table">
-        <tr>
-          <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} "  %>
-        </tr>
-        <%@report.reverse.map do |data|%>
-          <tr>
-            <td width="25%" colspan = 2 class="cellleft cellbottom main-table-cell" style="background-color:#b6b3b3; text-align:center;font-weight: bold; font-size: large; ">
-              <%= @grouping.humanize + " beginning "+ data[:start_date] + " ending " + data[:end_date]%>
-            </td>
-          </tr>
-          <tr>
-            <td class="cellleft cellbottom main-table-cell">
-              New Registrations
-            </td>
-            
-            <td class="cellleft cellbottom main-table-cell">
-            <%= data[:new_registrations]%>
-            </td>
-          </tr>
-          <tr>
-            <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Catchment (Nearest Health Centre)
-            </td>
-          </tr>
-          <% data[:catchment].map do | catchment |%>
-          <tr>
-            <td class="cellleft cellbottom main-table-cell">
-            <%= catchment.first %>
-            </td>
-            
-            <td class="cellleft cellbottom main-table-cell">
-            <%= catchment.last %>
-            </td>
-          </tr>
-          <% end %>
-          
-          <%if @patient_type.downcase == 'children' || @patient_type.downcase == 'school aged children' || @patient_type.downcase == 'non-mnch' %>
+            <%=@report_name +" - " %> <i><%=@patient_type%></i>
+        </legend>
+        <table cellspacing="0" width="100%" id="report_table">
             <tr>
-              <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
-                Gender
-              </td>
+                <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} "  %>
             </tr>
-            <% data[:gender].map do | gender |%>
-            <tr>
-              <td class="cellleft cellbottom main-table-cell">
-              <%= gender.first.humanize %>
-              </td>
-              
-              <td class="cellleft cellbottom main-table-cell">
-              <%= gender.last %>
-              </td>
-            </tr>
-            <% end %>
+            <% @report.reverse.map do |data| %>
+                <tr>
+                    <td width="25%" colspan = 2 class="cellleft cellbottom main-table-cell" style="background-color:#b6b3b3; text-align:center;font-weight: bold; font-size: large; ">
+                        <%= @grouping.humanize + " beginning "+ data[:start_date] + " ending " + data[:end_date]%>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="cellleft cellbottom main-table-cell">
+                        New Registrations
+                    </td>
 
-        <%elsif @patient_type.downcase == 'women' %>
-            <tr>
-              <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
-                Pregnancy Status
-              </td>
-            </tr>
-            <% data[:pregnancy_status].map do | pregnancy_status |%>
-            <tr>
-              <td class="cellleft cellbottom main-table-cell">
-              <%= pregnancy_status.first.humanize %>
-              </td>
-              
-              <td class="cellleft cellbottom main-table-cell">
-              <%= pregnancy_status.last %>
-              </td>
-            </tr>
-            <% end %>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%= data[:new_registrations]%>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                        Catchment (Nearest Health Centre)
+                    </td>
+                </tr>
+                <% data[:catchment].map do | catchment |%>
+                    <tr>
+                        <td class="cellleft cellbottom main-table-cell">
+                            <%= catchment.first %>
+                        </td>
 
-        <%elsif @patient_type.downcase == 'all' %>
-            <tr>
-              <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
-                Patient Type
-              </td>
-            </tr>
-            <% data[:patient_type].map do | patient_type |%>
-            <tr>
-              <td class="cellleft cellbottom main-table-cell">
-              <%= patient_type.first.humanize %>
-              </td>
-              
-              <td class="cellleft cellbottom main-table-cell">
-              <%= patient_type.last %>
-              </td>
-            </tr>
+                        <td class="cellleft cellbottom main-table-cell">
+                            <%= catchment.last %>
+                        </td>
+                    </tr>
+                <% end %>
+
+                <%if @patient_type.downcase == 'children (under 5)' || @patient_type.downcase == 'children (6 - 14)' %>
+                    <tr>
+                        <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                            Gender
+                        </td>
+                    </tr>
+                    <% data[:gender].map do | gender |%>
+                        <tr>
+                            <td class="cellleft cellbottom main-table-cell">
+                                <%= gender.first.humanize %>
+                            </td>
+
+                            <td class="cellleft cellbottom main-table-cell">
+                                <%= gender.last %>
+                            </td>
+                        </tr>
+                    <% end %>
+
+                <%elsif @patient_type.downcase == 'women' %>
+                    <tr>
+                        <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                            Pregnancy Status
+                        </td>
+                    </tr>
+                    <% data[:pregnancy_status].map do | pregnancy_status |%>
+                        <tr>
+                            <td class="cellleft cellbottom main-table-cell">
+                                <%= pregnancy_status.first.humanize %>
+                            </td>
+
+                            <td class="cellleft cellbottom main-table-cell">
+                                <%= pregnancy_status.last %>
+                            </td>
+                        </tr>
+                    <% end %>
+
+                <%elsif @patient_type.downcase == 'all' %>
+                    <tr>
+                        <td colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                            Patient Type
+                        </td>
+                    </tr>
+                    <% data[:patient_type].map do | patient_type |%>
+                        <tr>
+                            <td class="cellleft cellbottom main-table-cell">
+                                <% if patient_type.first.humanize.match(/^Children under/) %>
+                                    <%= 'Children (under 5)' %>
+                                <% elsif patient_type.first.humanize.match(/Children 6 14/) %>
+                                    <%= 'Children (6 - 14)' %>
+                                <% else %>
+                                    <%= patient_type.first.humanize %>
+                                <% end %>
+                            </td>
+
+                            <td class="cellleft cellbottom main-table-cell">
+                                <%= patient_type.last %>
+                            </td>
+                        </tr>
+                    <% end %>
+                <% end %>
             <% end %>
-          <% end %>
-        <% end %>
-      </table>
+        </table>
     </fieldset>
 </div>
 <script type="text/javascript">
-  
-      $("#main-fieldset").css("height",window.innerHeight * 0.62);
-      window.onresize = function(){
+
+    $("#main-fieldset").css("height",window.innerHeight * 0.62);
+    window.onresize = function(){
         $("#main-fieldset").css("height",window.innerHeight * 0.62);
-      }
+    }
 </script>
