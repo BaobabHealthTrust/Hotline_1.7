@@ -9,11 +9,14 @@
     <% @title = "#{controller.controller_name.humanize} #{controller.action_name.humanize}" rescue ""  %>
     <script language="javascript" defer="true">
       <!--
-      tstUsername = "<%= "" %>";
-      tstUserKeyboardPref = "<%= "qwerty" %>";
+      tstUsername = "<%= '' %>";
 
-  tstCurrentDate = "<%= (session[:datetime] ? session[:datetime].to_date.strftime("%Y-%m-%d") :
-    Date.today.strftime("%Y-%m-%d")) %>";
+      tstUserKeyboardPref = "<%= (session[:keyboard_pref].blank? ? 'qwerty' : session[:keyboard_pref]) %>";
+
+  tstCurrentDate = "<%= (session[:datetime] ? session[:datetime].to_date.strftime('%Y-%m-%d') :
+    Date.today.strftime('%Y-%m-%d')) %>";
+
+
 
   function addHereButton(){
     var button = document.createElement("button");
@@ -403,4 +406,69 @@
     }
 
     start();
+
+</script>
+
+<script type="text/javascript" defer="true">
+  
+  function init() {
+    if(__$("qwerty")) {
+
+      __$("qwerty").onmousedown = function(){};
+
+      __$("qwerty").onmousedown = function() {
+
+          tstUserKeyboardPref = 'qwerty';
+
+          showBestKeyboard(tstCurrentPage);
+
+          var httpRequest = new XMLHttpRequest();
+
+          httpRequest.onreadystatechange = function() {
+              if (httpRequest.readyState == 4 && (httpRequest.status == 200 || httpRequest.status == 304)) {               
+                var result = httpRequest.responseText;    
+
+              }
+          };
+          try {                      
+              httpRequest.open('GET', "/set_session?field=keyboard_pref&value=qwerty", true);
+              httpRequest.send(null);
+          } catch(e){
+          } 
+      }
+
+    }
+
+    if(__$("abc")) {
+
+      __$("abc").onmousedown = function(){};
+
+      __$("abc").onmousedown = function() {
+
+          tstUserKeyboardPref = 'abc';
+
+          showBestKeyboard(tstCurrentPage);
+
+          var httpRequest = new XMLHttpRequest();
+
+          httpRequest.onreadystatechange = function() {
+              if (httpRequest.readyState == 4 && (httpRequest.status == 200 || httpRequest.status == 304)) {               
+                var result = httpRequest.responseText;    
+
+              }
+          };
+          try {                      
+              httpRequest.open('GET', "/set_session?field=keyboard_pref&value=abc", true);
+              httpRequest.send(null);
+          } catch(e){
+          } 
+      }
+
+    }
+  }
+
+  setTimeout(function(){
+    init();
+  }, 500);
+
 </script>

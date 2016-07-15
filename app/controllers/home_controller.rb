@@ -256,4 +256,9 @@ class HomeController < ApplicationController
     render :text => hash.to_json
   end
   
+  def set_session
+    session[params[:field]] = params[:value]
+    render :text => session[params[:field]]
+  end
+
 end
