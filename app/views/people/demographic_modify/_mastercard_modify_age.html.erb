@@ -410,7 +410,8 @@
             validateMessage('Year of Birth is ahead.');
         }
         else if( year == null || year.length == 0) {
-            validateMessage('Year can not be blank. Select "Unknown" instead.');
+            popUp();
+            //validateMessage('Year can not be blank. Select "Unknown" instead.');
         }
         else {
             gotoNextPage();
