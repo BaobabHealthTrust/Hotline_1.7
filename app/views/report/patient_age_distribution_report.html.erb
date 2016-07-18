@@ -94,15 +94,9 @@
                     <%  end %>
                     </tr>
                 <% elsif @patient_type.downcase == 'men' %>
-                    <tr>
-                        <td colspan = 7 class="cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-                            Gender
-                        </td>
-                    </tr>
-                    <% data[:patient_data][:gender].map do | gender |%>
                         <tr>
                             <td class="cellleft cellbottom cellright main-table-cell">
-                                <%= gender.first.humanize %>
+                                All registered men
                             </td>
 
                                 <td class="cellleft cellbottom main-table-cell">
@@ -124,7 +118,6 @@
                                     <%= data[:patient_type][:patient][:male][:sdev] rescue 0 %>
                                 </td>
                         </tr>
-                    <% end %>
 
                 <%elsif @patient_type.downcase == 'women' %>
                     <tr>
