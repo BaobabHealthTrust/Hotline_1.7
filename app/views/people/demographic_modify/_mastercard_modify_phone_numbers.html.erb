@@ -13,7 +13,7 @@
    :validationMessage => "Not a valid phone number" } %>
 
 <%= hidden_field_tag("observations[][concept_name]", "Phone Type") %>
-<%= select_tag "observations[][value_text]", options_for_select(concept_set('Phone Type')),
+<%= select_tag "observations[][value_text]", options_for_select(concept_set('Phone Type'), @patient_obj.phone_type),
                :helpText =>"Select phone type",
                :id => "phone_type",
                :tt_onLoad => "$('keyboard').style.display = 'none';"
