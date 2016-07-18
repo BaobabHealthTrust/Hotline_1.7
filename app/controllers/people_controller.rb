@@ -140,10 +140,15 @@ class PeopleController < ApplicationController
 			redirect_to "/patient/dashboard/#{patient.person_id}/tasks?next_task=#{params[:next_task]}" and return if !params[:next_task].blank?
 			redirect_to "/demographics/#{patient.person_id}"
 		else
-			@edit_page = params[:field]
-			@patient_obj = PatientService.get_patient(params[:patient_id])
-			@patient_name = PersonName.where(:person_id => params[:patient_id]).last
-				#raise @patient_obj.inspect
+			@edit_page      = params[:field]
+			@patient_obj    = PatientService.get_patient(params[:patient_id])
+			@patient_name   = PersonName.where(:person_id => params[:patient_id]).last
+			birthdate       = @patient_obj.birthdate.split('/')
+
+			@birthday       = birthdate[0]
+			@birthmonth     = birthdate[1]
+			@birthyear      = birthdate[2]
+
 			location_tag = LocationTag.find_by_name("District")
 			@districts = Location.where("m.location_tag_id = #{location_tag.id}").joins('INNER JOIN location_tag_map m
      ON m.location_id = location.location_id').collect{|l | [l.id, l.name]}

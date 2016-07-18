@@ -493,6 +493,7 @@
         year_table_cell.appendChild(label);
 
         var year_input_field = document.createElement('input');
+        year_input_field.setAttribute('value','<%= @birthyear %>');
         year_input_field.setAttribute('id','tbInputYear');
         year_input_field.setAttribute('type','text');
         year_input_field.setAttribute('maxlength','4');
@@ -520,7 +521,7 @@
         btnUnknown.setAttribute('id','btnUnknow');
         btnUnknown.setAttribute('type','button');
         btnUnknown.setAttribute('value','Unknown');
-        btnUnknown.setAttribute('onclick','input(this); popUp();');
+        btnUnknown.setAttribute('onclick','popUp();');
         btnUnknown.className = 'btn-year lower_buttons';
         year_div.appendChild(btnUnknown);
 
@@ -554,6 +555,7 @@
         table_cell.appendChild(label);
 
         var month_input_field = document.createElement('input');
+        month_input_field.setAttribute('value','<%= @birthmonth %>');
         month_input_field.setAttribute('id','tbInputMonth');
         month_input_field.setAttribute('type','text');
         table_cell.appendChild(month_input_field);
@@ -616,6 +618,7 @@
         table_cell.appendChild(label);
 
         var day_input_field = document.createElement('input');
+        day_input_field.setAttribute('value','<%= @birthday %>');
         day_input_field.setAttribute('id','tbInputDay');
         day_input_field.setAttribute('type','text');
         day_input_field.setAttribute('maxlength','2');
