@@ -33,7 +33,7 @@ module PatientService
 
 		patient_obj.cell_phone_number = PersonAttribute.where(:person_id => person.id,
 		                                                      :person_attribute_type => PersonAttributeType.find_by_name("Cell Phone Number").id).first.value rescue nil
-		#patient_obj.phone_type = person.phone_type
+		patient_obj.phone_type = Observation.find_by_sql("SELECT * FROM obs WHERE person_id = #{person.id} AND value_text like '%phone' ").first.value_text
 
 
 		return patient_obj
