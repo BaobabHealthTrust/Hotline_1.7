@@ -1,18 +1,16 @@
-
-
+<script>
+var cur_facility = "<%= @patient_obj.facility_name %>"
+</script>
 <%= select_tag 'district',
-               options_for_select(@location_names.sort, []), {
+               options_for_select(@location_names.sort, @patient_obj.township_division), {
                 :helpText => 'Client\'s District of residence',
                 :id => 'district'
                 } %>
 
-<%= select_tag "nearest_health_facility", nil,
+<%= select_tag "nearest_health_facility", @patient_obj.facility_name,
                {:id => 'health_centre_name',
                 :field_type => 'alpha',
                 :helpText => 'Select nearest health centre',
-                :ajaxURL => "",
-                :tt_onLoad => "set_ajaxURL_for_suggestions(
-                             '/home/health_facilities?tag=' +  __$('district').value + '&search_string=',
-                             ''
-                        );"
+                :ajaxURL => "/home/health_facilities?search_string=#{@patient_obj.facility_name}",
+                :tt_onLoad => "__$('touchscreenInput' + tstCurrentPage).value = cur_facility;"
                }%>

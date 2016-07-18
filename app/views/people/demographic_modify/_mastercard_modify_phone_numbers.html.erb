@@ -4,7 +4,7 @@
   }
 </style>
 
-<%= text_field_tag "person[#{params[:field]}]",  nil,
+<%= text_field_tag "person[#{params[:field]}]",  @patient_obj.cell_phone_number,
   {:field_type => 'number', :helpText => "Phone number",
    :allowFreeText => true,
    :id => 'phone',

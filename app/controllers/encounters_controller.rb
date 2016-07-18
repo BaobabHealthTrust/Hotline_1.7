@@ -192,6 +192,7 @@ class EncountersController < ApplicationController
                                                'Last menstrual period',
                                                'Pregnancy Status',
                                                Date.today)
+        ##### defined in preg status view ######
         current_lmp_str = current_lmp[0].split('/') rescue []
         current_lmp_str_time = current_lmp_str[2].split(' ') rescue []
         months = Date::MONTHNAMES

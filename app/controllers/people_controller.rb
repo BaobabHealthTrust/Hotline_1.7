@@ -142,6 +142,8 @@ class PeopleController < ApplicationController
 		else
 			@edit_page = params[:field]
 			@patient_obj = PatientService.get_patient(params[:patient_id])
+			@patient_name = PersonName.where(:person_id => params[:patient_id]).last
+				#raise @patient_obj.inspect
 			location_tag = LocationTag.find_by_name("District")
 			@districts = Location.where("m.location_tag_id = #{location_tag.id}").joins('INNER JOIN location_tag_map m
      ON m.location_id = location.location_id').collect{|l | [l.id, l.name]}
