@@ -401,13 +401,13 @@
         var month = document.getElementById('selected_month').value = document.getElementById('tbInputMonth').value;
         var day = document.getElementById('selected_day').value = document.getElementById('tbInputDay').value;
         if( day > 31) {
-            validateMessage('Day of the entered month is invalid.');
+            validateMessage('The date entered is greater than the current date.');
         }
         else if( year == <%= Date.today.year %> && js_months.indexOf(month)+1 > <%= Date.today.month %> ) {
             validateMessage('Date of Birth is ahead.');
         }
-        else if( year > <%= Date.today.year %>) {
-            validateMessage('Year of Birth is ahead.');
+        else if( year < 1866 || year > <%= Date.today.year %>) {
+            validateMessage('Year Entered is out of range. Year should be between 1866 and '+ <%= Date.today.year%>);
         }
         else if( year == null || year.length == 0) {
             popUp();
