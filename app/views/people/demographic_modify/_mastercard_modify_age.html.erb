@@ -378,8 +378,8 @@
         pop_up_container.style.position = 'absolute';
         pop_up_container.style.left = '20%';
         pop_up_container.style.top = '20%';
-        pop_up_container.style.width = '50%';
-        pop_up_container.style.height = '50%';
+        pop_up_container.style.width = '35%';
+        pop_up_container.style.height = 'auto';
         pop_up_container.style.textAlign = 'center';
         pop_up_container.style.zIndex = '1000';
         pop_up_container.style.visibility = 'visible';
@@ -408,6 +408,9 @@
         }
         else if( year > <%= Date.today.year %>) {
             validateMessage('Year of Birth is ahead.');
+        }
+        else if( year == null || year.length == 0) {
+            validateMessage('Year can not be blank. Select "Unknown" instead.');
         }
         else {
             gotoNextPage();
@@ -710,17 +713,9 @@
             }
         }
 
-        // Check if year is blank ------
-        if (year.length == 0 ) {
-            clearInputAge();
-            input(btnUnknow);
-            //year = 'Unknown';
-            popUp();
-            return;
-        }
 
         // Check if year is not known ------------
-        else if (year != 'Unknown') {
+        if (year != 'Unknown') {
             if ( year.length != 4 ) {
                 alert('Year can only have 4 digits.');
                 return; // with a flash message.
@@ -750,13 +745,6 @@
             document.getElementById('selected_month').value = month;
             document.getElementById('selected_day').value = day;
         }
-        // check if year is known -------------
-        else if (year == 'Unknown') {
-            document.getElementById('selected_year').value = year;
-            document.getElementById('age_estimate').value = estimated_age;
-        }
-
-
     }
 
     function clearInputAge() {
