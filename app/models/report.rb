@@ -981,12 +981,12 @@ module Report
 			case patient_type.downcase
 				when 'women'
 					new_patients_data = self.women_demographics(results, date_range, district_id)
-				when 'children'
-					new_patients_data = self.children_demographics(results, date_range, district_id)
-				when 'school aged children'
-					new_patients_data = self.school_aged_children_demographics(results, date_range, district_id)
-				when 'non-mnch'
-					new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
+				when 'children (under 5)'
+					new_patients_data = self.children_under_5_demographics(results, date_range, district_id)
+				when 'children (6 - 14)'
+					new_patients_data = self.children_6_14_demographics(results, date_range, district_id)
+				when 'men'
+					new_patients_data = self.men_demographics(results, date_range, district_id)
 				else
 					new_patients_data = self.all_patients_demographics(results, date_range, district_id)
 			end # end case
@@ -1125,12 +1125,12 @@ module Report
 					  }
 				}
 
-			when 'children', 'school aged children'
+			when 'children (under 5)', 'children (6 - 14)'
 				all_age     = new_patients_data[:all_age]
 				male_age    = new_patients_data[:male_age]
 				female_age  = new_patients_data[:female_age]
 
-				if patient_type.downcase == 'children'
+				if patient_type.downcase == 'children (under 5)'
 					children = Patient.joins(person: {person_addresses: :person})
 						             .where("(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
                                 AND person.date_created BETWEEN ? AND ?
@@ -1138,7 +1138,7 @@ module Report
 						                    date_range[0],
 						                    date_range[1],
 						             )
-				elsif patient_type.downcase == 'school aged children'
+				elsif patient_type.downcase == 'children (6 - 14)'
 					children = Patient.joins(person: {person_addresses: :person})
 						             .where("(YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
 								AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
@@ -1165,22 +1165,19 @@ module Report
 				male_min            = self.calculate_min(male_age)
 				male_max            = self.calculate_max(male_age)
 
-			when 'non-mnch'
+			when 'men'
 				all_age     = new_patients_data[:all_age]
 				male_age    = new_patients_data[:male_age]
 				female_age  = new_patients_data[:female_age]
 
-				non_mnch = Patient.joins(person: {person_addresses: :person})
-					             .where("((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
-                                OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
-                                    AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
-                                OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
+				men = Patient.joins(person: {person_addresses: :person})
+					             .where("((YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
                                     AND person.gender = 'M') AND person.date_created BETWEEN ? AND ?
 								#{township_division}",
 					                    date_range[0],
 					                    date_range[1]
 					             )
-				total = non_mnch.count('patient.patient_id', :distinct => true)
+				total = men.count('patient.patient_id', :distinct => true)
 				#---------------- female non_mnch regardlesss of age
 				female_count        =   non_mnch.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
 				female_percentage   =   self.get_percentage(total, female_count)

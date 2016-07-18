@@ -537,15 +537,18 @@ class ReportController < ApplicationController
 
 		case @patient_type.downcase
 			when 'women'
-				@special_message = ' -- (Please note that women is any female over 13 years old.)'
-			when 'children'
-				@special_message = ' -- (Plese note that children is anyone of 5 years of age and below.)'
-			when 'school aged children'
-				@special_message = ' -- (Plese note that school aged children is anyone between the age of 6 and 13 years.)'
-			when 'non-mnch'
-				@special_message = ' -- (Please note that Non-MNCH might be a child or adult, and any gender.)'
+				@special_message = ' -- (Please note that women is any female over 13.)'
+			when 'children (under 5)'
+				@special_message = ' -- (Plese note that children(under 5) is anyone of 5 years of age and below.)'
+			when 'children (6 - 14)'
+				@special_message = ' -- (Plese note that children (6 - 14) is anyone between the age of 6 and 14.)'
+			when 'men'
+				@special_message = ' -- (Please note that Men might is any male above the age of 13.)'
 			else
-				@special_message = ' -- (Please note that age shows for Women, Children, School aged children & Non-MNCH)'
+				@special_message = ' -- (Please note that age shows for Women,
+				Children (under 5),
+				Children (6 - 14),
+				& Men)'
 		end
 
 
