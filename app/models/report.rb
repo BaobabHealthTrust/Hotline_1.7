@@ -1022,7 +1022,7 @@ module Report
 		}
 		case patient_type.downcase
 			when 'all'
-				all_age = new_patients_data[:all_age]
+				total_age = new_patients_data[:all_age]
 				child_under_5_age = new_patients_data[:child_under_5_age]
 				child_6_14_age = new_patients_data[:child_6_14]
 				women_age = new_patients_data[:women_age]
@@ -1042,7 +1042,7 @@ module Report
 				                                date_range[1]
 				).count('patient_id', :distinct => true)
 
-				women_percentage    = self.get_percentage(all_age.count, women_count)
+				women_percentage    = self.get_percentage(total_age.count, women_count)
 				women_average       = self.calculate_average(women_age)
 				women_sdev          = self.calculate_sdev(women_age)
 				women_min           = self.calculate_min(women_age)
@@ -1053,9 +1053,8 @@ module Report
                                         AND person.date_created BETWEEN ? AND ?',
 				                                   date_range[0],
 				                                   date_range[1]
-				)
-					                   .count('patient_id', :distinct => true)
-				children_under_5_percentage = self.get_percentage(total, children_under_5_count)
+				).count('patient_id', :distinct => true)
+				children_under_5_percentage = self.get_percentage(total_age.count, children_under_5_count)
 				children_under_5_average    = self.calculate_average(child_under_5_age)
 				children_under_5_sdev       = self.calculate_sdev(child_under_5_age)
 				children_under_5_min        = self.calculate_min(child_under_5_age)
@@ -1066,9 +1065,9 @@ module Report
 										AND (YEAR(patient.date_created) - YEAR(person.birthdate)) >= 13
                                         AND person.date_created BETWEEN ? AND ?',
 				                                               date_range[0],
-				                                               date_range[1])
-					                               .count('patient_id', :distinct => true)
-				children_6_14_percentage = self.get_percentage(total, children_6_14_count)
+				                                               date_range[1]
+				).count('patient_id', :distinct => true)
+				children_6_14_percentage = self.get_percentage(total_age.count, children_6_14_count)
 				children_6_14_average    = self.calculate_average(child_6_14_age)
 				children_6_14_sdev       = self.calculate_sdev(child_6_14_age)
 				children_6_14_min        = self.calculate_min(child_6_14_age)
@@ -1076,13 +1075,12 @@ module Report
 
 				#----- non_mnch_calculations
 				men_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
-                                        AND person.gender = "M")
+                                        AND person.gender = "M"
                                         AND person.date_created BETWEEN ? AND ?',
 				                                   date_range[0],
 				                                   date_range[1]
-				)
-					                   .count('patient_id', :distinct => true)
-				men_percentage = self.get_percentage(total, men_count)
+				).count('patient_id', :distinct => true)
+				men_percentage = self.get_percentage(total_age.count, men_count)
 				men_average    = self.calculate_average(men_age)
 				men_sdev       = self.calculate_sdev(men_age)
 				men_min        = self.calculate_min(men_age)
@@ -1097,29 +1095,29 @@ module Report
 							average: women_average,
 							sdev:   women_sdev
 					  },
-					  children: {
-							count: child_age.count,
-							percentage: '%.2f' % children_percentage,
-							min: children_min,
-							max: children_max,
-							average: children_average,
-							sdev:   children_sdev
+					  children_under_5: {
+							count: child_under_5_age.count,
+							percentage: '%.2f' % children_under_5_percentage,
+							min: children_under_5_min,
+							max: children_under_5_max,
+							average: children_under_5_average,
+							sdev:   children_under_5_sdev
 					  },
-					  school_aged_children: {
-							count: school_aged_child.count,
-							percentage: '%.2f' % school_aged_children_percentage,
-							min: school_aged_children_min,
-							max: school_aged_children_max,
-							average: school_aged_children_average,
-							sdev:   school_aged_children_sdev
+					  children_6_14: {
+							count: child_6_14_age.count,
+							percentage: '%.2f' % children_6_14_percentage,
+							min: children_6_14_min,
+							max: children_6_14_max,
+							average: children_6_14_average,
+							sdev:   children_6_14_sdev
 					  },
-					  non_mnch: {
-							count: non_mnch_age.count,
-							percentage: '%.2f' % non_mnch_percentage,
-							min: non_mnch_min,
-							max: non_mnch_max,
-							average: non_mnch_average,
-							sdev:   non_mnch_sdev
+					  men: {
+							count: men_age.count,
+							percentage: '%.2f' % men_percentage,
+							min: men_min,
+							max: men_max,
+							average: men_average,
+							sdev:   men_sdev
 					  }
 				}
 
@@ -1128,45 +1126,24 @@ module Report
 				male_age    = new_patients_data[:male_age]
 				female_age  = new_patients_data[:female_age]
 
-				if patient_type.downcase == 'children (under 5)'
-					children = Patient.joins(person: {person_addresses: :person})
-						             .where("(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
-                                AND person.date_created BETWEEN ? AND ?
-								#{township_division} ",
-						                    date_range[0],
-						                    date_range[1],
-						             )
-				elsif patient_type.downcase == 'children (6 - 14)'
-					children = Patient.joins(person: {person_addresses: :person})
-						             .where("(YEAR(patient.date_created) - YEAR(person.birthdate)) > 5
-								AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= 13
-                                AND person.date_created BETWEEN ? AND ?
-								#{township_division} ",
-						                    date_range[0],
-						                    date_range[1],
-						             )
-				end
-				total = children.count('patient_id', :distinct => true)
 				#------- Female child calculations
-				female_count        = children.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
-				female_percentage   = self.get_percentage(total, female_count)
+				female_count        = female_age.count
+				female_percentage   = self.get_percentage(all_age.count, female_count)
 				female_average      = self.calculate_average(female_age)
 				female_sdev         = self.calculate_sdev(female_age)
 				female_min          = self.calculate_min(female_age)
 				female_max          = self.calculate_max(female_age)
 
 				#------- Male child calculations
-				male_count          = children.where('person.gender' => 'M').count('patient.patient_id', :distinct => true)
-				male_percentage     = self.get_percentage(total, male_count)
+				male_count          = male_age.count
+				male_percentage     = self.get_percentage(all_age.count, male_count)
 				male_average        = self.calculate_average(male_age)
 				male_sdev           = self.calculate_sdev(male_age)
 				male_min            = self.calculate_min(male_age)
 				male_max            = self.calculate_max(male_age)
 
 			when 'men'
-				all_age     = new_patients_data[:all_age]
-				male_age    = new_patients_data[:male_age]
-				female_age  = new_patients_data[:female_age]
+				all_age     = new_patients_data[:men]
 
 				men = Patient.joins(person: {person_addresses: :person})
 					             .where("((YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
@@ -1176,21 +1153,25 @@ module Report
 					                    date_range[1]
 					             )
 				total = men.count('patient.patient_id', :distinct => true)
-				#---------------- female non_mnch regardlesss of age
-				female_count        =   non_mnch.where('person.gender' => 'F').count('patient.patient_id', :distinct => true)
-				female_percentage   =   self.get_percentage(total, female_count)
-				female_average      =   self.calculate_average(female_age)
-				female_sdev         =   self.calculate_sdev(female_age)
-				female_min          = self.calculate_min(female_age)
-				female_max          = self.calculate_min(female_age)
 
 				#---------------- male non_mnch regardless of age
-				male_count          = non_mnch.where('person.gender' => 'M').count('patient.patient_id', :distinct => true)
+				male_count          = total
 				male_percentage     = self.get_percentage(total, male_count)
-				male_average        = self.calculate_average(male_age)
-				male_sdev           = self.calculate_sdev(male_age)
-				male_min            = self.calculate_min(male_age)
-				male_max            = self.calculate_max(male_age)
+				male_average        = self.calculate_average(all_age)
+				male_sdev           = self.calculate_sdev(all_age)
+				male_min            = self.calculate_min(all_age)
+				male_max            = self.calculate_max(all_age)
+
+				data_for_patients[:patient_type][:patient] = {
+					  male: {
+							count: male_count,
+							percentage: '%.2f' % male_percentage,
+							min: male_min,
+							max: male_max,
+							average: male_average,
+							sdev: male_sdev
+					  }
+				}
 
 			when 'women'
 				all_age             = new_patients_data[:all_age]
@@ -1345,7 +1326,7 @@ module Report
 
 		end
 
-		if patient_type.downcase == 'children' || patient_type.downcase == 'school aged children' || patient_type.downcase == 'non-mnch'
+		if patient_type.downcase == 'children (under 5)' || patient_type.downcase == 'children (6 - 14)'
 			data_for_patients[:patient_type][:patient] = {
 				  female: {
 						count: female_count,
