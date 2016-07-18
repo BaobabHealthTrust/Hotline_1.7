@@ -997,7 +997,6 @@ module Report
 	end
 
 	def self.get_statistics(patient_type, data_for_patients, new_patients_data, date_range, district)
-
 		if district == 'All'
 			districts = "'" + Location.where('description = "Malawian district"').map(&:name).split.join("','") + "'"
 			township_division = "AND person_address.township_division IN (#{districts}) "
@@ -1024,10 +1023,10 @@ module Report
 		case patient_type.downcase
 			when 'all'
 				all_age = new_patients_data[:all_age]
-				child_age = new_patients_data[:child_age]
-				school_aged_child = new_patients_data[:school_aged_child]
+				child_under_5_age = new_patients_data[:child_under_5_age]
+				child_6_14_age = new_patients_data[:child_6_14]
 				women_age = new_patients_data[:women_age]
-				non_mnch_age = new_patients_data[:non_mnch_age]
+				men_age = new_patients_data[:men_age]
 				all_clients = Patient.joins(person: {person_addresses: :person})
 					                .where("person.date_created BETWEEN ? AND ? #{township_division}",
 					                       date_range[0],
@@ -1050,45 +1049,44 @@ module Report
 				women_max           = self.calculate_max(women_age)
 
 				#----- children_calculations
-				children_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
+				children_under_5_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
                                         AND person.date_created BETWEEN ? AND ?',
 				                                   date_range[0],
 				                                   date_range[1]
 				)
 					                   .count('patient_id', :distinct => true)
-				children_percentage = self.get_percentage(total, children_count)
-				children_average    = self.calculate_average(child_age)
-				children_sdev       = self.calculate_sdev(child_age)
-				children_min        = self.calculate_min(child_age)
-				children_max        = self.calculate_max(child_age)
+				children_under_5_percentage = self.get_percentage(total, children_under_5_count)
+				children_under_5_average    = self.calculate_average(child_under_5_age)
+				children_under_5_sdev       = self.calculate_sdev(child_under_5_age)
+				children_under_5_min        = self.calculate_min(child_under_5_age)
+				children_under_5_max        = self.calculate_max(child_under_5_age)
 
 				#----- school_aged_children_calculations
-				school_aged_children_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate))>5
+				children_6_14_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate))>5
 										AND (YEAR(patient.date_created) - YEAR(person.birthdate)) >= 13
                                         AND person.date_created BETWEEN ? AND ?',
 				                                               date_range[0],
 				                                               date_range[1])
 					                               .count('patient_id', :distinct => true)
-				school_aged_children_percentage = self.get_percentage(total, school_aged_children_count)
-				school_aged_children_average    = self.calculate_average(school_aged_child)
-				school_aged_children_sdev       = self.calculate_sdev(school_aged_child)
-				school_aged_children_min        = self.calculate_min(school_aged_child)
-				school_aged_children_max        = self.calculate_max(school_aged_child)
+				children_6_14_percentage = self.get_percentage(total, children_6_14_count)
+				children_6_14_average    = self.calculate_average(child_6_14_age)
+				children_6_14_sdev       = self.calculate_sdev(child_6_14_age)
+				children_6_14_min        = self.calculate_min(child_6_14_age)
+				children_6_14_max        = self.calculate_max(child_6_14_age)
 
 				#----- non_mnch_calculations
-				non_mnch_count = all_clients.where('((YEAR(patient.date_created) - YEAR(person.birthdate)) >= 50
-                                        OR (YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
+				men_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
                                         AND person.gender = "M")
                                         AND person.date_created BETWEEN ? AND ?',
 				                                   date_range[0],
 				                                   date_range[1]
 				)
 					                   .count('patient_id', :distinct => true)
-				non_mnch_percentage = self.get_percentage(total, non_mnch_count)
-				non_mnch_average    = self.calculate_average(non_mnch_age)
-				non_mnch_sdev       = self.calculate_sdev(non_mnch_age)
-				non_mnch_min        = self.calculate_min(non_mnch_age)
-				non_mnch_max        = self.calculate_max(non_mnch_age)
+				men_percentage = self.get_percentage(total, men_count)
+				men_average    = self.calculate_average(men_age)
+				men_sdev       = self.calculate_sdev(men_age)
+				men_min        = self.calculate_min(men_age)
+				men_max        = self.calculate_max(men_age)
 
 				data_for_patients[:patient_type][:patient] = {
 					  women: {
