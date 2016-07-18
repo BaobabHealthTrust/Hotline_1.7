@@ -40,7 +40,7 @@
                         <%= @grouping.humanize + " beginning "+ data[:patient_data][:start_date] + " ending " + data[:patient_data][:end_date]%>
                     </td>
                 </tr>
-                <%if @patient_type.downcase == 'children' || @patient_type.downcase == 'school aged children' %>
+                <%if @patient_type.downcase == 'children (under 5)' || @patient_type.downcase == 'children (6 - 14)' %>
                     <tr>
                         <td colspan = 7 class="cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
                             Gender
@@ -147,7 +147,7 @@
                         </tr>
                     <% end %>
 
-                <%elsif(@patient_type.downcase == 'women')%>
+                <%elsif @patient_type.downcase == 'women' %>
                     <tr>
                         <td colspan = 7 class="cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
                             Pregnancy Status
@@ -239,7 +239,7 @@
                         </tr>
                     <% end %>
 
-                <%elsif(@patient_type.downcase == 'all')%>
+                <%elsif @patient_type.downcase == 'all' %>
                     <tr>
                         <td colspan = 7 class="cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
                             Patient Type
