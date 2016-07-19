@@ -491,10 +491,8 @@ module Report
 		encounter_type_ids  = essential_params[:encounter_type_ids]
 		extra_conditions    = essential_params[:extra_conditions]
 		extra_parameters    = essential_params[:extra_parameters]
-
 		# TODO find a better way of getting concept_names that are not tagged concept_name_tag_map as danger,
 		# health_symptom or health info
-
 		concept_names =  "'" + essential_params[:concept_map].inject([]) {|result, concept|
 			result << concept[:concept_name].to_s
 		}.uniq.join("','") + "'"
@@ -534,14 +532,17 @@ module Report
 			  "AND DATE(obs.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(obs.date_created) <= '#{date_range.last}'"
 
-
-		if patient_type.to_s.upcase == "CHILDREN"
+		if patient_type.to_s.upcase == "CHILDREN (UNDER 5)"
 			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= #{child_age} "
-		elsif patient_type.to_s.upcase == 'SCHOOL AGED CHILDREN'
+		elsif patient_type.to_s.upcase == 'CHILDREN (6 - 14)'
 			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_age}
 				AND (YEAR(patient.date_created) - YEAR(person.birthdate)) < #{child_maximum_age} "
-		else
-			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_maximum_age} "
+		elsif patient_type.to_s.upcase == 'MEN'
+			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_maximum_age}
+				AND person.gender = 'M' "
+		elsif patient_type.to_s.upcase == 'WOMEN'
+			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_maximum_age}
+				AND person.gender = 'F' "
 		end
 
 		if health_task.to_s.upcase != "OUTCOMES"
@@ -915,7 +916,6 @@ module Report
 			new_patients_data[:total_calls]   = total_number_of_calls
 			new_patients_data[:total_number_of_calls]   = total_callers_with_symptoms
 			new_patients_data[:total_number_of_calls_for_period] = total_calls_for_period.count
-
 			symptom_total = results.map(&:number_of_patients).inject(0){|total,n| total = total + n.to_i} # i love ruby :D
 
 			unless results.blank?
@@ -1835,7 +1835,12 @@ module Report
 	end
 
 	def self.patient_referral_followup(patient_type, grouping, outcome, start_date, end_date, district)
-		district_id = Location.find_by_name(district).id
+		if district == 'All'
+			district_id = 0
+		else
+			district_id = Location.find_by_name(district).id
+		end
+
 		call_id = ConceptName.find_by_name("Call id").id
 		patient_data = []
 		youth_age = 9
