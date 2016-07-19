@@ -850,7 +850,7 @@ module Report
 			  "AND DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
 			  'AND o.voided = 0 ' + extra_parameters +
-			  'ORDER BY o.value_text'
+			  'ORDER BY o.comments DESC'
 
 		Observation.find_by_sql(query)
 	end
