@@ -1657,7 +1657,12 @@ module Report
 	end
 
 	def self.patient_activity(patient_type, grouping, start_date, end_date, district)
-		district_id = Location.find_by_name(district).id
+		if district == 'All'
+			district_id = 0
+		else
+			district_id = Location.find_by_name(district).id
+		end
+
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
 		patients_data = []
