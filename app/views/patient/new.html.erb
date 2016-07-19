@@ -233,6 +233,10 @@
                 validateMessage('The month selected is greater than the current month.');
                 return;
             }
+            if (month.length == 0){
+                validateMessage('Month cannot be blank.');
+                return;
+            }
 
             if (day.length == 0){
                 validateMessage('Day of month can not be blank');
