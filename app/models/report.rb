@@ -844,13 +844,14 @@ module Report
 		extra_conditions = get_extra_activity_conditions(district_name, district_names)
 
 		query   =  'SELECT distinct o.person_id FROM obs o ' +
-			  'INNER JOIN person p ON o.person_id = p.person_id ' +
-				'INNER JOIN person_address pa ON pa.person_id = p.person_id' +
+				'INNER JOIN person_address pa ON pa.person_id = o.person_id' +
 			  extra_conditions +
 			  "AND DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
 			  'AND o.voided = 0 ' + extra_parameters +
-			  'ORDER BY o.comments DESC'
+			  'GROUP BY o.comments DESC'
+
+		raise query.inspect
 
 		Observation.find_by_sql(query)
 	end
