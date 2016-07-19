@@ -145,8 +145,8 @@ class PeopleController < ApplicationController
 			@patient_name   = PersonName.where(:person_id => params[:patient_id]).last
 			birthdate       = @patient_obj.birthdate.split('/')
 
-			@birthday       = (birthdate[0]=='??')?'':birthdate[0]
-			@birthmonth     = (birthdate[1]=='???')?'':birthdate[1]
+			@birthday       = (birthdate[0]=='??')?'Unknown':birthdate[0]
+			@birthmonth     = (birthdate[1]=='???')?'Unknown':birthdate[1]
 			@birthyear      = birthdate[2]
 
 			location_tag = LocationTag.find_by_name("District")
