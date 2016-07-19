@@ -851,8 +851,6 @@ module Report
 			  'AND o.voided = 0 ' + extra_parameters +
 			  'GROUP BY o.comments DESC'
 
-		raise query.inspect
-
 		Observation.find_by_sql(query)
 	end
 
