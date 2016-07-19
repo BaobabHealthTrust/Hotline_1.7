@@ -29,12 +29,11 @@ module PatientService
 			patient_obj.county_district = addresses.county_district
 			patient_obj.neighborhood_cell = addresses.neighborhood_cell
 			patient_obj.township_division = addresses.township_division
+			patient_obj.phone_type = Observation.find_by_sql("SELECT * FROM obs WHERE person_id = #{person.id} AND value_text like '%phone' ").first.value_text
 		end
 
 		patient_obj.cell_phone_number = PersonAttribute.where(:person_id => person.id,
 		                                                      :person_attribute_type => PersonAttributeType.find_by_name("Cell Phone Number").id).first.value rescue nil
-		patient_obj.phone_type = Observation.find_by_sql("SELECT * FROM obs WHERE person_id = #{person.id} AND value_text like '%phone' ").first.value_text
-
 
 		return patient_obj
 	end
@@ -219,7 +218,7 @@ module PatientService
 			month_i = Date::MONTHNAMES.index(month) if month_i == 0 || month_i.blank?
 			month_i = Date::ABBR_MONTHNAMES.index(month) if month_i == 0 || month_i.blank?
 
-			if month_i == 0 || month == "Unknown"
+			if month.blank? || month_i == 0 || month == "Unknown"
 				birthdate = Date.new(year.to_i,7,1)
 				birthdate_estimated = 1
 			elsif day.blank? || day == "Unknown" || day == 0

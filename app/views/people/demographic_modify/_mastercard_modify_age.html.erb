@@ -162,6 +162,7 @@
         background-color: #ff2244;
         border-radius: 12px;
         border: 1px solid;
+        padding: 5px;
         height: 80px;
         text-align: center;
     }
@@ -609,6 +610,12 @@
         li_options.innerHTML = '<%= string %>';
         ul_options.appendChild(li_options);
         <% end %>
+        var li_options = document.createElement('li');
+        li_options.className = 'cell-table';
+        li_options.setAttribute('onclick','assignMonth(this)');
+        li_options.setAttribute('id','monthUnknown');
+        li_options.innerHTML = 'Unknown';
+        ul_options.appendChild(li_options);
         //===========================================
         var table_cell = document.createElement('div');
         table_cell.className = 'table-cell';
@@ -775,22 +782,20 @@
         age_blank = estimated_age.length == 0
         incorrect_age = age_max_digits || age_out_of_range || age_blank;
         if (incorrect_age) {
-            //alert('incorrect input');
             var flash = document.getElementById('flash');
             if ( incorrect_age == age_max_digits ) {
-                flash.innerHTML = '<%= flash[:age_max_digits] %><br>';
+                flash.innerHTML = 'Age input has exceeded maximum digits.<br>';
             }
             else if ( incorrect_age == age_out_of_range ) {
-                flash.innerHTML = '<%= flash[:age_out_of_range] %><br>';
+                flash.innerHTML = 'Age input is out of Range.<br>';
             }
             else if ( incorrect_age == age_blank ) {
-                flash.innerHTML = '<%= flash[:age_blank] %><br>';
+                flash.innerHTML = 'Age input can not be blank.<br>';
             }
             flash.style.display = 'inline';
             setTimeout( function() {
                 flash.style.display = "none"
             }, 4000);
-            //notify('incorrect_input');
             return;
         }
         else {
