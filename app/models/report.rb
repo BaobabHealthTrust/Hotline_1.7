@@ -817,39 +817,60 @@ module Report
 
 	def self.call_count_for_period(date_range, patient_type, district_id)
 		call_id = ConceptName.find_by_name('Call id').id
-		child_maximum_age = 9
+		child_age = 5
+		child_maximum_age = 13
 
-		if patient_type.humanize.downcase == 'children'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
+		if district_id == 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+		else
+			district_name = Location.find(district_id).name
+		end
+
+		if patient_type.humanize.downcase == 'children (under 5)'
+			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
 		elsif patient_type.humanize.downcase == 'women'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} "
-		elsif patient_type.humanize.downcase == 'non-mnch'
-			extra_parameters = ' AND ((YEAR(o.date_created) - YEAR(p.birthdate)) >= 50
-                            OR (YEAR(o.date_created) - YEAR(p.birthdate)) > 5 AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= 13
-                            OR (YEAR(o.date_created) - YEAR(p.birthdate)) > 5 AND ps.gender = "M") AS non_mnch, ps.gender AS gender '
+			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+							AND p.gender = 'F' "
+		elsif patient_type.humanize.downcase == 'children (6 - 14)'
+			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
+							AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
+		elsif patient_type.humanize.downcase == 'men'
+			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+                            AND ps.gender = 'M "
 		else
 			extra_parameters = ''
 		end
 
-		query   =  'SELECT distinct o.value_text ' +
-			  'FROM obs o ' +
-			  'LEFT JOIN person p ON o.person_id = p.person_id ' +
-			  'INNER JOIN call_log cl ON o.value_text = cl.call_log_id ' +
-			  "AND cl.district = #{district_id} " +
-			  "WHERE o.concept_id = #{call_id} " +
+		extra_conditions = get_extra_activity_conditions(district_name, district_names)
+
+		query   =  'SELECT distinct o.person_id FROM obs o ' +
+			  'INNER JOIN person p ON o.person_id = p.person_id ' +
+				'INNER JOIN person_address pa ON pa.person_id = p.person_id' +
+			  extra_conditions +
 			  "AND DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
 			  'AND o.voided = 0 ' + extra_parameters +
-			  'ORDER BY o.value_text'
+			  'ORDER BY o.comments DESC'
 
 		Observation.find_by_sql(query)
-		#Patient.find_by_sql(query)
+	end
+
+	def self.get_extra_activity_conditions(district_name,district_names,patient_type='')
+		if district_names.nil?
+			" AND pa.township_division = '#{district_name}'"
+		else
+			" AND pa.township_division IN (#{district_names})"
+		end
 	end
 
 	def self.get_callers(date_range, essential_params, patient_type, district_id, task = nil)
-		child_maximum_age     = 9 # see definition of a female adult above
-		concept_ids = essential_params[:concept_map].inject([]) {|result, concept| result << concept[:concept_id]}.uniq.join(',')
-		value_coded_indicator = ConceptName.find_by_name("YES").id
+		child_age               = 5
+		child_maximum_age       = 13 # see definition of a female adult above
+
+		concept_ids             = essential_params[:concept_map].inject([]) { |result, concept|
+			result << concept[:concept_id]
+		}.uniq.join(',')
+		value_coded_indicator   = ConceptName.find_by_name("YES").id
 
 		call_id = ConceptName.find_by_name("Call id").id
 
@@ -1667,7 +1688,6 @@ module Report
 
 		patients_data = []
 
-
 		date_ranges.map do |date_range|
 
 			query   = self.patient_demographics_query_builder(patient_type, date_range, district_id)
@@ -1682,6 +1702,7 @@ module Report
 			                      :info => 0, :info_pct => 0
 			}
 			activity_type = ["symptoms","danger","info"]
+
 			case patient_type.downcase
 				when "women"
 					new_patients_data = self.women_demographics(results, date_range, district_id)
@@ -1710,8 +1731,8 @@ module Report
 						end
 					end
 
-				when "children"
-					new_patients_data = self.children_demographics(results, date_range, district_id)
+				when "children (under 5)"
+					new_patients_data = self.children_under_5_demographics(results, date_range, district_id)
 					total_patients = 0
 					new_patients_data[:gender].each do |status|
 						total_patients += status.last
@@ -1738,8 +1759,36 @@ module Report
 						end
 					end
 
-				when "non-mnch"
-					new_patients_data = self.non_mnch_demographics(results, date_range, district_id)
+				when "children (6 - 14)"
+					new_patients_data = self.children_6_14_demographics(results, date_range, district_id)
+					total_patients = 0
+					new_patients_data[:gender].each do |status|
+						total_patients += status.last
+					end
+					patient_statistics[:total] = total_patients
+
+					activity_type.each do |type|
+						activity = 'health symptoms' if type == 'symptoms'
+						activity = 'danger warning signs' if type == 'danger'
+						activity = 'health information requested' if type == 'info'
+						essential_params  = self.prepopulate_concept_ids_and_extra_parameters(patient_type, activity)
+						data_query = self.patient_activity_query_builder(patient_type, activity, date_range, essential_params, district_id)
+						#raise data_query.to_s
+						activity_data = Patient.find_by_sql(data_query)
+						if type == 'symptoms'
+							patient_statistics[:symptoms] = activity_data.first.number_of_patients.to_i
+							patient_statistics[:symptoms_pct] = (activity_data.first.number_of_patients.to_f / patient_statistics[:total].to_f * 100).round(1) if patient_statistics[:total].to_f != 0
+						elsif type == 'danger'
+							patient_statistics[:danger] = activity_data.first.number_of_patients.to_i
+							patient_statistics[:danger_pct] = (activity_data.first.number_of_patients.to_f / patient_statistics[:total].to_f * 100).round(1) if patient_statistics[:total].to_f != 0
+						elsif type == 'info'
+							patient_statistics[:info] = activity_data.first.number_of_patients.to_i
+							patient_statistics[:info_pct] = (activity_data.first.number_of_patients.to_f / patient_statistics[:total].to_f * 100).round(1) if patient_statistics[:total].to_f != 0
+						end
+					end
+
+				when "men"
+					new_patients_data = self.men_demographics(results, date_range, district_id)
 					total_patients = 0
 					new_patients_data[:gender].each do |status|
 						total_patients += status.last
@@ -1807,7 +1856,7 @@ module Report
 		#extra_parameters    = essential_params[:extra_parameters]
 
 		value_coded_indicator = ConceptName.find_by_name("YES").id
-=begin
+
     query = "SELECT COUNT(obs.person_id) AS number_of_patients "  +
             "FROM encounter, encounter_type, obs, concept, concept_name " +
             "WHERE encounter_type.encounter_type_id IN (#{encounter_type_ids}) " +
@@ -1820,7 +1869,7 @@ module Report
               "AND DATE(obs.date_created) <= '#{date_range.last}' " +
               "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
             "ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
-=end
+=begin
 		query = "SELECT COUNT(DISTINCT o.person_id) AS number_of_patients "  +
 			  "FROM encounter e " +
 			  "INNER JOIN obs o ON e.encounter_id = o.encounter_id " +
@@ -1834,7 +1883,7 @@ module Report
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
 			  "AND e.voided = 0 AND o.voided = 0 " +
 			  "AND o.value_coded = " + value_coded_indicator.to_s
-
+=end
 		#raise query.to_s
 		query
 	end
