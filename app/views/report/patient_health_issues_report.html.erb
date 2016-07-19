@@ -24,7 +24,12 @@
 
             <%@report.reverse.map do |data|%>
                 <tr>
-                    <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell" style="background-color:#f7f7f7; text-align:center;font-weight: bold; font-size: large; font-style: italic;">
+                    <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell"
+                        style="background-color:#f7f7f7;
+                                text-align:center;
+                                font-weight: bold;
+                                font-size: large;
+                                font-style: italic;">
                         <%= @grouping.humanize + " beginning "+ data[:start_date] + " ending " + data[:end_date]%>
                     </td>
                 </tr>
@@ -62,7 +67,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell" style="background-color:#f7f7f7; text-align:center;font-weight: bold; font-size: large; font-style: italic;">
+                    <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell"
+                        style="background-color:#f7f7f7; text-align:center;
+                                font-weight: bold;
+                                font-size: large;
+                                font-style: italic;">
                         Below are the <%=  @health_task.gsub(/_/, " ").capitalize %>
                     </td>
                 </tr>
