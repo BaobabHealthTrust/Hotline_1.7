@@ -7,7 +7,7 @@
     <!--link rel="stylesheet" href="/stylesheets/background.css" type="text/css"-->
 
     <% @title = "#{controller.controller_name.humanize} #{controller.action_name.humanize}" rescue ""  %>
-    <script language="javascript" defer="true">
+<script language="javascript" defer="true">
       <!--
       tstUsername = "<%= '' %>";
 
@@ -17,6 +17,12 @@
     Date.today.strftime('%Y-%m-%d')) %>";
 
 
+  jQuery(document).ready(){
+    
+    setTimeout(function(){
+      init();
+    }, 500);
+  }
 
   function addHereButton(){
     var button = document.createElement("button");
@@ -350,6 +356,7 @@
         }
     }
 
+var checkArticlesTimeout
     function checkArticles(){
         var concept = "";
         var passed = "";
@@ -367,7 +374,7 @@
                 concept = passed;
             }
         }else{
-            setTimeout("checkArticles()", 3000);
+         checkArticlesTimeout = setTimeout("checkArticles()", 3000);
         }
 
         count += 1;
@@ -384,7 +391,7 @@
                     __$('img-circle').src = "/assets/icons/info-sign-disabled.png";
                 }
 
-                setTimeout("checkArticles()", 1000);
+                checkArticlesTimeout = setTimeout("checkArticles()", 1000);
             }
         }).fail(function(){
             setTimeout("checkArticles()", 3000);
@@ -466,9 +473,5 @@
 
     }
   }
-
-  setTimeout(function(){
-    init();
-  }, 500);
 
 </script>
