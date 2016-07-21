@@ -827,15 +827,15 @@ module Report
 		end
 
 		if patient_type.humanize.downcase == 'children (under 5)'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
 		elsif patient_type.humanize.downcase == 'women'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
 							AND p.gender = 'F' "
 		elsif patient_type.humanize.downcase == 'children (6 - 14)'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
 							AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == 'men'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
                             AND p.gender = 'M' "
 		else
 			extra_parameters = ''
@@ -845,7 +845,7 @@ module Report
 
 		query   =  'SELECT distinct o.comments, o.person_id FROM obs o ' +
 				'INNER JOIN person p ON p.person_id = o.person_id '+
-				'INNER JOIN person_address pa ON pa.person_id = o.person_id' +
+				'INNER JOIN person_address pa ON pa.person_id = o.person_id ' +
 			  extra_conditions +
 			  "AND DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
@@ -857,9 +857,9 @@ module Report
 
 	def self.get_extra_activity_conditions(district_name,district_names,patient_type='')
 		if district_names.nil?
-			" AND pa.township_division = '#{district_name}'"
+			"AND pa.township_division = '#{district_name}' "
 		else
-			" AND pa.township_division IN (#{district_names})"
+			"AND pa.township_division IN (#{district_names}) "
 		end
 	end
 
@@ -1692,6 +1692,7 @@ module Report
 
 			query   = self.patient_demographics_query_builder(patient_type, date_range, district_id)
 			results = Patient.find_by_sql(query)
+			raise results.inspect
 			total_calls_for_period = self.call_count_for_period(date_range, patient_type, district_id)
 			#data_for_patients = {:patient_data => {}, :statistical_data => {}}
 			patient_statistics = {:start_date => date_range.first,
