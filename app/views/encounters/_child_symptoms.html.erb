@@ -518,7 +518,7 @@
   <%= text_field_tag :summary, nil, {
                                      :tt_onLoad => "summary();$('keyboard').style.display = 'none';
                                      showHelpButton('Child Health Symptoms' | 'Danger Signs');
-                                     __$('nextButton').style.display = 'block'; ",
+                                     __$('nextButton').style.display = 'block'; clearTimeout(checkArticlesTimeout)",
                                      :optional => "true"} %>
 
   <!-- <label for='dangerSigns'>Danger signs</label> -->
