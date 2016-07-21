@@ -836,7 +836,7 @@ module Report
 							AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == 'men'
 			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
-                            AND ps.gender = 'M "
+                            AND p.gender = 'M' "
 		else
 			extra_parameters = ''
 		end
@@ -1790,9 +1790,8 @@ module Report
 				when "men"
 					new_patients_data = self.men_demographics(results, date_range, district_id)
 					total_patients = 0
-					new_patients_data[:gender].each do |status|
-						total_patients += status.last
-					end
+
+					total_patients += new_patients_data[:men].count
 					patient_statistics[:total] = total_patients
 
 					activity_type.each do |type|
@@ -1849,13 +1848,13 @@ module Report
 	end
 
 	def self.patient_activity_query_builder(patient_type, health_task, date_range, essential_params, district_id)
-		call_id = ConceptName.find_by_name("Call id").id
-		concept_ids         = essential_params[:concept_ids]
-		encounter_type_ids  = essential_params[:encounter_type_ids]
-		#extra_conditions    = essential_params[:extra_conditions]
-		#extra_parameters    = essential_params[:extra_parameters]
+		call_id                 = ConceptName.find_by_name("Call id").id
+		concept_ids             = essential_params[:concept_ids]
+		encounter_type_ids      = essential_params[:encounter_type_ids]
+		#extra_conditions       = essential_params[:extra_conditions]
+		#extra_parameters       = essential_params[:extra_parameters]
 
-		value_coded_indicator = ConceptName.find_by_name("YES").id
+		value_coded_indicator   = ConceptName.find_by_name("YES").id
 
     query = "SELECT COUNT(obs.person_id) AS number_of_patients "  +
             "FROM encounter, encounter_type, obs, concept, concept_name " +
