@@ -7,7 +7,7 @@
     <!--link rel="stylesheet" href="/stylesheets/background.css" type="text/css"-->
 
     <% @title = "#{controller.controller_name.humanize} #{controller.action_name.humanize}" rescue ""  %>
-    <script language="javascript" defer="true">
+<script language="javascript" defer="true">
       <!--
       tstUsername = "<%= '' %>";
 
@@ -16,7 +16,11 @@
   tstCurrentDate = "<%= (session[:datetime] ? session[:datetime].to_date.strftime('%Y-%m-%d') :
     Date.today.strftime('%Y-%m-%d')) %>";
 
-
+  document.addEventListener("DOMContentLoaded", function(event) {
+    setTimeout(function(){
+      init();
+    }, 500);
+  });
 
   function addHereButton(){
     var button = document.createElement("button");
@@ -329,7 +333,9 @@
 </html>
 
 <script>
+
     var count = 0;
+
     function animate(){
         var popup = document.getElementsByClassName("popup-cover");
 
@@ -343,12 +349,13 @@
             if ((count % 2) == 1) {
                 img.className = "active bounce";
             }
-            setTimeout(
-                    function () {
+            setTimeout(function () {
                         img.className = "active";
-                    }, 1500);
-        }
+                    }, 2000);
+            }
     }
+
+    var checkArticlesTimeout;
 
     function checkArticles(){
         var concept = "";
@@ -367,7 +374,8 @@
                 concept = passed;
             }
         }else{
-            setTimeout("checkArticles()", 4000);
+
+         checkArticlesTimeout = setTimeout("checkArticles()", 4000);
         }
 
         count += 1;
@@ -384,7 +392,7 @@
                     __$('img-circle').src = "/assets/icons/info-sign-disabled.png";
                 }
 
-                setTimeout("checkArticles()", 2100);
+        checkArticlesTimeout = setTimeout("checkArticles()", 2100);
             }
         }).fail(function(){
             setTimeout("checkArticles()", 4000);
@@ -400,7 +408,7 @@
                 setTimeout("checkArticles()", 2100);
             }
             else {
-                setTimeout("start()", 4000);
+               setTimeout("start()", 4000);
             }
         }, 200);
     }
@@ -466,9 +474,5 @@
 
     }
   }
-
-  setTimeout(function(){
-    init();
-  }, 500);
 
 </script>
