@@ -1715,7 +1715,6 @@ module Report
 
 			query   = self.patient_demographics_query_builder(patient_type, date_range, district_id)
 			results = Patient.find_by_sql(query)
-			raise results.inspect
 			total_calls_for_period = self.call_count_for_period(date_range, patient_type, district_id)
 			#data_for_patients = {:patient_data => {}, :statistical_data => {}}
 			patient_statistics = {:start_date => date_range.first,
@@ -1918,15 +1917,16 @@ module Report
 			district_id = Location.find_by_name(district).id
 		end
 
-		call_id = ConceptName.find_by_name("Call id").id
-		patient_data = []
-		youth_age = 9
+		call_id             = ConceptName.find_by_name("Call id").id
+		patient_data        = []
+		child_age           = 5
+		child_maximum_age   = 13
 
 		other_outcomes = ["GIVEN ADVICE NO REFERRAL NEEDED","GIVEN ADVICE"]
 		if outcome == "GIVEN ADVICE NO REFERRAL NEEDED"
 			outcome = other_outcomes
 		end
-		#raise outcome.to_yaml
+
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date,
 		                                                     end_date)[:date_ranges]
 
@@ -1934,34 +1934,59 @@ module Report
 			patient_info = []
 			patient_data_elements = {:date_range => [], :patient_info => []}
 
-			if patient_type.downcase == "women"
-				condition_options = ["encounter_type = ?
+			if patient_type.downcase == 'women'
+				condition_options = ['encounter_type = ?
                               AND encounter_datetime >= ?
                               AND encounter_datetime <= ?
                               AND obs.concept_id = ?
                               AND obs.value_text IN (?)
-                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?",
+                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
+							  AND person.gender = "F" ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("Outcome").id,
-				                     outcome, youth_age]
-			elsif patient_type.downcase == 'children'
-				condition_options = ["encounter_type = ?
+				                     outcome, child_maximum_age]
+			elsif patient_type.downcase == 'children (under 5)'
+				condition_options = ['encounter_type = ?
                               AND encounter_datetime >= ?
                               AND encounter_datetime <= ?
                               AND obs.concept_id = ?
                               AND obs.value_text IN (?)
-                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?",
+                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("Outcome").id,
-				                     outcome, youth_age]
+				                     outcome, child_age]
+			elsif patient_type.downcase == 'children (6 - 14)'
+				condition_options = ['encounter_type = ?
+                              AND encounter_datetime >= ?
+                              AND encounter_datetime <= ?
+                              AND obs.concept_id = ?
+                              AND obs.value_text IN (?)
+                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?
+							  AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?',
+				                     EncounterType.find_by_name("Update Outcome").id,
+				                     date_range.first, date_range.last,
+				                     ConceptName.find_by_name("Outcome").id,
+				                     outcome, child_age, child_maximum_age]
+			elsif patient_type.downcase == 'men'
+				condition_options = ['encounter_type = ?
+                              AND encounter_datetime >= ?
+                              AND encounter_datetime <= ?
+                              AND obs.concept_id = ?
+                              AND obs.value_text IN (?)
+                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
+							  AND person.gender = "M" ',
+				                     EncounterType.find_by_name("Update Outcome").id,
+				                     date_range.first, date_range.last,
+				                     ConceptName.find_by_name("Outcome").id,
+				                     outcome, child_maximum_age]
 			else
-				condition_options = ["encounter_type = ?
+				condition_options = ['encounter_type = ?
                               AND encounter_datetime >= ?
                               AND encounter_datetime <= ?
                               AND obs.concept_id = ?
-                              AND obs.value_text IN (?)",
+                              AND obs.value_text IN (?)',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("Outcome").id,
@@ -1976,7 +2001,6 @@ module Report
                               INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id
                                 AND cl.district = #{district_id}").where(condition_options)
 
-			#raise o_encounters.to_yaml
 			o_encounters.each do |a_encounter|
 
 				patient_information = {:name => '', :number => '', :visit_summary => ''}
