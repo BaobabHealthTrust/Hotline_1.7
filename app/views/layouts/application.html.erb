@@ -346,7 +346,7 @@
             setTimeout(
                     function () {
                         img.className = "active";
-                    }, 1000);
+                    }, 1500);
         }
     }
 
@@ -367,7 +367,7 @@
                 concept = passed;
             }
         }else{
-            setTimeout("checkArticles()", 3000);
+            setTimeout("checkArticles()", 4000);
         }
 
         count += 1;
@@ -384,10 +384,10 @@
                     __$('img-circle').src = "/assets/icons/info-sign-disabled.png";
                 }
 
-                setTimeout("checkArticles()", 1000);
+                setTimeout("checkArticles()", 2100);
             }
         }).fail(function(){
-            setTimeout("checkArticles()", 3000);
+            setTimeout("checkArticles()", 4000);
         });
 
     }
@@ -397,10 +397,10 @@
             var img = document.getElementById("img-circle");
             var inputAvailable = document.getElementById("touchscreenInput" + tstCurrentPage);
             if (img && inputAvailable) {
-                setTimeout("checkArticles()", 1000);
+                setTimeout("checkArticles()", 2100);
             }
             else {
-                setTimeout("start()", 1000);
+                setTimeout("start()", 4000);
             }
         }, 200);
     }
