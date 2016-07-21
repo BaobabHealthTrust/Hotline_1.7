@@ -231,23 +231,29 @@
 
 <script>
     var tt_cancel_destination = "/patient/dashboard/<%=@patient_obj.patient_id rescue params[:patient_id]%>/tasks"
-    jQuery(".select").dropdownchecklist();
 
-    jQuery('.ui-dropdownchecklist, .ui-dropdownchecklist-selector, .ui-dropdownchecklist-text').css(
-            {
-                'width' : (0.33333*jQuery('.table').width()+'px'),
-                'font-size' : '1.05em',
-                'height' : '50px'
-            }
-    );
+    function loadLib(){
 
-    jQuery('.ui-dropdownchecklist-text').css({
-        'padding-left' : '10px'
-    });
+        jQuery(".select").val("");
 
-    jQuery('.ui-dropdownchecklist-item:parent div').css({
-        'background' : 'lightgreen'
-    });
+        jQuery(".select").dropdownchecklist("destroy");
+
+        jQuery(".select").dropdownchecklist();
+
+        jQuery('.ui-dropdownchecklist, .ui-dropdownchecklist-selector, .ui-dropdownchecklist-text').css(
+                {
+                    'width' : (0.33333*jQuery('.table').width()+'px'),
+                    'font-size' : '1.05em',
+                    'height' : '50px'
+                }
+        );
+
+        jQuery('.ui-dropdownchecklist-text').css({
+            'padding-left' : '10px'
+        });
+    }
+
+    loadLib();
 
     function submitForm(){
         var form = document.forms[0];
@@ -271,7 +277,10 @@
                showMessage("Incomplete entries for " + Object.keys(messages).length + " row" + (Object.keys(messages).length > 1 ? "s" : ''));
            }
         }
-        __$('clearButton').style.display = 'none';
+
+        __$('clearButton').onmousedown = function(){
+            loadLib();
+        }
     }
 
     var messages = {};
