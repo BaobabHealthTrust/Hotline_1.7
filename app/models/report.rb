@@ -759,16 +759,26 @@ module Report
 		child_age           = 5
 		child_maximum_age   = 13
 
-		if patient_type.humanize.downcase == 'children'
+		if district_id == 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+		else
+			district_name = Location.find(district_id).name
+		end
+
+		if patient_type.humanize.downcase == 'children (under 5)'
 			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
-		elsif patient_type.humanize.downcase == 'school aged children'
+		elsif patient_type.humanize.downcase == 'children (6 - 14)'
 			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
 								AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == 'women'
-			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} "
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} AND p.gender = 'F' "
+		elsif patient_type.humanize.downcase == 'men'
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} AND p.gender = 'M' "
 		else
 			extra_parameters = ''
 		end
+
+		extra_conditions = self.get_extra_conditions(district_name,district_names)
 
 		if count_type.to_s.downcase == 'all'
 			select_part = 'SELECT o.person_id AS call_count, '
@@ -777,21 +787,16 @@ module Report
 		end
 
 		query   =  "#{select_part}" +
-			  'cn.name AS concept_name, ' +
 			  'DATE(e.date_created) AS start_date ' +
 			  'FROM encounter e ' +
 			  'INNER JOIN obs o ON o.encounter_id = e.encounter_id ' +
-			  "AND o.concept_id = #{call_id} " +
-			  'INNER JOIN call_log cl ON cl.call_log_id = o.value_text ' +
-			  "AND cl.district = #{district_id} " +
+			  'INNER JOIN person_address p_ad ' +
 			  'INNER JOIN person p ON o.person_id = p.person_id ' +
-			  'INNER JOIN concept_name cn ON o.concept_id = cn.concept_id ' +
 			  "WHERE DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
-			  'AND e.voided = 0 AND o.voided = 0 AND cn.voided = 0 ' +
-			  " #{extra_parameters} " +
-			  'GROUP BY o.concept_id ' +
-			  'ORDER BY DATE(o.date_created), o.concept_id'
+			  'AND e.voided = 0 AND o.voided = 0 ' +
+			  extra_conditions +
+			  " #{extra_parameters} "
 
 =begin
     query   =  "#{select_part}" +
@@ -833,7 +838,7 @@ module Report
 							AND p.gender = 'F' "
 		elsif patient_type.humanize.downcase == 'children (6 - 14)'
 			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
-							AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
+								AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == 'men'
 			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
                             AND p.gender = 'M' "
@@ -874,10 +879,17 @@ module Report
 
 		call_id = ConceptName.find_by_name("Call id").id
 
-		if patient_type.humanize.downcase == "children"
-			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
+		if patient_type.humanize.downcase == "children (under 5)"
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
+		elsif patient_type.humanize.downcase == "children (6 - 14)"
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
+					AND (YEAR(o.date_created) - YEAR(p.birthdate)) < #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == "women"
-			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} "
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+					AND p.gender = 'F' "
+		elsif patient_type.humanize.downcase == "men"
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+					AND p.gender = 'M' "
 		else
 			extra_parameters = ""
 		end
@@ -2865,7 +2877,11 @@ module Report
 		return patients_data
 	end
 	def self.follow_up_report(start_date, end_date, grouping, district)
-		district_id = Location.find_by_name(district).id
+		if district == 'All'
+			district_id = 0
+		else
+			district_id = Location.find_by_name(district).id
+		end
 		patients_data = []
 		#follow_up_reasons = self.create_follow_up_structure
 		reasons = [
