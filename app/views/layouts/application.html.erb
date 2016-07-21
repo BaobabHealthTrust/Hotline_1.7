@@ -16,13 +16,11 @@
   tstCurrentDate = "<%= (session[:datetime] ? session[:datetime].to_date.strftime('%Y-%m-%d') :
     Date.today.strftime('%Y-%m-%d')) %>";
 
-
-  jQuery(document).ready(){
-    
+  document.addEventListener("DOMContentLoaded", function(event) {
     setTimeout(function(){
       init();
     }, 500);
-  }
+  });
 
   function addHereButton(){
     var button = document.createElement("button");
