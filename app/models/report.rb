@@ -597,7 +597,7 @@ module Report
 						                 "RED EYE FOR 4 DAYS OR MORE WITH VISUAL PROBLEMS",
 						                 "VERY SLEEPY OR UNCONSCIOUS", "DRY SKIN",
 						                 "SWOLLEN HANDS OR FEET SIGN", "VISUAL PROBLEMS"] #"POTENTIAL CHEST INDRAWING"]
-#dry skin also known as flaky skin
+										#dry skin also known as flaky skin
 					when "health information requested"
 						concepts_list = ["SLEEPING", "FEEDING PROBLEMS", "CRYING",
 						                 "BOWEL MOVEMENTS", "SKIN RASHES", "SKIN INFECTIONS",
@@ -623,7 +623,7 @@ module Report
 						                 "RED EYE FOR 4 DAYS OR MORE WITH VISUAL PROBLEMS",
 						                 "VERY SLEEPY OR UNCONSCIOUS", "DRY SKIN",
 						                 "SWOLLEN HANDS OR FEET SIGN", "VISUAL PROBLEMS"] #"POTENTIAL CHEST INDRAWING"]
-#dry skin also known as flaky skin
+										#dry skin also known as flaky skin
 					when "health information requested"
 						concepts_list = ["SLEEPING", "FEEDING PROBLEMS", "CRYING",
 						                 "BOWEL MOVEMENTS", "SKIN RASHES", "SKIN INFECTIONS",
@@ -730,11 +730,10 @@ module Report
 						                 "BIRTH PLANNING FEMALE","OTHER"
 						]
 				end
-
 			end
 		end
 
-		concept_ids     = ""
+		concept_ids     = ''
 		concept_map     = []
 		call_count      = 0
 		call_percentage = 0
@@ -1906,7 +1905,6 @@ module Report
 			  "AND e.voided = 0 AND o.voided = 0 " +
 			  "AND o.value_coded = " + value_coded_indicator.to_s
 =end
-		#raise query.to_s
 		query
 	end
 

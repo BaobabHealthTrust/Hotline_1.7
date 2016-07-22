@@ -591,6 +591,7 @@ class ReportController < ApplicationController
 		@report             = Report.patient_activity(@patient_type, @grouping,
 		                                     @start_date, @end_date, district)
 	end
+
 	def patient_referral_report
 		@start_date         = params[:start_date]
 		@end_date           = params[:end_date]
