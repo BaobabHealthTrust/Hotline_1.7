@@ -958,7 +958,7 @@ module Report
 			new_patients_data[:total_calls]   = total_number_of_calls
 			new_patients_data[:total_number_of_calls]   = total_callers_with_symptoms
 			new_patients_data[:total_number_of_calls_for_period] = total_calls_for_period.count
-			symptom_total = results.map(&:number_of_patients).inject(0){|total,n| total = total + n.to_i} # i love ruby :D
+			symptom_total = results.map(&:number_of_patients).inject(0){|total,n| total = total + n.to_i}#i love ruby :D
 
 			unless results.blank?
 				(health_task.humanize.downcase == "outcomes")? outcomes = true : outcomes = false
