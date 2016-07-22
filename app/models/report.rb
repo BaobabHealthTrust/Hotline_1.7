@@ -938,7 +938,6 @@ module Report
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 		patients_data = []
 		essential_params  = self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
-
 		date_ranges.map do |date_range|
 			query                       = self.patient_health_issues_query_builder(patient_type,
 			                                                                       health_task,
@@ -1890,21 +1889,6 @@ module Report
 			  "AND DATE(obs.date_created) <= '#{date_range.last}' " +
 			  "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
 			  "ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
-=begin
-		query = "SELECT COUNT(DISTINCT o.person_id) AS number_of_patients "  +
-			  "FROM encounter e " +
-			  "INNER JOIN obs o ON e.encounter_id = o.encounter_id " +
-			  "INNER JOIN obs obs_call ON o.encounter_id = obs_call.encounter_id " +
-			  "AND obs_call.concept_id = #{call_id} " +
-			  "INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id " +
-			  "AND cl.district = #{district_id} " +
-			  "WHERE e.encounter_type IN (#{encounter_type_ids}) " +
-			  "AND o.concept_id IN (#{concept_ids}) " +
-			  "AND DATE(o.date_created) >= '#{date_range.first}' " +
-			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
-			  "AND e.voided = 0 AND o.voided = 0 " +
-			  "AND o.value_coded = " + value_coded_indicator.to_s
-=end
 		query
 	end
 
