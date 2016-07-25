@@ -579,7 +579,7 @@ module Report
 			extra_conditions = " DATE(obs.date_created), "
 			extra_parameters = " concept_name.name AS concept_name, "
 
-			if patient_type.downcase == "children"
+			if patient_type.downcase == "children (under 5)"
 				encounter_type_list = ["CHILD HEALTH SYMPTOMS"]
 
 				case health_task.humanize.downcase
@@ -597,7 +597,33 @@ module Report
 						                 "RED EYE FOR 4 DAYS OR MORE WITH VISUAL PROBLEMS",
 						                 "VERY SLEEPY OR UNCONSCIOUS", "DRY SKIN",
 						                 "SWOLLEN HANDS OR FEET SIGN", "VISUAL PROBLEMS"] #"POTENTIAL CHEST INDRAWING"]
-#dry skin also known as flaky skin
+										#dry skin also known as flaky skin
+					when "health information requested"
+						concepts_list = ["SLEEPING", "FEEDING PROBLEMS", "CRYING",
+						                 "BOWEL MOVEMENTS", "SKIN RASHES", "SKIN INFECTIONS",
+						                 "UMBILICUS INFECTION", "GROWTH MILESTONES",
+						                 "ACCESSING HEALTHCARE SERVICES"]
+				end
+
+			elsif patient_type.downcase == 'children (6 - 14)'
+				encounter_type_list = ["CHILD HEALTH SYMPTOMS"]
+
+				case health_task.humanize.downcase
+					when "health symptoms"
+						concepts_list = ["FEVER", "DIARRHEA", "COUGH", # feels that this is a danger sign "CONVULSIONS",
+						                 "NOT EATING","RED EYE", # this is only classified as 'Vomiting Everything' -"VOMITING",
+						                 "GAINED OR LOST WEIGHT", "UNCONSCIOUS"] #"VERY SLEEPY" is removed as it is under unconscious
+
+					when "danger warning signs"
+						concepts_list = ["FEVER OF 7 DAYS OR MORE",
+						                 "DIARRHEA FOR 14 DAYS OR MORE",
+						                 "BLOOD IN STOOL", "COUGH FOR 21 DAYS OR MORE",
+						                 "CONVULSIONS SIGN", "NOT EATING OR DRINKING ANYTHING",
+						                 "VOMITING EVERYTHING", #"VISUAL PROBLEMS"
+						                 "RED EYE FOR 4 DAYS OR MORE WITH VISUAL PROBLEMS",
+						                 "VERY SLEEPY OR UNCONSCIOUS", "DRY SKIN",
+						                 "SWOLLEN HANDS OR FEET SIGN", "VISUAL PROBLEMS"] #"POTENTIAL CHEST INDRAWING"]
+										#dry skin also known as flaky skin
 					when "health information requested"
 						concepts_list = ["SLEEPING", "FEEDING PROBLEMS", "CRYING",
 						                 "BOWEL MOVEMENTS", "SKIN RASHES", "SKIN INFECTIONS",
@@ -704,11 +730,10 @@ module Report
 						                 "BIRTH PLANNING FEMALE","OTHER"
 						]
 				end
-
 			end
 		end
 
-		concept_ids     = ""
+		concept_ids     = ''
 		concept_map     = []
 		call_count      = 0
 		call_percentage = 0
@@ -759,16 +784,26 @@ module Report
 		child_age           = 5
 		child_maximum_age   = 13
 
-		if patient_type.humanize.downcase == 'children'
+		if district_id == 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+		else
+			district_name = Location.find(district_id).name
+		end
+
+		if patient_type.humanize.downcase == 'children (under 5)'
 			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
-		elsif patient_type.humanize.downcase == 'school aged children'
+		elsif patient_type.humanize.downcase == 'children (6 - 14)'
 			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
 								AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == 'women'
-			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} "
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} AND p.gender = 'F' "
+		elsif patient_type.humanize.downcase == 'men'
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} AND p.gender = 'M' "
 		else
 			extra_parameters = ''
 		end
+
+		extra_conditions = self.get_extra_conditions(district_name,district_names)
 
 		if count_type.to_s.downcase == 'all'
 			select_part = 'SELECT o.person_id AS call_count, '
@@ -777,40 +812,16 @@ module Report
 		end
 
 		query   =  "#{select_part}" +
-			  'cn.name AS concept_name, ' +
 			  'DATE(e.date_created) AS start_date ' +
 			  'FROM encounter e ' +
 			  'INNER JOIN obs o ON o.encounter_id = e.encounter_id ' +
-			  "AND o.concept_id = #{call_id} " +
-			  'INNER JOIN call_log cl ON cl.call_log_id = o.value_text ' +
-			  "AND cl.district = #{district_id} " +
+			  'INNER JOIN person_address p_ad ' +
 			  'INNER JOIN person p ON o.person_id = p.person_id ' +
-			  'INNER JOIN concept_name cn ON o.concept_id = cn.concept_id ' +
 			  "WHERE DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
-			  'AND e.voided = 0 AND o.voided = 0 AND cn.voided = 0 ' +
-			  " #{extra_parameters} " +
-			  'GROUP BY o.concept_id ' +
-			  'ORDER BY DATE(o.date_created), o.concept_id'
-
-=begin
-    query   =  "#{select_part}" +
-                  "concept_name.name AS concept_name, " +
-                  "DATE(encounter.date_created) AS start_date " +
-                "FROM encounter, encounter_type, obs, concept, concept_name, person " +
-                "WHERE concept.concept_id = #{call_id} " +
-                  "AND encounter_type.encounter_type_id = encounter.encounter_type " +
-                  "AND obs.concept_id = concept_name.concept_id " +
-                  "AND obs.person_id = person.person_id " +
-                  "AND obs.concept_id = concept.concept_id " +
-                  "AND encounter.encounter_id = obs.encounter_id " +
-                  "AND DATE(obs.date_created) >= '#{date_range.first}' " +
-                  "AND DATE(obs.date_created) <= '#{date_range.last}' " +
-                  "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
-                  " #{extra_parameters}" +
-                "GROUP BY obs.concept_id " +
-                "ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
-=end
+			  'AND e.voided = 0 AND o.voided = 0 ' +
+			  extra_conditions +
+			  " #{extra_parameters} "
 
 		Patient.find_by_sql(query)
 	end
@@ -827,38 +838,39 @@ module Report
 		end
 
 		if patient_type.humanize.downcase == 'children (under 5)'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
 		elsif patient_type.humanize.downcase == 'women'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
 							AND p.gender = 'F' "
 		elsif patient_type.humanize.downcase == 'children (6 - 14)'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
-							AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
+								AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == 'men'
-			extra_parameters = " AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
-                            AND ps.gender = 'M "
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+                            AND p.gender = 'M' "
 		else
 			extra_parameters = ''
 		end
 
 		extra_conditions = get_extra_activity_conditions(district_name, district_names)
 
-		query   =  'SELECT distinct o.person_id FROM obs o ' +
-				'INNER JOIN person_address pa ON pa.person_id = o.person_id' +
+		query   =  'SELECT distinct o.comments, o.person_id FROM obs o ' +
+			  'INNER JOIN person p ON p.person_id = o.person_id '+
+			  'INNER JOIN person_address pa ON pa.person_id = o.person_id ' +
 			  extra_conditions +
 			  "AND DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
 			  'AND o.voided = 0 ' + extra_parameters +
-			  'GROUP BY o.comments DESC'
+			  'GROUP BY o.person_id, o.comments DESC'
 
 		Observation.find_by_sql(query)
 	end
 
 	def self.get_extra_activity_conditions(district_name,district_names,patient_type='')
 		if district_names.nil?
-			" AND pa.township_division = '#{district_name}'"
+			"AND pa.township_division = '#{district_name}' "
 		else
-			" AND pa.township_division IN (#{district_names})"
+			"AND pa.township_division IN (#{district_names}) "
 		end
 	end
 
@@ -873,24 +885,35 @@ module Report
 
 		call_id = ConceptName.find_by_name("Call id").id
 
-		if patient_type.humanize.downcase == "children"
-			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_maximum_age} "
+		if district_id == 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+		else
+			district_name = Location.find(district_id).name
+		end
+
+		if patient_type.humanize.downcase == "children (under 5)"
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) <= #{child_age} "
+		elsif patient_type.humanize.downcase == "children (6 - 14)"
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_age}
+					AND (YEAR(o.date_created) - YEAR(p.birthdate)) < #{child_maximum_age} "
 		elsif patient_type.humanize.downcase == "women"
-			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age} "
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+					AND p.gender = 'F' "
+		elsif patient_type.humanize.downcase == "men"
+			extra_parameters = "AND (YEAR(o.date_created) - YEAR(p.birthdate)) > #{child_maximum_age}
+					AND p.gender = 'M' "
 		else
 			extra_parameters = ""
 		end
+
+		extra_conditions = get_extra_activity_conditions(district_name, district_names)
 
 		query = "SELECT DISTINCT o.person_id " +
 			  "FROM obs o " +
 			  "INNER JOIN person p " +
 			  "ON p.person_id = o.person_id " +
-			  "INNER JOIN obs obs_call " +
-			  "ON o.encounter_id = obs_call.encounter_id " +
-			  "AND obs_call.concept_id = #{call_id} " +
-			  "INNER JOIN call_log cl " +
-			  "ON obs_call.value_text = cl.call_log_id " +
-			  "AND cl.district = #{district_id} " +
+			  'INNER JOIN person_address pa ON pa.person_id = p.person_id ' +
+			  extra_conditions +
 			  "WHERE o.concept_id IN (#{concept_ids}) " + extra_parameters +
 			  "AND DATE(o.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
@@ -915,7 +938,6 @@ module Report
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 		patients_data = []
 		essential_params  = self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
-
 		date_ranges.map do |date_range|
 			query                       = self.patient_health_issues_query_builder(patient_type,
 			                                                                       health_task,
@@ -936,7 +958,7 @@ module Report
 			new_patients_data[:total_calls]   = total_number_of_calls
 			new_patients_data[:total_number_of_calls]   = total_callers_with_symptoms
 			new_patients_data[:total_number_of_calls_for_period] = total_calls_for_period.count
-			symptom_total = results.map(&:number_of_patients).inject(0){|total,n| total = total + n.to_i} # i love ruby :D
+			symptom_total = results.map(&:number_of_patients).inject(0){|total,n| total = total + n.to_i}#i love ruby :D
 
 			unless results.blank?
 				(health_task.humanize.downcase == "outcomes")? outcomes = true : outcomes = false
@@ -1071,8 +1093,8 @@ module Report
 				#----- children_calculations
 				children_under_5_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate)) <= 5
                                         AND person.date_created BETWEEN ? AND ?',
-				                                   date_range[0],
-				                                   date_range[1]
+				                                           date_range[0],
+				                                           date_range[1]
 				).count('patient_id', :distinct => true)
 				children_under_5_percentage = self.get_percentage(total_age.count, children_under_5_count)
 				children_under_5_average    = self.calculate_average(child_under_5_age)
@@ -1084,8 +1106,8 @@ module Report
 				children_6_14_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate))>5
 										AND (YEAR(patient.date_created) - YEAR(person.birthdate)) >= 13
                                         AND person.date_created BETWEEN ? AND ?',
-				                                               date_range[0],
-				                                               date_range[1]
+				                                        date_range[0],
+				                                        date_range[1]
 				).count('patient_id', :distinct => true)
 				children_6_14_percentage = self.get_percentage(total_age.count, children_6_14_count)
 				children_6_14_average    = self.calculate_average(child_6_14_age)
@@ -1097,8 +1119,8 @@ module Report
 				men_count = all_clients.where('(YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
                                         AND person.gender = "M"
                                         AND person.date_created BETWEEN ? AND ?',
-				                                   date_range[0],
-				                                   date_range[1]
+				                              date_range[0],
+				                              date_range[1]
 				).count('patient_id', :distinct => true)
 				men_percentage = self.get_percentage(total_age.count, men_count)
 				men_average    = self.calculate_average(men_age)
@@ -1166,12 +1188,12 @@ module Report
 				all_age     = new_patients_data[:men]
 
 				men = Patient.joins(person: {person_addresses: :person})
-					             .where("((YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
+					        .where("((YEAR(patient.date_created) - YEAR(person.birthdate)) > 13
                                     AND person.gender = 'M') AND person.date_created BETWEEN ? AND ?
 								#{township_division}",
-					                    date_range[0],
-					                    date_range[1]
-					             )
+					               date_range[0],
+					               date_range[1]
+					        )
 				total = men.count('patient.patient_id', :distinct => true)
 
 				#---------------- male non_mnch regardless of age
@@ -1789,9 +1811,8 @@ module Report
 				when "men"
 					new_patients_data = self.men_demographics(results, date_range, district_id)
 					total_patients = 0
-					new_patients_data[:gender].each do |status|
-						total_patients += status.last
-					end
+
+					total_patients += new_patients_data[:men].count
 					patient_statistics[:total] = total_patients
 
 					activity_type.each do |type|
@@ -1848,42 +1869,26 @@ module Report
 	end
 
 	def self.patient_activity_query_builder(patient_type, health_task, date_range, essential_params, district_id)
-		call_id = ConceptName.find_by_name("Call id").id
-		concept_ids         = essential_params[:concept_ids]
-		encounter_type_ids  = essential_params[:encounter_type_ids]
-		#extra_conditions    = essential_params[:extra_conditions]
-		#extra_parameters    = essential_params[:extra_parameters]
+		call_id                 = ConceptName.find_by_name("Call id").id
+		concept_ids             = essential_params[:concept_ids]
+		encounter_type_ids      = essential_params[:encounter_type_ids]
+		#extra_conditions       = essential_params[:extra_conditions]
+		#extra_parameters       = essential_params[:extra_parameters]
 
-		value_coded_indicator = ConceptName.find_by_name("YES").id
+		value_coded_indicator   = ConceptName.find_by_name("YES").id
 
-    query = "SELECT COUNT(obs.person_id) AS number_of_patients "  +
-            "FROM encounter, encounter_type, obs, concept, concept_name " +
-            "WHERE encounter_type.encounter_type_id IN (#{encounter_type_ids}) " +
-              "AND concept.concept_id IN (#{concept_ids}) " +
-              "AND encounter_type.encounter_type_id = encounter.encounter_type " +
-              "AND obs.concept_id = concept_name.concept_id " +
-              "AND obs.concept_id = concept.concept_id " +
-              "AND encounter.encounter_id = obs.encounter_id " +
-              "AND DATE(obs.date_created) >= '#{date_range.first}' " +
-              "AND DATE(obs.date_created) <= '#{date_range.last}' " +
-              "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
-            "ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
-=begin
-		query = "SELECT COUNT(DISTINCT o.person_id) AS number_of_patients "  +
-			  "FROM encounter e " +
-			  "INNER JOIN obs o ON e.encounter_id = o.encounter_id " +
-			  "INNER JOIN obs obs_call ON o.encounter_id = obs_call.encounter_id " +
-			  "AND obs_call.concept_id = #{call_id} " +
-			  "INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id " +
-			  "AND cl.district = #{district_id} " +
-			  "WHERE e.encounter_type IN (#{encounter_type_ids}) " +
-			  "AND o.concept_id IN (#{concept_ids}) " +
-			  "AND DATE(o.date_created) >= '#{date_range.first}' " +
-			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
-			  "AND e.voided = 0 AND o.voided = 0 " +
-			  "AND o.value_coded = " + value_coded_indicator.to_s
-=end
-		#raise query.to_s
+		query = "SELECT COUNT(obs.person_id) AS number_of_patients "  +
+			  "FROM encounter, encounter_type, obs, concept, concept_name " +
+			  "WHERE encounter_type.encounter_type_id IN (#{encounter_type_ids}) " +
+			  "AND concept.concept_id IN (#{concept_ids}) " +
+			  "AND encounter_type.encounter_type_id = encounter.encounter_type " +
+			  "AND obs.concept_id = concept_name.concept_id " +
+			  "AND obs.concept_id = concept.concept_id " +
+			  "AND encounter.encounter_id = obs.encounter_id " +
+			  "AND DATE(obs.date_created) >= '#{date_range.first}' " +
+			  "AND DATE(obs.date_created) <= '#{date_range.last}' " +
+			  "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
+			  "ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
 		query
 	end
 
@@ -1894,15 +1899,16 @@ module Report
 			district_id = Location.find_by_name(district).id
 		end
 
-		call_id = ConceptName.find_by_name("Call id").id
-		patient_data = []
-		youth_age = 9
+		call_id             = ConceptName.find_by_name("Call id").id
+		patient_data        = []
+		child_age           = 5
+		child_maximum_age   = 13
 
 		other_outcomes = ["GIVEN ADVICE NO REFERRAL NEEDED","GIVEN ADVICE"]
 		if outcome == "GIVEN ADVICE NO REFERRAL NEEDED"
 			outcome = other_outcomes
 		end
-		#raise outcome.to_yaml
+
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date,
 		                                                     end_date)[:date_ranges]
 
@@ -1910,34 +1916,59 @@ module Report
 			patient_info = []
 			patient_data_elements = {:date_range => [], :patient_info => []}
 
-			if patient_type.downcase == "women"
-				condition_options = ["encounter_type = ?
+			if patient_type.downcase == 'women'
+				condition_options = ['encounter_type = ?
                               AND encounter_datetime >= ?
                               AND encounter_datetime <= ?
                               AND obs.concept_id = ?
                               AND obs.value_text IN (?)
-                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?",
+                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
+							  AND person.gender = "F" ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("Outcome").id,
-				                     outcome, youth_age]
-			elsif patient_type.downcase == 'children'
-				condition_options = ["encounter_type = ?
+				                     outcome, child_maximum_age]
+			elsif patient_type.downcase == 'children (under 5)'
+				condition_options = ['encounter_type = ?
                               AND encounter_datetime >= ?
                               AND encounter_datetime <= ?
                               AND obs.concept_id = ?
                               AND obs.value_text IN (?)
-                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?",
+                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("Outcome").id,
-				                     outcome, youth_age]
+				                     outcome, child_age]
+			elsif patient_type.downcase == 'children (6 - 14)'
+				condition_options = ['encounter_type = ?
+                              AND encounter_datetime >= ?
+                              AND encounter_datetime <= ?
+                              AND obs.concept_id = ?
+                              AND obs.value_text IN (?)
+                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?
+							  AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?',
+				                     EncounterType.find_by_name("Update Outcome").id,
+				                     date_range.first, date_range.last,
+				                     ConceptName.find_by_name("Outcome").id,
+				                     outcome, child_age, child_maximum_age]
+			elsif patient_type.downcase == 'men'
+				condition_options = ['encounter_type = ?
+                              AND encounter_datetime >= ?
+                              AND encounter_datetime <= ?
+                              AND obs.concept_id = ?
+                              AND obs.value_text IN (?)
+                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
+							  AND person.gender = "M" ',
+				                     EncounterType.find_by_name("Update Outcome").id,
+				                     date_range.first, date_range.last,
+				                     ConceptName.find_by_name("Outcome").id,
+				                     outcome, child_maximum_age]
 			else
-				condition_options = ["encounter_type = ?
+				condition_options = ['encounter_type = ?
                               AND encounter_datetime >= ?
                               AND encounter_datetime <= ?
                               AND obs.concept_id = ?
-                              AND obs.value_text IN (?)",
+                              AND obs.value_text IN (?)',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("Outcome").id,
@@ -1952,7 +1983,6 @@ module Report
                               INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id
                                 AND cl.district = #{district_id}").where(condition_options)
 
-			#raise o_encounters.to_yaml
 			o_encounters.each do |a_encounter|
 
 				patient_information = {:name => '', :number => '', :visit_summary => ''}
@@ -2864,7 +2894,11 @@ module Report
 		return patients_data
 	end
 	def self.follow_up_report(start_date, end_date, grouping, district)
-		district_id = Location.find_by_name(district).id
+		if district == 'All'
+			district_id = 0
+		else
+			district_id = Location.find_by_name(district).id
+		end
 		patients_data = []
 		#follow_up_reasons = self.create_follow_up_structure
 		reasons = [

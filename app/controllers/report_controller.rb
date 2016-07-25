@@ -577,34 +577,35 @@ class ReportController < ApplicationController
 	end
 
 	def patient_activity_report
-		@start_date   = params[:start_date]
-		@end_date     = params[:end_date]
-		@patient_type = params[:patient_type]
-		@report_type  = params[:report_type]
-		@query        = params[:query]
-		@grouping     = params[:grouping]
-		@special_message = ""
-		@source       = params[:source] rescue nil
-		district = params[:district]
+		@start_date         = params[:start_date]
+		@end_date           = params[:end_date]
+		@patient_type       = params[:patient_type]
+		@report_type        = params[:report_type]
+		@query              = params[:query]
+		@grouping           = params[:grouping]
+		@special_message    = ''
+		@source             = params[:source] rescue nil
+		district            = params[:district]
 
-		@report_name  = "Patient Activity for #{params[:district]} district"
-		@report    = Report.patient_activity(@patient_type, @grouping,
+		@report_name        = "Patient Activity for #{params[:district]} district"
+		@report             = Report.patient_activity(@patient_type, @grouping,
 		                                     @start_date, @end_date, district)
 	end
+
 	def patient_referral_report
-		@start_date   = params[:start_date]
-		@end_date     = params[:end_date]
-		@patient_type = params[:patient_type]
-		@report_type  = params[:report_type]
-		@query        = params[:query]
-		@grouping     = params[:grouping]
-		@outcome      = params[:outcome]
-		@special_message = ""
-		@source       = params[:source] rescue nil
-		district = params[:district]
-		#raise params.to_yaml
-		@report_name  = "Referral Followup for #{district} district"
-		@report    = Report.patient_referral_followup(@patient_type, @grouping, @outcome,
+		@start_date         = params[:start_date]
+		@end_date           = params[:end_date]
+		@patient_type       = params[:patient_type]
+		@report_type        = params[:report_type]
+		@query              = params[:query]
+		@grouping           = params[:grouping]
+		@outcome            = params[:outcome]
+		@special_message    = ''
+		@source             = params[:source] rescue nil
+		district            = params[:district]
+
+		@report_name        = "Referral Followup for #{district} district"
+		@report             = Report.patient_referral_followup(@patient_type, @grouping, @outcome,
 		                                              @start_date, @end_date, district)
 	end
 	def call_time_of_day
