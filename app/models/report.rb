@@ -674,7 +674,7 @@ module Report
 
 				end
 			else #all
-				encounter_type_list = ["MATERNAL HEALTH SYMPTOMS", "CHILD HEALTH SYMPTOMS"]
+				encounter_type_list = ['MATERNAL HEALTH SYMPTOMS', 'CHILD HEALTH SYMPTOMS', 'GENERAL HEALTH SYMPTOMS']
 
 				case health_task.humanize.downcase
 					when "health symptoms"
@@ -759,7 +759,7 @@ module Report
 				concept_map.push(mapping)
 			end
 		end
-		encounter_type_ids = ""
+		encounter_type_ids = ''
 		encounter_type_list.each do |encounter_type|
 			encounter_type_id = EncounterType.find_by_name("#{encounter_type}").id rescue nil
 			next if encounter_type_id.nil?
@@ -1872,23 +1872,44 @@ module Report
 		call_id                 = ConceptName.find_by_name("Call id").id
 		concept_ids             = essential_params[:concept_ids]
 		encounter_type_ids      = essential_params[:encounter_type_ids]
-		#extra_conditions       = essential_params[:extra_conditions]
-		#extra_parameters       = essential_params[:extra_parameters]
 
 		value_coded_indicator   = ConceptName.find_by_name("YES").id
 
-		query = "SELECT COUNT(obs.person_id) AS number_of_patients "  +
-			  "FROM encounter, encounter_type, obs, concept, concept_name " +
-			  "WHERE encounter_type.encounter_type_id IN (#{encounter_type_ids}) " +
-			  "AND concept.concept_id IN (#{concept_ids}) " +
-			  "AND encounter_type.encounter_type_id = encounter.encounter_type " +
-			  "AND obs.concept_id = concept_name.concept_id " +
-			  "AND obs.concept_id = concept.concept_id " +
-			  "AND encounter.encounter_id = obs.encounter_id " +
-			  "AND DATE(obs.date_created) >= '#{date_range.first}' " +
-			  "AND DATE(obs.date_created) <= '#{date_range.last}' " +
-			  "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
-			  "ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
+		query = "SELECT COUNT(obs.person_id) AS number_of_patients
+				FROM obs
+				INNER JOIN concept ON concept.concept_id = obs.concept_id
+				INNER JOIN concept_name ON concept_name.concept_id = obs.concept_id
+				INNER JOIN encounter_type ON encounter_type.encounter_type_id IN (#{encounter_type_ids})
+				INNER JOIN encounter ON encounter.encounter_type = encounter_type.encounter_type_id
+				WHERE concept.concept_id IN (#{concept_ids})
+				AND encounter_type.encounter_type_id = encounter.encounter_type
+				AND obs.concept_id = concept_name.concept_id
+				AND obs.concept_id = concept.concept_id
+				AND encounter.encounter_id = obs.encounter_id
+				AND DATE(obs.date_created) >= '#{date_range.first}'
+				AND DATE(obs.date_created) <= '#{date_range.last}'
+				AND encounter.voided = 0 AND obs.voided = 0
+				AND concept_name.voided = 0
+				ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id
+				"
+
+=begin
+		query = "SELECT COUNT(obs.person_id) AS number_of_patients FROM obs
+				INNER JOIN concept_name ON concept_name.concept_id = obs.concept_id
+				INNER JOIN encounter_type ON encounter_type.encounter_type_id IN (#{encounter_type_ids})
+				INNER JOIN encounter ON encounter_type.encounter_type_id IN (#{encounter_type_ids})
+				INNER JOIN concept WHERE encounter_type.encounter_type_id IN (#{encounter_type_ids})
+				AND concept.concept_id IN (#{concept_ids})
+				AND encounter_type.encounter_type_id = encounter.encounter_type
+				AND obs.concept_id = concept_name.concept_id
+				AND obs.concept_id = concept.concept_id
+				AND encounter.encounter_id = obs.encounter_id
+				AND DATE(obs.date_created) >= '#{date_range.first}'
+				AND DATE(obs.date_created) <= '#{date_range.last}'
+				AND encounter.voided = 0 AND obs.voided = 0
+				AND concept_name.voided = 0
+				ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
+=end
 		query
 	end
 
