@@ -881,6 +881,7 @@ module Report
 		concept_ids             = essential_params[:concept_map].inject([]) { |result, concept|
 			result << concept[:concept_id]
 		}.uniq.join(',')
+
 		value_coded_indicator   = ConceptName.find_by_name("YES").id
 
 		call_id = ConceptName.find_by_name("Call id").id
@@ -950,7 +951,6 @@ module Report
 			total_calls_for_period      = self.call_count_for_period(date_range, patient_type, district_id)
 			total_number_of_calls       = total_call_count.first.attributes['call_count'].to_i rescue 0
 			total_callers_with_symptoms = self.get_callers(date_range, essential_params, patient_type, district_id, health_task).count
-
 			new_patients_data                 = {}
 			new_patients_data[:health_issues] = concept_map
 			new_patients_data[:start_date]    = date_range.first
