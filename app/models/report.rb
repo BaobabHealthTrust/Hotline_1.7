@@ -491,6 +491,7 @@ module Report
 		encounter_type_ids  = essential_params[:encounter_type_ids]
 		extra_conditions    = essential_params[:extra_conditions]
 		extra_parameters    = essential_params[:extra_parameters]
+
 		# TODO find a better way of getting concept_names that are not tagged concept_name_tag_map as danger,
 		# health_symptom or health info
 		concept_names =  "'" + essential_params[:concept_map].inject([]) {|result, concept|
@@ -502,11 +503,6 @@ module Report
 
 		child_age           = 5
 		child_maximum_age   = 13
-
-		#required_tags = ConceptNameTag.find(:all,
-		#                                   :select => "concept_name_tag_id",
-		#                                    :conditions => ["tag IN ('DANGER SIGN', 'HEALTH INFORMATION', 'HEALTH SYMPTOM')"]
-		#).map(&:concept_name_tag_id).join(', ')
 
 		if district_id == 0
 			districts = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
@@ -532,7 +528,7 @@ module Report
 			  "AND DATE(obs.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(obs.date_created) <= '#{date_range.last}'"
 
-		if patient_type.to_s.upcase == "CHILDREN (UNDER 5)"
+		if patient_type.to_s.upcase == 'CHILDREN (UNDER 5)'
 			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= #{child_age} "
 		elsif patient_type.to_s.upcase == 'CHILDREN (6 - 14)'
 			query += "AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_age}
@@ -545,16 +541,6 @@ module Report
 				AND person.gender = 'F' "
 		end
 
-		if health_task.to_s.upcase != "OUTCOMES"
-			query += "AND obs.value_coded = " + value_coded_indicator.to_s
-		end
-
-		#    query = query + " AND concept_name.concept_name_id = concept_name_tag_map.concept_name_id "
-
-		if health_task.to_s.upcase != "OUTCOMES"
-			query += " AND concept_name.name IN (#{concept_names}) " #" AND concept_name_tag_map.concept_name_tag_id IN (" + required_tags + ") "
-		end
-
 		query += " GROUP BY encounter_type.encounter_type_id, " + extra_conditions + "obs.concept_id " +
 			  " ORDER BY encounter_type.name, DATE(obs.date_created), obs.concept_id"
 
@@ -565,28 +551,20 @@ module Report
 		if health_task.humanize.downcase == "outcomes"
 			concepts_list       = ["GENERAL OUTCOME", "SECONDARY OUTCOME"]
 			encounter_type_list = ["UPDATE OUTCOME"]
-			outcomes            = ["REFERRED TO A HEALTH CENTRE",
-			                       "REFERRED TO NEAREST VILLAGE CLINIC",
-			                       "PATIENT TRIAGED TO NURSE SUPERVISOR",
-			                       "GIVEN ADVICE NO REFERRAL NEEDED",
-			                       "HOSPITAL",
-			                       "REGISTERED FOR TIPS AND REMINDERS"]
 
 			outcomes = self.concept_set('General outcome').flatten.delete_if{|c| c.blank?}.uniq
 			extra_parameters    = " COALESCE((SELECT name FROM concept_name WHERE concept_id = obs.value_coded), obs.value_text) AS concept_name, "
 			extra_conditions    = " obs.value_text, DATE(obs.date_created), "
 		else
-			extra_conditions = " DATE(obs.date_created), "
-			extra_parameters = " concept_name.name AS concept_name, "
+			extra_parameters    = " concept_name.name AS concept_name, "
+			extra_conditions    = " DATE(obs.date_created), "
 
 			if patient_type.downcase == "children (under 5)"
 				encounter_type_list = ["CHILD HEALTH SYMPTOMS"]
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = ["FEVER", "DIARRHEA", "COUGH", # feels that this is a danger sign "CONVULSIONS",
-						                 "NOT EATING","RED EYE", # this is only classified as 'Vomiting Everything' -"VOMITING",
-						                 "GAINED OR LOST WEIGHT", "UNCONSCIOUS"] #"VERY SLEEPY" is removed as it is under unconscious
+						concepts_list = self.concept_set('child health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
 						concepts_list = ["FEVER OF 7 DAYS OR MORE",
@@ -610,9 +588,7 @@ module Report
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = ["FEVER", "DIARRHEA", "COUGH", # feels that this is a danger sign "CONVULSIONS",
-						                 "NOT EATING","RED EYE", # this is only classified as 'Vomiting Everything' -"VOMITING",
-						                 "GAINED OR LOST WEIGHT", "UNCONSCIOUS"] #"VERY SLEEPY" is removed as it is under unconscious
+						concepts_list = self.concept_set('general health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
 						concepts_list = ["FEVER OF 7 DAYS OR MORE",
@@ -636,21 +612,22 @@ module Report
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = ["VAGINAL BLEEDING DURING PREGNANCY",
-						                 "POSTNATAL BLEEDING", "FEVER DURING PREGNANCY SYMPTOM",
-						                 "POSTNATAL FEVER SYMPTOM", "HEADACHES",
-						                 "FITS OR CONVULSIONS SYMPTOM",
-						                 "SWOLLEN HANDS OR FEET SYMPTOM",
-						                 "PALENESS OF THE SKIN AND TIREDNESS SYMPTOM",
-						                 "NO FETAL MOVEMENTS SYMPTOM", "WATER BREAKS SYMPTOM",
-						                 "POSTNATAL DISCHARGE BAD SMELL", "ABDOMINAL PAIN",
-						                 "PROBLEMS WITH MONTHLY PERIODS",
-						                 "PROBLEMS WITH FAMILY PLANNING METHO", "INFERTILITY",
-						                 "FREQUENT MISCARRIAGES",
-						                 "VAGINAL BLEEDING NOT DURING PREGNANCY",
-						                 "VAGINAL ITCHING","VAGINAL DISCHARGE",
-						                 "OTHER"
-						]
+						concepts_list = self.concept_set('Maternal health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+
+					when "danger warning signs"
+						concepts_list = self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
+
+					when "health information requested"
+						concepts_list = self.concept_set('maternal health info').flatten.delete_if{|c| c.blank?}.uniq
+
+				end
+
+			elsif patient_type.downcase == "men"
+				encounter_type_list = ["HEALTH SYMPTOMS"]
+
+				case health_task.humanize.downcase
+					when "health symptoms"
+						concepts_list = self.concept_set('general health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
 						concepts_list = ["HEAVY VAGINAL BLEEDING DURING PREGNANCY",
@@ -673,29 +650,15 @@ module Report
 						                 "BIRTH PLANNING FEMALE","OTHER"]
 
 				end
+
 			else #all
-				encounter_type_list = ['MATERNAL HEALTH SYMPTOMS', 'CHILD HEALTH SYMPTOMS', 'GENERAL HEALTH SYMPTOMS']
+				encounter_type_list = ['MATERNAL HEALTH SYMPTOMS', 'CHILD HEALTH SYMPTOMS', 'HEALTH SYMPTOMS']
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = ["VAGINAL BLEEDING DURING PREGNANCY",
-						                 "POSTNATAL BLEEDING", "FEVER DURING PREGNANCY SYMPTOM",
-						                 "POSTNATAL FEVER SYMPTOM", "HEADACHES",
-						                 "FITS OR CONVULSIONS SYMPTOM",
-						                 "SWOLLEN HANDS OR FEET SYMPTOM",
-						                 "PALENESS OF THE SKIN AND TIREDNESS SYMPTOM",
-						                 "NO FETAL MOVEMENTS SYMPTOM", "WATER BREAKS SYMPTOM",
-						                 "FEVER", "DIARRHEA", "COUGH", "CONVULSIONS SYMPTOM",
-						                 "NOT EATING", "VOMITING", "RED EYE",
-						                 "FAST BREATHING", "VERY SLEEPY", "UNCONSCIOUS",
-						                 "POSTNATAL DISCHARGE BAD SMELL", "ABDOMINAL PAIN",
-						                 "PROBLEMS WITH MONTHLY PERIODS",
-						                 "PROBLEMS WITH FAMILY PLANNING METHO", "INFERTILITY",
-						                 "FREQUENT MISCARRIAGES",
-						                 "VAGINAL BLEEDING NOT DURING PREGNANCY",
-						                 "VAGINAL ITCHING","VAGINAL DISCHARGE",
-						                 "OTHER"
-						]
+						concepts_list = self.concept_set('child health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list += self.concept_set('maternal health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list += self.concept_set('health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
 						concepts_list = ["HEAVY VAGINAL BLEEDING DURING PREGNANCY",
@@ -742,9 +705,9 @@ module Report
 			concept_id = ConceptName.find_by_name("#{concept_name}").id rescue nil
 			next if concept_id.nil?
 
-			concept_ids += concept_id.to_s + ", "
-			next if concept_name == "SECONDARY OUTCOME"
-			if concept_name == "GENERAL OUTCOME"
+			concept_ids += concept_id.to_s + ', '
+			next if concept_name == 'SECONDARY OUTCOME'
+			if concept_name == 'GENERAL OUTCOME'
 				outcomes.each do |concept_name|
 					mapping = {:concept_name  => concept_name,  :concept_id       => concept_id,
 					           :call_count    => call_count,    :call_percentage  => call_percentage}
@@ -759,6 +722,7 @@ module Report
 				concept_map.push(mapping)
 			end
 		end
+
 		encounter_type_ids = ''
 		encounter_type_list.each do |encounter_type|
 			encounter_type_id = EncounterType.find_by_name("#{encounter_type}").id rescue nil
@@ -774,7 +738,6 @@ module Report
 		          :encounter_type_ids => encounter_type_ids,
 		          :extra_conditions   => extra_conditions,
 		          :extra_parameters   => extra_parameters}
-
 		return params
 	end
 
@@ -1916,8 +1879,12 @@ module Report
 	def self.patient_referral_followup(patient_type, grouping, outcome, start_date, end_date, district)
 		if district == 'All'
 			district_id = 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+			township_division = "person_address.township_division IN (#{district_names}) "
 		else
 			district_id = Location.find_by_name(district).id
+			district_name = Location.find(district_id).name
+			township_division = "person_address.township_division = '#{district_name}'"
 		end
 
 		call_id             = ConceptName.find_by_name("Call id").id
@@ -1942,13 +1909,12 @@ module Report
                               AND encounter_datetime >= ?
                               AND encounter_datetime <= ?
                               AND obs.concept_id = ?
-                              AND obs.value_text IN (?)
                               AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
 							  AND person.gender = "F" ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
-				                     ConceptName.find_by_name("Outcome").id,
-				                     outcome, child_maximum_age]
+				                     ConceptName.find_by_name("referral to hospital").id,
+				                     child_maximum_age]
 			elsif patient_type.downcase == 'children (under 5)'
 				condition_options = ['encounter_type = ?
                               AND encounter_datetime >= ?
@@ -1999,10 +1965,8 @@ module Report
 
 			o_encounters = Encounter.joins("INNER JOIN obs ON encounter.encounter_id = obs.encounter_id
                              INNER JOIN person ON patient_id = person.person_id
-                             INNER JOIN obs obs_call ON obs_call.encounter_id = obs.encounter_id
-                              AND obs_call.concept_id = #{call_id}
-                              INNER JOIN call_log cl ON obs_call.value_text = cl.call_log_id
-                                AND cl.district = #{district_id}").where(condition_options)
+                              INNER JOIN person_address ON person_address.person_id = person.person_id
+                                AND #{township_division}").where(condition_options)
 
 			o_encounters.each do |a_encounter|
 
@@ -2014,9 +1978,9 @@ module Report
 				patient_information[:number] = a_person.phone_numbers
 				patient_information[:visit_summary] = get_call_summary(a_person.id,
 				                                                       a_encounter.encounter_datetime.strftime("%Y-%m-%d"))
-
 				patient_info << patient_information
 			end
+
 			patient_data_elements[:date_range] = date_range
 			patient_data_elements[:patient_info] = patient_info
 

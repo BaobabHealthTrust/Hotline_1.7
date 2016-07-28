@@ -128,7 +128,7 @@ class ReportController < ApplicationController
 						                        "Children (6 - 14)",
 						                        "Children (under 5)",
 						                        "All"]
-						@outcomes            = ["","REFERRED TO A HEALTH CENTRE",
+						@outcomes            = ["",'REFERRAL TO HOSPITAL',"REFERRED TO A HEALTH CENTRE",
 						                        "REFERRED TO NEAREST VILLAGE CLINIC",
 						                        "PATIENT TRIAGED TO NURSE SUPERVISOR",
 						                        "GIVEN ADVICE NO REFERRAL NEEDED"]
