@@ -192,6 +192,7 @@ img {
         </div>
         <!-- btn ends .. -->
         <!-- btn starts .. -->
+        <%if params[:param] != 'house_keeping' || params[:param].blank? %>
         <div class="table-row">
           <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
             <div class="divbtn" onclick="javascript:addNew();" >
@@ -202,12 +203,17 @@ img {
             </div>
           </div>
         </div>
+        <% end %>
         <!-- btn ends .. -->
         <!-- btn starts .. -->
         <% if params[:action_type] != 'guardian' %>
             <div class="table-row">
               <div class="table-cell" style="width: 100%; text-align: center; height: 150px;">
-                <div class="divbtn" onclick="document.location='/start_call'" >
+                <% if params[:param] == 'house_keeping' %>
+                  <div class="divbtn" onclick="document.location='/house_keeping?param=house_keeping'" >
+                <% else %>
+                  <div class="divbtn" onclick="document.location='/start_call'" >
+                <% end %>
                   <span>
                     <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>
                     <p>New search</p>
@@ -310,7 +316,9 @@ function addNew() {
 
 function patientDashboard() {
   if(selectedPersonID) {
-      <% unless params[:action_type] == 'guardian'%>
+      <% if params[:param] == 'house_keeping' %>
+        document.location = '/patient/dashboard/' + selectedPersonID + '/tasks?param=<%= params[:param] %>';
+      <% elsif params[:action_type] != 'guardian'%>
         document.location = '/patient/dashboard/' + selectedPersonID + '/tasks?next_task=true';
       <% else %>
         document.location = '/encounters/create_guardian?patient_id=<%= params[:patient_id]%>&guardian_id=' + selectedPersonID;

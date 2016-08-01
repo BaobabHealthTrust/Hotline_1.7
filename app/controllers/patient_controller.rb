@@ -1,6 +1,10 @@
 class PatientController < ApplicationController
 	def dashboard
+
 		session[:call] = 'started' if session[:call].blank? || session[:call].nil?
+		session[:house_keeping] = true if params[:param] == 'house_keeping'
+		session[:automatic_flow] = false if session[:house_keeping] == true
+		#raise params[:param].inspect
 		@tab_name = params[:tab_name]
 		@tab_name = 'current_call' if @tab_name.blank?
 		@patient_obj = PatientService.get_patient(params[:patient_id])
@@ -117,6 +121,7 @@ class PatientController < ApplicationController
 	end
 
 	def search_result
+		@param = params[:param]
 		@given_name = params[:person]['names']['given_name']
 		@family_name = params[:person]['names']['family_name']
 		@gender = params[:person]['gender']
@@ -225,7 +230,7 @@ class PatientController < ApplicationController
 
 	def attributes_search_results
 		people = []
-
+		@param = params[:param]
 		@attribute_name = params[:attribute_name].titleize
 		@attribute = params[:attribute_value]
 
@@ -321,9 +326,7 @@ class PatientController < ApplicationController
 	end
 
 	def districts
-
-
-
+	
 		if !params[:end_call].blank?
 			#raise params[:patient_id].inspect
 			#session['seen_clients'] = [] if session['seen_clients'].blank?
@@ -378,11 +381,16 @@ class PatientController < ApplicationController
 			purpose_of_call = Encounter.current_data('PURPOSE OF CALL', @patient_obj.patient_id)['PURPOSE OF CALL'].first rescue ''
 
 			if verify_purpose_encounter == false
+				if session[:house_keeping] == true
+					session[:house_keeping] = false
+					redirect_to '/' and return
+				end
 				redirect_to "/encounters/new/confirm_purpose_of_call?patient_id=#{params[:patient_id]}" and return
 			elsif purpose_of_call == "Registration"
 				redirect_to '/' and return
 			elsif update_outcome_encounter == false
 				redirect_to "/encounters/new/update_outcomes?patient_id=#{params[:patient_id]}&end_call=#{params[:end_call]}" and return
+
 			else
 				redirect_to '/' and return
 			end
