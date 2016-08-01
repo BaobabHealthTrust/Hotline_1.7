@@ -128,7 +128,9 @@ class ReportController < ApplicationController
 						                        "Children (6 - 14)",
 						                        "Children (under 5)",
 						                        "All"]
-						@outcomes            = ["",'REFERRAL TO HOSPITAL',"REFERRED TO A HEALTH CENTRE",
+						@outcomes = ['']+Report.concept_set('General outcome').flatten.delete_if{|c| c.blank?}.uniq
+						#outcomes below minimised for the time being. Can used if above method fails
+						outcomes            = ["",'REFERRAL TO HOSPITAL',"REFERRED TO A HEALTH CENTRE",
 						                        "REFERRED TO NEAREST VILLAGE CLINIC",
 						                        "PATIENT TRIAGED TO NURSE SUPERVISOR",
 						                        "GIVEN ADVICE NO REFERRAL NEEDED"]
@@ -699,7 +701,7 @@ class ReportController < ApplicationController
 		@report_type    = params[:report_type]
 
 		@report_name  = "New vs Repeat Callers for #{@district} District"
-		@report = Report.new_vs_repeat_callers_report(@start_date, @end_date, @grouping, @district) rescue []
+		@report = Report.new_vs_repeat_callers_report(@start_date, @end_date, @grouping, @district)
 		#raise @report.to_yaml
 
 	end

@@ -1703,6 +1703,7 @@ module Report
 						essential_params  = self.prepopulate_concept_ids_and_extra_parameters(patient_type, activity)
 						data_query = self.patient_activity_query_builder(patient_type, activity, date_range, essential_params, district_id)
 						activity_data = Patient.find_by_sql(data_query)
+
 						if type == 'symptoms'
 							patient_statistics[:symptoms] = activity_data.first.number_of_patients.to_i
 							patient_statistics[:symptoms_pct] = (activity_data.first.number_of_patients.to_f / patient_statistics[:total].to_f * 100).round(1) if patient_statistics[:total].to_f != 0
@@ -1913,7 +1914,7 @@ module Report
 							  AND person.gender = "F" ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
-				                     ConceptName.find_by_name("referral to hospital").id,
+				                     ConceptName.find_by_name("outcome").id,
 				                     child_maximum_age]
 			elsif patient_type.downcase == 'children (under 5)'
 				condition_options = ['encounter_type = ?
@@ -2000,9 +2001,11 @@ module Report
 
 		patient_encounters = Encounter.find(:all,
 		                                    :conditions =>["encounter_type IN (?)
-                                  AND encounter_datetime like ?
-                                  AND patient_id = ?",
-		                                                   encounter_types, "#{encounter_date}%", patient_id
+												AND encounter_datetime like ?
+												AND patient_id = ?",
+		                                                   encounter_types,
+		                                                   encounter_date,
+		                                                   patient_id
 		                                    ])
 		return_string = ""
 		patient_encounters.each do |a_encounter|
@@ -2845,7 +2848,11 @@ module Report
 
 	end
 	def self.new_vs_repeat_callers_report(start_date, end_date, grouping, district)
-		district_id = Location.find_by_name(district).id
+		if district == 'All'
+			district_id = 0
+		else
+			district_id = Location.find_by_name(district).id
+		end
 		patients_data = []
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
@@ -2858,12 +2865,28 @@ module Report
 			            :repeat_calls_percentage => 0
 			}
 
-			call_data = CallLog.find(:all,
-			                         :conditions => ["district = ? AND start_time >= ?
-                                 AND start_time <= ?", district_id, date_range.first,
-			                                         date_range.last])
+			query = "SELECT e.patient_id, o.concept_id, o.comments FROM encounter e
+					INNER JOIN obs o
+					ON e.encounter_id = o.encounter_id
+					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
+                    AND e.encounter_datetime >= '#{date_range.first}'
+                    AND e.encounter_datetime <= '#{date_range.last}'
+					GROUP BY e.patient_id, o.comments"
+
+			call_data = Patient.find_by_sql(query)
+
+			repeat_query = "SELECT e.patient_id FROM obs o
+					INNER JOIN encounter e
+					ON e.encounter_id = o.encounter_id
+					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
+                    AND e.encounter_datetime >= '#{date_range.first}'
+                    AND e.encounter_datetime <= '#{date_range.last}'
+					AND o.comments > 1
+					GROUP BY e.patient_id, o.comments"
+
+			repeat_call_data = Patient.find_by_sql(repeat_query)
 			row_data[:total_calls] = call_data.count
-			call_data.group_by(&:call_mode).each do |mode, call|
+			call_data.each do |mode, call|
 				if mode == 1 #new call
 					row_data[:new_calls] = call.count
 					row_data[:new_calls_percentage] = (row_data[:new_calls].to_f / row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
