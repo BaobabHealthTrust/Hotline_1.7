@@ -130,7 +130,7 @@
 
         <!-- loop -->
         <div class="cells btncells">
-          <div class="divbtn" onclick="document.location='/patient/find_by_phone?redirect=house_keeping'" >
+          <div class="divbtn" onclick="document.location='/patient/find_by_phone?redirect=house_keeping&param=<%= params[:param] %>'" >
             <span class="icons">
               <%=image_tag("icons/Directory.png", class: 'icons')%>
                 <p class="button-label">Find by phone number</p>
@@ -141,7 +141,7 @@
 
           <!-- loop -->
           <div class="cells btncells">
-            <div class="divbtn" onclick="document.location='/patient/find_by_identifier?redirect=house_keeping'" >
+            <div class="divbtn" onclick="document.location='/patient/find_by_identifier?redirect=house_keeping&param=<%= params[:param] %>'" >
               <span class="icons">
                 <%=image_tag("icons/user-id.png", class: 'icons')%>
                   <p class="button-label">Find by ID</p>
@@ -152,7 +152,7 @@
 
             <!-- loop -->
             <div class="cells btncells">
-              <div class="divbtn" onclick="document.location='/patient/search_by_name?redirect=house_keeping'" >
+              <div class="divbtn" onclick="document.location='/patient/search_by_name?redirect=house_keeping&param=<%= params[:param] %>'" >
                 <span class="icons">
                   <%=image_tag("icons/kuser.png", class: 'icons')%>
                     <p class="button-label">Find by name</p>

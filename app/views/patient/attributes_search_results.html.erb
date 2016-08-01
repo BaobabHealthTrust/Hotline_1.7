@@ -133,7 +133,7 @@ img {
       </div>
         <!-- btn ends .. -->
       <!-- btn starts .. -->
-      <div class="divbtn" onclick="document.location='/start_call'" >
+      <div class="divbtn" onclick="document.location='/house_keeping'" >
         <span>
           <%=image_tag("icons/start-call-4.png", class: 'search-icons')%>
           <p>New search</p>
@@ -170,9 +170,11 @@ img {
 
 function patientDashboard() {
   if(selectedPersonID)
-    document.location='/patient/dashboard/'+ selectedPersonID + '/tasks';
-
+    <% if params[:param] == 'house_keeping' %>
+    document.location='/patient/dashboard/'+ selectedPersonID + '/tasks?param=<%= params[:param] %>';
+  <% end %>
 }
+
 
 
 </script>

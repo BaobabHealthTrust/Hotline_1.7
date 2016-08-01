@@ -117,7 +117,8 @@
 
       <!-- loop -->
       <div class="cells btncells">
-        <div class="divbtn" onclick="document.location='/house_keeping'" >
+      <% param = 'house_keeping' %>
+        <div class="divbtn" onclick="document.location='/house_keeping?param=<%= param %>'" >
           <span class="icons">
             <%=image_tag("icons/clear.png", class: 'icons')%>
               <p class="button-label">House Keeping</p>
