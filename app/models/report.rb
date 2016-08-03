@@ -1906,7 +1906,6 @@ module Report
 			township_division = "person_address.township_division = '#{district_name}'"
 		end
 
-		call_id             = ConceptName.find_by_name("Call id").id
 		patient_data        = []
 		child_age           = 5
 		child_maximum_age   = 13
@@ -1991,11 +1990,8 @@ module Report
 
 				patient_information = {:name => '', :number => '', :visit_summary => ''}
 
-				a_person = Person.find(a_encounter.observations.first.person_id)
-				at_person = PersonAttribute.where("value like '%phone%'
-							and person_id = #{a_encounter.observations.first.person_id}")
-
 				a_person = PatientService.get_patient(a_encounter.observations.first.person_id)
+
 				patient_information[:name] = a_person.name
 				patient_information[:number] = a_person.cell_phone_number
 				patient_information[:visit_summary] = get_call_summary(
@@ -2017,16 +2013,18 @@ module Report
 
 	def self.get_call_summary(patient_id, encounter_date)
 
-
-		encounter_type_list = ["MATERNAL HEALTH SYMPTOMS",
-		                       "CHILD HEALTH SYMPTOMS"]
+		encounter_type_list = ['MATERNAL HEALTH SYMPTOMS', 'CHILD HEALTH SYMPTOMS', 'GENERAL HEALTH SYMPTOMS']
 		encounter_types = self.get_encounter_types(encounter_type_list)
 
-		patient_encounters = Encounter.where(:encounter_type => encounter_types, :encounter_datetime => encounter_date, :patient_id => patient_id)
-		return_string = ""
+		patient_encounters = Encounter.where("encounter_type IN (?) AND patient_id = #{patient_id}
+								AND DATE(encounter_datetime) like ? ", encounter_types, encounter_date)
+		return_string = ''
+
 		patient_encounters.each do |a_encounter|
-			return_string = return_string + " " + a_encounter.to_s
+			a_encounter = EncounterType.find(a_encounter.encounter_type).name
+			return_string = return_string + ' ' + a_encounter.to_s.titleize + ','
 		end
+
 		return return_string
 	end
 
