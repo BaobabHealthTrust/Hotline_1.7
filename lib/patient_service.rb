@@ -23,13 +23,13 @@ module PatientService
 		patient_obj.sex = person.gender || "F" #previously all clients were females and gender was not saved
 		patient_obj.facility_name = nearest_facility
 
-		unless addresses.blank?
+		if addresses.present?
 			patient_obj.region = addresses.region
 			patient_obj.address2 = addresses.address2
 			patient_obj.county_district = addresses.county_district
 			patient_obj.neighborhood_cell = addresses.neighborhood_cell
 			patient_obj.township_division = addresses.township_division
-			patient_obj.phone_type = Observation.find_by_sql("SELECT * FROM obs WHERE person_id = #{person.id} AND value_text like '%phone' ").first.value_text
+			patient_obj.phone_type = Observation.find_by_sql("SELECT * FROM obs WHERE person_id = #{person.id} AND value_text like '%phone' ").first.value_text rescue nil
 		end
 
 		patient_obj.cell_phone_number = PersonAttribute.where(:person_id => person.id,
