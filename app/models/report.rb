@@ -1991,7 +1991,6 @@ module Report
 				patient_information = {:name => '', :number => '', :visit_summary => ''}
 
 				a_person = PatientService.get_patient(a_encounter.observations.first.person_id)
-
 				patient_information[:name] = a_person.name
 				patient_information[:number] = a_person.cell_phone_number
 				patient_information[:visit_summary] = get_call_summary(
