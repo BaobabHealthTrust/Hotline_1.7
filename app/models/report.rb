@@ -612,7 +612,8 @@ module Report
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = self.concept_set('Maternal health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list = ['maternal health symptoms']
+						symptoms = self.concept_set('Maternal health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
 						concepts_list = self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
@@ -623,11 +624,12 @@ module Report
 				end
 
 			elsif patient_type.downcase == "men"
-				encounter_type_list = ["HEALTH SYMPTOMS"]
+				encounter_type_list = ["MATERNAL HEALTH SYMPTOMS"]
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = self.concept_set('general health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list = ['GENERAL HEALTH SYMPTOMS']
+						symptoms = self.concept_set('general health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
 						concepts_list = ["HEAVY VAGINAL BLEEDING DURING PREGNANCY",
@@ -716,10 +718,13 @@ module Report
 					concept_map.uniq!
 				end
 			else
-				mapping = {:concept_name  => concept_name,  :concept_id       => concept_id,
-				           :call_count  => call_count,    :call_percentage  => call_percentage}
+				symptoms.each do |concept_name|
+					mapping = {:concept_name  => concept_name,  :concept_id       => concept_id,
+					           :call_count    => call_count,    :call_percentage  => call_percentage}
 
-				concept_map.push(mapping)
+					concept_map.push(mapping)
+					concept_map.uniq!
+				end
 			end
 		end
 
@@ -840,14 +845,11 @@ module Report
 	def self.get_callers(date_range, essential_params, patient_type, district_id, task = nil)
 		child_age               = 5
 		child_maximum_age       = 13 # see definition of a female adult above
+		encounter_type_ids      = essential_params[:encounter_type_ids]
 
 		concept_ids             = essential_params[:concept_map].inject([]) { |result, concept|
 			result << concept[:concept_id]
 		}.uniq.join(',')
-
-		value_coded_indicator   = ConceptName.find_by_name("YES").id
-
-		call_id = ConceptName.find_by_name("Call id").id
 
 		if district_id == 0
 			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
@@ -883,9 +885,18 @@ module Report
 			  "AND DATE(o.date_created) <= '#{date_range.last}' " +
 			  "AND o.voided = 0"
 
-		if task.to_s.upcase != "OUTCOMES"
-			query = query + " AND o.value_coded = " + value_coded_indicator.to_s
-		end
+
+		#query = "SELECT o.* FROM encounter e
+               # INNER JOIN encounter_type enc ON e.encounter_type = enc.encounter_type_id
+			#	AND enc.encounter_type_id IN (#{encounter_type_ids})
+             #   INNER JOIN obs o ON o.encounter_id = e.encounter_id AND o.voided = 0 AND e.voided = 0
+			#	INNER JOIN person p ON p.person_id = o.person_id
+			#	INNER JOIN person_address pa ON pa.person_id = o.person_id
+			#	#{extra_conditions}
+			#	WHERE o.concept_id = 232 #{extra_parameters}
+			#	AND DATE(o.date_created) >= '#{date_range.first}'
+			#	AND DATE(o.date_created) <= '#{date_range.last}'
+			#	ORDER BY o.person_id, o.obs_datetime"
 
 		Patient.find_by_sql(query)
 
@@ -902,6 +913,7 @@ module Report
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 		patients_data = []
 		essential_params  = self.prepopulate_concept_ids_and_extra_parameters(patient_type, health_task)
+
 		date_ranges.map do |date_range|
 			query                       = self.patient_health_issues_query_builder(patient_type,
 			                                                                       health_task,
@@ -913,7 +925,11 @@ module Report
 			total_call_count            = self.call_count(date_range, patient_type, district_id)
 			total_calls_for_period      = self.call_count_for_period(date_range, patient_type, district_id)
 			total_number_of_calls       = total_call_count.first.attributes['call_count'].to_i rescue 0
-			total_callers_with_symptoms = self.get_callers(date_range, essential_params, patient_type, district_id, health_task).count
+			total_callers_with_symptoms = self.get_callers(date_range,
+			                                               essential_params,
+			                                               patient_type,
+			                                               district_id,
+			                                               health_task).count
 			new_patients_data                 = {}
 			new_patients_data[:health_issues] = concept_map
 			new_patients_data[:start_date]    = date_range.first
@@ -921,7 +937,9 @@ module Report
 			new_patients_data[:total_calls]   = total_number_of_calls
 			new_patients_data[:total_number_of_calls]   = total_callers_with_symptoms
 			new_patients_data[:total_number_of_calls_for_period] = total_calls_for_period.count
-			symptom_total = results.map(&:number_of_patients).inject(0){|total,n| total = total + n.to_i}#i love ruby :D
+			symptom_total = results.map(&:number_of_patients).inject(0){|total,n|
+				total = total + n.to_i
+			}#i love ruby :D
 
 			unless results.blank?
 				(health_task.humanize.downcase == "outcomes")? outcomes = true : outcomes = false
@@ -952,7 +970,7 @@ module Report
 
 						number_of_patients_so_far  = new_patients_data[:health_issues][i][:call_count]
 						number_of_patients_so_far += number_of_patients
-						#call_percentage            = ((number_of_patients_so_far * 100.0)/total_callers_with_symptoms).round(1) rescue 0
+						#call_percentage           = ((number_of_patients_so_far * 100.0)/total_callers_with_symptoms).round(1) rescue 0
 						call_percentage            = ((number_of_patients_so_far * 100.0)/symptom_total).round(1) rescue 0
 
 						new_patients_data[:health_issues][i][:call_count]       = number_of_patients_so_far
@@ -1914,7 +1932,7 @@ module Report
 							  AND person.gender = "F" ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
-				                     ConceptName.find_by_name("outcome").id,
+				                     ConceptName.find_by_name("general outcome").id,
 				                     child_maximum_age]
 			elsif patient_type.downcase == 'children (under 5)'
 				condition_options = ['encounter_type = ?
@@ -1925,7 +1943,7 @@ module Report
                               AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
-				                     ConceptName.find_by_name("Outcome").id,
+				                     ConceptName.find_by_name("general outcome").id,
 				                     outcome, child_age]
 			elsif patient_type.downcase == 'children (6 - 14)'
 				condition_options = ['encounter_type = ?
@@ -1937,7 +1955,7 @@ module Report
 							  AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
-				                     ConceptName.find_by_name("Outcome").id,
+				                     ConceptName.find_by_name("general outcome").id,
 				                     outcome, child_age, child_maximum_age]
 			elsif patient_type.downcase == 'men'
 				condition_options = ['encounter_type = ?
@@ -1949,7 +1967,7 @@ module Report
 							  AND person.gender = "M" ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
-				                     ConceptName.find_by_name("Outcome").id,
+				                     ConceptName.find_by_name("general outcome").id,
 				                     outcome, child_maximum_age]
 			else
 				condition_options = ['encounter_type = ?
@@ -1959,7 +1977,7 @@ module Report
                               AND obs.value_text IN (?)',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
-				                     ConceptName.find_by_name("Outcome").id,
+				                     ConceptName.find_by_name("general outcome").id,
 				                     outcome]
 
 			end
@@ -1974,11 +1992,16 @@ module Report
 				patient_information = {:name => '', :number => '', :visit_summary => ''}
 
 				a_person = Person.find(a_encounter.observations.first.person_id)
+				at_person = PersonAttribute.where("value like '%phone%'
+							and person_id = #{a_encounter.observations.first.person_id}")
 
+				a_person = PatientService.get_patient(a_encounter.observations.first.person_id)
 				patient_information[:name] = a_person.name
-				patient_information[:number] = a_person.phone_numbers
-				patient_information[:visit_summary] = get_call_summary(a_person.id,
-				                                                       a_encounter.encounter_datetime.strftime("%Y-%m-%d"))
+				patient_information[:number] = a_person.cell_phone_number
+				patient_information[:visit_summary] = get_call_summary(
+					  a_person.patient_id,
+					  a_encounter.encounter_datetime.strftime("%Y-%m-%d"))
+
 				patient_info << patient_information
 			end
 
@@ -1999,14 +2022,7 @@ module Report
 		                       "CHILD HEALTH SYMPTOMS"]
 		encounter_types = self.get_encounter_types(encounter_type_list)
 
-		patient_encounters = Encounter.find(:all,
-		                                    :conditions =>["encounter_type IN (?)
-												AND encounter_datetime like ?
-												AND patient_id = ?",
-		                                                   encounter_types,
-		                                                   encounter_date,
-		                                                   patient_id
-		                                    ])
+		patient_encounters = Encounter.where(:encounter_type => encounter_types, :encounter_datetime => encounter_date, :patient_id => patient_id)
 		return_string = ""
 		patient_encounters.each do |a_encounter|
 			return_string = return_string + " " + a_encounter.to_s
@@ -2405,10 +2421,7 @@ module Report
 	end
 
 	def self.get_encounter_types(type_names)
-		encounter_types = EncounterType.find(:all,
-		                                     :conditions =>["name IN (?)",
-		                                                    type_names]).map(&:encounter_type_id)
-
+		encounter_types = EncounterType.where(:name => type_names).map(&:encounter_type_id)
 		return encounter_types
 	end
 =begin
