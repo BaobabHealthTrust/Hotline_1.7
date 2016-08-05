@@ -1,61 +1,57 @@
 <%= render :partial => 'header' %>
 <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
 <div class="main-page-container">
     <fieldset class="main_fieldset">
-      <legend >
-        <%=@report_name %>
-      </legend>
-      <table id="report_table" cellspacing="0" width="100%">
-        <tr >
-          <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} " %>
-        </tr>
-        <tr style="background:#b6b3b3;">
-          <td width="50%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-            &nbsp;
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Total Calls
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              New Calls
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              % of New Calls
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              Repeat Calls
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              % of Repeat Calls
-          </td>
-
-        </tr>
-        <%@report.reverse.map do |data|%>
-          <tr>
-            <td width="50%" colspan = 1 class="cellleft cellbottom main-table-cell" style="background-color:ddd; text-align:left;font-weight: bold; font-size: large; font-style: italic;">
-              <%= @grouping.humanize + " beginning "+ data[:start_date] + " ending " + data[:end_date]%>
-            </td>
-            <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              <%= data[:total_calls] %>
-            </td>
-              <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-                  <%= data[:new_calls] %>
-              </td>
-              <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-                  <%= data[:new_calls_percentage] %>
-              </td>
-              <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-                  <%= data[:repeat_calls] %>
-              </td>
-              <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-                  <%= data[:repeat_calls_percentage] %>
-              </td>
-          
-        <% end %>
-      </table>
-
+        <legend >
+            <%=@report_name %>
+        </legend>
+        <table id="report_table" cellspacing="0" width="100%">
+            <tr >
+                <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} " %>
+            </tr>
+            <tr style="background:#b6b3b3;">
+                <td width="50%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Total Calls
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    New Calls
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    % of New Calls
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    Repeat Calls
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    % of Repeat Calls
+                </td>
+            </tr>
+            <%@report.reverse.map do |data|%>
+                <tr>
+                    <td width="50%" colspan = 1 class="cellleft cellbottom main-table-cell" style="background-color:ddd; text-align:left;font-weight: bold; font-size: large; font-style: italic;">
+                        <%= @grouping.humanize + " beginning "+ data[:start_date] + " ending " + data[:end_date]%>
+                    </td>
+                    <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                        <%= data[:total_calls] %>
+                    </td>
+                    <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                        <%= data[:new_calls] %>
+                    </td>
+                    <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                        <%= data[:new_calls_percentage] %>
+                    </td>
+                    <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                        <%= data[:repeat_calls] %>
+                    </td>
+                    <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                        <%= data[:repeat_calls_percentage] %>
+                    </td>
+            <% end %>
+        </table>
     </fieldset>
-      
-    </div>
+</div>

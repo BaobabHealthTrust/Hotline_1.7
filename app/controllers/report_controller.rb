@@ -780,17 +780,16 @@ class ReportController < ApplicationController
 		@source         = params[:source] rescue nil
 		district        = params[:district]
 
-		@special_message = ""
+		@special_message = ''
 
 		@report_name  = "Current Enrollment Totals for #{district} District"
 		@report    = Report.current_enrollment_totals(@start_date, @end_date, @grouping,
 		                                              @content_type, @language, @delivery, @number_prefix, district) rescue []
 	end
 	def individual_current_enrollments
-		@start_date     = Encounter.find(:first,
-		                                 :order => "date_created ASC").date_created.strftime("%Y/%m/%d")
-		@end_date       = Encounter.find(:first,
-		                                 :order => "date_created DESC").date_created.strftime("%Y/%m/%d")
+		@start_date     = Encounter.find(:order => "date_created ASC").date_created.strftime("%Y/%m/%d")
+		@end_date       = Encounter.find(:order => "date_created DESC").date_created.strftime("%Y/%m/%d")
+		# removed :first before :order in the above two lines
 		@report_type    = params[:report_type]
 		@query          = params[:query]
 		@grouping       = "None"
@@ -802,7 +801,7 @@ class ReportController < ApplicationController
 		@source         = params[:source] rescue nil
 		district        = params[:district]
 
-		@special_message = ""
+		@special_message = ''
 
 		@report_name  = "Individual Current Enrollments for #{district} District"
 		@report    = Report.individual_current_enrollments(@start_date, @end_date, @grouping,

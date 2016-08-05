@@ -9,9 +9,14 @@
 <div class="btn-menu">
     <%params[:format] = 'pdf'%>
     <%select_report_criteria = '/report/select?report_type=' +@report_type +'&query=' + @query%>
+
+    <!--button id="back_button" class="button blue" onclick="window.location = '<%#=report_path(params)%>'"><span>PDF</span></button -->
+    <!-- button id="regenerate_button" class="button blue" onclick="document.getElementById('frmMain').submit();"><span>Regenerate</span></button -->
+    <!-- button id="print_button" class="button blue" onclick="window.print()"><span>Print</span></button -->
     <button id="finish_button" class="button green" onclick="window.location = '/clinic'"><span>Finish</span></button>
     <button id="back_button" class="button red" onclick="window.location = '<%=select_report_criteria%>'"><span>Back</span></button>
 </div>
+
 <form id="frmMain" action="/report/patient_analysis_report" method="post">
     <input type="hidden" id="start_date" name="start_date" value="<%= @start_date.to_date.strftime('%d-%m-%Y') %>" />
     <input type="hidden" id="end_date" name="end_date" value="<%= @end_date.to_date.strftime('%d-%m-%Y') %>" />
@@ -46,12 +51,12 @@
                 <td width="25%" colspan = 2 class="cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
                     &nbsp;
                 </td>
-                <%= pregnancy_data_cell(@content_type) %>
-                <%= child_data_cell(@content_type) %>
-                <%= chiyao_data_cell(@language) %>
-                <%= chichewa_data_cell(@language) %>
-                <%= sms_data_cell(@delivery) %>
-                <%= voice_data_cell(@delivery) %>
+                <%#= pregnancy_data_cell(@content_type) %>
+                <%#= child_data_cell(@content_type) %>
+                <%#= chiyao_data_cell(@language) %>
+                <%#= chichewa_data_cell(@language) %>
+                <%#= sms_data_cell(@delivery) %>
+                <%#= voice_data_cell(@delivery) %>
             </tr>
             <tr>
                 <td width="22%" class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
@@ -60,12 +65,12 @@
                 <td class="cellleft cellbottom main-table-cell" style="font-weight: bold;">
                     Count
                 </td>
-                <%= pregnancy_count_and_percent_header(@content_type) %>
-                <%= child_count_and_percent_header(@content_type) %>
-                <%= chiyao_count_and_percent_header(@language) %>
-                <%= chichewa_count_and_percent_header(@language) %>
-                <%= sms_count_and_percent_header(@delivery) %>
-                <%= voice_count_and_percent_header(@delivery) %>
+                <%#= pregnancy_count_and_percent_header(@content_type) %>
+                <%#= child_count_and_percent_header(@content_type) %>
+                <%#= chiyao_count_and_percent_header(@language) %>
+                <%#= chichewa_count_and_percent_header(@language) %>
+                <%#= sms_count_and_percent_header(@delivery) %>
+                <%#= voice_count_and_percent_header(@delivery) %>
             </tr>
             <%@report.reverse.map do |data| %>
                 <tr>
