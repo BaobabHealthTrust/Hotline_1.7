@@ -2914,20 +2914,25 @@ module Report
 	def self.follow_up_report(start_date, end_date, grouping, district)
 		if district == 'All'
 			district_id = 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+			township_division = " pd.township_division IN (#{district_names}) "
 		else
 			district_id = Location.find_by_name(district).id
+			district_name = Location.find(district_id).name
+			township_division = " pd.township_division = '#{district_name}' "
 		end
+
 		patients_data = []
 		#follow_up_reasons = self.create_follow_up_structure
 		reasons = [
-			  "Client cannot be reached",
-			  "Condition improved",
-			  "Condition worsened",
-			  "Client deceased",
-			  "Client followed-up with referral",
-			  "Client did not follow up with referral",
-			  "Client followed advice given",
-			  "Client did not follow advice given"
+			  'Client cannot be reached',
+			  'Condition improved',
+			  'Condition worsened',
+			  'Client deceased',
+			  'Client followed-up with referral',
+			  'Client did not follow up with referral',
+			  'Client followed advice given',
+			  'Client did not follow advice given'
 		]
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
@@ -2947,7 +2952,7 @@ module Report
               o.comments, DATE(e.encounter_datetime) date, count(*)
             FROM encounter e
             INNER JOIN obs o ON e.encounter_id = o.encounter_id AND e.voided = 0 AND o.voided = 0
-            INNER JOIN person_address pd ON pd.person_id = e.patient_id AND pd.township_division = '#{district}'
+            INNER JOIN person_address pd ON pd.person_id = e.patient_id AND #{township_division}
           WHERE e.encounter_type = #{follow_up_encounter} AND o.concept_id = #{follow_up_concept}
           AND e.encounter_datetime BETWEEN '#{date_range.first} 00:00:00' AND '#{date_range.last} 23:59:59'
           GROUP BY e.patient_id, o.comments"
