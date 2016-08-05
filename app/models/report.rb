@@ -2895,7 +2895,7 @@ module Report
 
 			repeat_call_data = Patient.find_by_sql(repeat_query)
 			row_data[:total_calls] = call_data.count
-			raise call_data.inspect
+
 			call_data.each do |mode, call|
 				if mode == 1 #new call
 					row_data[:new_calls] = call.count
