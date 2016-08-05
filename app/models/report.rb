@@ -2270,20 +2270,19 @@ module Report
 		call_data = []
 
 		# main obs conceps
-		content_concept = Concept.find_by_name('TYPE OF MESSAGE CONTENT').id
-		language_concept = Concept.find_by_name('LANGUAGE PREFERENCE').id
-		delivery_concept = Concept.find_by_name('TYPE OF MESSAGE').id
+		content_concept     = Concept.find(ConceptName.find_by_name('TYPE OF MESSAGE CONTENT').id).id
+		language_concept    = Concept.find(ConceptName.find_by_name('LANGUAGE PREFERENCE').id).id
+		delivery_concept    = Concept.find(ConceptName.find_by_name('TYPE OF MESSAGE').id).id
+
 		#data elements concepts
-		pregnancy_concept = Concept.find_by_name('pregnancy').id
-		child_concept = Concept.find_by_name('child').id
-		yao_concept = Concept.find_by_name('chiyao').id
-		chewa_concept = Concept.find_by_name('chichewa').id
-		sms_concept = Concept.find_by_name('sms').id
-		voice_concept = Concept.find_by_name('voice').id
+		pregnancy_concept   = Concept.find(ConceptName.find_by_name('pregnancy').id).id
+		child_concept       = Concept.find(ConceptName.find_by_name('child').id).id
+		yao_concept         = Concept.find(ConceptName.find_by_name('chiyao').id).id
+		chewa_concept       = Concept.find(ConceptName.find_by_name('chichewa').id).id
+		sms_concept         = Concept.find(ConceptName.find_by_name('sms').id).id
+		voice_concept       = Concept.find(ConceptName.find_by_name('voice').id).id
 
-
-		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date,
-		                                                     end_date)[:date_ranges]
+		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 		date_ranges.map do |date_range|
 			encounters = self.get_tips_data(date_range, district_id)
 			total_calls = self.get_total_tips_calls(date_range, district_id)
