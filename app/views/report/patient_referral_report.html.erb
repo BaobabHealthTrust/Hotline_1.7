@@ -1,51 +1,49 @@
 <%= render :partial => 'header' %>
-  <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+<form id="tt_form" style="height: 50%;">
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
-    <div>
+<div>
     <fieldset class="main_fieldset">
-      <legend >
-        <%=@report_name %> - <i><%= @patient_type%> </i>
-      </legend>
-      <table id="report_table" cellspacing="0" width="100%">
-        <tr>
-          <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} "  %>
-        </tr>
-        <tr style="background:#b6b3b3;">
-          <td width="20%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:left;">
-              Caller Name
-          </td>
-          <td width="10%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Phone
-          </td>
-          <td width="70%" class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              Call Summary
-          </td>
-        </tr>
-
-        <%@report.reverse.map do |data|%>
-          <tr>
-            <td colspan="3" class="cellleft cellbottom cellright main-table-cell" style="text-align:left; background-color:ddd">
-              <%= @grouping.humanize + " ( " + data[:date_range].first + " - " + data[:date_range].last + " )"%>
-            </td>
-          </tr>
-            <% data[:patient_info].each do |info| %>
-            <% empty_space = '&nbsp;' %>
-              <tr>
-                <td class="cellleft cellbottom main-table-cell">
-                  <%=  info[:name]%>
+        <legend >
+            <%= @report_name %> - <i><%= @patient_type%> </i>
+        </legend>
+        <table id="report_table" cellspacing="0" width="100%">
+            <tr>
+                <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} "  %>
+            </tr>
+            <tr style="background:#b6b3b3;">
+                <td width="20%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:left;">
+                    Caller Name
                 </td>
-                <td class="cellleft cellbottom main-table-cell">
-                  <%=  info[:number] %>
+                <td width="10%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Phone
                 </td>
-                <td class="cellleft cellbottom cellright main-table-cell">
-                  <%=  info[:visit_summary] %>
+                <td width="70%" class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    Call Summary
                 </td>
+            </tr>
 
-              </tr>
-            <% end  %>
-        <% end %>
-      </table>
-
+            <%@report.reverse.map do |data|%>
+                <tr>
+                    <td colspan="3" class="cellleft cellbottom cellright main-table-cell" style="text-align:left; background-color:ddd">
+                        <b><%= @grouping.humanize + " ( " + data[:date_range].first + " - " + data[:date_range].last + " )"%></b>
+                    </td>
+                </tr>
+                <% data[:patient_info].each do |info| %>
+                    <% empty_space = '&nbsp;' %>
+                    <tr>
+                        <td class="cellleft cellbottom main-table-cell">
+                            <%=  info[:name]%>
+                        </td>
+                        <td class="cellleft cellbottom main-table-cell">
+                            <%=  info[:number] %>
+                        </td>
+                        <td class="cellleft cellbottom cellright main-table-cell">
+                            <%=  info[:visit_summary] %>
+                        </td>
+                    </tr>
+                <% end  %>
+            <% end %>
+        </table>
     </fieldset>
-    </div>
+</div>
