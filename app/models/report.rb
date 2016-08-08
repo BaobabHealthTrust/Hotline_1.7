@@ -613,35 +613,29 @@ module Report
 				case health_task.humanize.downcase
 					when "health symptoms"
 						concepts_list = ['maternal health symptoms']
-						symptoms = self.concept_set('Maternal health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+						conditions = self.concept_set('Maternal health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
-						concepts_list = self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list = ['danger signs']
+						conditions   =   self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "health information requested"
-						concepts_list = self.concept_set('maternal health info').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list = ['maternal health info']
+						conditions   =   self.concept_set('Maternal health info').flatten.delete_if{|c| c.blank?}.uniq
 
 				end
 
 			elsif patient_type.downcase == "men"
-				encounter_type_list = ["MATERNAL HEALTH SYMPTOMS"]
+				encounter_type_list = ["HEALTH SYMPTOMS"]
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = ['GENERAL HEALTH SYMPTOMS']
-						symptoms = self.concept_set('general health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list = ['general health symptoms']
+						conditions = self.concept_set('General health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
-						concepts_list = ["HEAVY VAGINAL BLEEDING DURING PREGNANCY",
-						                 "EXCESSIVE POSTNATAL BLEEDING",
-						                 "FEVER DURING PREGNANCY SIGN",
-						                 "POSTNATAL FEVER SIGN", "SEVERE HEADACHE",
-						                 "FITS OR CONVULSIONS SIGN",
-						                 "SWOLLEN HANDS OR FEET SIGN",
-						                 "PALENESS OF THE SKIN AND TIREDNESS SIGN",
-						                 "NO FETAL MOVEMENTS SIGN", "WATER BREAKS SIGN",
-						                 "ACUTE ABDOMINAL PAIN"
-						]
+						concepts_list = ['danger signs']
+						conditions   =   self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "health information requested"
 						concepts_list = ["HEALTHCARE VISITS", "NUTRITION", "BODY CHANGES",
@@ -718,7 +712,7 @@ module Report
 					concept_map.uniq!
 				end
 			else
-				symptoms.each do |concept_name|
+				conditions.each do |concept_name|
 					mapping = {:concept_name  => concept_name,  :concept_id       => concept_id,
 					           :call_count    => call_count,    :call_percentage  => call_percentage}
 

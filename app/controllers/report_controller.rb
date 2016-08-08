@@ -572,7 +572,7 @@ class ReportController < ApplicationController
 		@source       = params[:source] rescue nil
 		district     = params[:district]
 
-		@report_name  = "Patient Health Issues for #{params[:district]} district"
+		@report_name  = "Patient Health Issues (#{@health_task.titleize}) for #{district} district"
 		@report       = Report.patient_health_issues(@patient_type, @grouping,
 		                                             @health_task, @start_date,
 		                                             @end_date, district)
