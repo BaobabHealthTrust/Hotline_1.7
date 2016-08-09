@@ -634,7 +634,7 @@ class ReportController < ApplicationController
 		@report_name  = "Call Time Of Day for #{district} District"
 		@report    = Report.call_time_of_day(@patient_type, @grouping, @call_type,
 		                                     @call_status, @staff_member,
-		                                     @start_date, @end_date, district) rescue []
+		                                     @start_date, @end_date, district)
 
 	end
 	def call_day_distribution

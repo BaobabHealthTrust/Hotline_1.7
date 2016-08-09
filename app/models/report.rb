@@ -2018,21 +2018,25 @@ module Report
 	end
 
 	def self.call_analysis_query_builder(patient_type, date_range, staff_id, call_type, call_status, district_id)
-
-		child_maximum_age     = 9 # see definition of a female adult above
-		call_concept_id = ConceptName.find_by_name('call id').id
-		extra_conditions = " "
-		extra_grouping = " "
+		child_age           = 5
+		child_maximum_age   = 13 # see definition of a female adult above
+		call_concept_id     = ConceptName.find_by_name('call id').id
+		extra_conditions    = ' '
+		extra_grouping      = ' '
 
 		case patient_type.downcase
 			when 'women'
 				extra_conditions += " AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_maximum_age} "
-			when 'children'
+			when 'children (under 5)'
+				extra_conditions += " AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= #{child_maximum_age} "
+			when 'men'
+				extra_conditions += " AND (YEAR(patient.date_created) - YEAR(person.birthdate)) > #{child_maximum_age} "
+			when 'children (6 - 14)'
 				extra_conditions += " AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= #{child_maximum_age} "
 		end
 
 		if staff_id.downcase != 'all'
-			extra_conditions += " AND call_log.creator = '#{staff_id.to_i}' "
+			extra_conditions += " AND patient.creator = '#{staff_id.to_i}' "
 		else
 			extra_grouping += ", users.username"
 		end
@@ -2054,16 +2058,7 @@ module Report
 			extra_conditions += " AND call_log.call_type = '#{call_type_code}' "
 		end
 
-=begin
-   if call_status = 'All'
-   elsif call_status = 'Yes'
-     extra_conditions +=
-   else
-
-   end
-=end
-
-		query = "SELECT TIME(call_log.start_time) AS call_start_time, " +
+		query = "SELECT TIME(obs.date_created) AS call_start_time, " +
 			  "TIME(call_log.end_time) AS call_end_time, " +
 			  "users.username, DATE_FORMAT(start_time,'%W') AS day_of_week, " +
 			  "TIMESTAMPDIFF(SECOND, call_log.start_time, call_log.end_time) AS call_length_seconds, " +
@@ -2085,7 +2080,17 @@ module Report
 
 	def self.call_time_of_day(patient_type, grouping, call_type, call_status,
 		  staff_member, start_date, end_date, district)
-		district_id = Location.find_by_name(district).id
+
+		if district == 'All'
+			district_id = 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+			township_division = "person_address.township_division IN (#{district_names}) "
+		else
+			district_id = Location.find_by_name(district).id
+			district_name = Location.find(district_id).name
+			township_division = "person_address.township_division = '#{district_name}'"
+		end
+
 		call_data = []
 		norm_date = Date.today
 
@@ -2097,7 +2102,7 @@ module Report
 			query   = self.call_analysis_query_builder(patient_type,
 			                                           date_range, staff_member, call_type, call_status, district_id)
 
-			results = CallLog.find_by_sql(query)
+			results = Observation.find_by_sql(query)
 
 			call_statistics = { :start_date => date_range.first,
 			                    :end_date => date_range.last, :total => results.count,
@@ -2830,32 +2835,35 @@ module Report
 					ON e.encounter_id = o.encounter_id
 					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
                     AND e.encounter_datetime >= '#{date_range.first}'
-                    AND e.encounter_datetime <= '#{date_range.last}'
-					GROUP BY e.patient_id, o.comments"
+                    AND e.encounter_datetime <= '#{date_range.last}' "
 
 			call_data = Patient.find_by_sql(query)
 
-			repeat_query = "SELECT e.patient_id FROM obs o
-					INNER JOIN encounter e
+			new_query = "SELECT e.patient_id, o.concept_id, o.comments FROM encounter e
+					INNER JOIN obs o
 					ON e.encounter_id = o.encounter_id
 					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
                     AND e.encounter_datetime >= '#{date_range.first}'
                     AND e.encounter_datetime <= '#{date_range.last}'
-					AND o.comments > 1
-					GROUP BY e.patient_id, o.comments"
+					GROUP BY e.patient_id"
+
+			new_call_data = Patient.find_by_sql(new_query)
+
+			repeat_query = "SELECT e.patient_id, o.concept_id, o.comments FROM encounter e
+					INNER JOIN obs o
+					ON e.encounter_id = o.encounter_id
+					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
+                    AND e.encounter_datetime >= '#{date_range.first}'
+                    AND e.encounter_datetime <= '#{date_range.last}'
+					GROUP BY o.comments"
 
 			repeat_call_data = Patient.find_by_sql(repeat_query)
-			row_data[:total_calls] = call_data.count
 
-			call_data.each do |mode, call|
-				if mode == 1 #new call
-					row_data[:new_calls] = call.count
-					row_data[:new_calls_percentage] = (row_data[:new_calls].to_f / row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
-				elsif mode == 2 #repeat call
-					row_data[:repeat_calls] = call.count
-					row_data[:repeat_calls_percentage] = (row_data[:repeat_calls].to_f / row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
-				end
-			end
+			row_data[:total_calls] = call_data.count
+			row_data[:new_calls] = new_call_data.count
+			row_data[:new_calls_percentage] = (row_data[:new_calls].to_f / row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
+			row_data[:repeat_calls] = repeat_call_data.count
+			row_data[:repeat_calls_percentage] = (row_data[:repeat_calls].to_f / row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
 
 			patients_data << row_data
 		end
