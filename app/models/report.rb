@@ -1978,7 +1978,7 @@ module Report
 			o_encounters = Encounter.joins("INNER JOIN obs ON encounter.encounter_id = obs.encounter_id
                              INNER JOIN person ON patient_id = person.person_id
                               INNER JOIN person_address ON person_address.person_id = person.person_id
-                                AND #{township_division}").where(condition_options)
+                                AND #{township_division} ").where(condition_options)
 
 			o_encounters.each do |a_encounter|
 

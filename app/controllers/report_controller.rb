@@ -589,7 +589,7 @@ class ReportController < ApplicationController
 		@source             = params[:source] rescue nil
 		district            = params[:district]
 
-		@report_name        = "Patient Activity for #{params[:district]} district"
+		@report_name        = "Patient Activity for #{district} district"
 		@report             = Report.patient_activity(@patient_type, @grouping,
 		                                     @start_date, @end_date, district)
 	end
@@ -606,7 +606,7 @@ class ReportController < ApplicationController
 		@source             = params[:source] rescue nil
 		district            = params[:district]
 
-		@report_name        = "Referral Followup for #{district} district"
+		@report_name        = "Referral Followup (#{@outcome}) for #{district} district"
 		@report             = Report.patient_referral_followup(@patient_type, @grouping, @outcome,
 		                                              @start_date, @end_date, district)
 	end
