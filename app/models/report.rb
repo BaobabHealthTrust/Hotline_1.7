@@ -1980,6 +1980,7 @@ module Report
 
 	def self.call_day_distribution(patient_type, grouping, call_type, call_status,
 		  staff_member, start_date, end_date, district)
+
 		district_id = Location.find_by_name(district).id
 		call_data = []
 
@@ -1988,10 +1989,17 @@ module Report
 
 		date_ranges.map do |date_range|
 
-			query   = self.call_analysis_query_builder(patient_type,
-			                                           date_range, staff_member, call_type, call_status, district_id)
+			query = "SELECT e.patient_id, o.concept_id, o.comments FROM encounter e
+					INNER JOIN obs o
+					ON e.encounter_id = o.encounter_id
+					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
+                    AND e.encounter_datetime >= '#{date_range.first}'
+                    AND e.encounter_datetime <= '#{date_range.last}' "
 
-			results = CallLog.find_by_sql(query)
+			#query   = self.call_analysis_query_builder(patient_type,
+			#                                           date_range, staff_member, call_type, call_status, district_id)
+
+			results = Patient.find_by_sql(query)
 
 			# create row template
 			call_statistics = {:start_date => date_range.first,
@@ -2035,11 +2043,9 @@ module Report
 				extra_conditions += " AND (YEAR(patient.date_created) - YEAR(person.birthdate)) <= #{child_maximum_age} "
 		end
 
-		if staff_id.downcase != 'all'
-			extra_conditions += " AND patient.creator = '#{staff_id.to_i}' "
-		else
-			extra_grouping += ", users.username"
-		end
+		(staff_id.downcase != 'all') ?
+			  extra_conditions += " AND patient.creator = '#{staff_id.to_i}' " :
+			  extra_grouping += ', users.username'
 
 		if call_type != 'All'
 			case call_type.downcase
