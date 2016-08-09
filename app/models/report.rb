@@ -564,23 +564,15 @@ module Report
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = self.concept_set('child health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list = ['child health symptoms']
+						conditions = self.concept_set('Child health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
-						concepts_list = ["FEVER OF 7 DAYS OR MORE",
-						                 "DIARRHEA FOR 14 DAYS OR MORE",
-						                 "BLOOD IN STOOL", "COUGH FOR 21 DAYS OR MORE",
-						                 "CONVULSIONS SIGN", "NOT EATING OR DRINKING ANYTHING",
-						                 "VOMITING EVERYTHING", #"VISUAL PROBLEMS"
-						                 "RED EYE FOR 4 DAYS OR MORE WITH VISUAL PROBLEMS",
-						                 "VERY SLEEPY OR UNCONSCIOUS", "DRY SKIN",
-						                 "SWOLLEN HANDS OR FEET SIGN", "VISUAL PROBLEMS"] #"POTENTIAL CHEST INDRAWING"]
-										#dry skin also known as flaky skin
+						concepts_list = ['danger signs']
+						conditions = self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
 					when "health information requested"
-						concepts_list = ["SLEEPING", "FEEDING PROBLEMS", "CRYING",
-						                 "BOWEL MOVEMENTS", "SKIN RASHES", "SKIN INFECTIONS",
-						                 "UMBILICUS INFECTION", "GROWTH MILESTONES",
-						                 "ACCESSING HEALTHCARE SERVICES"]
+						concepts_list = ['child health info']
+						conditions   =   self.concept_set('Child health info').flatten.delete_if{|c| c.blank?}.uniq
 				end
 
 			elsif patient_type.downcase == 'children (6 - 14)'
@@ -588,23 +580,15 @@ module Report
 
 				case health_task.humanize.downcase
 					when "health symptoms"
-						concepts_list = self.concept_set('general health symptoms').flatten.delete_if{|c| c.blank?}.uniq
+						concepts_list = ['child health symptoms']
+						conditions = self.concept_set('Child health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
 					when "danger warning signs"
-						concepts_list = ["FEVER OF 7 DAYS OR MORE",
-						                 "DIARRHEA FOR 14 DAYS OR MORE",
-						                 "BLOOD IN STOOL", "COUGH FOR 21 DAYS OR MORE",
-						                 "CONVULSIONS SIGN", "NOT EATING OR DRINKING ANYTHING",
-						                 "VOMITING EVERYTHING", #"VISUAL PROBLEMS"
-						                 "RED EYE FOR 4 DAYS OR MORE WITH VISUAL PROBLEMS",
-						                 "VERY SLEEPY OR UNCONSCIOUS", "DRY SKIN",
-						                 "SWOLLEN HANDS OR FEET SIGN", "VISUAL PROBLEMS"] #"POTENTIAL CHEST INDRAWING"]
-										#dry skin also known as flaky skin
+						concepts_list = ['danger signs']
+						conditions = self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
 					when "health information requested"
-						concepts_list = ["SLEEPING", "FEEDING PROBLEMS", "CRYING",
-						                 "BOWEL MOVEMENTS", "SKIN RASHES", "SKIN INFECTIONS",
-						                 "UMBILICUS INFECTION", "GROWTH MILESTONES",
-						                 "ACCESSING HEALTHCARE SERVICES"]
+						concepts_list = ['child health info']
+						conditions   =   self.concept_set('Child health info').flatten.delete_if{|c| c.blank?}.uniq
 				end
 
 			elsif patient_type.downcase == "women"
@@ -818,7 +802,6 @@ module Report
 		concept_ids             = essential_params[:concept_map].inject([]) { |result, concept|
 			result << concept[:concept_id]
 		}.uniq.join(',')
-
 		if district_id == 0
 			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
 		else
