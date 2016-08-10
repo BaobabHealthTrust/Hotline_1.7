@@ -2035,13 +2035,16 @@ module Report
 
 		case patient_type.downcase
 			when 'women'
-				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age} "
+				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}
+				AND ps.gender = 'F' "
 			when 'children (under 5)'
-				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
+				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_age} "
 			when 'men'
-				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age} "
+				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age}
+				AND ps.gender = 'M' "
 			when 'children (6 - 14)'
-				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
+				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_age}
+				AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
 		end
 
 		(staff_id.downcase != 'all') ?
@@ -2081,8 +2084,10 @@ module Report
 		#	  extra_conditions +
 		#	  " GROUP BY call_log.call_log_id" + extra_grouping
 
-		query = "SELECT e.patient_id, o.concept_id, TIME(o.date_created) AS call_start_time, o.comments, u.username,
-					DATE_FORMAT(o.obs_datetime, '%W') AS day_of_week
+		query = "SELECT e.patient_id, o.concept_id, TIME(o.obs_datetime) AS call_start_time, o.comments, u.username,
+					DATE_FORMAT(o.obs_datetime, '%W') AS day_of_week,
+					TIMESTAMPDIFF(SECOND, o.date_created, o.obs_datetime) AS call_length_seconds,
+					TIMESTAMPDIFF(MINUTE, o.date_created, o.obs_datetime) AS call_lengths_minutes
 					FROM encounter e
 					INNER JOIN obs o
 					ON e.encounter_id = o.encounter_id
@@ -2091,7 +2096,9 @@ module Report
 					INNER JOIN patient p ON p.patient_id = ps.person_id
 					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
                     AND o.obs_datetime >= '#{date_range.first}'
-                    AND o.obs_datetime <= '#{date_range.last}' " + extra_conditions + extra_grouping
+                    AND o.obs_datetime <= '#{date_range.last}'
+					#{extra_conditions}
+					#{extra_grouping}"
 
 		return query
 	end
@@ -2194,7 +2201,6 @@ module Report
 			}
 
 			results.each do |call|
-				date_comp = "#{norm_date} #{call.call_start_time.strftime('%I:%M')}"
 
 				if Time.parse("#{call.call_start_time.strftime('%I:%M')}") >= Time.parse("07:00:00").strftime('%I:%M') &&
 					  Time.parse("#{call.call_start_time.strftime('%I:%M')}") <= Time.parse("10:00:00").strftime('%I:%M')

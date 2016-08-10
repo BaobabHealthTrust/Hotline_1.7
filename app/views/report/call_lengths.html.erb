@@ -1,163 +1,163 @@
 <%= render :partial => 'header' %>
 <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
 <div class="main-page-container">
     <fieldset class="main_fieldset">
-      <legend >
-        <%=@report_name %> - <i><%=@patient_type%>
-      </legend>
-      <table id="report_table" cellspacing="0" width="100%">
-        <tr>
-          <%= "Filter Info: Grouping - #{@grouping.capitalize}, Staff Name - #{@staff.capitalize}, Call Status - #{@call_status}, Call Type - #{@call_type} -- #{@special_message} " %>
-        </tr>
-        <tr style="background:#b6b3b3;">
-          <td width="20%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
-              Total Calls
-          </td>
-          <td width="15%" colspan = 4 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              Morning (0700-1000)
-          </td>
-          <td width="15%" colspan = 4 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              Mid-Day (1001-1300)
-          </td>
-          <td width="15%" colspan = 4 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              Afternoon (1301-1600)
-          </td>
-          <td width="15%" colspan = 4 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
-              Evening (1601-1900)
-          </td>
-        </tr>
-        <tr>
-          <td width="35%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              &nbsp;
-          </td>
-          <td width="5%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Avg
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Min
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              SDev
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Avg
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Min
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              SDev
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Avg
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Min
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              SDev
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Avg
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Min
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              SDev
-          </td>
-        </tr>
-        <% total_calls = 0
-           total_morning = 0
-           total_midday = 0
-           total_afternoon = 0
-           total_evening = 0
-        %>
-        <%@report.reverse.map do |data|
-          total_calls += data[:total]
-          total_morning += data[:morning]
-          total_midday += data[:midday]
-          total_afternoon += data[:afternoon]
-          total_evening += data[:evening]
-        %>
-          <tr>
-            <td class="cellleft cellbottom main-table-cell" style="text-align:left">
-              <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:total] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:morning] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:m_avg] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:m_min] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:m_sdev] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:midday] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:mid_avg] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:mid_min] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:mid_sdev] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:afternoon] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:a_avg] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:a_min] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:a_sdev] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:evening] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:e_avg] %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:e_min] %>
-            </td>
-            <td class="cellleft cellbottom cellright main-table-cell">
-              <%=  data[:e_sdev] %>
-            </td>
-          </tr>
+        <legend >
+            <%=@report_name %> - <i><%=@patient_type%>
+        </legend>
+        <table id="report_table" cellspacing="0" width="100%">
+            <tr>
+                <%= "Filter Info: Grouping - #{@grouping.capitalize}, Staff Name - #{@staff.capitalize}, Call Status - #{@call_status}, Call Type - #{@call_type} -- #{@special_message} " %>
+            </tr>
+            <tr style="background:#b6b3b3;">
+                <td width="20%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
+                    Total Calls
+                </td>
+                <td width="15%" colspan = 4 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    Morning (0700-1000)
+                </td>
+                <td width="15%" colspan = 4 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    Mid-Day (1001-1300)
+                </td>
+                <td width="15%" colspan = 4 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    Afternoon (1301-1600)
+                </td>
+                <td width="15%" colspan = 4 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
+                    Evening (1601-1900)
+                </td>
+            </tr>
+            <tr>
+                <td width="35%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+                <td width="5%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Avg
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Min
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    SDev
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Avg
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Min
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    SDev
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Avg
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Min
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    SDev
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Avg
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Min
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    SDev
+                </td>
+            </tr>
+            <% total_calls = 0
+               total_morning = 0
+               total_midday = 0
+               total_afternoon = 0
+               total_evening = 0
+            %>
+            <%@report.reverse.map do |data|
+                total_calls += data[:total]
+                total_morning += data[:morning]
+                total_midday += data[:midday]
+                total_afternoon += data[:afternoon]
+                total_evening += data[:evening]
+            %>
+                <tr>
+                    <td class="cellleft cellbottom main-table-cell" style="text-align:left">
+                        <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:total] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:morning] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:m_avg] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:m_min] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:m_sdev] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:midday] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:mid_avg] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:mid_min] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:mid_sdev] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:afternoon] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:a_avg] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:a_min] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:a_sdev] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:evening] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:e_avg] %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:e_min] %>
+                    </td>
+                    <td class="cellleft cellbottom cellright main-table-cell">
+                        <%=  data[:e_sdev] %>
+                    </td>
+                </tr>
 
-        <% end %>
-          
-      </table>
+            <% end %>
+
+        </table>
 
     </fieldset>
-      
-    </div>
+
+</div>
