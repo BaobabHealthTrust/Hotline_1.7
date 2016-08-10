@@ -1,51 +1,51 @@
 <%= render :partial => 'header' %>
 <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
 <div class="main-page-container">
     <fieldset class="main_fieldset">
-      <legend>
-        <%=@report_name %>
-      </legend>
-      <table id="report_table" cellspacing="0" width="100%">
-        <tr>
-          <%= '' %>
-        </tr>
-        <tr style="background:#b6b3b3;">
-          <td width="25%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
-              Period
-          </td>
-          <td width="25%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
-              Total Callers
-          </td>
-          <td width="25%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              Total of those wanting more info
-          </td>
-          <td width="25%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              %age of those wanting more info
-          </td>
-          
-        </tr>
-        
-        <%@report.reverse.map do |data|%>
-        <tr>
-            <td class="cellleft cellbottom main-table-cell" style="text-align:left">
-              <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:total_callers] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:number_wanting_more_info] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:percentage_of_callers_wanting_info] rescue 0 %>
-            </td>
-         </tr>
+        <legend>
+            <%=@report_name %>
+        </legend>
+        <table id="report_table" cellspacing="0" width="100%">
+            <tr>
+                <%= '' %>
+            </tr>
+            <tr style="background:#b6b3b3;">
+                <td width="25%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
+                    Period
+                </td>
+                <td width="25%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
+                    Total Callers
+                </td>
+                <td width="25%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    Total of those wanting more info
+                </td>
+                <td width="25%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    %age of those wanting more info
+                </td>
 
-        <% end %>
-      </table>
+            </tr>
+
+            <%@report.reverse.map do |data|%>
+                <tr>
+                    <td class="cellleft cellbottom main-table-cell" style="text-align:left">
+                        <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:total_callers] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:number_wanting_more_info] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:percentage_of_callers_wanting_info] rescue 0 %>
+                    </td>
+                </tr>
+
+            <% end %>
+        </table>
 
     </fieldset>
-      
-    </div>
+
+</div>

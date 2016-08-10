@@ -13,27 +13,28 @@ module Report
 		report_date_ranges  = {}
 
 		if end_date
-			today       = end_date
-			this_week_beginning   = today.beginning_of_week
-			last_week_beginning   = (this_week_beginning - 1.week)
-			last_week_ending      = (last_week_beginning + 4.days) # the fifth day is the actual beginning of week itself
-			this_month_beginning  = today.beginning_of_month
+			today                   = end_date
+			this_week_beginning     = today.beginning_of_week
+			last_week_beginning     = (this_week_beginning - 1.week)
+			last_week_ending        = (last_week_beginning + 4.days) # the fifth day is the actual beginning of week itself
+			this_month_beginning    = today.beginning_of_month
 
 			this_week  = "#{this_week_beginning.strftime("%d-%m")} to #{today.strftime("%d-%m")}"
 			last_week  = "#{last_week_beginning.strftime("%d-%m")} to #{last_week_ending.strftime("%d-%m")}"
 			this_month = "#{this_month_beginning.strftime("%d-%m")} to #{today.strftime("%d-%m")}"
 
-			report_date_ranges["this_week"]   = {"range"      =>["This Week (#{this_week})"],
-			                                     "datetime"  =>[this_week_beginning.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")]}
+			report_date_ranges["this_week"]   = {"range"    =>["This Week (#{this_week})"],
+			                                     "datetime" =>[this_week_beginning.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")]}
 
-			report_date_ranges["last_week"]   = {"range"      =>["Last Week (#{last_week})"],
-			                                     "datetime"  =>[last_week_beginning.strftime("%Y-%m-%d"), last_week_ending.strftime("%Y-%m-%d")]}
+			report_date_ranges["last_week"]   = {"range"    =>["Last Week (#{last_week})"],
+			                                     "datetime" =>[last_week_beginning.strftime("%Y-%m-%d"), last_week_ending.strftime("%Y-%m-%d")]}
 
-			report_date_ranges["this_month"]  = {"range"      =>["This Month (#{this_month})"],
-			                                     "datetime"  =>[this_month_beginning.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")]}
-			report_date_ranges["all_dates"]  = {"range"      =>["All Dates"],
+			report_date_ranges["this_month"]  = {"range"    =>["This Month (#{this_month})"],
+			                                     "datetime" =>[this_month_beginning.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")]}
+			report_date_ranges["all_dates"]  = {"range"     =>["All Dates"],
 			                                    "datetime"  =>[start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d")]}
 		end
+
 		report_date_ranges
 	end
 
@@ -2799,10 +2800,11 @@ module Report
 					row_data[:number_wanting_more_info] += 1
 				end
 			end
-			row_data[:percentage_of_callers_wanting_info] = ((row_data[:number_wanting_more_info].to_f / row_data[:total_callers].to_f) * 100).round(1) if row_data[:number_wanting_more_info] != 0
+			row_data[:percentage_of_callers_wanting_info] = ((row_data[:number_wanting_more_info].to_f /
+				  row_data[:total_callers].to_f) * 100).round(1) if row_data[:number_wanting_more_info] != 0
 			patients_data << row_data
 		end
-		#raise patients_data.to_yaml
+
 		return patients_data
 	end
 
@@ -2893,15 +2895,18 @@ module Report
 
 			row_data[:total_calls] = call_data.count
 			row_data[:new_calls] = new_call_data.count
-			row_data[:new_calls_percentage] = (row_data[:new_calls].to_f / row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
+			row_data[:new_calls_percentage] = (row_data[:new_calls].to_f /
+				  row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
 			row_data[:repeat_calls] = repeat_call_data.count
-			row_data[:repeat_calls_percentage] = (row_data[:repeat_calls].to_f / row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
+			row_data[:repeat_calls_percentage] = (row_data[:repeat_calls].to_f /
+				  row_data[:total_calls].to_f * 100).round(1) if row_data[:total_calls].to_f != 0
 
 			patients_data << row_data
 		end
 		#raise patients_data.to_yaml
 		return patients_data
 	end
+
 	def self.follow_up_report(start_date, end_date, grouping, district)
 		if district == 'All'
 			district_id = 0
@@ -2928,32 +2933,33 @@ module Report
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 
 		date_ranges.map do |date_range|
-=begin
-      follow_ups = FollowUp.find(:all,
-                                 :conditions => ["district = ? AND date_created >= ?
-                                 AND date_created <= ?", district_id, date_range.first,
-                                                 date_range.last])
-=end
 			follow_up_encounter = EncounterType.where(name: 'FOLLOW-UP').first.id
 			follow_up_concept = ConceptName.where(name: 'OUTCOME').first.concept_id
 
-			follow_ups = ActiveRecord::Base.connection.select_all(
-				  "SELECT e.patient_id, (SELECT name from concept_name WHERE concept_id =
-	            (SELECT value_coded FROM obs WHERE obs_id = MAX(o.obs_id))) result,
-              o.comments, DATE(e.encounter_datetime) date, count(*)
-            FROM encounter e
-            INNER JOIN obs o ON e.encounter_id = o.encounter_id AND e.voided = 0 AND o.voided = 0
-            INNER JOIN person_address pd ON pd.person_id = e.patient_id AND #{township_division}
-          WHERE e.encounter_type = #{follow_up_encounter} AND o.concept_id = #{follow_up_concept}
-          AND e.encounter_datetime BETWEEN '#{date_range.first} 00:00:00' AND '#{date_range.last} 23:59:59'
-          GROUP BY e.patient_id, o.comments"
-			)
+			follow_ups = ActiveRecord::Base.connection.select_all("SELECT e.patient_id,
+			(SELECT name from concept_name
+				WHERE concept_id =
+				(SELECT value_coded FROM obs
+				WHERE obs_id = MAX(o.obs_id))) result, o.comments, DATE(e.encounter_datetime) date,
+			count(*)
+			FROM encounter e
+			INNER JOIN obs o ON e.encounter_id = o.encounter_id
+			AND e.voided = 0 AND o.voided = 0
+			INNER JOIN person_address pd ON pd.person_id = e.patient_id
+			AND #{township_division}
+			WHERE e.encounter_type = #{follow_up_encounter}
+			AND o.concept_id = #{follow_up_concept}
+			AND e.encounter_datetime
+			BETWEEN '#{date_range.first} 00:00:00'
+			AND '#{date_range.last} 23:59:59'
+			GROUP BY e.patient_id, o.comments")
 
-			new_follow_up_data                 = {}
-			new_follow_up_data[:reasons] = reasons.collect{|f| {reason: f, call_count: 0, call_percentage: 0}}.uniq
-			new_follow_up_data[:start_date]    = date_range.first
-			new_follow_up_data[:end_date]      = date_range.last
-			new_follow_up_data[:total_calls]   = follow_ups.count
+			new_follow_up_data                  = {}
+			new_follow_up_data[:reasons]        = reasons.collect{|f| {reason: f, call_count: 0, call_percentage: 0}}
+				                                        .uniq
+			new_follow_up_data[:start_date]     = date_range.first
+			new_follow_up_data[:end_date]       = date_range.last
+			new_follow_up_data[:total_calls]    = follow_ups.count
 
 			new_follow_up_data[:reasons].each do |reason|
 				follow_ups.each do |data|
@@ -2961,7 +2967,9 @@ module Report
 						reason[:call_count] = reason[:call_count] + 1
 					end
 				end
-				reason[:call_percentage] = (reason[:call_count].to_f / new_follow_up_data[:total_calls].to_f * 100).round(1) if new_follow_up_data[:total_calls].to_f != 0
+				reason[:call_percentage] = (reason[:call_count].to_f /
+					  new_follow_up_data[:total_calls].to_f * 100).round(1) if
+					  new_follow_up_data[:total_calls].to_f != 0
 			end
 			patients_data.push(new_follow_up_data)
 
