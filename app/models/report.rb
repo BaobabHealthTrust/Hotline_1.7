@@ -2719,10 +2719,14 @@ module Report
 					row_data[:number_wanting_more_info] += 1
 				end
 			end
-			row_data[:percentage_of_callers_on_fp] = ((row_data[:total_callers_on_fp].to_f / row_data[:total_callers].to_f) * 100).round(1) if row_data[:total_callers_on_fp] != 0
-			row_data[:total_breakdown] = row_data[:pills] + row_data[:condoms] + row_data[:other] + row_data[:injectables] + row_data[:implants]
-			row_data[:percentage_of_satisfied_with_fpm] = ((row_data[:total_breakdown].to_f / row_data[:total_callers_on_fp].to_f)* 100).round(1) if row_data[:total_breakdown] != 0
-			row_data[:percentage_of_callers_wanting_info] = ((row_data[:number_wanting_more_info].to_f / row_data[:total_callers].to_f) * 100).round(1) if row_data[:number_wanting_more_info] != 0
+			row_data[:percentage_of_callers_on_fp] = ((row_data[:total_callers_on_fp].to_f /
+				  row_data[:total_callers].to_f) * 100).round(1) if row_data[:total_callers_on_fp] != 0
+			row_data[:total_breakdown] = row_data[:pills] + row_data[:condoms] +
+				  row_data[:other] + row_data[:injectables] + row_data[:implants]
+			row_data[:percentage_of_satisfied_with_fpm] = ((row_data[:total_breakdown].to_f /
+				  row_data[:total_callers_on_fp].to_f)* 100).round(1) if row_data[:total_breakdown] != 0
+			row_data[:percentage_of_callers_wanting_info] = ((row_data[:number_wanting_more_info].to_f /
+				  row_data[:total_callers].to_f) * 100).round(1) if row_data[:number_wanting_more_info] != 0
 			patients_data << row_data
 		end
 		#raise patients_data.to_yaml
@@ -2730,7 +2734,7 @@ module Report
 	end
 
 	def self.create_family_planning_query(start_date, end_date, district)
-#TODO - Remove the hard coding of the ids
+		#TODO - Remove the hard coding of the ids
 		query = "select e.patient_id AS patient_id, obc.value_text AS call_id,
            ofplan.value_coded_name_id AS family_planning_method_vcni,
            ofplan.value_coded AS family_planning_method_vc,
@@ -2775,6 +2779,7 @@ module Report
 		result = Patient.find_by_sql(query)
 		return result
 	end
+
 	def self.info_on_family_planning(start_date, end_date, grouping, district)
 
 		if district == 'All'
