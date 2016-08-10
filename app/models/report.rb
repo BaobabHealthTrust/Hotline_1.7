@@ -2777,22 +2777,29 @@ module Report
 	end
 	def self.info_on_family_planning(start_date, end_date, grouping, district)
 
-		district_id = Location.find_by_name(district).id
+		if district == 'All'
+			district_id = 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+			township_division = "person_address.township_division IN (#{district_names}) "
+		else
+			district_id = Location.find_by_name(district).id
+			district_name = Location.find(district_id).name
+			township_division = "person_address.township_division = '#{district_name}'"
+		end
+
 		patients_data = []
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
-
 		date_ranges.map do |date_range|
-			total_callers = self.get_total_nonpregnant_callers(date_range.first,
-			                                                   date_range.last,
-			                                                   district_id).map(&:patient_id).uniq.count
+			total_callers = self.get_total_nonpregnant_callers(date_range.first, date_range.last, district_id)
+				                  .map(&:patient_id).uniq.count
 
 			query   = self.create_family_planning_info_query(date_range.first, date_range.last, district_id)
 			results = Patient.find_by_sql(query)
 
-			row_data = {:start_date => date_range.first,:end_date => date_range.last,
-			            :total_callers => total_callers,
-			            :number_wanting_more_info => 0,
-			            :percentage_of_callers_wanting_info => 0
+			row_data = {start_date: date_range.first, end_date: date_range.last,
+			            total_callers: total_callers,
+			            number_wanting_more_info: 0,
+			            percentage_of_callers_wanting_info: 0
 			}
 
 			results.each do |patient|

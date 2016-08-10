@@ -727,7 +727,7 @@ class ReportController < ApplicationController
 		@report_type    = params[:report_type]
 
 		@report_name  = "Family Planning Satisfaction for #{@district}"
-		@report = Report.family_planning_satisfaction(@start_date, @end_date, @grouping, @district) rescue []
+		@report = Report.family_planning_satisfaction(@start_date, @end_date, @grouping, @district)
 
 	end
 	def info_on_family_planning
@@ -739,7 +739,7 @@ class ReportController < ApplicationController
 		@report_type    = params[:report_type]
 
 		@report_name  = "Info on Family Planning for #{@district}"
-		@report = Report.info_on_family_planning(@start_date, @end_date, @grouping, @district) rescue []
+		@report = Report.info_on_family_planning(@start_date, @end_date, @grouping, @district)
 
 	end
 	def tips_activity
