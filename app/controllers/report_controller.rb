@@ -677,8 +677,8 @@ class ReportController < ApplicationController
 		@source       = params[:source] rescue  nil
 		district      = params[:district]
 
-		@special_message = "<I> -- (Please note that the call lengths " +
-			  "are in <B>Seconds</B>)<I>"
+		@special_message = "(Please note that the call lengths " +
+			  "are in Seconds)"
 
 		if @staff_member == "All"
 			@staff = @staff_member
@@ -689,7 +689,7 @@ class ReportController < ApplicationController
 		@report_name  = "Call Lengths Report for #{district} District"
 		@report    = Report.call_lengths(@patient_type, @grouping, @call_type,
 		                                 @call_status, @staff_member,
-		                                 @start_date, @end_date, district) rescue []
+		                                 @start_date, @end_date, district)
 
 	end
 	def new_vs_repeat_callers
