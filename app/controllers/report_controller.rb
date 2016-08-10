@@ -647,7 +647,7 @@ class ReportController < ApplicationController
 		@staff_member = params[:staff_member]
 		@call_status  = params[:call_status]
 		@call_type    = params[:call_type]
-		@special_message = ""
+		@special_message = ''
 		@source       = params[:source] rescue nil
 		district      = params[:district]
 
@@ -660,7 +660,7 @@ class ReportController < ApplicationController
 		@report_name  = "Call Day Distribution for #{district} District"
 		@report    = Report.call_day_distribution(@patient_type, @grouping, @call_type,
 		                                          @call_status, @staff_member,
-		                                          @start_date, @end_date, district) rescue []
+		                                          @start_date, @end_date, district)
 
 
 	end

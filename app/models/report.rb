@@ -1981,7 +1981,16 @@ module Report
 	def self.call_day_distribution(patient_type, grouping, call_type, call_status,
 		  staff_member, start_date, end_date, district)
 
-		district_id = Location.find_by_name(district).id
+		if district == 'All'
+			district_id = 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+			township_division = "person_address.township_division IN (#{district_names}) "
+		else
+			district_id = Location.find_by_name(district).id
+			district_name = Location.find(district_id).name
+			township_division = "person_address.township_division = '#{district_name}'"
+		end
+
 		call_data = []
 
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date,
@@ -1989,18 +1998,10 @@ module Report
 
 		date_ranges.map do |date_range|
 
-			query = "SELECT e.patient_id, o.concept_id, o.comments FROM encounter e
-					INNER JOIN obs o
-					ON e.encounter_id = o.encounter_id
-					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
-                    AND e.encounter_datetime >= '#{date_range.first}'
-                    AND e.encounter_datetime <= '#{date_range.last}' "
-
-			#query   = self.call_analysis_query_builder(patient_type,
-			#                                           date_range, staff_member, call_type, call_status, district_id)
+			query   = self.call_analysis_query_builder(patient_type,
+			                                           date_range, staff_member, call_type, call_status, district_id)
 
 			results = Patient.find_by_sql(query)
-
 			# create row template
 			call_statistics = {:start_date => date_range.first,
 			                   :end_date => date_range.last, :total => results.count,
@@ -2080,15 +2081,17 @@ module Report
 		#	  extra_conditions +
 		#	  " GROUP BY call_log.call_log_id" + extra_grouping
 
-		query = "SELECT e.patient_id, o.concept_id, TIME(o.date_created) as call_start_time, o.comments, u.username FROM encounter e
+		query = "SELECT e.patient_id, o.concept_id, TIME(o.date_created) AS call_start_time, o.comments, u.username,
+					DATE_FORMAT(o.obs_datetime, '%W') AS day_of_week
+					FROM encounter e
 					INNER JOIN obs o
 					ON e.encounter_id = o.encounter_id
 					INNER JOIN users u ON u.user_id = o.creator
 					INNER JOIN person ps ON ps.person_id = o.person_id
 					INNER JOIN patient p ON p.patient_id = ps.person_id
 					WHERE e.encounter_type = #{EncounterType.find_by_name('Purpose of call').id}
-                    AND e.encounter_datetime >= '#{date_range.first}'
-                    AND e.encounter_datetime <= '#{date_range.last}' " + extra_conditions + extra_grouping
+                    AND o.obs_datetime >= '#{date_range.first}'
+                    AND o.obs_datetime <= '#{date_range.last}' " + extra_conditions + extra_grouping
 
 		return query
 	end
