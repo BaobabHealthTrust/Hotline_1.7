@@ -1,146 +1,146 @@
 <%= render :partial => 'header' %>
 <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
 <div class="main-page-container">
     <fieldset class="main_fieldset">
-      <legend>
-        <%=@report_name %> - <i> <%= @patient_type%>
-      </legend>
-      <table id="report_table" cellspacing="0" width="100%">
-        <tr>
-          <%= "Filter Info: Grouping - #{@grouping.capitalize}, Staff Name - #{@staff.capitalize}, Call Status - #{@call_status}, Call Type - #{@call_type}-- #{@special_message} "  %>
-        </tr>
-        <tr style="background:#b6b3b3;">
-          <td width="52%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
-              Total Calls
-          </td>
-          <td width="12%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              Morning <br/> 0700-1000
-          </td>
-          <td width="12%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
-              Mid-Day <br/> 1001-1300
-          </td>
-          <td width="12%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
-              Afternoon <br/> 1301-1600
-          </td>
-          <td width="12%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
-              Evening <br/> 1601-1900
-          </td>
-        </tr>
-        <tr>
-          <td width="45%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              &nbsp;
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              %age
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              %age
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              %age
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              %age
-          </td>
-        </tr>
-        <% total_calls = 0
-           total_morning = 0
-           total_midday = 0
-           total_afternoon = 0
-           total_evening = 0
-        %>
-        <%@report.reverse.map do |data|
-          total_calls += data[:total]
-          total_morning += data[:morning]
-          total_midday += data[:midday]
-          total_afternoon += data[:afternoon]
-          total_evening += data[:evening]
-        %>
-          <tr>
-            <td class="cellleft cellbottom main-table-cell" style="text-align:left">
-              <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:total] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:morning] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:morning_pct] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:midday] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:midday_pct] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:afternoon] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:afternoon_pct] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:evening] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom cellright main-table-cell">
-              <%=  data[:evening_pct] rescue 0 %>
-            </td>
-          </tr>
+        <legend>
+            <%=@report_name %> - <i> <%= @patient_type%>
+        </legend>
+        <table id="report_table" cellspacing="0" width="100%">
+            <tr>
+                <%= "Filter Info: Grouping - #{@grouping.capitalize}, Staff Name - #{@staff.capitalize}, Call Status - #{@call_status}, Call Type - #{@call_type}-- #{@special_message} "  %>
+            </tr>
+            <tr style="background:#b6b3b3;">
+                <td width="52%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
+                    Total Calls
+                </td>
+                <td width="12%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    Morning <br/> 0700-1000
+                </td>
+                <td width="12%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
+                    Mid-Day <br/> 1001-1300
+                </td>
+                <td width="12%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
+                    Afternoon <br/> 1301-1600
+                </td>
+                <td width="12%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
+                    Evening <br/> 1601-1900
+                </td>
+            </tr>
+            <tr>
+                <td width="45%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    %age
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    %age
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    %age
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    %age
+                </td>
+            </tr>
+            <% total_calls = 0
+               total_morning = 0
+               total_midday = 0
+               total_afternoon = 0
+               total_evening = 0
+            %>
+            <%@report.reverse.map do |data|
+                total_calls += data[:total]
+                total_morning += data[:morning]
+                total_midday += data[:midday]
+                total_afternoon += data[:afternoon]
+                total_evening += data[:evening]
+            %>
+                <tr>
+                    <td class="cellleft cellbottom main-table-cell" style="text-align:left">
+                        <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:total] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:morning] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:morning_pct] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:midday] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:midday_pct] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:afternoon] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:afternoon_pct] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:evening] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom cellright main-table-cell">
+                        <%=  data[:evening_pct] rescue 0 %>
+                    </td>
+                </tr>
 
-        <% end %>
-          <tr>
-            <td class="cellleft cellbottom main-table-cell" style="text-align:right">
-              Total
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  total_calls %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  total_morning %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%= (total_morning.to_f / total_calls.to_f * 100).round(1) rescue 0%>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  total_midday %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  (total_midday.to_f / total_calls.to_f * 100).round(1) rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  total_afternoon %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  (total_afternoon.to_f / total_calls.to_f * 100).round(1) rescue 0%>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%= total_evening %>
-            </td>
-            <td class="cellleft cellbottom cellright main-table-cell">
-              <%=  (total_evening.to_f / total_calls.to_f * 100).round(1) rescue 0 %>
-            </td>
-          </tr>
-      </table>
+            <% end %>
+            <tr>
+                <td class="cellleft cellbottom main-table-cell" style="text-align:right">
+                    Total
+                </td>
+                <td class="cellleft cellbottom main-table-cell">
+                    <%=  total_calls %>
+                </td>
+                <td class="cellleft cellbottom main-table-cell">
+                    <%=  total_morning %>
+                </td>
+                <td class="cellleft cellbottom main-table-cell">
+                    <%= (total_morning.to_f / total_calls.to_f * 100).round(1) rescue 0%>
+                </td>
+                <td class="cellleft cellbottom main-table-cell">
+                    <%=  total_midday %>
+                </td>
+                <td class="cellleft cellbottom main-table-cell">
+                    <%=  (total_midday.to_f / total_calls.to_f * 100).round(1) rescue 0 %>
+                </td>
+                <td class="cellleft cellbottom main-table-cell">
+                    <%=  total_afternoon %>
+                </td>
+                <td class="cellleft cellbottom main-table-cell">
+                    <%=  (total_afternoon.to_f / total_calls.to_f * 100).round(1) rescue 0%>
+                </td>
+                <td class="cellleft cellbottom main-table-cell">
+                    <%= total_evening %>
+                </td>
+                <td class="cellleft cellbottom cellright main-table-cell">
+                    <%=  (total_evening.to_f / total_calls.to_f * 100).round(1) rescue 0 %>
+                </td>
+            </tr>
+        </table>
 
     </fieldset>
-      
-    </div>
+
+</div>
