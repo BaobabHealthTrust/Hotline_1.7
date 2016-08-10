@@ -2038,9 +2038,9 @@ module Report
 			when 'children (under 5)'
 				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
 			when 'men'
-				extra_conditions += " AND (YEAR(p.date_created) - YEAR(person.birthdate)) > #{child_maximum_age} "
+				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) > #{child_maximum_age} "
 			when 'children (6 - 14)'
-				extra_conditions += " AND (YEAR(p.date_created) - YEAR(person.birthdate)) <= #{child_maximum_age} "
+				extra_conditions += " AND (YEAR(p.date_created) - YEAR(ps.birthdate)) <= #{child_maximum_age} "
 		end
 
 		(staff_id.downcase != 'all') ?
