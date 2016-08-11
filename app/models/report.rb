@@ -1848,6 +1848,8 @@ module Report
 	end
 
 	def self.patient_referral_followup(patient_type, grouping, outcome, start_date, end_date, district)
+		concept_id = ConceptName.find_by_name("#{outcome}").id
+
 		if district == 'All'
 			district_id = 0
 			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
@@ -1876,67 +1878,74 @@ module Report
 
 			if patient_type.downcase == 'women'
 				condition_options = ['encounter_type = ?
-                              AND encounter_datetime >= ?
-                              AND encounter_datetime <= ?
-                              AND obs.concept_id = ?
-                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
-							  AND person.gender = "F" ',
+                                AND encounter_datetime >= ?
+                                AND encounter_datetime <= ?
+                                AND obs.concept_id = ?
+                                AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
+							    AND person.gender = "F"
+								AND obs.value_coded_name_id = ? ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("general outcome").id,
-				                     child_maximum_age]
+				                     child_maximum_age, concept_id]
 			elsif patient_type.downcase == 'children (under 5)'
 				condition_options = ['encounter_type = ?
-                              AND encounter_datetime >= ?
-                              AND encounter_datetime <= ?
-                              AND obs.concept_id = ?
-                              AND obs.value_text IN (?)
-                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?',
+                                AND encounter_datetime >= ?
+                                AND encounter_datetime <= ?
+                                AND obs.concept_id = ?
+                                AND obs.value_text IN (?)
+                                AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?
+								AND obs.value_coded_name_id = ? ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("general outcome").id,
-				                     outcome, child_age]
+				                     outcome, child_age, concept_id]
 			elsif patient_type.downcase == 'children (6 - 14)'
 				condition_options = ['encounter_type = ?
-                              AND encounter_datetime >= ?
-                              AND encounter_datetime <= ?
-                              AND obs.concept_id = ?
-                              AND obs.value_text IN (?)
-                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?
-							  AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?',
+                                AND encounter_datetime >= ?
+                                AND encounter_datetime <= ?
+                                AND obs.concept_id = ?
+                                AND obs.value_text IN (?)
+                                AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) <= ?
+							    AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
+								AND obs.value_coded_name_id = ? ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("general outcome").id,
-				                     outcome, child_age, child_maximum_age]
+				                     outcome, child_age, child_maximum_age, concept_id]
 			elsif patient_type.downcase == 'men'
 				condition_options = ['encounter_type = ?
-                              AND encounter_datetime >= ?
-                              AND encounter_datetime <= ?
-                              AND obs.concept_id = ?
-                              AND obs.value_text IN (?)
-                              AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
-							  AND person.gender = "M" ',
+                                AND encounter_datetime >= ?
+                                AND encounter_datetime <= ?
+                                AND obs.concept_id = ?
+                                AND obs.value_text IN (?)
+                                AND (YEAR(encounter.encounter_datetime) - YEAR(person.birthdate)) > ?
+							    AND person.gender = "M"
+								AND obs.value_coded_name_id = ? ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("general outcome").id,
-				                     outcome, child_maximum_age]
+				                     outcome, child_maximum_age, concept_id]
 			else
 				condition_options = ['encounter_type = ?
-                              AND encounter_datetime >= ?
-                              AND encounter_datetime <= ?
-                              AND obs.concept_id = ?
-                              AND obs.value_text IN (?)',
+                                AND encounter_datetime >= ?
+                                AND encounter_datetime <= ?
+                                AND obs.concept_id = ?
+                                AND obs.value_text IN (?)
+								AND obs.value_coded_name_id = ? ',
 				                     EncounterType.find_by_name("Update Outcome").id,
 				                     date_range.first, date_range.last,
 				                     ConceptName.find_by_name("general outcome").id,
-				                     outcome]
+				                     outcome,
+								concept_id
+				]
 
 			end
 
 			o_encounters = Encounter.joins("INNER JOIN obs ON encounter.encounter_id = obs.encounter_id
-                             INNER JOIN person ON patient_id = person.person_id
-                              INNER JOIN person_address ON person_address.person_id = person.person_id
-                                AND #{township_division} ").where(condition_options)
+								INNER JOIN person ON patient_id = person.person_id
+                                INNER JOIN person_address ON person_address.person_id = person.person_id
+                                AND #{township_division}").where(condition_options)
 
 			o_encounters.each do |a_encounter|
 
