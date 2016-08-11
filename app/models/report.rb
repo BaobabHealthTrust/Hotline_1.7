@@ -2792,11 +2792,27 @@ module Report
 			township_division = "person_address.township_division = '#{district_name}'"
 		end
 
-		patients_data = []
-		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
+		patients_data   = []
+		concept_ids     = ''
+		concept_ids    += ConceptName.find_by_name('Child health info').id.to_s
+		concept_ids    += ','+ConceptName.find_by_name('Maternal health info').id.to_s
+
+		date_ranges     = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 		date_ranges.map do |date_range|
-			total_callers = self.get_total_nonpregnant_callers(date_range.first, date_range.last, district_id)
-				                  .map(&:patient_id).uniq.count
+			#total_callers = self.get_total_nonpregnant_callers(date_range.first, date_range.last, district_id)
+				                  #.map(&:patient_id).uniq.count
+
+			total_callers_query = "SELECT DISTINCT o.person_id " +
+				  "FROM obs o " +
+				  "INNER JOIN person p " +
+				  "ON p.person_id = o.person_id " +
+				  'INNER JOIN person_address pa ON pa.person_id = p.person_id ' +
+				  "WHERE DATE(o.date_created) >= '#{date_range.first}' " +
+				  "AND DATE(o.date_created) <= '#{date_range.last}' " +
+				  "AND o.voided = 0"
+
+			total_callers_result    = Patient.find_by_sql(total_callers_query)
+			total_callers           = total_callers_result.uniq.count
 
 			query   = self.create_family_planning_info_query(date_range.first, date_range.last, district_id)
 			results = Patient.find_by_sql(query)
@@ -2808,9 +2824,9 @@ module Report
 			}
 
 			results.each do |patient|
-				if patient.family_planning_info_vc == 1065
+				#if patient.family_planning_info_vc == 38#1065
 					row_data[:number_wanting_more_info] += 1
-				end
+				#end
 			end
 			row_data[:percentage_of_callers_wanting_info] = ((row_data[:number_wanting_more_info].to_f /
 				  row_data[:total_callers].to_f) * 100).round(1) if row_data[:number_wanting_more_info] != 0
@@ -2821,6 +2837,11 @@ module Report
 	end
 
 	def self.create_family_planning_info_query(start_date, end_date, district)
+
+		concept_ids     = ''
+		concept_ids    += ConceptName.find_by_name('Child health info').id.to_s
+		concept_ids    += ','+ConceptName.find_by_name('Maternal health info').id.to_s
+
 		query = "select e.patient_id AS patient_id, obc.value_text AS call_id,
            ofplan.value_coded_name_id AS family_planning_method_vcni,
            ofplan.value_coded AS family_planning_method_vc,
@@ -2841,19 +2862,38 @@ module Report
                 and e.voided = 0
                 and e.encounter_datetime >= '#{start_date}' and e.encounter_datetime <= '#{end_date}'"
 
+		query = "SELECT DISTINCT o.person_id, o.value_coded_name_id AS family_planning_info_vcni " +
+			  "FROM obs o " +
+			  "INNER JOIN person p " +
+			  "ON p.person_id = o.person_id " +
+			  'INNER JOIN person_address pa ON pa.person_id = p.person_id ' +
+			  "WHERE o.concept_id IN (#{concept_ids})
+			    AND o.value_coded_name_id = #{ConceptName.find_by_name('Family planning').id}
+				AND DATE(o.date_created) >= '#{start_date}' " +
+			  "AND DATE(o.date_created) <= '#{end_date}' " +
+			  "AND o.voided = 0"
+
 		return query
 	end
 
 	def self.get_nearest_health_centers(district)
-		district_id = district
+		if district == 'All'
+			district_id = 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+			township_division = "person_address.township_division IN (#{district_names}) "
+		else
+			district_id = Location.find_by_name(district).id
+			district_name = Location.find(district_id).name
+			township_division = "person_address.township_division = '#{district_name}'"
+		end
 		#hc_conditions  = ["district = ?", district_id]
 		#location_tag = LocationTag.find_by_name(Location.find(district_id).name.gsub(/City/i, '').strip)
 		location_tags   = LocationTag.where(" name IN ('Health Centre', 'District Hospital', 'Clinic',
      'Rural/Community Hospital', 'Dispensary', 'Central Hospital', 'Maternity', 'Other Hospital', 'Health Post')"
 		).collect{|l| l.id}
 		health_centers  = Location.where("m.location_tag_id IN (#{location_tags.join(', ')}) "
-		).joins("INNER JOIN location_tag_map m
-                          ON m.location_id = location.location_id")#.select(' distinct name ').map(&:name).sort
+		).joins('INNER JOIN location_tag_map m
+                          ON m.location_id = location.location_id')#.select(' distinct name ').map(&:name).sort
 
 		return health_centers
 
@@ -2915,7 +2955,7 @@ module Report
 
 			patients_data << row_data
 		end
-		#raise patients_data.to_yaml
+
 		return patients_data
 	end
 
