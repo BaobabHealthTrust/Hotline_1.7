@@ -41,7 +41,7 @@
                         <%= data[:total_calls] %>
                     </td>
                     <td  class="cellleft cellbottom cellright main-table-cell">
-                        na
+                        N/A
                     </td>
                 </tr>
                 <tr>
@@ -49,10 +49,13 @@
                         Total <%= @patient_type %> Callers with <%= @health_task.humanize.titleize %>
                     </td>
                     <td  class="cellleft cellbottom main-table-cell">
-                        <%= data[:total_number_of_calls] %>
+                        <%= data[:total_number_of_calls] if @patient_type.downcase != 'men' %>
+                        <% if @patient_type.downcase == 'men' %>
+                            N/A
+                        <% end %>
                     </td>
                     <td  class="cellleft cellbottom cellright main-table-cell">
-                        na
+                        N/A
                     </td>
                 </tr>
                 <tr>
@@ -63,7 +66,7 @@
                         <%= data[:total_number_of_calls_for_period]%>
                     </td>
                     <td  class="cellleft cellbottom cellright main-table-cell">
-                        na
+                        N/A
                     </td>
                 </tr>
                 <tr>
@@ -76,24 +79,31 @@
                     </td>
                 </tr>
 
-                <% data[:health_issues].map do | health_issue|%>
-                    <tr>
-                        <td class="cellleft cellbottom main-table-cell">
-                            <% concept = health_issue[:concept_name].to_s.sub("SIGN", "")%>
-                            <% concept.sub("SYMPTOM","") %>
-                            <% concept = concept == "GAINED OR LOST WEIGHT" ? "WEIGHT CHANGE" : concept %>
-                            <% concept = concept == "ACUTE ABDOMINAL PAIN" ? "SEVERE ABDOMINAL PAIN" : concept %>
-                            <%=concept.to_s.titleize %>
-                        </td>
+                <% if @patient_type.downcase == 'men' %>
+                    <td width="25%" colspan = 3 class="cellleft cellbottom cellright main-table-cell"
+                        style="text-align:center; font-weight: bold; font-size: large; font-style: italic;">
+                        N/A
+                    </td>
+                <% else %>
+                    <% data[:health_issues].map do | health_issue|%>
+                        <tr>
+                            <td class="cellleft cellbottom main-table-cell">
+                                <% concept = health_issue[:concept_name].to_s.sub("SIGN", "")%>
+                                <% concept.sub("SYMPTOM","") %>
+                                <% concept = concept == "GAINED OR LOST WEIGHT" ? "WEIGHT CHANGE" : concept %>
+                                <% concept = concept == "ACUTE ABDOMINAL PAIN" ? "SEVERE ABDOMINAL PAIN" : concept %>
+                                <%= concept.to_s.titleize %>
+                            </td>
 
-                        <td class="cellleft cellbottom main-table-cell">
-                            <%= health_issue[:call_count] %>
-                        </td>
+                            <td class="cellleft cellbottom main-table-cell">
+                                <%= health_issue[:call_count] %>
+                            </td>
 
-                        <td class="cellleft cellbottom cellright main-table-cell">
-                            <%= health_issue[:call_percentage] %>
-                        </td>
-                    </tr>
+                            <td class="cellleft cellbottom cellright main-table-cell">
+                                <%= health_issue[:call_percentage] %>
+                            </td>
+                        </tr>
+                    <% end %>
                 <% end %>
             <% end %>
         </table>

@@ -564,14 +564,14 @@ module Report
 				encounter_type_list = ["CHILD HEALTH SYMPTOMS"]
 
 				case health_task.humanize.downcase
-					when "health symptoms"
+					when 'health symptoms'
 						concepts_list = ['child health symptoms']
 						conditions = self.concept_set('Child health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
-					when "danger warning signs"
+					when 'danger warning signs'
 						concepts_list = ['danger signs']
-						conditions = self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
-					when "health information requested"
+						conditions = self.concept_set('danger sign').flatten.delete_if{|c| c.blank?}.uniq
+					when 'health information requested'
 						concepts_list = ['child health info']
 						conditions   =   self.concept_set('Child health info').flatten.delete_if{|c| c.blank?}.uniq
 				end
@@ -580,14 +580,14 @@ module Report
 				encounter_type_list = ["CHILD HEALTH SYMPTOMS"]
 
 				case health_task.humanize.downcase
-					when "health symptoms"
+					when 'health symptoms'
 						concepts_list = ['child health symptoms']
 						conditions = self.concept_set('Child health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
-					when "danger warning signs"
+					when 'danger warning signs'
 						concepts_list = ['danger signs']
-						conditions = self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
-					when "health information requested"
+						conditions = self.concept_set('danger sign').flatten.delete_if{|c| c.blank?}.uniq
+					when 'health information requested'
 						concepts_list = ['child health info']
 						conditions   =   self.concept_set('Child health info').flatten.delete_if{|c| c.blank?}.uniq
 				end
@@ -596,15 +596,15 @@ module Report
 				encounter_type_list = ["MATERNAL HEALTH SYMPTOMS"]
 
 				case health_task.humanize.downcase
-					when "health symptoms"
+					when 'health symptoms'
 						concepts_list = ['maternal health symptoms']
 						conditions = self.concept_set('Maternal health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
-					when "danger warning signs"
+					when 'danger warning signs'
 						concepts_list = ['danger signs']
 						conditions   =   self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
 
-					when "health information requested"
+					when 'health information requested'
 						concepts_list = ['maternal health info']
 						conditions   =   self.concept_set('Maternal health info').flatten.delete_if{|c| c.blank?}.uniq
 
@@ -614,15 +614,15 @@ module Report
 				encounter_type_list = ["HEALTH SYMPTOMS"]
 
 				case health_task.humanize.downcase
-					when "health symptoms"
+					when 'health symptoms'
 						concepts_list = ['general health symptoms']
 						conditions = self.concept_set('general health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
-					when "danger warning signs"
+					when 'danger warning signs'
 						concepts_list = ['danger signs']
 						conditions   =   self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
 
-					when "health information requested"
+					when 'health information requested'
 						concepts_list = ['maternal health info']
 						conditions   =   self.concept_set('Maternal health info').flatten.delete_if{|c| c.blank?}.uniq
 
@@ -632,17 +632,17 @@ module Report
 				encounter_type_list = ['MATERNAL HEALTH SYMPTOMS', 'CHILD HEALTH SYMPTOMS', 'HEALTH SYMPTOMS']
 
 				case health_task.humanize.downcase
-					when "health symptoms"
+					when 'health symptoms'
 						concepts_list = ['maternal health symptoms','general health symptoms', 'child health symptoms']
 						conditions = self.concept_set('child health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 						conditions += self.concept_set('maternal health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 						conditions += self.concept_set('general health symptoms').flatten.delete_if{|c| c.blank?}.uniq
 
-					when "danger warning signs"
+					when 'danger warning signs'
 						concepts_list = ['danger signs']
 						conditions   =   self.concept_set('danger signs').flatten.delete_if{|c| c.blank?}.uniq
 
-					when "health information requested"
+					when 'health information requested'
 						concepts_list = ['maternal health info']
 						conditions   =   self.concept_set('Maternal health info').flatten.delete_if{|c| c.blank?}.uniq
 				end
@@ -685,7 +685,7 @@ module Report
 		encounter_type_list.each do |encounter_type|
 			encounter_type_id = EncounterType.find_by_name("#{encounter_type}").id rescue nil
 			next if encounter_type_id.nil?
-			encounter_type_ids += encounter_type_id.to_s + ", "
+			encounter_type_ids += encounter_type_id.to_s + ', '
 		end
 
 		concept_ids.strip!.chop!
