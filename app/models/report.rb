@@ -655,7 +655,7 @@ module Report
 		call_percentage = 0
 
 		concepts_list.each do |concept_name|
-			concept_id = ConceptName.find_by_name("#{concept_name}").id rescue nil
+			concept_id = ConceptName.find_by_name("#{concept_name}").id
 			next if concept_id.nil?
 
 			concept_ids += concept_id.to_s + ', '
@@ -897,7 +897,6 @@ module Report
 				(health_task.humanize.downcase == "outcomes")? outcomes = true : outcomes = false
 
 				results.map do|data|
-
 					concept_name        = data.attributes["concept_name"].to_s.upcase
 					concept_id          = data.attributes["concept_id"].to_i
 					number_of_patients  = data.attributes["number_of_patients"].to_i
