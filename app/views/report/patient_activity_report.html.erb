@@ -1,96 +1,96 @@
 <%= render :partial => 'header' %>
-  <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+<form id="tt_form">
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
-    <div class="main-page-container">
+<div class="main-page-container">
     <fieldset class="main_fieldset">
-      <legend >
-        <%=@report_name %> - <i><%= @patient_type %></i>
-      </legend>
-      <table id="report_table" cellspacing="0" width="100%">
-        <tr>
-          <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} "  %>
-        </tr>
-        <tr style="background:#b6b3b3;">
-          <td width="48%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
-              Total Calls
-          </td>
-          <td width="8%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:left;">
-              Total Callers
-          </td>
-          <td width="14%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Any Health Symptoms
-          </td>
-          <td width="14%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              Any Danger Signs
-          </td>
-          <td width="14%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              Any Info Requested
-          </td>
-        </tr>
-        <tr>
-          <td width="44%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              &nbsp;
-          </td>
-          <td width="7%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              %age
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              %age
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Count
-          </td>
-          <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
-              %age
-          </td>
-        </tr>
-        <%@report.reverse.map do |data|%>
-          <tr>
-            <td class="cellleft cellbottom main-table-cell" style="text-align:left">
-              <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:total_calls_for_period] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:total] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:symptoms] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:symptoms_pct] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:danger] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom cellright main-table-cell">
-              <%=  data[:danger_pct] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:info] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom cellright main-table-cell">
-              <%=  data[:info_pct] rescue 0 %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
+        <legend >
+            <%=@report_name %> - <i><%= @patient_type %></i>
+        </legend>
+        <table id="report_table" cellspacing="0" width="100%">
+            <tr>
+                <%= "Filter Info: Grouping - #{@grouping.capitalize} #{@special_message} "  %>
+            </tr>
+            <tr style="background:#b6b3b3;">
+                <td width="48%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
+                    Total Calls
+                </td>
+                <td width="8%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:left;">
+                    Total Callers
+                </td>
+                <td width="14%" colspan = 2 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Any Health Symptoms
+                </td>
+                <td width="14%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    Any Danger Signs
+                </td>
+                <td width="14%" colspan = 2 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    Any Info Requested
+                </td>
+            </tr>
+            <tr>
+                <td width="44%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+                <td width="7%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    %age
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    %age
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Count
+                </td>
+                <td class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold;">
+                    %age
+                </td>
+            </tr>
+            <%@report.reverse.map do |data|%>
+                <tr>
+                    <td class="cellleft cellbottom main-table-cell" style="text-align:left">
+                        <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:total_calls_for_period] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:total] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:symptoms] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:symptoms_pct] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:danger] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom cellright main-table-cell">
+                        <%=  data[:danger_pct] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:info] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom cellright main-table-cell">
+                        <%=  data[:info_pct] rescue 0 %>
+                    </td>
+                </tr>
+            <% end %>
+        </table>
 
     </fieldset>
-    </div>
+</div>
 
-    <%= render :partial => 'footer' %>
+<%= render :partial => 'footer' %>

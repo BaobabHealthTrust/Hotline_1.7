@@ -1654,7 +1654,7 @@ module Report
 			                      :danger => 0, :danger_pct => 0,
 			                      :info => 0, :info_pct => 0
 			}
-			activity_type = ["symptoms","danger","info"]
+			activity_type = ['symptoms','danger','info']
 
 			case patient_type.downcase
 				when "women"
