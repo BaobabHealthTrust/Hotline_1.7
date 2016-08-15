@@ -42,8 +42,6 @@ class ReportController < ApplicationController
 					    "link" => "/"}
 			  ],
 			  "family_planning" => [
-					{   "name" => "Family Planning Satisfaction", "icon" => "icons/analysis-256.png",
-					    "link" => "/report/report_filter_page?report_type=family_planning&query=family planning satisfaction"},
 					{   "name" => "Info on Family Planning", "icon" => "icons/analysis-256.png",
 					    "link" => "/report/report_filter_page?report_type=family_planning&query=info on family planning"},
 					{   "name" => "Home", "icon" => "icons/gohome.png",

@@ -2680,7 +2680,16 @@ module Report
 
 	def self.family_planning_satisfaction(start_date, end_date, grouping, district)
 
-		district_id = Location.find_by_name(district).id
+		if district == 'All'
+			district_id = 0
+			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+			township_division = "person_address.township_division IN (#{district_names}) "
+		else
+			district_id = Location.find_by_name(district).id
+			district_name = Location.find(district_id).name
+			township_division = "person_address.township_division = '#{district_name}'"
+		end
+
 		patients_data = []
 		date_ranges   = Report.generate_grouping_date_ranges(grouping, start_date, end_date)[:date_ranges]
 

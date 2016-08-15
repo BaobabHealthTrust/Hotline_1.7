@@ -1,111 +1,111 @@
 <%= render :partial => 'header' %>
 <form id="tt_form">
-  <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
+    <input name="test" type="text" id="hook" tt_onLoad="loadControlKeys()"/>
 </form>
 <div class="main-page-container">
     <fieldset class="main_fieldset">
-      <legend>
-        <%=@report_name %>
-      </legend>
-      <table id="report_table" cellspacing="0" width="100%">
-        <tr>
-          <%= '' %>
-        </tr>
-        <tr style="background:#b6b3b3;">
-          <td width="20%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
-              Period
-          </td>
-          <td width="20%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
-              Total Non-Pregnant Callers
-          </td>
-          <td width="20%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              Total on Family Planning
-          </td>
-          <td width="20%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              %age on Family Planning
-          </td>
-          <td width="20%" colspan = 6 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
-              Total on Family Planning and Satisfied
-          </td>
-          <td width="20%" colspan = 1 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
-              %age on Family Planning and Satisfied
-          </td>
-        </tr>
-        <tr>
-          <td width="20%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              &nbsp;
-          </td>
-          <td width="20%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              &nbsp;
-          </td>
-          <td width="20%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              &nbsp;
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              &nbsp;
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Pills
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Injectables
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Implants
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Condoms
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Other
-          </td>
-          <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
-              Total
-          </td>
-          <td width="20%" class="celltop cellleft cellright cellbottom main-table-cell" style="font-weight: bold;">
-              &nbsp;
-          </td>
-        </tr>
-        <%@report.reverse.map do |data|%>
-        <tr>
-            <td class="cellleft cellbottom main-table-cell" style="text-align:left">
-              <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:total_callers] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:total_callers_on_fp] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:percentage_of_callers_on_fp] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:pills] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:injectables] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:implants] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:condoms] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:other] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom main-table-cell">
-              <%=  data[:total_breakdown] rescue 0 %>
-            </td>
-            <td class="cellleft cellbottom cellright main-table-cell">
-              <%=  data[:percentage_of_satisfied_with_fpm] rescue 0 %>
-            </td>
-        </tr>
+        <legend>
+            <%=@report_name %>
+        </legend>
+        <table id="report_table" cellspacing="0" width="100%">
+            <tr>
+                <%= '' %>
+            </tr>
+            <tr style="background:#b6b3b3;">
+                <td width="20%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
+                    Period
+                </td>
+                <td width="20%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:right;">
+                    Total Non-Pregnant Callers
+                </td>
+                <td width="20%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    Total on Family Planning
+                </td>
+                <td width="20%" colspan = 1 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    %age on Family Planning
+                </td>
+                <td width="20%" colspan = 6 class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold; text-align:center;">
+                    Total on Family Planning and Satisfied
+                </td>
+                <td width="20%" colspan = 1 class="celltop cellleft cellbottom cellright main-table-cell" style="font-weight: bold; text-align:center;">
+                    %age on Family Planning and Satisfied
+                </td>
+            </tr>
+            <tr>
+                <td width="20%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+                <td width="20%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+                <td width="20%" class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Pills
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Injectables
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Implants
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Condoms
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Other
+                </td>
+                <td class="celltop cellleft cellbottom main-table-cell" style="font-weight: bold;">
+                    Total
+                </td>
+                <td width="20%" class="celltop cellleft cellright cellbottom main-table-cell" style="font-weight: bold;">
+                    &nbsp;
+                </td>
+            </tr>
+            <%@report.reverse.map do |data|%>
+                <tr>
+                    <td class="cellleft cellbottom main-table-cell" style="text-align:left">
+                        <%= @grouping.humanize + " ( "+ data[:start_date] + " - " + data[:end_date] + " )"%>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:total_callers] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:total_callers_on_fp] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:percentage_of_callers_on_fp] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:pills] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:injectables] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:implants] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:condoms] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:other] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom main-table-cell">
+                        <%=  data[:total_breakdown] rescue 0 %>
+                    </td>
+                    <td class="cellleft cellbottom cellright main-table-cell">
+                        <%=  data[:percentage_of_satisfied_with_fpm] rescue 0 %>
+                    </td>
+                </tr>
 
-        <% end %>
-      </table>
+            <% end %>
+        </table>
 
     </fieldset>
-      
-    </div>
+
+</div>
