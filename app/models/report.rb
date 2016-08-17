@@ -513,19 +513,19 @@ module Report
 			township_division = "AND ad.township_division = '#{district}' "
 		end
 
-		query = "SELECT encounter_type.name AS encounter_type_name, " +
-			  "COUNT(obs.person_id) AS number_of_patients," + extra_parameters +
-			  "obs.concept_id AS concept_id, DATE(encounter.date_created) AS start_date " +
-			  "FROM obs LEFT JOIN encounter ON encounter.encounter_id = obs.encounter_id " +
-			  "LEFT JOIN encounter_type on encounter.encounter_type = encounter_type.encounter_type_id " +
-			  "LEFT JOIN patient ON encounter.patient_id = patient.patient_id " +
-			  "LEFT JOIN person ON patient.patient_id = person.person_id " +
-			  "LEFT JOIN concept_name on obs.concept_id = concept_name.concept_id " +
-			  "LEFT JOIN person_address ad ON ad.person_id = obs.person_id AND ad.voided = 0 " +
+		query = 'SELECT encounter_type.name AS encounter_type_name, ' +
+			  'COUNT(obs.person_id) AS number_of_patients,' + extra_parameters +
+			  'obs.concept_id AS concept_id, DATE(encounter.date_created) AS start_date ' +
+			  'FROM obs LEFT JOIN encounter ON encounter.encounter_id = obs.encounter_id ' +
+			  'LEFT JOIN encounter_type on encounter.encounter_type = encounter_type.encounter_type_id ' +
+			  'LEFT JOIN patient ON encounter.patient_id = patient.patient_id ' +
+			  'LEFT JOIN person ON patient.patient_id = person.person_id ' +
+			  'LEFT JOIN concept_name on obs.concept_id = concept_name.concept_id ' +
+			  'LEFT JOIN person_address ad ON ad.person_id = obs.person_id AND ad.voided = 0 ' +
 			  township_division +
 			  "WHERE encounter_type.encounter_type_id IN (#{encounter_type_ids}) " +
 			  "AND obs.concept_id IN (#{concept_ids}) " +
-			  "AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 " +
+			  'AND encounter.voided = 0 AND obs.voided = 0 AND concept_name.voided = 0 ' +
 			  "AND DATE(obs.date_created) >= '#{date_range.first}' " +
 			  "AND DATE(obs.date_created) <= '#{date_range.last}'"
 
@@ -554,11 +554,13 @@ module Report
 			encounter_type_list = ["UPDATE OUTCOME"]
 
 			outcomes = self.concept_set('General outcome').flatten.delete_if{|c| c.blank?}.uniq
-			extra_parameters    = " COALESCE((SELECT name FROM concept_name WHERE concept_id = obs.value_coded), obs.value_text) AS concept_name, "
-			extra_conditions    = " obs.value_text, DATE(obs.date_created), "
+			extra_parameters    = ' COALESCE((SELECT name FROM concept_name WHERE concept_id = obs.value_coded), obs.value_text) AS concept_name, '
+			extra_conditions    = ' obs.value_text, DATE(obs.date_created), '
 		else
-			extra_parameters    = " concept_name.name AS concept_name, "
-			extra_conditions    = " DATE(obs.date_created), "
+			#extra_parameters    = " concept_name.name AS concept_name, "
+			#extra_conditions    = " DATE(obs.date_created), "
+			extra_parameters    = ' COALESCE((SELECT name FROM concept_name WHERE concept_id = obs.value_coded), obs.value_text) AS concept_name, '
+			extra_conditions    = ' obs.value_text, DATE(obs.date_created), '
 
 			if patient_type.downcase == "children (under 5)"
 				encounter_type_list = ["CHILD HEALTH SYMPTOMS"]
@@ -657,7 +659,6 @@ module Report
 		concepts_list.each do |concept_name|
 			concept_id = ConceptName.find_by_name("#{concept_name}").id
 			next if concept_id.nil?
-
 			concept_ids += concept_id.to_s + ', '
 			next if concept_name == 'SECONDARY OUTCOME'
 			if concept_name == 'GENERAL OUTCOME'
@@ -895,7 +896,6 @@ module Report
 
 			unless results.blank?
 				(health_task.humanize.downcase == "outcomes")? outcomes = true : outcomes = false
-
 				results.map do|data|
 					concept_name        = data.attributes["concept_name"].to_s.upcase
 					concept_id          = data.attributes["concept_id"].to_i
@@ -914,7 +914,8 @@ module Report
 
 							update_statistics = true if(health_issue[:concept_name].to_s.upcase == concept_name)
 						else
-							update_statistics = true if(health_issue[:concept_id].to_i == concept_id)
+							#update_statistics = true if(health_issue[:concept_id].to_i == concept_id)
+							update_statistics = true if(health_issue[:concept_name].to_s.upcase == concept_name)
 						end
 
 						next if !update_statistics
@@ -934,7 +935,6 @@ module Report
 
 			patients_data.push(new_patients_data)
 		end
-
 		patients_data
 	end
 
