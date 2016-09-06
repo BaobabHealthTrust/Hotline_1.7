@@ -329,7 +329,7 @@ class ReportController < ApplicationController
 	def reports
 		case  params[:query]
 			when 'demographics'
-				redirect_to :action       => "patient_demographics_report",
+				redirect_to :action       => 'patient_demographics_report',
 				            :start_date   => params[:start_date],
 				            :end_date     => params[:end_date],
 				            :grouping     => params[:grouping],

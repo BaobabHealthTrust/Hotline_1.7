@@ -78,11 +78,11 @@ module Report
 		# Get a list of health centers for the particular district
 		if district_id == 0
 			district_names = '"' + Location.where('description = "Malawian district"').map(&:name).split.join('","') + '"'
+			health_centers = '"' + get_nearest_health_centers(district_id).map(&:name).join('","') + '"'
 		else
 			district_name = Location.find(district_id).name
 		end
-
-		health_centers = '"' + get_nearest_health_centers(district_id).map(&:name).join('","') + '"'
+		
 
 		child_maximum_age     = 13 # see definition of a female adult above
 		nearest_health_center = PersonAttributeType.find_by_name("NEAREST HEALTH FACILITY").id #rescue 1
@@ -179,7 +179,7 @@ module Report
 			  "LEFT JOIN person ps ON pa.person_id = ps.person_id " +
 			  "INNER JOIN #{patients_with_encounter} ON pa.person_id = patients.patient_id " + sub_query +
 			  "WHERE pa.person_attribute_type_id = #{nearest_health_center} " + extra_conditions +
-			  "AND pa.value IN (#{health_centers}) " +
+			  #"AND pa.value IN (#{health_centers}) " +
 			  "GROUP BY pa.value " + extra_group_by +
 			  " ORDER BY p.date_created"
 		return query
