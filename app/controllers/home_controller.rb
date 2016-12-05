@@ -2,6 +2,18 @@ class HomeController < ApplicationController
   skip_before_action :verify_authenticity_token
   
   def index
+
+    concept_id      = ConceptName.find_by_name('Purpose of call').id
+    start_datetime  = Date.today.strftime('%Y-%m-%d %H:%M:%S')
+    end_datetime    = Date.today.strftime('%Y-%m-%d 59:59:59')
+    @calls_today    = Observation.find_by_sql("SELECT * FROM obs o INNER JOIN encounter e
+                                                            ON e.encounter_id = o.encounter_id
+                                                            WHERE o.comments > 0
+                                                            AND o.concept_id = #{concept_id}
+                                                            AND (o.date_created >= '#{start_datetime}'
+                                                                 AND o.date_created <= '#{end_datetime}') "
+    ).count
+
     render :layout => false
 
     if !session[:tag_encounters].blank?
