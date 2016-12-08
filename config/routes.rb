@@ -181,6 +181,7 @@ Rails.application.routes.draw do
   get '/report/current_enrollment_totals'
   get '/report/individual_current_enrollments'
   get '/report/report_filter_page'
+  get '/call_history', to: 'report#call_history'
   ######################## Reports end  ############################################
 
   # The priority is based upon order of creation: first created -> highest priority.

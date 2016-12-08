@@ -16,6 +16,18 @@
         height: 100px;
     }
 
+        .badge-link {
+            text-decoration-color: #FFFFFF;
+            color: #999;
+            background-color: #FFFFFF;
+            border: 1px solid black;
+            border-radius: 15px;
+            width: 100%;
+            padding: 5px;
+            box-shadow: 0 0 1.5px #000000 inset;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
 </style>
 
 
@@ -39,7 +51,7 @@
         <div class="cells" style="width:30%">
             <span class="icons small-icons" style=" border-right: 0px solid #ccc; color: #999;font-size: 1.5em; font-style: italic;">
               <b>Total Calls Today:</b>
-                &nbsp;<%= @calls_today %>
+                &nbsp;<a class='badge-link' href="/call_history"><%= Report.call_history('today') %></a>
             </span>
         </div>
 

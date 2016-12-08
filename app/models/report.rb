@@ -3069,4 +3069,56 @@ module Report
 
 		return follow_up_map
 	end
+
+	def self.call_history(history_type)
+		case history_type
+			when 'today'
+				start_datetime  = Date.today.strftime('%Y-%m-%d %H:%M:%S')
+				end_datetime    = Date.today.strftime('%Y-%m-%d 59:59:59')
+
+			when 'yesterday'
+				yesterday       = Date.today - 1.day
+				start_datetime  = yesterday.strftime('%Y-%m-%d %H:%M:%S')
+				end_datetime    = yesterday.strftime('%Y-%m-%d 59:59:59')
+
+			when 'this_week'
+				start_datetime  = Date.today.beginning_of_week.strftime('%Y-%m-%d %H:%M:%S')
+				end_datetime    = Date.today.end_of_week.strftime('%Y-%m-%d 59:59:59')
+
+			when 'last_week'
+				last_week       = Date.today - 1.week
+				start_datetime  = last_week.beginning_of_week.strftime('%Y-%m-%d %H:%M:%S')
+				end_datetime    = last_week.end_of_week.strftime('%Y-%m-%d 59:59:59')
+
+			when 'this_month'
+				start_datetime  = Date.today.beginning_of_month.strftime('%Y-%m-%d %H:%M:%S')
+				end_datetime    = Date.today.end_of_month.strftime('%Y-%m-%d 59:59:59')
+
+			when 'last_month'
+				last_month      = Date.today - 1.month
+				start_datetime  = last_month.beginning_of_month.strftime('%Y-%m-%d %H:%M:%S')
+				end_datetime    = last_month.end_of_month.strftime('%Y-%m-%d 59:59:59')
+
+			when 'this_year'
+				start_datetime  = Date.today.beginning_of_year.strftime('%Y-%m-%d %H:%M:%S')
+				end_datetime    = Date.today.end_of_year.strftime('%Y-%m-%d 59:59:59')
+
+			when 'last_year'
+				last_year      = Date.today - 1.year
+				start_datetime  = last_year.beginning_of_year.strftime('%Y-%m-%d %H:%M:%S')
+				end_datetime    = last_year.end_of_year.strftime('%Y-%m-%d 59:59:59')
+
+		end
+
+		call_history    = Observation.find_by_sql("SELECT * FROM
+                                              ( SELECT person_id, comments
+                                                FROM obs
+                                                WHERE date_created >= '#{start_datetime}'
+                                                AND date_created <= '#{end_datetime}'
+                                                GROUP BY person_id, comments
+                                              )
+                                              AS calls ").count
+
+		return call_history
+	end
 end

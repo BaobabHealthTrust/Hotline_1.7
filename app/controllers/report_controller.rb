@@ -806,6 +806,25 @@ class ReportController < ApplicationController
 		                                                   @content_type, @language, @phone_type,
 		                                                   @delivery, @number_prefix, district) rescue []
 	end
+
+	def call_history
+
+		@calls = Hash.new(0)
+
+		@calls['Total calls today']         = Report.call_history('today')
+		@calls['Total calls yesterday']     = Report.call_history('yesterday')
+
+		@calls['Total calls this week']     = Report.call_history('this_week')
+		@calls['Total calls last week']     = Report.call_history('last_week')
+
+		@calls['Total calls this month']    = Report.call_history('this_month')
+		@calls['Total calls last month']    = Report.call_history('last_month')
+
+		@calls['Total calls this year']    = Report.call_history('this_year')
+		@calls['Total calls last year']    = Report.call_history('last_year')
+
+		render :layout => false
+	end
 end
 
 

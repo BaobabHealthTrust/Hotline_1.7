@@ -3,17 +3,6 @@ class HomeController < ApplicationController
   
   def index
 
-    start_datetime  = Date.today.strftime('%Y-%m-%d %H:%M:%S')
-    end_datetime    = Date.today.strftime('%Y-%m-%d 59:59:59')
-    @calls_today    = Observation.find_by_sql("SELECT * FROM
-                                              ( SELECT person_id, comments
-                                                FROM obs
-                                                WHERE date_created >= '#{start_datetime}'
-                                                AND date_created <= '#{end_datetime}'
-                                                GROUP BY person_id, comments
-                                              )
-                                              AS calls ").count
-
     render :layout => false
 
     if !session[:tag_encounters].blank?
