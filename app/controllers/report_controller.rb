@@ -825,6 +825,11 @@ class ReportController < ApplicationController
 
 		render :layout => false
 	end
+
+	def detailed_call_history
+
+		render :layout => false
+	end
 end
 
 

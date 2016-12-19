@@ -109,10 +109,6 @@
         background-color: white;
     }
 
-    .clickable {
-        cursor: pointer;
-    }
-
     /* .................. stats css ends .............. */
 </style>
 
@@ -126,26 +122,8 @@
                 <%(@calls || {}).each_with_index do |(title, count), i|
                     row = 'stripped' if i.even?
                     row = 'nostrips' if i.odd?
-                    case title
-                        when 'Total calls today'
-                            reference = 'today'
-                        when 'Total calls yesterday'
-                            reference = 'yesterday'
-                        when 'Total calls this week'
-                            reference = 'this_week'
-                        when 'Total calls last week'
-                            reference = 'last_week'
-                        when 'Total calls this month'
-                            reference = 'this_month'
-                        when 'Total calls last month'
-                            reference = 'last_month'
-                        when 'Total calls this year'
-                            reference = 'this_year'
-                        when 'Total calls last year'
-                            reference = 'last_year'
-                    end
                 %>
-                    <div class="stats-table-rows row_<%=row%> clickable" onclick='javascript:drillDown("<%= reference %>");'>
+                    <div class="stats-table-rows row_<%=row%>">
                         <div class="stats-table-cells" style="width: 85%; padding-left: 10px; vertical-align: middle;">
                             <%= title %>
                         </div>
@@ -174,9 +152,3 @@
 
 
 <%= render :partial => 'footer' %>
-
-<script>
-    function drillDown(reference) {
-    	window.location = '/detailed_call_history/'+reference;
-    }
-</script>
