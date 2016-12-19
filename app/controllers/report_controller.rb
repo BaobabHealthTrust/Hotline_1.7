@@ -844,6 +844,7 @@ class ReportController < ApplicationController
 			hotline_user = User.find(caller.creator).username
 
 			arr = []
+			arr.push(caller.person_id)
 			arr.push(name)
 			arr.push(ivr_number)
 			arr.push(phone_number)

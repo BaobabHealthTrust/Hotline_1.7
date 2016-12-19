@@ -79,6 +79,10 @@
         font-weight: bold;
     }
 
+    .clickable {
+        cursor: pointer;
+    }
+
     /* .................. button css ends .............. */
 
 </style>
@@ -103,7 +107,8 @@
         </thead>
         <tbody>
             <% @callers.each do |caller| %>
-                <tr>
+                <tr onclick="#javascript:drillDown(<%= caller[0] %>)" class="clickable">
+                    <% caller.shift %>
                     <% caller.each_with_index do |cell_data, index| %>
                         <td><%= cell_data %></td>
                     <% end %>
@@ -117,6 +122,10 @@
 	$(document).ready(function(){
 		$('#call_history').DataTable();
 	});
+
+	function drillDown(patient_id) {
+		window.location = "/patient/dashboard/"+patient_id+"/recent_calls"
+    }
 </script>
 
 <%= render :partial => 'footer' %>
