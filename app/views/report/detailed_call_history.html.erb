@@ -1,3 +1,4 @@
+
 <style>
 
     body {
@@ -80,75 +81,31 @@
 
     /* .................. button css ends .............. */
 
-
-    /* .................. stats css starts .............. */
-    .stats-table  {
-        display: table;
-        width: 95%;
-        padding: 0px 1px 0px 1px;
-        margin-top: 15px;
-    }
-
-    .stats-table-rows  {
-        display: table-row;
-        height: 60px;
-    }
-
-    .stats-table-cells {
-        display: table-cell;
-        font-size: 22px;
-        font-weight: bold;
-        border-bottom: 1px solid black;
-    }
-
-    .row_stripped {
-        background-color: lightgrey;
-    }
-
-    .row_nostrips {
-        background-color: white;
-    }
-
-    /* .................. stats css ends .............. */
 </style>
 
 <%= render :partial => '/home/header' %>
 
-<div class="main-table">
-    <div class="main-table-rows">
+<%= stylesheet_link_tag 'jquery.dataTables.min' %>
 
-        <div class="main-table-cells" style="width: 78%; vertical-align: top; overflow: auto; height: 80%;">
-            <div class="stats-table">
-                <%(@calls || {}).each_with_index do |(title, count), i|
-                    row = 'stripped' if i.even?
-                    row = 'nostrips' if i.odd?
-                %>
-                    <div class="stats-table-rows row_<%=row%>">
-                        <div class="stats-table-cells" style="width: 85%; padding-left: 10px; vertical-align: middle;">
-                            <%= title %>
-                        </div>
-                        <div class="stats-table-cells" style="width: 10%;
-                                text-align: right; padding-right: 10px; vertical-align: middle;">
-                            <div class="stat_count"><%= count %></div>
-                        </div>
-                    </div>
-                    <br />
-                <%end%>
-            </div>
-        </div>
+<%= javascript_include_tag 'jquery' %>
+<%= javascript_include_tag 'jquery.dataTables.min' %>
 
-        <div class="main-table-cells" style="width: 22%; vertical-align: top;">
-            <div class="divbtn" onclick="document.location='/'" >
-        <span class="icons">
-          <%=image_tag("icons/gohome.png", class: 'icons')%>
-            <p class="button-label">Home</p>
-        </span>
-            </div>
-        </div>
+<table id="call_history" class="display">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>IVR Number</td>
+            <td>District</td>
+            <td>Hotline User</td>
+        </tr>
+    </thead>
+</table>
 
-
-    </div>
-</div>
-
+<script>
+	$(document).ready(function(){
+		$('#call_history').DataTable();
+	});
+</script>
 
 <%= render :partial => 'footer' %>
+
