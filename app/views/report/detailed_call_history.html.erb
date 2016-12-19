@@ -89,17 +89,29 @@
 
 <%= javascript_include_tag 'jquery' %>
 <%= javascript_include_tag 'jquery.dataTables.min' %>
-
-<table id="call_history" class="display">
-    <thead>
-        <tr>
-            <td>Name</td>
-            <td>IVR Number</td>
-            <td>District</td>
-            <td>Hotline User</td>
-        </tr>
-    </thead>
-</table>
+<br>
+<div style="padding-bottom: 70px;">
+    <table id="call_history" class="display">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>IVR Number</th>
+                <th>Phone Number</th>
+                <th>District</th>
+                <th>Hotline User</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @callers.each do |caller| %>
+                <tr>
+                    <% caller.each_with_index do |cell_data, index| %>
+                        <td><%= cell_data %></td>
+                    <% end %>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
 
 <script>
 	$(document).ready(function(){
@@ -108,4 +120,3 @@
 </script>
 
 <%= render :partial => 'footer' %>
-

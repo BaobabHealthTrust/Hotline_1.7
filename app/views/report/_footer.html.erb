@@ -38,7 +38,6 @@
 
 .footer img {
   bottom: 0px;
-  position: absolute;
 }
 </style>
 
@@ -48,7 +47,7 @@ window.onresize = function(){
   $("#report_div").css("height",window.innerHeight * 0.75);
 }*/
 </script>
-<div class="footer">
+<div class="footer" style="position: fixed; background-color: #ffffff">
   <span class="x-icons x-small-icons">
     <%=image_tag("b40b4b-2.png", class: 'x-icons')%>
   </span>

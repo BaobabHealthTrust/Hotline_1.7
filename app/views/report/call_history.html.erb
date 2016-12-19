@@ -145,7 +145,7 @@
                             reference = 'last_year'
                     end
                 %>
-                    <div class="stats-table-rows row_<%=row%> clickable" onclick='javascript:drillDown("<%= reference %>");'>
+                    <div class="stats-table-rows row_<%=row%> clickable" onclick='javascript:viewDetailed("<%= reference %>");'>
                         <div class="stats-table-cells" style="width: 85%; padding-left: 10px; vertical-align: middle;">
                             <%= title %>
                         </div>
@@ -176,7 +176,7 @@
 <%= render :partial => 'footer' %>
 
 <script>
-    function drillDown(reference) {
+    function viewDetailed(reference) {
     	window.location = '/detailed_call_history/'+reference;
     }
 </script>

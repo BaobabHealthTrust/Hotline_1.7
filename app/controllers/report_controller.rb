@@ -827,7 +827,31 @@ class ReportController < ApplicationController
 	end
 
 	def detailed_call_history
+		reference = params[:reference]
 
+		people = []
+		callers = Report.call_history(reference,'detailed')
+		(callers || []).each do |caller|
+			get_person = PersonName.find(caller.person_id)
+			patient = PatientService.get_patient(caller.person_id)
+			given_name = patient.first_name
+			family_name = patient.last_name
+
+			name = given_name+' '+family_name
+			ivr_number = patient.avr_access_number
+			phone_number = patient.cell_phone_number
+			district = patient.township_division || session[:district]
+			hotline_user = User.find(caller.creator).username
+
+			arr = []
+			arr.push(name)
+			arr.push(ivr_number)
+			arr.push(phone_number)
+			arr.push(district)
+			arr.push(hotline_user)
+			people.push(arr)
+		end
+		@callers = people
 		render :layout => false
 	end
 end
