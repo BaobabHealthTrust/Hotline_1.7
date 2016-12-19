@@ -827,33 +827,42 @@ class ReportController < ApplicationController
 	end
 
 	def detailed_call_history
+
 		reference = params[:reference]
 
 		people = []
 		callers = Report.call_history(reference,'detailed')
 		(callers || []).each do |caller|
-			get_person = PersonName.find(caller.person_id)
-			patient = PatientService.get_patient(caller.person_id)
-			given_name = patient.first_name
-			family_name = patient.last_name
+			get_person      = PersonName.find(caller.person_id)
+			patient         = PatientService.get_patient(caller.person_id)
+			given_name      = patient.first_name
+			family_name     = patient.last_name
 
-			name = given_name+' '+family_name
-			ivr_number = patient.avr_access_number
-			phone_number = patient.cell_phone_number
-			district = patient.township_division || session[:district]
-			hotline_user = User.find(caller.creator).username
+			name            = given_name+' '+family_name
+			ivr_number      = patient.avr_access_number
+			phone_number    = patient.cell_phone_number
+			district        = patient.township_division || session[:district]
+			start_time      = ''
+			end_time        = ''
+			hotline_user    = User.find(caller.creator).username
 
-			arr = []
-			arr.push(caller.person_id)
-			arr.push(name)
-			arr.push(ivr_number)
-			arr.push(phone_number)
-			arr.push(district)
-			arr.push(hotline_user)
-			people.push(arr)
+			caller_array    = []
+			caller_array.push(caller.person_id)
+			caller_array.push(name)
+			caller_array.push(ivr_number)
+			caller_array.push(phone_number)
+			caller_array.push(district)
+			caller_array.push(start_time)
+			caller_array.push(end_time)
+			caller_array.push(hotline_user)
+
+			people.push(caller_array)
 		end
+
 		@callers = people
+
 		render :layout => false
+
 	end
 end
 
