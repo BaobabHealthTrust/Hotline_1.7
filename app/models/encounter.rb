@@ -91,7 +91,7 @@ class Encounter < ActiveRecord::Base
   end
 
   def self.feed_tags(patient_id)
-    max_tag = Observation.find_by_sql("SELECT MAX(comments) AS max_tag FROM obs WHERE person_id = #{patient_id} LIMIT 1")[0]['max_tag'].to_i rescue 0
+    max_tag = Observation.find_by_sql("SELECT CAST(MAX(comments) AS INT) AS max_tag FROM obs WHERE person_id = #{patient_id} LIMIT 1")[0]['max_tag'].to_i rescue 0
     tag = max_tag + 1
 
     ActiveRecord::Base.connection.execute(<<-EOQ)
