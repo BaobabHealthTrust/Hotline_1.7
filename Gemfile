@@ -27,3 +27,6 @@ gem 'mysql2', '~> 0.3.10'
 gem 'fastercsv', '1.5.5'
 
 gem 'activerecord-session_store'
+
+# add gem 'roo' to read stylesheet files.
+gem "roo", "~> 2.7.0"
