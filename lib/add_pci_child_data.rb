@@ -1,19 +1,42 @@
+##################################################################################
+#                                                                                #
+# Created by: Jacob Mziya (BHT Software Developer)                               #
+# Description: To load PCI Child Data into Hotline CCPF system                   #
+# Created on: February 13th, 2017                                                #
+# Plugins: roo                                                                   #
+#                                                                                #
+##################################################################################
+
 require 'roo'
+require 'date'
+
+def validate_date(date)
+	formats = ['%d-%m-%y', '%Y-%m-%dT%H:%M:%S%z', '%Y-%m-%d %H:%M:%S %z']
+	formats.each do |format|
+		begin
+			return true if Date.strptime(date, format)
+		rescue
+		end
+	end
+	raise InvalidInputError.new("Date you have entered is invalid, please enter a valid date")
+end
 
 def add_pci_child
 	#xlsx = Roo::Spreadsheet.open("#{Rails.root}/app/assets/data/CCPF_PCI_Data_Child.xlsx")
 	xlsx = Roo::Excelx.new("#{Rails.root}/app/assets/data/CCPF_PCI_Data_Child.xlsx")
 	i = 0
 	xlsx.each_row_streaming(pad_cells: true) do |row|
-		# puts row.inspect # Array of Excelx::Cell objects
+		puts row.inspect and return # Array of Excelx::Cell objects
 		i = i + 1
 		
 		# rows before row 4 are header related.
-		if i >= 5 #and !row[0].blank?
+		if i >= 5 and !row[0].blank? and
 			# create person
 			person = Person.new
 			person.gender = row[7].value
-			person.birthdate = row[9].value.to_datetime.strftime('%Y-%m-%d')
+			birthdate = row[9].value.to_datetime.strftime('%Y-%m-%d')
+			next if validate_date(birthdate) != true
+			person.birthdate = birthdate
 			person.creator = 1
 			person.save!
 			
@@ -61,6 +84,8 @@ def add_pci_child
 				person_attribute.creator = 1
 				person_attribute.save!
 			end
+			puts "Person #{i-4} creation: Ok"
+			return "Creating data successfully completed." if row[0].nil?
 		end
 	end
 end
