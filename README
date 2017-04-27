@@ -1,3 +1,16 @@
 Run post migration scripts using the terminal command
 
 	bundle exec rails runner lib/post_migration_fixes.rb
+
+Post migration script for PCI Data.
+    Make sure you are in the root directory of the Application and run the following command.
+
+        ./lib/pci_migrate.sh
+
+    Troubleshooting PCI Data Migration
+        If it may happen that running the above script returns a 'Permission Denied' error, while still in the root of
+        the application, run the following command to make sure the file has required user access.
+
+            chmod u+x lib/pci_migrate.sh
+
+        Run the following command to verify

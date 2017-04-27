@@ -20,7 +20,7 @@ def add_pci_child
 	xlsx = Roo::Excelx.new("#{Rails.root}/app/assets/data/CCPF_PCI_Data_Child.xlsx")
 	i = 0
 	xlsx.each_row_streaming(pad_cells: true) do |row|
-		puts row.inspect # and return # Array of Excelx::Cell objects
+		# and return # Array of Excelx::Cell objects
 		i = i + 1
 		
 		# rows before row 4 are header related.
