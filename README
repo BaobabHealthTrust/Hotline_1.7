@@ -14,3 +14,9 @@ Post migration script for PCI Data.
             chmod u+x lib/pci_migrate.sh
 
         Run the following command to verify
+
+            ls -l lib/pci_migrate.sh
+
+        Result of the immediate above command should look as below;
+
+            -rwxrwxrwx 1 username username 699 Apr 27 13:31 lib/pci_migrate.sh
