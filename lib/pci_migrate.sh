@@ -8,9 +8,9 @@ clear
 
 echo
 echo "PCI Data Migration initiated by [$USER on $HOSTNAME @ $(date +"%T")]"
-sleep 3
+sleep 2
 echo "Starting to migrate PCI Data ..."
-sleep 3
+sleep 2
 echo
 echo
 echo "Select which type of data you would wish to migrate"
@@ -29,23 +29,53 @@ read INPUT
 case "$INPUT" in
     1)
     #process child data
-    echo "=============="
-    echo "| CHILD DATA |"
-    echo "=============="
-    sleep 2
-    echo "Processing PCI Child Data"
-    sleep 2
-    echo "Child PCI Data Migration starting..."
-    sleep 3
-    rails runner lib/add_pci_child_data.rb
+        echo "=============="
+        echo "| CHILD DATA |"
+        echo "=============="
+        sleep 2
+        echo "Processing PCI Child Data"
+        sleep 2
+        echo "Child PCI Data Migration starting..."
+        sleep 3
+        rails runner lib/add_pci_child_data.rb
     ;;
 
     2)
     # process women data
+        echo "=============="
+        echo "| WOMEN DATA |"
+        echo "=============="
+        sleep 2
+        echo "Processing PCI Women Data"
+        sleep 2
+        echo "Women PCI Data Migration starting..."
+        sleep 3
+        rails runner lib/add_pci_women_data.rb
     ;;
 
     3)
     # process child data and then process women data
+        #process child data
+            echo "=============="
+            echo "| CHILD DATA |"
+            echo "=============="
+            sleep 2
+            echo "Processing PCI Child Data"
+            sleep 2
+            echo "Child PCI Data Migration starting..."
+            sleep 3
+            rails runner lib/add_pci_child_data.rb
+
+            # process women data
+                echo "=============="
+                echo "| WOMEN DATA |"
+                echo "=============="
+                sleep 2
+                echo "Processing PCI Women Data"
+                sleep 2
+                echo "Women PCI Data Migration starting..."
+                sleep 3
+                rails runner lib/add_pci_women_data.rb
     ;;
 
     4)

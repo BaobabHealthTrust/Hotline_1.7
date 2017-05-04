@@ -24,7 +24,7 @@ def add_pci_child
 		i = i + 1
 		
 		# rows before row 4 are header related.
-		if i >= 5 and !row[0].blank? and
+		if i >= 5 and !row[0].blank?
 			# create person
 			person = Person.new
 			person.gender = row[7].value
@@ -79,6 +79,17 @@ def add_pci_child
 					person_attribute.creator = 1
 					person_attribute.save!
 				end
+				
+				# create obs for 'PURPOSE OF CALL' encounter to state this person as a caller for reporting purposes
+				person_obs = Observation.new
+				person_obs.person_id = person_id
+				person_obs.encounter_id = 11
+				person_obs.obs_datetime = Time.now.strftime('%Y-%m-%d %H:%m:%S')
+				person_obs.location_id = 35002
+				person_obs.comments = 1 # to set the observation as 1 time caller
+				person_obs.creator = 1
+				person_obs.save!
+				
 				puts "Person #{i-4} creation: Ok"
 			else
 				next
