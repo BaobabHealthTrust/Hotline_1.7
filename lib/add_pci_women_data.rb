@@ -11,7 +11,8 @@ require 'roo'
 require 'date'
 
 def birthdate_check(received_date)
-	if received_date.include?('/')
+	#raise received_date.inspect and return if received_date == 'Tue, 07 Nov 1989'
+	if received_date.to_s.include? '/'
 		
 		date_check = received_date.split('/')
 		received_year = date_check[2].to_i
@@ -29,6 +30,8 @@ def birthdate_check(received_date)
 			received_date = "#{received_day}/#{received_month}/#{received_year}"
 			valid_date = received_date.to_datetime.strftime('%Y-%m-%d') rescue false
 		end
+	else
+		valid_date = false
 	end
 	
 	return valid_date
@@ -48,7 +51,7 @@ def add_pci_women
 			# create person
 			person = Person.new
 			person.gender = 'Female'
-			birthdate = birthdate_check(row[10].value)
+			birthdate = birthdate_check(row[10].value) rescue nil
 			if birthdate != false
 				person.birthdate = birthdate
 				person.creator = 1
@@ -86,13 +89,25 @@ def add_pci_women
 					
 					if attribute_type.to_i == 1
 						# phone Number
-						person_attribute.value = row[17].value || 'NULL'
+						if !person_attribute.value.blank?
+							person_attribute.value = row[17].value
+						else
+							person_attribute.value = 'NA'
+						end
 					elsif attribute_type.to_i == 6
 						# occupation
-						person_attribute.value = row[7].value || 'NULL'
+						if !person_attribute.value.blank?
+							person_attribute.value = row[7].value
+						else
+							person_attribute.value = 'NA'
+						end
 					elsif attribute_type.to_i == 14
 						# nearest health facility
-						person_attribute.value = row[16].value || 'NULL'
+						if !person_attribute.value.blank?
+							person_attribute.value = row[16].value
+						else
+							person_attribute.value = 'NA'
+						end
 					end
 					
 					person_attribute.creator = 1
