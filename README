@@ -1,3 +1,10 @@
+Setup Hotline
+-------------
+Run the following command in terminal to setup the Hotline application
+
+	rake db:drop db:create db:migrate db:seed
+
+
 Run post migration scripts using the terminal command
 
 	bundle exec rails runner lib/post_migration_fixes.rb
