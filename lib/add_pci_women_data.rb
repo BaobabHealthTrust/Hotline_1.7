@@ -137,7 +137,7 @@ def add_pci_women
 				puts "Person #{i-4} creation: Ok"
 			else
 				Kernel.system ('mkdir lib/migration_logs')
-				log_text = "Skipped #{row[5].value}, #{row[4].value} :Invalid Date of Birth format."
+				log_text = "Skipped #{row[5].value rescue 'NA'}, #{row[4].value rescue 'NA'} :Invalid Date of Birth format."
 				log_file = "#{Rails.root}/lib/migration_logs/pci_women.txt"
 				command = "echo #{log_text} >> #{log_file}"
 				if Kernel.system (command)
